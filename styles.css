@@ -1,0 +1,138 @@
+body {
+    font-family: 'Source Han Sans TC', sans-serif;
+    /* 設置全局字體為思源黑體 */
+}
+
+.tab {
+    display: none;
+    /* 隱藏所有tab內容 */
+}
+
+.tab.active {
+    display: block;
+    /* 顯示當前激活的tab內容 */
+}
+
+.tabs {
+    display: flex;
+    cursor: pointer;
+    /* 設置tab標籤容器為flex布局，並且鼠標懸停時顯示為指針 */
+}
+
+.tab-links {
+    padding: 10px 20px;
+    background: linear-gradient(to bottom, rgb(240, 240, 240), rgb(185, 185, 185));
+    margin-right: 5px;
+    /* 設置tab標籤的樣式 */
+}
+
+.tab-links.active, .item-header {
+    font-weight: bold;
+    background: linear-gradient(to bottom, rgb(240, 240, 240), rgb(174, 205, 255));
+    /* 設置當前激活tab標籤的樣式 */
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    margin-bottom: 5px;
+    /* 設置表單組為flex布局，垂直排列，並且元素靠左對齊 */
+}
+.header-group {
+    display: flex;
+    align-items: left;
+    justify-content: flex-start;
+    margin-bottom: 5px;
+    /* 設置標題在左，輸入框在右，並且整個佈局靠左對齊 */
+}
+
+.header-group label {
+    width: 150px;
+    margin-bottom: 0px;
+    background-color: #e4e8ec;
+    padding: 5px;
+    text-align: left;
+    /* 設置label的寬度和樣式 */
+}
+
+.header-group input, .header-group select, .header-group textarea {
+    flex: 1;
+    padding: 5px;
+    box-sizing: border-box;
+    /* 設置表單控件的樣式，並且填滿剩餘空間 */
+}
+
+.form-group .remove-item {
+    margin-top: 5px;
+    cursor: pointer;
+    color: red;
+    font-weight: bold;
+    /* 設置刪除項目的樣式 */
+}
+
+#item-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+    /* 設置模態框的樣式，初始為隱藏，並居中顯示 */
+}
+
+#item-modal .modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    width: 1000px;
+    max-height: 80%;
+    overflow-y: auto;
+    box-sizing: border-box; /* 確保內邊距和邊框包含在寬度內 */
+    /* 設置模態框內容的樣式 */
+}
+
+.item-row {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    /* 確保項次標題和輸入框垂直居中對齊，並且不換行 */
+}
+
+.item-row .form-group {
+    flex: 1;
+    margin-right: 5px;
+    /* 設置項目行內的表單組的樣式，使每個表單組平分可用空間 */
+}
+
+.item-row .form-group:last-child {
+    margin-right: 0;
+    /* 去掉最後一個表單組的右邊距 */
+}
+
+.item-row .form-group.fix {
+    flex: none;
+    width: 50px; /* 固定項次欄位的寬度 */
+}
+
+.item-row label, .item-row input, .item-row textarea {
+    width: 100%;
+    box-sizing: border-box;
+    /* 確保label和輸入框/文本區域填滿表單組 */
+}
+
+textarea {
+    resize: none;
+    /* 禁用textarea的調整大小功能 */
+}
+
+.flex-group {
+    display: flex;
+    align-items: center;
+    padding-bottom: 10px;
+    /* 設置flex-group為flex布局，元素垂直居中，並且設置間距 */
+}
