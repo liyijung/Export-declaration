@@ -196,8 +196,8 @@ function mergeItems(data) {
             currentItem.TRADE_MARK += '\n' + (row[7] || '');
             currentItem.CCC_CODE += '\n' + (row[8] || '');
             currentItem.ST_MTD += '\n' + (row[9] || '');
-            currentItem.NET_WT += '\n' + (row[10] || '');
             currentItem.ORG_COUNTRY += '\n' + (row[11] || '');
+            currentItem.NET_WT += '\n' + (row[10] || '');
             currentItem.ORG_IMP_DCL_NO += '\n' + (row[12] || '');
             currentItem.ORG_IMP_DCL_NO_ITEM += '\n' + (row[13] || '');
         }
