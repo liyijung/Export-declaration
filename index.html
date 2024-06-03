@@ -22,9 +22,25 @@
             <input type="text" id="LOT_NO" name="LOT_NO">
         </div>
         <div class="header-group">
-            <label for="TO_CODE">目的地</label>
-            <input type="text" id="TO_CODE" name="TO_CODE"
-            placeholder="範例：HKHKG、CNCAN、KRICN、SGSIN、MYKUL（英文代碼）">
+            <label for="SHPR_BAN_ID">出口人統一編號</label>
+            <input type="text" id="SHPR_BAN_ID" name="SHPR_BAN_ID">
+        </div>
+        <div class="header-group">
+            <label for="SHPR_C_NAME">出口人名稱</label>
+            <input type="text" id="SHPR_C_NAME" name="SHPR_C_NAME">
+        </div>
+        <div class="header-group">
+            <label for="CNEE_E_NAME">買方名稱</label>
+            <input type="text" id="CNEE_E_NAME" name="CNEE_E_NAME">
+        </div>
+        <div class="header-group">
+            <label for="CNEE_E_ADDR">買方地址</label>
+            <input type="text" id="CNEE_E_ADDR" name="CNEE_E_ADDR">
+        </div>
+        <div class="header-group">
+            <label for="TO_DESC">目的地(名稱)</label>
+            <input type="text" id="TO_DESC" name="TO_DESC"
+            placeholder="範例：HONG KONG、Guangzhou、KOREA、SINGAPORE（英文名稱）">
         </div>
         <div class="header-group">
             <label for="TOT_CTN">總件數</label>
@@ -179,8 +195,7 @@
             </div>
             <div class="header-group">
                 <label for="DOC_UM">單位</label>
-                <input type="text" id="DOC_UM"
-                placeholder="範例：EAC、PCE、SET、YRD、MTR（英文代碼）">
+                <input type="text" id="DOC_UM" placeholder="範例：EAC、PCE、SET、YRD、MTR（英文代碼）">
             </div>
             <div class="header-group">
                 <label for="DOC_UNIT_P">單價</label>
@@ -192,8 +207,7 @@
             </div>
             <div class="header-group">
                 <label for="TRADE_MARK">商標</label>
-                <input type="text" id="TRADE_MARK"
-                placeholder="NO BRAND（無商標）、FIG（圖樣）、文字（字樣）">
+                <input type="text" id="TRADE_MARK" placeholder="NO BRAND（無商標）、FIG（圖樣）、文字（字樣）">
             </div>
             <div class="header-group">
                 <label for="CCC_CODE">稅則</label>
@@ -215,23 +229,23 @@
             </div>
             <div class="header-group">
                 <label for="ORG_COUNTRY">生產國別</label>
-                <input type="text" id="ORG_COUNTRY" 
-                placeholder="範例：TW、US、CN、JP、GB（英文代碼）">
-            </div>            
+                <input type="text" id="ORG_COUNTRY" placeholder="範例：TW、US、CN、JP、GB（英文代碼）">
+            </div>
             <div class="header-group">
                 <label for="ORG_IMP_DCL_NO">原進口報單號碼</label>
-                <input type="text" id="ORG_IMP_DCL_NO" 
-                placeholder="範例：CX  13709TEST1（中間為兩位空格）">
+                <input type="text" id="ORG_IMP_DCL_NO" placeholder="範例：CX  13709TEST1（中間為兩位空格）">
             </div>
             <div class="header-group">
                 <label for="ORG_IMP_DCL_NO_ITEM">原進口報單項次</label>
                 <input type="text" id="ORG_IMP_DCL_NO_ITEM">
             </div>
-            <p style="margin-top: 30px;"></p>            
-            <button onclick="saveItem()">儲存</button>
-            <button onclick="closeItemModal()">取消</button>
+            <!-- 將儲存和取消按鈕包裹在一個固定定位的div中 -->
+            <div class="buttons">
+                <button onclick="saveItem()">儲存</button>
+                <button onclick="closeItemModal()">取消</button>
+            </div>
         </div>
-    </div>
+    </div>    
     
     <section style="margin-bottom: 50px; margin-top: 30px">
         <button id="export-to-excel">匯出EXCEL</button>
