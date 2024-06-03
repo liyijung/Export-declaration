@@ -180,8 +180,8 @@ function mergeItems(data) {
                 TRADE_MARK: row[7] || '',
                 CCC_CODE: row[8] || '',
                 ST_MTD: row[9] || '',
-                ORG_COUNTRY: row[11] || '',
-                NET_WT: row[10] || '',                
+                ORG_COUNTRY: row[10] || '',
+                NET_WT: row[11] || '',                
                 ORG_IMP_DCL_NO: row[12] || '',
                 ORG_IMP_DCL_NO_ITEM: row[13] || '',
                 HAS_MAJOR_NAME: row[1] ? true : false // 根據B欄判斷是否有大品名註記
@@ -196,8 +196,8 @@ function mergeItems(data) {
             currentItem.TRADE_MARK += '\n' + (row[7] || '');
             currentItem.CCC_CODE += '\n' + (row[8] || '');
             currentItem.ST_MTD += '\n' + (row[9] || '');
-            currentItem.ORG_COUNTRY += '\n' + (row[11] || '');
-            currentItem.NET_WT += '\n' + (row[10] || '');
+            currentItem.ORG_COUNTRY += '\n' + (row[10] || '');
+            currentItem.NET_WT += '\n' + (row[11] || '');
             currentItem.ORG_IMP_DCL_NO += '\n' + (row[12] || '');
             currentItem.ORG_IMP_DCL_NO_ITEM += '\n' + (row[13] || '');
         }
