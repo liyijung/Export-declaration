@@ -496,18 +496,20 @@ function exportToPDF() {
                     item.querySelector('.ORG_IMP_DCL_NO').value,
                     item.querySelector('.ORG_IMP_DCL_NO_ITEM').value
                 ];
+
+                const descriptionLines = rowData[2].split('\n').length; // 計算品名的行數
                 rowData.forEach((field, i) => {
                     const x = i % 2 === 0 ? 10 : 110; // 根據索引偶數放左邊，奇數放右邊
                     doc.text(`${itemHeader[i]}: ${field}`, x, y);
                     if (i % 2 === 1) { // 每次奇數索引增加 y
-                        y += 10;
+                        y += 10 * descriptionLines; // 根據品名的行數動態增加間距
                         if (y > 270) { // 判斷是否需要換頁
                             doc.addPage();
-                            y = 20; // 重置 y 座標
+                            y = 10; // 重置 y 座標
                         }
                     }
                 });
-                y += 10; // 每個項次結束後增加 y
+                y += 10 * descriptionLines; // 每個項次結束後增加 y
             });
 
             // 保存 PDF
