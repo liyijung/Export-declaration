@@ -503,7 +503,7 @@ function exportToPDF() {
                         y += 10;
                         if (y > 270) { // 判斷是否需要換頁
                             doc.addPage();
-                            y = 10; // 重置 y 座標
+                            y = 20; // 重置 y 座標
                         }
                     }
                 });
