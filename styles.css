@@ -23,12 +23,16 @@ body {
     padding: 10px 20px;
     background: linear-gradient(to bottom, rgb(240, 240, 240), rgb(185, 185, 185));
     margin-right: 5px;
+    border-radius: 5px; /* 圓角 */
+    border: 1px solid #989898; /* 外框 */
     /* 設置tab標籤的樣式 */
 }
 
 .tab-links.active, .item-header {
     font-weight: bold;
     background: linear-gradient(to bottom, rgb(240, 240, 240), rgb(174, 205, 255));
+    border-radius: 5px; /* 圓角 */
+    border: 1px solid #97b3eb; /* 外框 */
     /* 設置當前激活tab標籤的樣式 */
 }
 
@@ -40,6 +44,15 @@ body {
     margin-bottom: 5px;
     /* 設置表單組為flex布局，垂直排列，並且元素靠左對齊 */
 }
+
+.header-section {
+    border: 1px solid #9e9e9e; /* 外框 */
+    background-color: #f0f0f0; /* 底色 */
+    padding: 20px;
+    margin-bottom: 10px;
+    border-radius: 5px; /* 圓角 */
+}
+
 .header-group {
     display: flex;
     align-items: left;
@@ -51,9 +64,10 @@ body {
 .header-group label {
     width: 150px;
     margin-bottom: 0px;
-    background-color: #e4e8ec;
+    background: linear-gradient(to left, rgb(240, 240, 240), rgb(174, 205, 255));    background: linear-gradient(to left, rgb(240, 240, 240), rgb(199, 218, 248));
     padding: 5px;
     text-align: left;
+    border-radius: 5px; /* 圓角 */
     /* 設置label的寬度和樣式 */
 }
 
@@ -65,10 +79,8 @@ body {
 }
 
 .form-group .remove-item {
-    margin-top: 5px;
-    cursor: pointer;
-    color: red;
-    font-weight: bold;
+    background: linear-gradient(to bottom, rgb(240, 240, 240), rgb(213, 213, 213));
+    border: 1px solid #9e9e9e; /* 外框 */
     /* 設置刪除項目的樣式 */
 }
 
@@ -157,16 +169,4 @@ textarea {
     justify-content: center;
     align-items: center;
     /* 設置模態框的樣式，初始為隱藏，並居中顯示 */
-}
-
-#item-modal .modal-content {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 5px;
-    width: 1000px;
-    max-height: 80%;
-    overflow-y: auto;
-    box-sizing: border-box;
-    /* 確保內邊距和邊框包含在寬度內 */
-    /* 設置模態框內容的樣式 */
 }
