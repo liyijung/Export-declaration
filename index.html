@@ -16,107 +16,121 @@
 
     <!--報單表頭-->    
     <div id="header" class="tab active">
-        <p style="margin-top: 30px;"></p>
-        <div class="header-group">
-            <label for="LOT_NO">運單號</label>
-            <input type="text" id="LOT_NO" name="LOT_NO">
+        <p style="margin-top: 30px;"></p>        
+        <div class="header-section">
+            <div class="header-group">
+                <label for="LOT_NO">運單號</label>
+                <input type="text" id="LOT_NO" name="LOT_NO">
+            </div>
+            <div class="header-group">
+                <label for="SHPR_BAN_ID">出口人統一編號</label>
+                <input type="text" id="SHPR_BAN_ID" name="SHPR_BAN_ID">
+            </div>
+            <div class="header-group">
+                <label for="SHPR_C_NAME">出口人名稱</label>
+                <input type="text" id="SHPR_C_NAME" name="SHPR_C_NAME">
+            </div>
+            <div class="header-group">
+                <label for="CNEE_E_NAME">買方名稱</label>
+                <input type="text" id="CNEE_E_NAME" name="CNEE_E_NAME">
+            </div>
+            <div class="header-group">
+                <label for="CNEE_E_ADDR">買方地址</label>
+                <input type="text" id="CNEE_E_ADDR" name="CNEE_E_ADDR">
+            </div>
+            <div class="header-group">
+                <label for="TO_DESC">目的地</label>
+                <input type="text" id="TO_DESC" name="TO_DESC"
+                placeholder="範例：HONG KONG、Guangzhou、KOREA、SINGAPORE（英文名稱）">
+            </div>
         </div>
-        <div class="header-group">
-            <label for="SHPR_BAN_ID">出口人統一編號</label>
-            <input type="text" id="SHPR_BAN_ID" name="SHPR_BAN_ID">
+        <hr>
+
+        <div class="header-section">
+            <div class="header-group">
+                <label for="TOT_CTN">總件數</label>
+                <input type="number" id="TOT_CTN" name="TOT_CTN">
+            </div>
+            <div class="header-group">
+                <label for="DOC_CTN_UM">總件數單位</label>
+                <input type="text" id="DOC_CTN_UM" name="DOC_CTN_UM"
+                placeholder="範例：CTN、PKG、BOX、PLT（英文代碼）">
+            </div>
+            <div class="header-group">
+                <label for="DCL_GW">總毛重</label>
+                <input type="number" id="DCL_GW" name="DCL_GW">
+            </div>
+            <div class="header-group">
+                <label for="DCL_NW">總淨重</label>
+                <input type="number" id="DCL_NW" name="DCL_NW">
+            </div>
         </div>
-        <div class="header-group">
-            <label for="SHPR_C_NAME">出口人名稱</label>
-            <input type="text" id="SHPR_C_NAME" name="SHPR_C_NAME">
-        </div>
-        <div class="header-group">
-            <label for="CNEE_E_NAME">買方名稱</label>
-            <input type="text" id="CNEE_E_NAME" name="CNEE_E_NAME">
-        </div>
-        <div class="header-group">
-            <label for="CNEE_E_ADDR">買方地址</label>
-            <input type="text" id="CNEE_E_ADDR" name="CNEE_E_ADDR">
-        </div>
-        <div class="header-group">
-            <label for="TO_DESC">目的地(名稱)</label>
-            <input type="text" id="TO_DESC" name="TO_DESC"
-            placeholder="範例：HONG KONG、Guangzhou、KOREA、SINGAPORE（英文名稱）">
-        </div>
-        <div class="header-group">
-            <label for="TOT_CTN">總件數</label>
-            <input type="number" id="TOT_CTN" name="TOT_CTN">
-        </div>
-        <div class="header-group">
-            <label for="DOC_CTN_UM">總件數單位</label>
-            <input type="text" id="DOC_CTN_UM" name="DOC_CTN_UM"
-            placeholder="範例：CTN、PKG、BOX、PLT（英文代碼）">
-        </div>
-        <div class="header-group">
-            <label for="DCL_GW">總毛重</label>
-            <input type="number" id="DCL_GW" name="DCL_GW">
-        </div>
-        <div class="header-group">
-            <label for="DCL_NW">總淨重</label>
-            <input type="number" id="DCL_NW" name="DCL_NW">
-        </div>
-        <div class="header-group">
-            <label for="DCL_DOC_TYPE">報單類別</label>
-            <input type="text" id="DCL_DOC_TYPE" name="DCL_DOC_TYPE" list="member"
-            placeholder="範例：G5、G3、B8、B9、D5、F5">
-            <datalist id="member">
-                <option value="G5">國貨出口</option>
-                <option value="G3">外貨復出口</option>
-                <option value="B8">保稅廠進口貨物（原料）復出口</option>
-                <option value="B9">保稅廠產品出口</option>
-                <option value="D5">保稅倉貨物出口</option>
-                <option value="F5">自由港區貨物出口</option>
-            </datalist>            
-        </div>
-        <div class="header-group">
-            <label for="TERMS_SALES">貿易條件</label>
-            <input type="text" id="TERMS_SALES" name="TERMS_SALES" list="terms"
-            placeholder="範例：EXW、FOB、CFR、C&I、CIF">
-            <datalist id="terms">
-                <option value="EXW">需填列應加費用，不得填列運保費</option>
-                <option value="FOB">不含運費、保險費</option>
-                <option value="CFR">含運費</option>
-                <option value="C&I">含保險費</option>
-                <option value="CIF">含運費、保險費</option>
-            </datalist>              
-        </div>
-        <div class="header-group">
-            <label for="CURRENCY">幣別</label>
-            <input type="text" id="CURRENCY" name="CURRENCY"
-            placeholder="範例：TWD、USD、CNY、JPY、EUR（英文代碼）">
-        </div>
-        <div class="header-group">
-            <label for="CAL_IP_TOT_ITEM_AMT">總金額</label>
-            <input type="number" id="CAL_IP_TOT_ITEM_AMT" name="CAL_IP_TOT_ITEM_AMT">
-        </div>
-        <div class="header-group">
-            <label for="FRT_AMT">運費</label>
-            <input type="number" id="FRT_AMT" name="FRT_AMT">
-        </div>   
-        <div class="header-group">
-            <label for="INS_AMT">保險費</label>
-            <input type="number" id="INS_AMT" name="INS_AMT">
-        </div>
-        <div class="header-group">
-            <label for="ADD_AMT">應加費用</label>
-            <input type="number" id="ADD_AMT" name="ADD_AMT">
-        </div>
-        <div class="header-group">
-            <label for="SUBTRACT_AMT">應減費用</label>
-            <input type="number" id="SUBTRACT_AMT" name="SUBTRACT_AMT">
-        </div>        
-        <div class="header-group">
-            <label for="DOC_MARKS_DESC">標記及貨櫃號碼</label>
-            <textarea id="DOC_MARKS_DESC" name="DOC_MARKS_DESC" rows="5"></textarea>
-        </div>
-        <div class="header-group">
-            <label for="DOC_OTR_DESC">其它申報事項</label>
-            <textarea id="DOC_OTR_DESC" name="DOC_OTR_DESC" rows="5"></textarea>
-        </div>                 
+        <hr>
+
+        <div class="header-section">
+            <div class="header-group">
+                <label for="DCL_DOC_TYPE">報單類別</label>
+                <input type="text" id="DCL_DOC_TYPE" name="DCL_DOC_TYPE" list="member"
+                placeholder="範例：G5、G3、B8、B9、D5、F5">
+                <datalist id="member">
+                    <option value="G5">國貨出口</option>
+                    <option value="G3">外貨復出口</option>
+                    <option value="B8">保稅廠進口貨物（原料）復出口</option>
+                    <option value="B9">保稅廠產品出口</option>
+                    <option value="D5">保稅倉貨物出口</option>
+                    <option value="F5">自由港區貨物出口</option>
+                </datalist>            
+            </div>
+            <div class="header-group">
+                <label for="TERMS_SALES">貿易條件</label>
+                <input type="text" id="TERMS_SALES" name="TERMS_SALES" list="terms"
+                placeholder="範例：EXW、FOB、CFR、C&I、CIF">
+                <datalist id="terms">
+                    <option value="EXW">需填列應加費用，不得填列運保費</option>
+                    <option value="FOB">不含運費、保險費</option>
+                    <option value="CFR">含運費</option>
+                    <option value="C&I">含保險費</option>
+                    <option value="CIF">含運費、保險費</option>
+                </datalist>              
+            </div>
+            <div class="header-group">
+                <label for="CURRENCY">幣別</label>
+                <input type="text" id="CURRENCY" name="CURRENCY"
+                placeholder="範例：TWD、USD、CNY、JPY、EUR（英文代碼）">
+            </div>
+            <div class="header-group">
+                <label for="CAL_IP_TOT_ITEM_AMT">總金額</label>
+                <input type="number" id="CAL_IP_TOT_ITEM_AMT" name="CAL_IP_TOT_ITEM_AMT">
+            </div>
+            <div class="header-group">
+                <label for="FRT_AMT">運費</label>
+                <input type="number" id="FRT_AMT" name="FRT_AMT">
+            </div>   
+            <div class="header-group">
+                <label for="INS_AMT">保險費</label>
+                <input type="number" id="INS_AMT" name="INS_AMT">
+            </div>
+            <div class="header-group">
+                <label for="ADD_AMT">應加費用</label>
+                <input type="number" id="ADD_AMT" name="ADD_AMT">
+            </div>
+            <div class="header-group">
+                <label for="SUBTRACT_AMT">應減費用</label>
+                <input type="number" id="SUBTRACT_AMT" name="SUBTRACT_AMT">
+            </div>       
+        </div> 
+        <hr>
+
+        <div class="header-section">
+            <div class="header-group">
+                <label for="DOC_MARKS_DESC">標記及貨櫃號碼</label>
+                <textarea id="DOC_MARKS_DESC" name="DOC_MARKS_DESC" rows="5"></textarea>
+            </div>
+            <div class="header-group">
+                <label for="DOC_OTR_DESC">其它申報事項</label>
+                <textarea id="DOC_OTR_DESC" name="DOC_OTR_DESC" rows="5"></textarea>
+            </div>  
+        </div>               
     </div>
 
     <!--報單項次-->
@@ -149,6 +163,9 @@
                 <label>金額</label>
             </div>
             <div class="form-group">
+                <label>淨重</label>
+            </div>
+            <div class="form-group">
                 <label>商標</label>
             </div>
             <div class="form-group">
@@ -161,14 +178,17 @@
                 <label>生產國別</label>
             </div>            
             <div class="form-group">
-                <label>淨重</label>
-            </div>
-            <div class="form-group">
                 <label>原進口報單號碼</label>
             </div>
             <div class="form-group">
                 <label>原進口報單項次</label>
             </div>
+            <div class="form-group">
+                <label>產證號碼</label>
+            </div>
+            <div class="form-group">
+                <label>產證項次</label>
+            </div>            
             <div class="form-group">
                 <label>操作</label>
             </div>
@@ -206,6 +226,10 @@
                 <input type="number" id="DOC_TOT_P">
             </div>
             <div class="header-group">
+                <label for="NET_WT">淨重</label>
+                <input type="number" id="NET_WT">
+            </div>
+            <div class="header-group">
                 <label for="TRADE_MARK">商標</label>
                 <input type="text" id="TRADE_MARK" placeholder="NO BRAND（無商標）、FIG（圖樣）、文字（字樣）">
             </div>
@@ -228,10 +252,6 @@
                 <input type="text" id="ORG_COUNTRY" placeholder="範例：TW、US、CN、JP、GB（英文代碼）">
             </div>
             <div class="header-group">
-                <label for="NET_WT">淨重</label>
-                <input type="number" id="NET_WT">
-            </div>
-            <div class="header-group">
                 <label for="ORG_IMP_DCL_NO">原進口報單號碼</label>
                 <input type="text" id="ORG_IMP_DCL_NO" placeholder="範例：CX  13709TEST1（中間為兩位空格）">
             </div>
@@ -239,6 +259,14 @@
                 <label for="ORG_IMP_DCL_NO_ITEM">原進口報單項次</label>
                 <input type="text" id="ORG_IMP_DCL_NO_ITEM">
             </div>
+            <div class="header-group">
+                <label for="CERT_NO">產證號碼</label>
+                <input type="text" id="CERT_NO" placeholder="ECFA產證">
+            </div>
+            <div class="header-group">
+                <label for="CERT_NO_ITEM">產證項次</label>
+                <input type="text" id="CERT_NO_ITEM" placeholder="ECFA產證">
+            </div>           
             <!-- 將儲存和取消按鈕包裹在一個固定定位的div中 -->
             <div class="buttons">
                 <button onclick="saveItem()">儲存</button>
