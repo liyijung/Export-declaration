@@ -22,13 +22,15 @@ function openItemModal() {
     document.getElementById('DOC_UM').value = '';
     document.getElementById('DOC_UNIT_P').value = '';
     document.getElementById('DOC_TOT_P').value = '';
+    document.getElementById('NET_WT').value = '';        
     document.getElementById('TRADE_MARK').value = '';
     document.getElementById('CCC_CODE').value = '';
     document.getElementById('ST_MTD').value = '';
     document.getElementById('ORG_COUNTRY').value = '';
-    document.getElementById('NET_WT').value = '';    
     document.getElementById('ORG_IMP_DCL_NO').value = '';
     document.getElementById('ORG_IMP_DCL_NO_ITEM').value = '';
+    document.getElementById('CERT_NO').value = '';
+    document.getElementById('CERT_NO_ITEM').value = '';    
 
     // 顯示彈跳框
     document.getElementById('item-modal').style.display = 'flex';
@@ -53,13 +55,15 @@ function saveItem() {
         DOC_UM: document.getElementById('DOC_UM').value,
         DOC_UNIT_P: document.getElementById('DOC_UNIT_P').value,
         DOC_TOT_P: document.getElementById('DOC_TOT_P').value,
+        NET_WT: document.getElementById('NET_WT').value,        
         TRADE_MARK: document.getElementById('TRADE_MARK').value,
         CCC_CODE: document.getElementById('CCC_CODE').value,
         ST_MTD: document.getElementById('ST_MTD').value,
         ORG_COUNTRY: document.getElementById('ORG_COUNTRY').value,
-        NET_WT: document.getElementById('NET_WT').value,        
         ORG_IMP_DCL_NO: document.getElementById('ORG_IMP_DCL_NO').value,
-        ORG_IMP_DCL_NO_ITEM: document.getElementById('ORG_IMP_DCL_NO_ITEM').value
+        ORG_IMP_DCL_NO_ITEM: document.getElementById('ORG_IMP_DCL_NO_ITEM').value,
+        CERT_NO: document.getElementById('CERT_NO').value,
+        CERT_NO_ITEM: document.getElementById('CERT_NO_ITEM').value        
     });
     itemContainer.appendChild(item);
 
@@ -177,13 +181,15 @@ function mergeItems(data) {
                 DOC_UM: row[4] || '',
                 DOC_UNIT_P: row[5] || '',
                 DOC_TOT_P: row[6] || '',
-                TRADE_MARK: row[7] || '',
-                CCC_CODE: row[8] || '',
-                ST_MTD: row[9] || '',
-                ORG_COUNTRY: row[10] || '',
-                NET_WT: row[11] || '',                
+                NET_WT: row[7] || '',                
+                TRADE_MARK: row[8] || '',
+                CCC_CODE: row[9] || '',
+                ST_MTD: row[10] || '',
+                ORG_COUNTRY: row[11] || '',
                 ORG_IMP_DCL_NO: row[12] || '',
                 ORG_IMP_DCL_NO_ITEM: row[13] || '',
+                CERT_NO: row[14] || '',
+                CERT_NO_ITEM: row[15] || '',                
                 HAS_MAJOR_NAME: row[1] ? true : false // 根據B欄判斷是否有大品名註記
             };
         } else if (currentItem) {
@@ -193,13 +199,15 @@ function mergeItems(data) {
             currentItem.DOC_UM += '\n' + (row[4] || '');
             currentItem.DOC_UNIT_P += '\n' + (row[5] || '');
             currentItem.DOC_TOT_P += '\n' + (row[6] || '');
-            currentItem.TRADE_MARK += '\n' + (row[7] || '');
-            currentItem.CCC_CODE += '\n' + (row[8] || '');
-            currentItem.ST_MTD += '\n' + (row[9] || '');
-            currentItem.ORG_COUNTRY += '\n' + (row[10] || '');
-            currentItem.NET_WT += '\n' + (row[11] || '');
+            currentItem.NET_WT += '\n' + (row[7] || '');
+            currentItem.TRADE_MARK += '\n' + (row[8] || '');
+            currentItem.CCC_CODE += '\n' + (row[9] || '');
+            currentItem.ST_MTD += '\n' + (row[10] || '');
+            currentItem.ORG_COUNTRY += '\n' + (row[11] || '');
             currentItem.ORG_IMP_DCL_NO += '\n' + (row[12] || '');
             currentItem.ORG_IMP_DCL_NO_ITEM += '\n' + (row[13] || '');
+            currentItem.CERT_NO += '\n' + (row[14] || '');
+            currentItem.CERT_NO_ITEM += '\n' + (row[15] || '');
         }
     });
 
@@ -222,13 +230,15 @@ function addItemFromExcel(row) {
         DOC_UM: row.DOC_UM || '',
         DOC_UNIT_P: row.DOC_UNIT_P || '',
         DOC_TOT_P: row.DOC_TOT_P || '',
+        NET_WT: row.NET_WT || '',        
         TRADE_MARK: row.TRADE_MARK || '',
         CCC_CODE: row.CCC_CODE || '',
         ST_MTD: row.ST_MTD || '',
         ORG_COUNTRY: row.ORG_COUNTRY || '',
-        NET_WT: row.NET_WT || '',        
         ORG_IMP_DCL_NO: row.ORG_IMP_DCL_NO || '',
         ORG_IMP_DCL_NO_ITEM: row.ORG_IMP_DCL_NO_ITEM || '',
+        CERT_NO: row.CERT_NO || '',
+        CERT_NO_ITEM: row.CERT_NO_ITEM || '',
         HAS_MAJOR_NAME: row.HAS_MAJOR_NAME // 根據B欄決定是否勾選
     });
     itemContainer.appendChild(item);
@@ -252,13 +262,15 @@ function createItemRow(data) {
         ${createInputField('DOC_UM', data.DOC_UM)}
         ${createInputField('DOC_UNIT_P', data.DOC_UNIT_P)}
         ${createInputField('DOC_TOT_P', data.DOC_TOT_P)}
+        ${createInputField('NET_WT', data.NET_WT)}        
         ${createInputField('TRADE_MARK', data.TRADE_MARK)}
         ${createInputField('CCC_CODE', data.CCC_CODE)}
         ${createInputField('ST_MTD', data.ST_MTD)}
         ${createInputField('ORG_COUNTRY', data.ORG_COUNTRY)}
-        ${createInputField('NET_WT', data.NET_WT)}        
         ${createInputField('ORG_IMP_DCL_NO', data.ORG_IMP_DCL_NO)}
         ${createInputField('ORG_IMP_DCL_NO_ITEM', data.ORG_IMP_DCL_NO_ITEM)}
+        ${createInputField('CERT_NO', data.CERT_NO)}
+        ${createInputField('CERT_NO_ITEM', data.CERT_NO_ITEM)}
         <div class="form-group">
             <span class="remove-item" onclick="removeItem(this)">刪除</span>
         </div>
@@ -314,7 +326,9 @@ function exportToExcel() {
 
     // 項次數據
     const itemHeaderData = [
-        ["項次", "大品名註記", "品名", "數量", "單位", "單價", "金額", "商標", "稅則", "統計方式", "生產國別", "淨重", "原進口報單號碼", "原進口報單項次"]
+        ["項次", "大品名註記", "品名", "數量", "單位", "單價", "金額", 
+        "淨重", "商標", "稅則", "統計方式", "生產國別", 
+        "原進口報單號碼", "原進口報單項次", "產證號碼", "產證項次"]
     ];
     const itemData = [];
 
@@ -327,13 +341,15 @@ function exportToExcel() {
             item.querySelector('.DOC_UM').value,
             item.querySelector('.DOC_UNIT_P').value,
             item.querySelector('.DOC_TOT_P').value,
+            item.querySelector('.NET_WT').value,                        
             item.querySelector('.TRADE_MARK').value,
             item.querySelector('.CCC_CODE').value,
             item.querySelector('.ST_MTD').value,
             item.querySelector('.ORG_COUNTRY').value,
-            item.querySelector('.NET_WT').value,            
             item.querySelector('.ORG_IMP_DCL_NO').value,
-            item.querySelector('.ORG_IMP_DCL_NO_ITEM').value
+            item.querySelector('.ORG_IMP_DCL_NO_ITEM').value,
+            item.querySelector('.CERT_NO').value,
+            item.querySelector('.CERT_NO_ITEM').value
         ];
         itemData.push(rowData);
     });
@@ -362,9 +378,9 @@ function exportToXML() {
         'INS_AMT', 'ADD_AMT', 'SUBTRACT_AMT', 'DOC_MARKS_DESC', 'DOC_OTR_DESC'
     ];
     const itemFields = [
-        'ITEM_NO', 'DESCRIPTION', 'QTY', 'DOC_UM', 
-        'DOC_UNIT_P', 'DOC_TOT_P', 'TRADE_MARK', 'CCC_CODE', 'ST_MTD', 
-        'ORG_COUNTRY', 'NET_WT', 'ORG_IMP_DCL_NO', 'ORG_IMP_DCL_NO_ITEM'
+        'ITEM_NO', 'DESCRIPTION', 'QTY', 'DOC_UM', 'DOC_UNIT_P', 'DOC_TOT_P', 
+        'NET_WT', 'TRADE_MARK', 'CCC_CODE', 'ST_MTD', 'ORG_COUNTRY', 
+        'ORG_IMP_DCL_NO', 'ORG_IMP_DCL_NO_ITEM', 'CERT_NO', 'CERT_NO_ITEM'
     ];
 
     let xmlContent = '<?xml version="1.0" encoding="UTF-8"?>\n<Root>\n  <sys_code>GICCDS</sys_code>\n<head>\n  <head_table_name>DOC_HEAD</head_table_name>\n';
@@ -476,7 +492,10 @@ function exportToPDF() {
             doc.text('---------------------------------------------------------------------------------------------------------------', 10, y);
             y += 10;
 
-            const itemHeader = ["項次", "大品名註記", "品名", "數量", "單位", "單價", "金額", "商標", "稅則", "統計方式", "生產國別", "淨重", "原進口報單號碼", "原進口報單項次"];
+            const itemHeader = 
+            ["項次", "大品名註記", "品名", "數量", "單位", "單價", "金額", 
+            "淨重", "商標", "稅則", "統計方式", "生產國別", 
+            "原進口報單號碼", "原進口報單項次", "產證號碼", "產證項次"];
             const items = document.querySelectorAll("#item-container .item-row");
 
             items.forEach((item, index) => {
@@ -488,13 +507,15 @@ function exportToPDF() {
                     item.querySelector('.DOC_UM').value,
                     item.querySelector('.DOC_UNIT_P').value,
                     item.querySelector('.DOC_TOT_P').value,
+                    item.querySelector('.NET_WT').value,                    
                     item.querySelector('.TRADE_MARK').value,
                     item.querySelector('.CCC_CODE').value,
                     item.querySelector('.ST_MTD').value,
                     item.querySelector('.ORG_COUNTRY').value,
-                    item.querySelector('.NET_WT').value,                    
                     item.querySelector('.ORG_IMP_DCL_NO').value,
-                    item.querySelector('.ORG_IMP_DCL_NO_ITEM').value
+                    item.querySelector('.ORG_IMP_DCL_NO_ITEM').value,
+                    item.querySelector('.CERT_NO').value,
+                    item.querySelector('.CERT_NO_ITEM').value
                 ];
 
                 rowData.forEach((field, i) => {
