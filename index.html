@@ -12,6 +12,7 @@
     <div class="tabs">
         <div class="tab-links active" onclick="openTab('header')">報單表頭</div>
         <div class="tab-links" onclick="openTab('items')">報單項次</div>
+        <div class="tab-links" onclick="openTab('copy')">報單副本</div>
     </div>
 
     <!--報單表頭-->    
@@ -275,6 +276,29 @@
         </div>
     </div>    
     
+    <!--報單表頭-->    
+    <div id="copy" class="tab active">
+        <p style="margin-top: 30px;"></p>  
+        <div class="header-section">
+            <div class="flex-group"><P></P>
+                <input type="checkbox" id="copy_3">
+                <label for="copy_3">申請沖退原料稅（E化退稅）</label>
+            </div>
+            <div class="flex-group"><P></P>
+                <input type="checkbox" id="copy_3">
+                <label for="copy_3">申請報單副本第三聯，沖退原料稅用聯</label>
+            </div>
+            <div class="flex-group"><P></P>
+                <input type="checkbox" id="copy_3">
+                <label for="copy_4">申請報單副本第四聯，退內地稅用聯</label>
+            </div>
+            <div class="flex-group"><P></P>
+                <input type="checkbox" id="copy_3">
+                <label for="copy_5">申請報單副本第五聯，出口證明用聯</label>
+            </div>  
+        </div>                                
+    </div>
+
     <section style="margin-bottom: 50px; margin-top: 30px">
         <button id="export-to-excel">匯出EXCEL</button>
         <button id="export-to-xml">匯出XML</button>
