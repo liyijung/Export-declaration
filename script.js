@@ -296,7 +296,118 @@ function createTextareaField(className, value) {
     `;
 }
 
-// 匯出 Excel 文件
+// 報單副本
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+        checkbox.addEventListener('change', updateVariables);
+    });
+
+    function updateVariables() {
+        const appDutyRefund = document.getElementById('APP_DUTY_REFUND');
+        const markTotLines = document.getElementById('MARK_TOT_LINES');
+        const examType = document.getElementById('EXAM_TYPE');
+        const copyQty = document.getElementById('COPY_QTY');
+
+        const copy3_e = document.getElementById('copy_3_e');
+        const copy3 = document.getElementById('copy_3');
+        const copy4 = document.getElementById('copy_4');
+        const copy5 = document.getElementById('copy_5');
+
+        // 確保 申請沖退原料稅（E化退稅）和 申請報單副本第三聯（沖退原料稅用聯) 只能擇一
+        if (copy3_e.checked && copy3.checked) {
+            alert("申請沖退原料稅（E化退稅）\n申請報單副本第三聯（沖退原料稅用聯)\n\n請擇一選擇");
+            copy3_e.checked = false;
+            copy3.checked = false;
+        }
+
+        // 更新 APP_DUTY_REFUND 和 MARK_TOT_LINES
+        appDutyRefund.value = (copy3_e.checked || copy3.checked) ? 'Y' : 'N';
+        markTotLines.value = (copy3_e.checked || copy3.checked) ? 'Y' : 'N';
+
+        // 更新 EXAM_TYPE 和 COPY_QTY
+        if (copy3.checked || copy4.checked || copy5.checked) {
+            examType.value = '8';
+            copyQty.value = '1';
+        } else {
+            examType.value = '';
+            copyQty.value = '0';
+        }
+
+        // 用於顯示變數值的控制台日誌
+        console.log("APP_DUTY_REFUND: " + appDutyRefund.value);
+        console.log("MARK_TOT_LINES: " + markTotLines.value);
+        console.log("EXAM_TYPE: " + examType.value);
+        console.log("COPY_QTY: " + copyQty.value);
+    }
+
+    function exportToXML() {
+        updateVariables();  // 確保在匯出前更新變數
+
+        const headerFields = [
+            'LOT_NO', 'SHPR_BAN_ID', 'SHPR_C_NAME', 'CNEE_E_NAME', 'CNEE_E_ADDR', 
+            'TO_DESC', 'TOT_CTN', 'DOC_CTN_UM', 'DCL_GW', 'DCL_NW', 
+            'DCL_DOC_TYPE', 'TERMS_SALES', 'CURRENCY', 'CAL_IP_TOT_ITEM_AMT', 'FRT_AMT', 
+            'INS_AMT', 'ADD_AMT', 'SUBTRACT_AMT', 'DOC_MARKS_DESC', 'DOC_OTR_DESC',
+            'EXAM_TYPE', 'COPY_QTY', 'APP_DUTY_REFUND', 'MARK_TOT_LINES'
+        ];
+        const itemFields = [
+            'ITEM_NO', 'DESCRIPTION', 'QTY', 'DOC_UM', 'DOC_UNIT_P', 'DOC_TOT_P', 
+            'NET_WT', 'TRADE_MARK', 'CCC_CODE', 'ST_MTD', 'ORG_COUNTRY', 
+            'ORG_IMP_DCL_NO', 'ORG_IMP_DCL_NO_ITEM', 'CERT_NO', 'CERT_NO_ITEM'
+        ];
+
+        let xmlContent = '<?xml version="1.0" encoding="UTF-8"?>\n<Root>\n  <sys_code>GICCDS</sys_code>\n<head>\n  <head_table_name>DOC_HEAD</head_table_name>\n';
+        
+        headerFields.forEach(id => {
+            let element = document.getElementById(id);
+            if (element) {
+                let value = element.value;
+                if (id === 'DOC_OTR_DESC') {
+                    let additionalDesc = '';
+                    if (document.getElementById('copy_3_e').checked) {
+                        additionalDesc = '申請沖退原料稅（E化退稅）\n';
+                    }
+                    if (document.getElementById('copy_3').checked) {
+                        additionalDesc += (additionalDesc ? ' 或 ' : '') + '申請報單副本第三聯（沖退原料稅用聯）\n';
+                    }
+                    if (document.getElementById('copy_4').checked) {
+                        additionalDesc += (additionalDesc ? ' 或 ' : '') + '申請報單副本第四聯（退內地稅用聯）\n';
+                    }
+                    if (document.getElementById('copy_5').checked) {
+                        additionalDesc += (additionalDesc ? ' 或 ' : '') + '申請報單副本第五聯（出口證明用聯）\n';
+                    }
+                    value = additionalDesc ? additionalDesc + '\n' + value : value;
+                }
+                xmlContent += `  <fields>\n    <field_name>${id}</field_name>\n    <field_value>${value}</field_value>\n  </fields>\n`;
+            }
+        });
+
+        xmlContent += '  </head>\n<detail>\n  <detail_table_name>DOCINVBD</detail_table_name>\n';
+
+        document.querySelectorAll("#item-container .item-row").forEach((item, index) => {
+            xmlContent += '  <items>\n';
+            itemFields.forEach(className => {
+                let value = item.querySelector(`.${className}`).value;
+                xmlContent += `    <fields>\n      <field_name>${className}</field_name>\n      <field_value>${value}</field_value>\n    </fields>\n`;
+            });
+            xmlContent += '  </items>\n';
+        });
+
+        xmlContent += '</detail>\n</Root>';
+
+        const blob = new Blob([xmlContent], { type: 'application/xml' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'report.xml';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+    document.getElementById('export-to-xml').addEventListener('click', exportToXML);
+});
+
+// 匯出 EXCEL
 function exportToExcel() {
     const workbook = XLSX.utils.book_new();
 
@@ -362,71 +473,10 @@ function exportToExcel() {
     const itemsSheet = XLSX.utils.aoa_to_sheet(itemHeaderData.concat(itemData));
     XLSX.utils.book_append_sheet(workbook, itemsSheet, "報單項次");
 
-    // 匯出Excel文件
+    // 匯出 EXCEL 文件
     XLSX.writeFile(workbook, 'report.xlsx');
 }
-
-// 添加匯出 Excel 文件的按鍵事件
 document.getElementById('export-to-excel').addEventListener('click', exportToExcel);
-
-// 匯出 XML 文件
-function exportToXML() {
-    const headerFields = [
-        'LOT_NO', 'SHPR_BAN_ID', 'SHPR_C_NAME', 'CNEE_E_NAME', 'CNEE_E_ADDR', 
-        'TO_DESC', 'TOT_CTN', 'DOC_CTN_UM', 'DCL_GW', 'DCL_NW', 
-        'DCL_DOC_TYPE', 'TERMS_SALES', 'CURRENCY', 'CAL_IP_TOT_ITEM_AMT', 'FRT_AMT', 
-        'INS_AMT', 'ADD_AMT', 'SUBTRACT_AMT', 'DOC_MARKS_DESC', 'DOC_OTR_DESC'
-    ];
-    const itemFields = [
-        'ITEM_NO', 'DESCRIPTION', 'QTY', 'DOC_UM', 'DOC_UNIT_P', 'DOC_TOT_P', 
-        'NET_WT', 'TRADE_MARK', 'CCC_CODE', 'ST_MTD', 'ORG_COUNTRY', 
-        'ORG_IMP_DCL_NO', 'ORG_IMP_DCL_NO_ITEM', 'CERT_NO', 'CERT_NO_ITEM'
-    ];
-
-    let xmlContent = '<?xml version="1.0" encoding="UTF-8"?>\n<Root>\n  <sys_code>GICCDS</sys_code>\n<head>\n  <head_table_name>DOC_HEAD</head_table_name>\n';
-    
-    headerFields.forEach(id => {
-        let element = document.getElementById(id);
-        if (element) {
-            let value = element.value;
-            xmlContent += `  <fields>\n    <field_name>${id}</field_name>\n    <field_value>${value}</field_value>\n  </fields>\n`;
-        }
-    });
-
-    xmlContent += '  </head>\n<detail>\n  <detail_table_name>DOCINVBD</detail_table_name>\n';
-
-    let sequenceNumber = 1;
-
-    document.querySelectorAll("#item-container .item-row").forEach(item => {
-        xmlContent += '  <items>\n';
-        itemFields.forEach(className => {
-            let value = item.querySelector(`.${className}`);
-            if (className === 'ITEM_NO') {
-                value = value.checked ? '*' : '';
-            } else {
-                value = value.value;
-            }
-            if (className === 'ITEM_NO' && !value) {
-                value = sequenceNumber++;
-            }
-            xmlContent += `    <fields>\n      <field_name>${className}</field_name>\n      <field_value>${value}</field_value>\n    </fields>\n`;
-        });
-        xmlContent += '  </items>\n';
-    });
-
-    xmlContent += '</detail>\n</Root>';
-
-    const blob = new Blob([xmlContent], { type: 'application/xml' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = 'report.xml';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-}
-
-// 添加匯出 XML 文件的按鍵事件
-document.getElementById('export-to-xml').addEventListener('click', exportToXML);
 
 // 出口報單預覽
 function exportToPDF() {
@@ -538,6 +588,4 @@ function exportToPDF() {
         })
         .catch(error => console.error('讀取字體文件失敗:', error));
 }
-
-// 添加出口報單預覽的按鍵事件
 document.getElementById('export-to-pdf').addEventListener('click', exportToPDF);
