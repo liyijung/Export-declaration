@@ -25,8 +25,9 @@
                 <input type="text" id="LOT_NO" name="LOT_NO">
             </div>
             <div class="header-group">
-                <label for="SHPR_BAN_ID">出口人統一編號</label>
-                <input type="text" id="SHPR_BAN_ID" name="SHPR_BAN_ID">
+                <!--介宏交易對象-->
+                <label for="SHPR_CODE">出口人統一編號</label>
+                <input type="text" id="SHPR_CODE" name="SHPR_CODE">
             </div>
             <div class="header-group">
                 <label for="SHPR_C_NAME">出口人名稱</label>
@@ -41,9 +42,19 @@
                 <input type="text" id="CNEE_E_ADDR" name="CNEE_E_ADDR">
             </div>
             <div class="header-group">
-                <label for="TO_DESC">目的地</label>
+                <label for="CNEE_COUNTRY_CODE">買方國家代碼</label>
+                <input type="text" id="CNEE_COUNTRY_CODE" name="CNEE_COUNTRY_CODE"
+                placeholder="範例：HK、CN、KR、SG（英文代碼）">
+            </div>            
+            <div class="header-group">
+                <label for="TO_CODE">目的地(代碼)</label>
+                <input type="text" id="TO_CODE" name="TO_CODE"
+                placeholder="範例：HKHKG、CNCAN、KRICN、SGSIN（英文代碼）">
+            </div>
+            <div class="header-group">
+                <label for="TO_DESC">目的地(名稱)</label>
                 <input type="text" id="TO_DESC" name="TO_DESC"
-                placeholder="範例：HONG KONG、Guangzhou、KOREA、SINGAPORE（英文名稱）">
+                placeholder="範例：HONG KONG、GUANGZHOU、KOREA、SINGAPORE（英文名稱）">
             </div>
         </div>
         <hr>
@@ -103,19 +114,22 @@
             <div class="header-group">
                 <label for="CAL_IP_TOT_ITEM_AMT">總金額</label>
                 <input type="number" id="CAL_IP_TOT_ITEM_AMT" name="CAL_IP_TOT_ITEM_AMT"
-                placeholder="若為台幣金額不可有小數點">
+                placeholder="提示：若為台幣金額不可有小數點">
             </div>
             <div class="header-group">
                 <label for="FRT_AMT">運費</label>
-                <input type="number" id="FRT_AMT" name="FRT_AMT">
+                <input type="number" id="FRT_AMT" name="FRT_AMT"
+                placeholder="提示：CFR、CIF 需填列運費">
             </div>   
             <div class="header-group">
                 <label for="INS_AMT">保險費</label>
-                <input type="number" id="INS_AMT" name="INS_AMT">
+                <input type="number" id="INS_AMT" name="INS_AMT"
+                placeholder="提示：C&I、CIF 需填列保險費">
             </div>
             <div class="header-group">
                 <label for="ADD_AMT">應加費用</label>
-                <input type="number" id="ADD_AMT" name="ADD_AMT">
+                <input type="number" id="ADD_AMT" name="ADD_AMT"
+                placeholder="提示：EXW 需填列應加費用">
             </div>
             <div class="header-group">
                 <label for="SUBTRACT_AMT">應減費用</label>
@@ -234,7 +248,7 @@
             </div>
             <div class="header-group">
                 <label for="TRADE_MARK">商標</label>
-                <input type="text" id="TRADE_MARK" placeholder="NO BRAND（無商標）、FIG（圖樣）、文字（字樣）">
+                <input type="text" id="TRADE_MARK" placeholder="範例：NO BRAND（無商標）、FIG（圖樣）、文字（字樣）">
             </div>
             <div class="header-group">
                 <label for="CCC_CODE">稅則</label>
@@ -249,6 +263,9 @@
                     <option value="81">洋貨銷售</option>
                     <option value="82">洋貨樣品/贈送/不良品退回</option>
                 </datalist>
+                <!-- 添加連結 -->
+                <a href="統計方式_出口.pdf" target="_blank" class="download-button">出口</a>
+                <a href="統計方式_復出口.pdf" target="_blank" class="download-button">復出口</a>
             </div>
             <div class="header-group">
                 <label for="ORG_COUNTRY">生產國別</label>
@@ -264,11 +281,11 @@
             </div>
             <div class="header-group">
                 <label for="CERT_NO">產證號碼</label>
-                <input type="text" id="CERT_NO" placeholder="ECFA 產證號碼">
+                <input type="text" id="CERT_NO" placeholder="提示：ECFA 產證號碼">
             </div>
             <div class="header-group">
                 <label for="CERT_NO_ITEM">產證項次</label>
-                <input type="text" id="CERT_NO_ITEM" placeholder="ECFA 產證項次">
+                <input type="text" id="CERT_NO_ITEM" placeholder="提示：ECFA 產證項次">
             </div>           
             <!-- 將儲存和取消按鈕包裹在一個固定定位的div中 -->
             <div class="buttons">
@@ -282,6 +299,9 @@
     <div id="copy" class="tab">
         <p style="margin-top: 30px;"></p>  
         <div class="header-section">
+            <div style="height: 40px;">
+                <button class="add-button" onclick="add(this)">生成報單號碼</button>
+            </div>
             <div class="flex-group">
                 <input type="checkbox" id="copy_3_e">
                 <label for="copy_3_e">申請沖退原料稅（E化退稅）</label>
@@ -311,8 +331,9 @@
 
     <!--進口 D 類正式報關-->
     <div id="import-d" class="tab">
-        <p style="margin-top: 30px;"></p>  
+        <p style="margin-top: 30px;"></p>
         <div class="header-section">
+            <h4>1、指定清關機場</h4>
             <div class="flex-group">
                 <input type="checkbox" id="CNSZX">
                 <label for="CNSZX">深圳</label>
@@ -325,8 +346,46 @@
 
                 <input type="checkbox" id="CNPVG">
                 <label for="CNPVG">上海</label>
-            </div>  
-        </div>   
+            </div>
+            <h4>2、收方是否具備進出口經營權</h4>
+            <div class="flex-group">
+                <input type="checkbox" id="I_Y">
+                <label for="I_Y">具備</label>
+            </div>
+            <div class="flex-group">
+                <input type="checkbox" id="I_N">
+                <label for="I_N">不具備（若收方不具備，我司可協助通過深圳關買單，買單服務費：深圳RMB220/票，若物品涉及商檢，預計產生商檢費用300RMB/票（深圳機場），如涉及特殊單證的費用不定。）</label>
+            </div>
+            <h4>3、貨件是否為</h4>
+            <div class="flex-group">
+                <input type="checkbox" id="I_old">
+                <label for="I_old">舊物品（無法進口）</label>
+            </div>
+            <div class="flex-group">
+                <input type="checkbox" id="I_3c">
+                <label for="I_3c">需3C認證的電子產品（如無法提供3C認證相關單證，則無法申報進口大陸）</label>
+            </div>
+            <div class="flex-group">
+                <input type="checkbox" id="I_no">
+                <label for="I_no">否，非上述物品</label>
+            </div>
+            <h4>4、收方是否位於保稅園區</h4>
+            <div class="flex-group">
+                <input type="checkbox" id="I_yb">
+                <label for="I_yb">是</label>
+                <input type="checkbox" id="I_nb">
+                <label for="I_nb">否</label>
+            </div>
+            <h4>5、大陸端清關聯繫方式</h4>
+            <div class="flex-group">
+                <label for="I_name">聯繫人：</label>
+                <input type="text" id="I_name">
+                <label for="I_tel">、電話：</label>
+                <input type="text" id="I_tel">
+                <label for="I_company">、清關公司名稱：</label>
+                <input type="text" id="I_company" style="width: 300px;">
+            </div>                    
+        </div>  
     </div>    
 
     <section style="margin-bottom: 50px; margin-top: 30px">
