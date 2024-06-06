@@ -10,9 +10,10 @@
 <body>
     <p style="margin-top: 30px;"></p>
     <div class="tabs">
-        <div class="tab-links active" onclick="openTab('header')">報單表頭</div>
-        <div class="tab-links" onclick="openTab('items')">報單項次</div>
-        <div class="tab-links" onclick="openTab('copy')">報單副本</div>
+        <div class="tab-links active" onclick="openTab('header')">出口正式報單表頭</div>
+        <div class="tab-links" onclick="openTab('items')">出口正式報單項次</div>
+        <div class="tab-links" onclick="openTab('copy')">申請出口報單副本</div>
+        <div class="tab-links" onclick="openTab('import-d')">進口 D 類正式報關</div>
     </div>
 
     <!--報單表頭-->    
@@ -101,7 +102,8 @@
             </div>
             <div class="header-group">
                 <label for="CAL_IP_TOT_ITEM_AMT">總金額</label>
-                <input type="number" id="CAL_IP_TOT_ITEM_AMT" name="CAL_IP_TOT_ITEM_AMT">
+                <input type="number" id="CAL_IP_TOT_ITEM_AMT" name="CAL_IP_TOT_ITEM_AMT"
+                placeholder="若為台幣金額不可有小數點">
             </div>
             <div class="header-group">
                 <label for="FRT_AMT">運費</label>
@@ -254,7 +256,7 @@
             </div>
             <div class="header-group">
                 <label for="ORG_IMP_DCL_NO">原進口報單號碼</label>
-                <input type="text" id="ORG_IMP_DCL_NO" placeholder="範例：CX  13709TEST1（中間為兩位空格）">
+                <input type="text" id="ORG_IMP_DCL_NO" placeholder="範例：CX  13709IPORT（中間為兩位空格）">
             </div>
             <div class="header-group">
                 <label for="ORG_IMP_DCL_NO_ITEM">原進口報單項次</label>
@@ -262,11 +264,11 @@
             </div>
             <div class="header-group">
                 <label for="CERT_NO">產證號碼</label>
-                <input type="text" id="CERT_NO" placeholder="ECFA產證">
+                <input type="text" id="CERT_NO" placeholder="ECFA 產證號碼">
             </div>
             <div class="header-group">
                 <label for="CERT_NO_ITEM">產證項次</label>
-                <input type="text" id="CERT_NO_ITEM" placeholder="ECFA產證">
+                <input type="text" id="CERT_NO_ITEM" placeholder="ECFA 產證項次">
             </div>           
             <!-- 將儲存和取消按鈕包裹在一個固定定位的div中 -->
             <div class="buttons">
@@ -276,35 +278,63 @@
         </div>
     </div>    
     
-    <!--報單表頭-->    
-    <div id="copy" class="tab active">
+    <!--報單副本-->
+    <div id="copy" class="tab">
         <p style="margin-top: 30px;"></p>  
         <div class="header-section">
-            <div class="flex-group"><P></P>
-                <input type="checkbox" id="copy_3">
-                <label for="copy_3">申請沖退原料稅（E化退稅）</label>
+            <div class="flex-group">
+                <input type="checkbox" id="copy_3_e">
+                <label for="copy_3_e">申請沖退原料稅（E化退稅）</label>
             </div>
-            <div class="flex-group"><P></P>
+            <div class="flex-group">
                 <input type="checkbox" id="copy_3">
-                <label for="copy_3">申請報單副本第三聯，沖退原料稅用聯</label>
+                <label for="copy_3">申請報單副本第三聯（沖退原料稅用聯）</label>
             </div>
-            <div class="flex-group"><P></P>
-                <input type="checkbox" id="copy_3">
-                <label for="copy_4">申請報單副本第四聯，退內地稅用聯</label>
+            <div class="flex-group">
+                <input type="checkbox" id="copy_4">
+                <label for="copy_4">申請報單副本第四聯（退內地稅用聯）</label>
             </div>
-            <div class="flex-group"><P></P>
-                <input type="checkbox" id="copy_3">
-                <label for="copy_5">申請報單副本第五聯，出口證明用聯</label>
+            <div class="flex-group">
+                <input type="checkbox" id="copy_5">
+                <label for="copy_5">申請報單副本第五聯（出口證明用聯）</label>
             </div>  
-        </div>                                
+        </div>   
     </div>
+    
+    <!-- 用於顯示變數值 -->
+    <div id="variables" style="display:none;">
+        <input type="hidden" id="APP_DUTY_REFUND" value="N">
+        <input type="hidden" id="MARK_TOT_LINES" value="N">
+        <input type="hidden" id="EXAM_TYPE" value="">
+        <input type="hidden" id="COPY_QTY" value="0">
+    </div>
+
+    <!--進口 D 類正式報關-->
+    <div id="import-d" class="tab">
+        <p style="margin-top: 30px;"></p>  
+        <div class="header-section">
+            <div class="flex-group">
+                <input type="checkbox" id="CNSZX">
+                <label for="CNSZX">深圳</label>
+
+                <input type="checkbox" id="CNNGB">
+                <label for="CNNGB">寧波</label>
+
+                <input type="checkbox" id="CNCAN">
+                <label for="CNCAN">廣州</label>
+
+                <input type="checkbox" id="CNPVG">
+                <label for="CNPVG">上海</label>
+            </div>  
+        </div>   
+    </div>    
 
     <section style="margin-bottom: 50px; margin-top: 30px">
         <button id="export-to-excel">匯出EXCEL</button>
-        <button id="export-to-xml">匯出XML</button>
         <button onclick="exportToPDF()">出口報單預覽</button>
+        <button id="export-to-xml">申報上傳 XML</button>
     </section>
-
+        
     <script src="script.js"></script>    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>    
