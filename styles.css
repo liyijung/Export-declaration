@@ -170,3 +170,56 @@ textarea {
     align-items: center;
     /* 設置模態框的樣式，初始為隱藏，並居中顯示 */
 }
+
+.download-button {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #fff;
+    background-color: #92c1f4;
+    border: none;
+    border-radius: 5px;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    margin-left: 10px;
+    width: 50px;
+}
+.download-button:hover {
+    background-color: #3d85d1;
+}
+
+.delete-button {
+    display: inline-block;
+    padding: 5px 10px;
+    font-size: 12px;
+    font-weight: bold;
+    color: #fff;
+    background-color: #f37380;
+    border: none;
+    border-radius: 5px;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+}
+.delete-button:hover {
+    background-color: #c82333;
+}
+
+.add-button {
+    display: inline-block;
+    padding: 5px 10px;
+    font-size: 12px;
+    font-weight: bold;
+    color: #fff;
+    background-color: #426ed5;
+    border: none;
+    border-radius: 5px;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+}
+.add-button:hover {
+    background-color: #1844ab;
+}
