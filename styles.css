@@ -1,0 +1,248 @@
+body {
+    font-family: 'Source Han Sans TC', sans-serif;
+    /* 設置全局字體為思源黑體 */
+}
+
+.tab {
+    display: none;
+    /* 隱藏所有tab內容 */
+}
+
+.tab.active {
+    display: block;
+    /* 顯示當前激活的tab內容 */
+}
+
+.tabs {
+    display: flex;
+    cursor: pointer;
+    /* 設置tab標籤容器為flex布局，並且鼠標懸停時顯示為指針 */
+}
+
+.tab-links {
+    font-weight: bold;
+    padding: 10px 20px;
+    background: linear-gradient(to bottom, rgb(240, 240, 240), rgb(185, 185, 185));
+    margin-right: 5px;
+    border-radius: 5px; /* 圓角 */
+    border: 1px solid #989898; /* 外框 */
+}
+
+.tab-links.active {
+    font-weight: bold;
+    background: linear-gradient(to bottom, rgb(240, 240, 240), rgb(174, 205, 255));
+    border-radius: 5px; /* 圓角 */
+    border: 1px solid #97b3eb; /* 外框 */
+    /* 設置當前激活tab標籤的樣式 */
+}
+
+.item-header {
+    text-align: center;
+    background: linear-gradient(to bottom, rgb(240, 240, 240), rgb(174, 205, 255));
+    border-radius: 5px; /* 圓角 */
+    border: 1px solid #97b3eb; /* 外框 */
+}
+
+.form-group {
+    display: flex; /* 使用 flex 布局 */
+    flex-direction: column; /* 垂直排列子元素 */
+    align-items: center; /* 子元素水平居中對齊 */
+    width: 100%; /* 設置寬度為100% */
+    margin-bottom: 5px; /* 設置底部外邊距為5px */
+    margin-left: 2px; /* 設置左側外邊距為5px */
+    margin-right: 2px; /* 設置右側外邊距為5px */
+    text-align: center; /* 設置文字居中對齊 */
+}
+
+
+.header-section {
+    border: 1px solid #9e9e9e; /* 外框 */
+    background-color: #f0f0f0; /* 底色 */
+    padding: 20px; /* 設置內邊距為20px */
+    margin-bottom: 10px; /* 設置底部外邊距為10px */
+    border-radius: 5px; /* 設置邊框圓角為5px */
+}
+
+.header-group {
+    display: flex;
+    align-items: left;
+    justify-content: flex-start;
+    margin-bottom: 5px;
+    /* 設置標題在左，輸入框在右，並且整個佈局靠左對齊 */
+}
+
+.header-group label {
+    width: 150px;
+    margin-bottom: 0px;
+    background: linear-gradient(to left, rgb(240, 240, 240), rgb(174, 205, 255));    background: linear-gradient(to left, rgb(240, 240, 240), rgb(199, 218, 248));
+    padding: 5px;
+    text-align: left;
+    border-radius: 5px; /* 圓角 */
+    /* 設置label的寬度和樣式 */
+}
+
+.header-group input, .header-group select, .header-group textarea {
+    flex: 1;
+    padding: 5px;
+    box-sizing: border-box;
+    /* 設置表單控件的樣式，並且填滿剩餘空間 */
+}
+
+.form-group .remove-item {
+    background: linear-gradient(to bottom, rgb(240, 240, 240), rgb(213, 213, 213));
+    border: 1px solid #9e9e9e; /* 外框 */
+    /* 設置刪除項目的樣式 */
+}
+
+#item-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+    /* 設置模態框的樣式，初始為隱藏，並居中顯示 */
+}
+
+#item-modal .modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    width: 1000px;
+    max-height: 80%;
+    overflow-y: auto;
+    box-sizing: border-box; /* 確保內邊距和邊框包含在寬度內 */
+    /* 設置模態框內容的樣式 */
+}
+
+.item-row {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    text-align: center;
+    /* 確保項次標題和輸入框垂直居中對齊，並且不換行 */
+}
+
+.item-row {
+    flex: 1;
+    margin-right: 5px;
+    /* 設置項目行內的表單組的樣式，使每個表單組平分可用空間 */
+}
+
+.item-row .form-group:last-child {
+    margin-right: 0;
+    /* 去掉最後一個表單組的右邊距 */
+}
+
+.item-row .form-group.fix {
+    flex: none;
+    width: 50px; /* 固定項次欄位的寬度 */
+}
+
+.item-row label, .item-row input, .item-row textarea {
+    width: 100%;
+    box-sizing: border-box;
+    /* 確保label和輸入框/文本區域填滿表單組 */
+}
+
+textarea {
+    resize: none;
+    /* 禁用textarea的調整大小功能 */
+}
+
+.flex-group {
+    display: flex;
+    align-items: center;
+    padding-bottom: 10px;
+    /* 設置flex-group為flex布局，元素垂直居中，並且設置間距 */
+}
+
+.flex-group input[type="checkbox"] {
+    margin-right: 5px; /* 設置複選框與標籤之間的右外邊距為10px */
+}
+
+.flex-group label {
+    margin-right: 20px; /* 設置標籤之間的右外邊距為20px */
+}
+
+#item-modal .modal-content .buttons {
+    position: fixed; /* 固定定位 */
+    bottom: 20px; /* 距離底部20px */
+    right: 20px; /* 距離右側20px */
+    z-index: 1000; /* 設置較高的層級 */
+    display: flex; /* 使用flex佈局 */
+    gap: 10px; /* 按鈕之間的間距 */
+}
+
+#item-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+    /* 設置模態框的樣式，初始為隱藏，並居中顯示 */
+}
+
+.delete-button {
+    display: inline-block; /* 設置為行內塊元素 */
+    padding: 5px 10px; /* 設置內邊距，上下5px，左右10px */
+    font-size: 12px; /* 設置字體大小為12px */
+    font-weight: bold; /* 設置字體粗細為粗體 */
+    color: #fff; /* 設置文字顏色為白色 */
+    background-color: #f37380; /* 設置背景顏色為淡紅色 */
+    border: none; /* 去除邊框 */
+    border-radius: 5px; /* 設置邊框圓角為5px */
+    text-align: center; /* 文字居中對齊 */
+    text-decoration: none; /* 去除文字裝飾 */
+    cursor: pointer; /* 設置鼠標指針為手型 */
+}
+.delete-button:hover {
+    background-color: #c82333; /* 當鼠標懸停時，設置背景顏色為深紅色 */
+}
+
+.download-button {
+    display: inline-block;
+    padding: 5px 10px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff; /* 設置文字顏色為白色 */
+    background-color: #426ed5; /* 設置背景顏色為藍色 */
+    border: none;
+    border-radius: 5px;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    margin-left: 10px;
+    width: 150px;
+}
+.download-button:hover {
+    background-color: #1844ab; /* 當鼠標懸停時，設置背景顏色為深藍色 */
+}
+
+.add-button {
+    display: inline-block; /* 設置為行內塊元素 */
+    padding: 5px 10px; /* 設置內邊距，上下5px，左右10px */
+    font-size: 16px; /* 設置字體大小為12px */
+    font-weight: bold; /* 設置字體粗細為粗體 */
+    color: #fff; /* 設置文字顏色為白色 */
+    background-color: #426ed5; /* 設置背景顏色為藍色 */
+    border: none; /* 去除邊框 */
+    border-radius: 5px; /* 設置邊框圓角為5px */
+    text-align: center; /* 文字居中對齊 */
+    text-decoration: none; /* 去除文字裝飾 */
+    cursor: pointer; /* 設置鼠標指針為手型 */
+}
+.add-button:hover {
+    background-color: #1844ab; /* 當鼠標懸停時，設置背景顏色為深藍色 */
+}
+
+h4 {
+    color: rgb(0, 0, 183); /* 設置文字顏色為深藍色 */
+}
