@@ -351,72 +351,81 @@ document.addEventListener('DOMContentLoaded', function () {
         console.log("COPY_QTY: " + copyQty.value);
     }
 
-    function exportToXML() {
-        updateVariables();  // 確保在匯出前更新變數
+function exportToXML() {
+    updateVariables();  // 確保在匯出前更新變數
 
-        const headerFields = [
-            'LOT_NO', 'SHPR_CODE', 'SHPR_C_NAME', 'CNEE_E_NAME', 'CNEE_E_ADDR', 
-            'CNEE_COUNTRY_CODE', 'TO_CODE', 'TO_DESC', 'TOT_CTN', 'DOC_CTN_UM', 'DCL_GW', 
-            'DCL_NW', 'DCL_DOC_TYPE', 'TERMS_SALES', 'CURRENCY', 'CAL_IP_TOT_ITEM_AMT', 
-            'FRT_AMT', 'INS_AMT', 'ADD_AMT', 'SUBTRACT_AMT', 'DOC_MARKS_DESC', 
-            'DOC_OTR_DESC', 'EXAM_TYPE', 'COPY_QTY', 'APP_DUTY_REFUND', 'MARK_TOT_LINES'
-        ];
-        const itemFields = [
-            'ITEM_NO', 'DESCRIPTION', 'QTY', 'DOC_UM', 'DOC_UNIT_P', 'DOC_TOT_P', 
-            'NET_WT', 'TRADE_MARK', 'CCC_CODE', 'ST_MTD', 'ORG_COUNTRY', 
-            'ORG_IMP_DCL_NO', 'ORG_IMP_DCL_NO_ITEM', 'CERT_NO', 'CERT_NO_ITEM'
-        ];
+    const headerFields = [
+        'LOT_NO', 'SHPR_CODE', 'SHPR_C_NAME', 'CNEE_E_NAME', 'CNEE_E_ADDR', 
+        'CNEE_COUNTRY_CODE', 'TO_CODE', 'TO_DESC', 'TOT_CTN', 'DOC_CTN_UM', 'DCL_GW', 
+        'DCL_NW', 'DCL_DOC_TYPE', 'TERMS_SALES', 'CURRENCY', 'CAL_IP_TOT_ITEM_AMT', 
+        'FRT_AMT', 'INS_AMT', 'ADD_AMT', 'SUBTRACT_AMT', 'DOC_MARKS_DESC', 
+        'DOC_OTR_DESC', 'EXAM_TYPE', 'COPY_QTY', 'APP_DUTY_REFUND', 'MARK_TOT_LINES'
+    ];
+    const itemFields = [
+        'DESCRIPTION', 'QTY', 'DOC_UM', 'DOC_UNIT_P', 'DOC_TOT_P', 
+        'NET_WT', 'TRADE_MARK', 'CCC_CODE', 'ST_MTD', 'ORG_COUNTRY', 
+        'ORG_IMP_DCL_NO', 'ORG_IMP_DCL_NO_ITEM', 'CERT_NO', 'CERT_NO_ITEM'
+    ];
 
-        let xmlContent = '<?xml version="1.0" encoding="UTF-8"?>\n<Root>\n  <sys_code>GICCDS</sys_code>\n<head>\n  <head_table_name>DOC_HEAD</head_table_name>\n';
-        
-        headerFields.forEach(id => {
-            let element = document.getElementById(id);
-            if (element) {
-                let value = element.value;
-                if (id === 'DOC_OTR_DESC') {
-                    let additionalDesc = '';
-                    if (document.getElementById('copy_3_e').checked) {
-                        additionalDesc = '申請沖退原料稅（E化退稅）\n';
-                    }
-                    if (document.getElementById('copy_3').checked) {
-                        additionalDesc += (additionalDesc ? ' 或 ' : '') + '申請報單副本第三聯（沖退原料稅用聯）\n';
-                    }
-                    if (document.getElementById('copy_4').checked) {
-                        additionalDesc += (additionalDesc ? ' 或 ' : '') + '申請報單副本第四聯（退內地稅用聯）\n';
-                    }
-                    if (document.getElementById('copy_5').checked) {
-                        additionalDesc += (additionalDesc ? ' 或 ' : '') + '申請報單副本第五聯（出口證明用聯）\n';
-                    }
-                    value = additionalDesc ? additionalDesc + '\n' + value : value;
+    let xmlContent = '<?xml version="1.0" encoding="UTF-8"?>\n<Root>\n  <sys_code>GICCDS</sys_code>\n<head>\n  <head_table_name>DOC_HEAD</head_table_name>\n';
+    
+    headerFields.forEach(id => {
+        let element = document.getElementById(id);
+        if (element) {
+            let value = element.value;
+            if (id === 'DOC_OTR_DESC') {
+                let additionalDesc = '';
+                if (document.getElementById('copy_3_e').checked) {
+                    additionalDesc = '申請沖退原料稅（E化退稅）\n';
                 }
-                xmlContent += `  <fields>\n    <field_name>${id}</field_name>\n    <field_value>${value}</field_value>\n  </fields>\n`;
+                if (document.getElementById('copy_3').checked) {
+                    additionalDesc += (additionalDesc ? ' 或 ' : '') + '申請報單副本第三聯（沖退原料稅用聯）\n';
+                }
+                if (document.getElementById('copy_4').checked) {
+                    additionalDesc += (additionalDesc ? ' 或 ' : '') + '申請報單副本第四聯（退內地稅用聯）\n';
+                }
+                if (document.getElementById('copy_5').checked) {
+                    additionalDesc += (additionalDesc ? ' 或 ' : '') + '申請報單副本第五聯（出口證明用聯）\n';
+                }
+                value = additionalDesc ? additionalDesc + '\n' + value : value;
             }
+            xmlContent += `  <fields>\n    <field_name>${id}</field_name>\n    <field_value>${value}</field_value>\n  </fields>\n`;
+        }
+    });
+
+    xmlContent += '  </head>\n<detail>\n  <detail_table_name>DOCINVBD</detail_table_name>\n';
+
+    let itemNoCounter = 1;
+    document.querySelectorAll("#item-container .item-row").forEach((item, index) => {
+        xmlContent += '  <items>\n';
+        let hasMajorName = item.querySelector('.ITEM_NO').checked;
+        if (hasMajorName) {
+            // 將有大品名註記的項次編號設為 '*'
+            xmlContent += `    <fields>\n      <field_name>ITEM_NO</field_name>\n      <field_value>*</field_value>\n    </fields>\n`;
+        } else {
+            // 對沒有大品名註記的項次進行編號
+            xmlContent += `    <fields>\n      <field_name>ITEM_NO</field_name>\n      <field_value>${itemNoCounter}</field_value>\n    </fields>\n`;
+            itemNoCounter++;
+        }
+        itemFields.forEach(className => {
+            let value = item.querySelector(`.${className}`).value;
+            xmlContent += `    <fields>\n      <field_name>${className}</field_name>\n      <field_value>${value}</field_value>\n    </fields>\n`;
         });
+        xmlContent += '  </items>\n';
+    });
 
-        xmlContent += '  </head>\n<detail>\n  <detail_table_name>DOCINVBD</detail_table_name>\n';
+    xmlContent += '</detail>\n</Root>';
 
-        document.querySelectorAll("#item-container .item-row").forEach((item, index) => {
-            xmlContent += '  <items>\n';
-            itemFields.forEach(className => {
-                let value = item.querySelector(`.${className}`).value;
-                xmlContent += `    <fields>\n      <field_name>${className}</field_name>\n      <field_value>${value}</field_value>\n    </fields>\n`;
-            });
-            xmlContent += '  </items>\n';
-        });
+    const blob = new Blob([xmlContent], { type: 'application/xml' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'report.xml';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
 
-        xmlContent += '</detail>\n</Root>';
-
-        const blob = new Blob([xmlContent], { type: 'application/xml' });
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = 'report.xml';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    }
-
-    document.getElementById('export-to-xml').addEventListener('click', exportToXML);
-});
+document.getElementById('export-to-xml').addEventListener('click', exportToXML);
 
 // 匯出 EXCEL
 function exportToExcel() {
