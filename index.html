@@ -152,6 +152,7 @@
     <!--報單項次-->
     <div id="items" class="tab">
         <p style="margin-top: 30px;"></p>
+        <button id="export-to-excel">匯出EXCEL</button>        
         <button onclick="uploadFile()">批量導入</button>
         <input type="file" id="file-input" accept=".xlsx, .xls">
         <button onclick="openItemModal()" style="margin-right: 50px;">新增項次</button>                        
@@ -316,6 +317,8 @@
             </div>  
         </div>
         <p style="margin-top: 20px;"></p>  
+        <button onclick="exportToPDF()">出口報單預覽</button>
+        <button id="export-to-xml">申報上傳 XML</button>   
     </div>
     
     <!-- 用於顯示變數值 -->
@@ -325,11 +328,7 @@
         <input type="hidden" id="EXAM_TYPE" value="">
         <input type="hidden" id="COPY_QTY" value="0">
     </div>
-    
-    <button id="export-to-excel">匯出EXCEL</button>
-    <button onclick="exportToPDF()">出口報單預覽</button>    
-    <button id="export-to-xml">申報上傳XML</button>
-    
+        
     <script src="script.js"></script>    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>    
