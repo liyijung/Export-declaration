@@ -12,8 +12,7 @@ function openTab(tabName) {
     document.getElementById(tabName).classList.add("active");
     event.currentTarget.classList.add("active");
 }
-
-// 打開新增項次的彈跳框
+// 開啟新增項次的彈跳框
 function openItemModal() {
     // 清空所有輸入框
     document.getElementById('ITEM_NO').checked = false;
@@ -85,6 +84,58 @@ function renumberItems() {
         itemCount++;
         item.querySelector('label').textContent = `${itemCount}`; // 項次
     });
+}
+
+// 引入 Sortable.js 庫
+document.write('<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.14.0/Sortable.min.js"><\/script>');
+
+// 開啟調整順序的彈跳框
+function openAdjustOrderModal() {
+    const itemContainer = document.getElementById('item-container');
+    const items = itemContainer.querySelectorAll('.item-row');
+
+    const orderList = document.getElementById('order-list');
+    orderList.innerHTML = ''; // 清空列表
+
+    items.forEach((item, index) => {
+        const description = item.querySelector('.DESCRIPTION').value; // 獲取品名
+        const orderItem = document.createElement('div');
+        orderItem.className = 'order-item';
+        orderItem.innerHTML = `
+            <span>項次 ${index + 1} - 品名: ${description}</span>
+            <input type="hidden" class="original-order" value="${index}">
+        `;
+        orderList.appendChild(orderItem);
+    });
+
+    // 初始化 Sortable.js
+    Sortable.create(orderList, {
+        animation: 150
+    });
+
+    document.getElementById('adjust-order-modal').style.display = 'flex';
+}
+
+// 關閉調整順序的彈跳框
+function closeOrderModal() {
+    document.getElementById('adjust-order-modal').style.display = 'none';
+}
+
+// 儲存新的順序
+function saveNewOrder() {
+    const orderList = document.getElementById('order-list');
+    const orderItems = orderList.querySelectorAll('.order-item');
+    const newOrder = Array.from(orderItems).map(item => parseInt(item.querySelector('.original-order').value));
+
+    const itemContainer = document.getElementById('item-container');
+    const items = Array.from(itemContainer.querySelectorAll('.item-row'));
+    itemContainer.innerHTML = '';
+    newOrder.forEach(index => {
+        itemContainer.appendChild(items[index]);
+    });
+
+    renumberItems();
+    closeOrderModal();
 }
 
 // 處理文件上傳事件
