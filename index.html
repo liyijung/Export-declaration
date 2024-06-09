@@ -9,11 +9,14 @@
 </head>
 <body>
     <p style="margin-top: 30px;"></p>
-    <div class="tabs">
-        <div class="tab-links active" onclick="openTab(event, 'header')">報單表頭</div>
-        <div class="tab-links" onclick="openTab('items')">報單項次</div>
-        <div class="tab-links" onclick="openTab('copy')">報單副本</div>
-        <div class="tab-links" onclick="openTab('bonded')">保稅貨物</div>
+    <!--固定在頁面頂部-->
+    <div class="tabs-wrapper">
+        <div class="tabs">
+            <div class="tab-links active" onclick="openTab('header')">報單表頭</div>
+            <div class="tab-links" onclick="openTab('items')">報單項次</div>
+            <div class="tab-links" onclick="openTab('copy')">報單副本</div>
+            <div class="tab-links" onclick="openTab('bonded')">保稅貨物</div>
+        </div>
     </div>
 
     <!--報單表頭-->    
@@ -230,47 +233,54 @@
 
     <!-- 新增項次彈跳框 -->
     <div id="item-modal" class="modal">
-        <div class="modal-content large-modal">
+        <div class="modal-content">
             <h2>新增項次</h2>
             <div class="flex-group">
                 <input type="checkbox" id="ITEM_NO">
                 <label for="ITEM_NO">大品名註記（勾選大品名註記時，只需填寫品名）</label>
             </div>
             <div class="header-group">
+                <label for="COPY_ITEM">選擇要複製的項次</label>
+                <select id="COPY_ITEM">
+                    <option value="">選擇項次</option>
+                </select>
+                <button onclick="copyItem()">複製</button>
+            </div>
+            <div class="header-group">
                 <label for="DESCRIPTION">品名</label>
-                <textarea id="DESCRIPTION" rows="5"></textarea>
+                <textarea id="DESCRIPTION" class="DESCRIPTION" rows="5"></textarea>
             </div>
             <div class="header-group">
                 <label for="QTY">數量</label>
-                <input type="number" id="QTY" min="0">
+                <input type="number" id="QTY" class="QTY" min="0">
             </div>
             <div class="header-group">
                 <label for="DOC_UM">單位</label>
-                <input type="text" id="DOC_UM" placeholder="範例：EAC、PCE、SET、YRD、MTR（英文代碼）">
+                <input type="text" id="DOC_UM" class="DOC_UM" placeholder="範例：EAC、PCE、SET、YRD、MTR（英文代碼）">
             </div>
             <div class="header-group">
                 <label for="DOC_UNIT_P">單價</label>
-                <input type="number" id="DOC_UNIT_P" min="0">
+                <input type="number" id="DOC_UNIT_P" class="DOC_UNIT_P" min="0">
             </div>
             <div class="header-group">
                 <label for="DOC_TOT_P">金額</label>
-                <input type="number" id="DOC_TOT_P" min="0">
+                <input type="number" id="DOC_TOT_P" class="DOC_TOT_P" min="0">
             </div>
             <div class="header-group">
                 <label for="NET_WT">淨重</label>
-                <input type="number" id="NET_WT" min="0">
+                <input type="number" id="NET_WT" class="NET_WT" min="0">
             </div>
             <div class="header-group">
                 <label for="TRADE_MARK">商標</label>
-                <input type="text" id="TRADE_MARK" placeholder="範例：NO BRAND（無商標）、FIG（圖樣）、文字（字樣）">
+                <input type="text" id="TRADE_MARK" class="TRADE_MARK" placeholder="範例：NO BRAND（無商標）、FIG（圖樣）、文字（字樣）">
             </div>
             <div class="header-group">
                 <label for="CCC_CODE">稅則</label>
-                <input type="text" id="CCC_CODE">
+                <input type="text" id="CCC_CODE" class="CCC_CODE">
             </div>
             <div class="header-group">
                 <label for="ST_MTD">統計方式</label>
-                <input type="text" id="ST_MTD" name="ST_MTD" list="method">
+                <input type="text" id="ST_MTD" class="ST_MTD" name="ST_MTD" list="method">
                 <datalist id="method">
                     <option value="02">國貨銷售</option>
                     <option value="04">國貨樣品/贈送</option>
@@ -280,25 +290,24 @@
             </div>
             <div class="header-group">
                 <label for="ORG_COUNTRY">生產國別</label>
-                <input type="text" id="ORG_COUNTRY" placeholder="範例：TW、US、CN、JP、GB（英文代碼）">
+                <input type="text" id="ORG_COUNTRY" class="ORG_COUNTRY" placeholder="範例：TW、US、CN、JP、GB（英文代碼）">
             </div>
             <div class="header-group">
                 <label for="ORG_IMP_DCL_NO">原進口報單號碼</label>
-                <input type="text" id="ORG_IMP_DCL_NO" placeholder="範例：CX  13709IPORT（中間為兩位空格）">
+                <input type="text" id="ORG_IMP_DCL_NO" class="ORG_IMP_DCL_NO" placeholder="範例：CX  13709IPORT（中間為兩位空格）">
             </div>
             <div class="header-group">
                 <label for="ORG_IMP_DCL_NO_ITEM">原進口報單項次</label>
-                <input type="text" id="ORG_IMP_DCL_NO_ITEM">
+                <input type="text" id="ORG_IMP_DCL_NO_ITEM" class="ORG_IMP_DCL_NO_ITEM">
             </div>
             <div class="header-group">
                 <label for="CERT_NO">產證號碼</label>
-                <input type="text" id="CERT_NO" placeholder="提示：ECFA 產證號碼">
+                <input type="text" id="CERT_NO" class="CERT_NO" placeholder="提示：ECFA 產證號碼">
             </div>
             <div class="header-group">
                 <label for="CERT_NO_ITEM">產證項次</label>
-                <input type="text" id="CERT_NO_ITEM" placeholder="提示：ECFA 產證項次">
+                <input type="text" id="CERT_NO_ITEM" class="CERT_NO_ITEM" placeholder="提示：ECFA 產證項次">
             </div>
-            <!-- 將儲存和取消按鈕包裹在一個固定定位的div中 -->
             <div class="floating-buttons">
                 <button onclick="saveItem()">儲存</button>
                 <button onclick="closeItemModal()">取消</button>
@@ -308,11 +317,9 @@
 
     <!-- 調整順序彈跳框 -->
     <div id="adjust-order-modal" class="modal">
-        <div class="modal-content large-modal">
-            <div class="modal-header">
-                <h2>調整順序</h2>
-                <h4>【直接拖曳調整項次的排列順序】</h4>
-            </div>
+        <div class="modal-content">
+            <h2>調整順序</h2>
+            <h4>【直接拖曳調整項次的排列順序】</h4>
             <div id="order-list" class="order-list">
                 <!-- 動態生成的項次列表 -->
             </div>
@@ -322,7 +329,6 @@
             </div>
         </div>
     </div>
-
 
     <!--報單副本-->
     <div id="copy" class="tab">
@@ -391,10 +397,11 @@
         </div>
     </div>
 
-    <p style="margin-top: 30px;"></p>
-    <button id="export-to-excel">匯出 EXCEL</button>
-    <button id="export-to-xml">匯出 XML</button>
-    <button onclick="exportToPDF()">出口報單預覽</button>
+    <div style="margin-left: 20px;">
+        <button id="export-to-excel">匯出 EXCEL</button>
+        <button id="export-to-xml">匯出 XML</button>
+        <button onclick="exportToPDF()">出口報單預覽</button>
+    </div>
     <p style="margin-bottom: 50px;"></p>
 
     <script src="script.js"></script>    
