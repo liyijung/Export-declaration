@@ -172,6 +172,104 @@ function saveNewOrder() {
     closeOrderModal();
 }
 
+// 開啟指定填列欄位資料的彈跳框
+function openSpecifyFieldModal() {
+    document.getElementById('specify-field-modal').style.display = 'flex';
+}
+
+// 關閉指定填列欄位資料的彈跳框
+function closeSpecifyFieldModal() {
+    document.getElementById('specify-field-modal').style.display = 'none';
+}
+
+// 切換模式
+function toggleSpecifyMode() {
+    const mode = document.getElementById('specify-mode').value;
+    if (mode === 'custom') {
+        document.getElementById('custom-content').style.display = 'block';
+        document.getElementById('copy-content').style.display = 'none';
+    } else {
+        document.getElementById('custom-content').style.display = 'none';
+        document.getElementById('copy-content').style.display = 'block';
+    }
+}
+
+// 應用填列資料的函數
+function applyFieldData() {
+    const mode = document.getElementById('specify-mode').value;
+    const overwriteOption = document.getElementById('overwrite-option').value;
+    const itemContainer = document.getElementById('item-container');
+    const items = itemContainer.querySelectorAll('.item-row');
+
+    if (mode === 'custom') {
+        const itemNumbers = document.getElementById('specify-item-numbers').value;
+        const fieldName = document.getElementById('specify-field-name').value;
+        const fieldValue = document.getElementById('specify-field-value').value;
+        const ranges = itemNumbers.split(',').map(range => range.trim());
+        let indices = [];
+
+        ranges.forEach(range => {
+            if (range.includes('-')) {
+                const [start, end] = range.split('-').map(Number);
+                for (let i = start; i <= end; i++) {
+                    indices.push(i - 1);
+                }
+            } else {
+                indices.push(Number(range) - 1);
+            }
+        });
+
+        indices.forEach(index => {
+            if (index >= 0 && index < items.length) {
+                const item = items[index];
+                const fieldElement = item.querySelector(`.${fieldName}`);
+                if (overwriteOption === 'all' || (overwriteOption === 'empty' && !fieldElement.value) || (overwriteOption === 'specified' && fieldElement.value)) {
+                    fieldElement.value = fieldValue;
+                }
+            }
+        });
+    } else if (mode === 'copy') {
+        const sourceItemNumber = document.getElementById('source-item-number').value;
+        const fieldNames = Array.from(document.getElementById('specify-field-names-copy').selectedOptions).map(option => option.value);
+        const targetItemNumbers = document.getElementById('target-item-numbers').value;
+        const sourceIndex = parseInt(sourceItemNumber, 10) - 1;
+
+        const ranges = targetItemNumbers.split(',').map(range => range.trim());
+        let targetIndices = [];
+
+        ranges.forEach(range => {
+            if (range.includes('-')) {
+                const [start, end] = range.split('-').map(Number);
+                for (let i = start; i <= end; i++) {
+                    targetIndices.push(i - 1);
+                }
+            } else {
+                targetIndices.push(Number(range) - 1);
+            }
+        });
+
+        if (sourceIndex >= 0 && sourceIndex < items.length) {
+            const sourceItem = items[sourceIndex];
+
+            targetIndices.forEach(index => {
+                if (index >= 0 && index < items.length) {
+                    const targetItem = items[index];
+                    fieldNames.forEach(fieldName => {
+                        const sourceFieldElement = sourceItem.querySelector(`.${fieldName}`);
+                        const targetFieldElement = targetItem.querySelector(`.${fieldName}`);
+
+                        if (overwriteOption === 'all' || (overwriteOption === 'empty' && !targetFieldElement.value) || (overwriteOption === 'specified' && targetFieldElement.value)) {
+                            targetFieldElement.value = sourceFieldElement.value;
+                        }
+                    });
+                }
+            });
+        }
+    }
+
+    closeSpecifyFieldModal();
+}
+
 // 處理文件上傳事件
 document.getElementById('file-input').addEventListener('change', handleFile, false);
 
