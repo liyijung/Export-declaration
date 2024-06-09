@@ -13,6 +13,7 @@
         <div class="tab-links active" onclick="openTab('header')">報單表頭</div>
         <div class="tab-links" onclick="openTab('items')">報單項次</div>
         <div class="tab-links" onclick="openTab('copy')">報單副本</div>
+        <div class="tab-links" onclick="openTab('bonded')">保稅貨物</div>
     </div>
 
     <!--報單表頭-->    
@@ -32,6 +33,7 @@
                 <label for="SHPR_C_NAME">出口人名稱</label>
                 <input type="text" id="SHPR_C_NAME" name="SHPR_C_NAME">
             </div>
+            <hr>
             <div class="header-group">
                 <label for="CNEE_E_NAME">買方名稱</label>
                 <input type="text" id="CNEE_E_NAME" name="CNEE_E_NAME">
@@ -44,7 +46,8 @@
                 <label for="CNEE_COUNTRY_CODE">買方國家代碼</label>
                 <input type="text" id="CNEE_COUNTRY_CODE" name="CNEE_COUNTRY_CODE"
                 placeholder="範例：HK、CN、KR、SG（英文代碼）">
-            </div>            
+            </div>
+            <hr>
             <div class="header-group">
                 <label for="TO_CODE">目的地(代碼)</label>
                 <input type="text" id="TO_CODE" name="TO_CODE"
@@ -61,7 +64,7 @@
         <div class="header-section">
             <div class="header-group">
                 <label for="TOT_CTN">總件數</label>
-                <input type="number" id="TOT_CTN" name="TOT_CTN">
+                <input type="number" id="TOT_CTN" name="TOT_CTN" min="0" step="1">
             </div>
             <div class="header-group">
                 <label for="DOC_CTN_UM">總件數單位</label>
@@ -70,15 +73,16 @@
             </div>
             <div class="header-group">
                 <label for="CTN_DESC">包裝說明</label>
-                <input type="text" id="CTN_DESC" name="CTN_DESC">
-            </div>            
+                <input type="text" id="CTN_DESC" name="CTN_DESC"
+                placeholder="範例：5 CTN、5 PKG、5 ROL（一般倉或ECFA包裝說明）">
+            </div>
             <div class="header-group">
                 <label for="DCL_GW">總毛重</label>
-                <input type="number" id="DCL_GW" name="DCL_GW">
+                <input type="number" id="DCL_GW" name="DCL_GW" min="0">
             </div>
             <div class="header-group">
                 <label for="DCL_NW">總淨重</label>
-                <input type="number" id="DCL_NW" name="DCL_NW">
+                <input type="number" id="DCL_NW" name="DCL_NW" min="0">
             </div>
         </div>
         <hr>
@@ -116,27 +120,27 @@
             </div>
             <div class="header-group">
                 <label for="CAL_IP_TOT_ITEM_AMT">總金額</label>
-                <input type="number" id="CAL_IP_TOT_ITEM_AMT" name="CAL_IP_TOT_ITEM_AMT"
+                <input type="number" id="CAL_IP_TOT_ITEM_AMT" name="CAL_IP_TOT_ITEM_AMT" min="0"
                 placeholder="提示：若為台幣金額不可有小數點">
             </div>
             <div class="header-group">
                 <label for="FRT_AMT">運費</label>
-                <input type="number" id="FRT_AMT" name="FRT_AMT"
+                <input type="number" id="FRT_AMT" name="FRT_AMT" min="0"
                 placeholder="提示：CFR、CIF 需填列運費">
             </div>   
             <div class="header-group">
                 <label for="INS_AMT">保險費</label>
-                <input type="number" id="INS_AMT" name="INS_AMT"
+                <input type="number" id="INS_AMT" name="INS_AMT" min="0"
                 placeholder="提示：C&I、CIF 需填列保險費">
             </div>
             <div class="header-group">
                 <label for="ADD_AMT">應加費用</label>
-                <input type="number" id="ADD_AMT" name="ADD_AMT"
+                <input type="number" id="ADD_AMT" name="ADD_AMT" min="0"
                 placeholder="提示：EXW 需填列應加費用">
             </div>
             <div class="header-group">
                 <label for="SUBTRACT_AMT">應減費用</label>
-                <input type="number" id="SUBTRACT_AMT" name="SUBTRACT_AMT">
+                <input type="number" id="SUBTRACT_AMT" name="SUBTRACT_AMT" min="0">
             </div>       
         </div> 
         <hr>
@@ -149,7 +153,13 @@
             <div class="header-group">
                 <label for="DOC_OTR_DESC">其它申報事項</label>
                 <textarea id="DOC_OTR_DESC" name="DOC_OTR_DESC" rows="5"></textarea>
-            </div>  
+            </div>
+            <hr>
+            <div class="header-group">
+                <label for="REMARK1">REMARKS</label>
+                <textarea id="REMARK1" name="REMARK1" rows="5"
+                placeholder="（此欄不會出現在報單上，僅作為備註用）"></textarea>
+            </div>            
         </div>               
     </div>
 
@@ -231,7 +241,7 @@
             </div>
             <div class="header-group">
                 <label for="QTY">數量</label>
-                <input type="number" id="QTY">
+                <input type="number" id="QTY" min="0">
             </div>
             <div class="header-group">
                 <label for="DOC_UM">單位</label>
@@ -239,15 +249,15 @@
             </div>
             <div class="header-group">
                 <label for="DOC_UNIT_P">單價</label>
-                <input type="number" id="DOC_UNIT_P">
+                <input type="number" id="DOC_UNIT_P" min="0">
             </div>
             <div class="header-group">
                 <label for="DOC_TOT_P">金額</label>
-                <input type="number" id="DOC_TOT_P">
+                <input type="number" id="DOC_TOT_P" min="0">
             </div>
             <div class="header-group">
                 <label for="NET_WT">淨重</label>
-                <input type="number" id="NET_WT">
+                <input type="number" id="NET_WT" min="0">
             </div>
             <div class="header-group">
                 <label for="TRADE_MARK">商標</label>
@@ -328,7 +338,40 @@
         <input type="hidden" id="EXAM_TYPE" value="">
         <input type="hidden" id="COPY_QTY" value="0">
     </div>
-        
+
+    <!--保稅貨物-->
+    <div id="bonded" class="tab">
+        <p style="margin-top: 30px;"></p>        
+        <div class="header-section">
+            <div class="header-group">
+                <label for="FAC_BAN_ID_EX">保稅廠統一編號</label>
+                <input type="text" id="FAC_BAN_ID_EX" name="FAC_BAN_ID_EX">
+            </div>
+            <div class="header-group">
+                <label for="FAC_BONDED_ID_EX">保稅廠監管編號</label>
+                <input type="text" id="FAC_BONDED_ID_EX" name="FAC_BONDED_ID_EX">
+            </div>
+            <hr>
+            <div class="header-group">
+                <label for="FAC_BAN_ID">出倉保稅倉庫統一編號</label>
+                <input type="text" id="FAC_BAN_ID" name="FAC_BAN_ID">
+            </div>
+            <div class="header-group">
+                <label for="FAC_BONDED_ID">出倉保稅倉庫代碼</label>
+                <input type="text" id="FAC_BONDED_ID" name="FAC_BONDED_ID">
+            </div>
+            <hr>
+            <div class="header-group">
+                <label for="IN_BONDED_BAN">進倉保稅倉庫統一編號</label>
+                <input type="text" id="IN_BONDED_BAN" name="IN_BONDED_BAN">
+            </div>
+            <div class="header-group">
+                <label for="IN_BONDED_CODE">進倉保稅倉庫代碼</label>
+                <input type="text" id="IN_BONDED_CODE" name="IN_BONDED_CODE">
+            </div>                      
+        </div>
+    </div>
+
     <p style="margin-top: 30px;"></p>
     <button id="export-to-excel">匯出 EXCEL</button>
     <button id="export-to-xml">匯出 XML</button>
