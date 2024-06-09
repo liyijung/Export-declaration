@@ -105,14 +105,16 @@ body {
 }
 
 #item-modal,
-#adjust-order-modal {
+#adjust-order-modal,
+#specify-field-modal {
     display: none;
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
+    max-height: 95%; /* 調整高度 */
+    background-color: rgba(0, 0, 0, 0); /* 完全透明背景 */
     justify-content: center;
     align-items: center;
 }
@@ -124,7 +126,7 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* 背景變暗 */
+    background-color: rgba(211, 211, 211, 0.8); /* 設置為淡灰色並增加一些透明度 */
     justify-content: center;
     align-items: center;
     z-index: 1001; /* 確保彈跳框在其他內容前面 */
@@ -132,27 +134,58 @@ body {
 
 .modal-content {
     position: relative;
-    background-color: #fff;
+    background-color: #efefef;
     padding: 20px;
     border-radius: 5px;
-    max-height: 90%;
+    max-height: 95%; /* 調整高度 */
     overflow-y: auto;
     box-sizing: border-box;
+    border: 2px solid #ccc; /* 添加邊框 */
+    width: 500px; /* 設置寬度 */
+    resize: both; /* 添加可調整大小屬性 */
+    overflow: auto; /* 確保內容可滾動 */
 }
 
 #item-modal .modal-content {
-    width: 90%;
+    width: 800px;
 }
 
 #adjust-order-modal .modal-content {
-    width: 70%; /* 調整順序彈跳框寬度縮減 */
+    width: 500px; /* 調整順序彈跳框的寬度 */
+    background: linear-gradient(to right, rgb(240, 240, 240), rgb(228, 237, 250));
+}
+
+#adjust-order-modal .modal-header {
+    background: linear-gradient(to right, rgb(240, 240, 240), rgb(228, 237, 250));
+    padding: 10px;
+    border-radius: 5px 5px 0 0;
+    color: #333; /* 標題文字顏色 */
+    font-size: 1em; /* 標題文字大小 */
+}
+
+#specify-field-modal .modal-content {
+    max-height: 95%; /* 將高度增加到95% */
+}
+
+#specify-field-modal .header-group label {
+    width: 200px; /* 調整左邊文字區塊的寬度 */
+}
+
+#specify-field-modal .header-group input,
+#specify-field-modal .header-group select,
+#specify-field-modal .header-group textarea {
+    flex: 1;
+    padding: 5px;
+    box-sizing: border-box;
 }
 
 .modal-header {
+    cursor: move;
+    background-color: #efefef;
+    padding: 10px;
     display: flex;
     align-items: center;
-    justify-content: flex-start;
-    gap: 20px;
+    justify-content: space-between;
 }
 
 .order-list {
@@ -188,9 +221,6 @@ body {
     flex-wrap: nowrap;
     align-items: center;
     text-align: center;
-}
-
-.item-row {
     flex: 1;
     margin-right: 5px;
 }
