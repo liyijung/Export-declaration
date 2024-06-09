@@ -54,7 +54,6 @@ body {
     text-align: center; /* 設置文字居中對齊 */
 }
 
-
 .header-section {
     border: 1px solid #9e9e9e; /* 外框 */
     background-color: #f0f0f0; /* 底色 */
@@ -72,7 +71,7 @@ body {
 }
 
 .header-group label {
-    width: 150px;
+    width: 170px;
     margin-bottom: 0px;
     background: linear-gradient(to left, rgb(240, 240, 240), rgb(174, 205, 255));    background: linear-gradient(to left, rgb(240, 240, 240), rgb(199, 218, 248));
     padding: 5px;
