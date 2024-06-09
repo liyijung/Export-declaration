@@ -13,6 +13,47 @@ function openTab(tabName) {
     event.currentTarget.classList.add("active");
 }
 
+function dragElement(element, header) {
+    var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+    if (header) {
+        header.onmousedown = dragMouseDown;
+    } else {
+        element.onmousedown = dragMouseDown;
+    }
+
+    function dragMouseDown(e) {
+        e = e || window.event;
+        e.preventDefault();
+        pos3 = e.clientX;
+        pos4 = e.clientY;
+        document.onmouseup = closeDragElement;
+        document.onmousemove = elementDrag;
+    }
+
+    function elementDrag(e) {
+        e = e || window.event;
+        e.preventDefault();
+        pos1 = pos3 - e.clientX;
+        pos2 = pos4 - e.clientY;
+        pos3 = e.clientX;
+        pos4 = e.clientY;
+        element.style.top = (element.offsetTop - pos2) + "px";
+        element.style.left = (element.offsetLeft - pos1) + "px";
+    }
+
+    function closeDragElement() {
+        document.onmouseup = null;
+        document.onmousemove = null;
+    }
+}
+
+// 初始化拖動功能
+document.addEventListener('DOMContentLoaded', (event) => {
+    dragElement(document.getElementById("item-modal"), document.getElementById("item-modal-header"));
+    dragElement(document.getElementById("adjust-order-modal"), document.getElementById("adjust-order-modal-header"));
+    dragElement(document.getElementById("specify-field-modal"), document.getElementById("specify-field-modal-header"));
+});
+
 // 開啟新增項次的彈跳框
 function openItemModal() {
     // 清空所有輸入框
@@ -799,4 +840,5 @@ function exportToPDF() {
         })
         .catch(error => console.error('讀取字體文件失敗:', error));
 }
+
 document.getElementById('export-to-pdf').addEventListener('click', exportToPDF);
