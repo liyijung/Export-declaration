@@ -131,6 +131,7 @@ function handleFile(event) {
             document.getElementById('SUBTRACT_AMT').value = headerJson[20][1] || '';
             document.getElementById('DOC_MARKS_DESC').value = headerJson[21][1] || '';
             document.getElementById('DOC_OTR_DESC').value = headerJson[22][1] || '';
+            document.getElementById('REMARK1').value = headerJson[23][1] || '';
         }
 
         if (itemsSheet) {
@@ -359,8 +360,8 @@ document.addEventListener('DOMContentLoaded', function () {
             'LOT_NO', 'SHPR_CODE', 'SHPR_C_NAME', 'CNEE_E_NAME', 'CNEE_E_ADDR', 
             'CNEE_COUNTRY_CODE', 'TO_CODE', 'TO_DESC', 'TOT_CTN', 'DOC_CTN_UM', 'CTN_DESC', 
             'DCL_GW', 'DCL_NW', 'DCL_DOC_TYPE', 'TERMS_SALES', 'CURRENCY', 'CAL_IP_TOT_ITEM_AMT', 
-            'FRT_AMT', 'INS_AMT', 'ADD_AMT', 'SUBTRACT_AMT', 'DOC_MARKS_DESC', 
-            'DOC_OTR_DESC', 'EXAM_TYPE', 'COPY_QTY', 'APP_DUTY_REFUND', 'MARK_TOT_LINES'
+            'FRT_AMT', 'INS_AMT', 'ADD_AMT', 'SUBTRACT_AMT', 'DOC_MARKS_DESC', 'DOC_OTR_DESC', 
+            'REMARK1', 'APP_DUTY_REFUND', 'MARK_TOT_LINES', 'EXAM_TYPE', 'COPY_QTY',
         ];
         const itemFields = [
             'DESCRIPTION', 'QTY', 'DOC_UM', 'DOC_UNIT_P', 'DOC_TOT_P', 
@@ -452,7 +453,8 @@ function exportToExcel() {
         ["應加費用", document.getElementById('ADD_AMT').value],
         ["應減費用", document.getElementById('SUBTRACT_AMT').value],
         ["標記及貨櫃號碼", document.getElementById('DOC_MARKS_DESC').value],
-        ["其它申報事項", document.getElementById('DOC_OTR_DESC').value]
+        ["其它申報事項", document.getElementById('DOC_OTR_DESC').value],
+        ["REMARKS", document.getElementById('REMARK1').value]
     ];
 
     // 項次數據
@@ -487,10 +489,12 @@ function exportToExcel() {
 
     // 建立表頭工作表
     const headerSheet = XLSX.utils.aoa_to_sheet(headerData);
+    headerSheet['!cols'] = [{ wch: 20 }];
     XLSX.utils.book_append_sheet(workbook, headerSheet, "報單表頭");
 
     // 建立項次工作表
     const itemsSheet = XLSX.utils.aoa_to_sheet(itemHeaderData.concat(itemData));
+    itemsSheet['!cols'] = [{ wch: 20 }];
     XLSX.utils.book_append_sheet(workbook, itemsSheet, "報單項次");
 
     // 匯出 EXCEL 文件
@@ -547,6 +551,7 @@ function exportToPDF() {
                 ["應減費用", document.getElementById('SUBTRACT_AMT').value],
                 ["標記及貨櫃號碼", document.getElementById('DOC_MARKS_DESC').value],
                 ["其它申報事項", document.getElementById('DOC_OTR_DESC').value]
+                // REMARKS（此欄不會出現在報單上，僅作為備註用）
             ];
 
             let y = 30; // 更新初始 y 座標
