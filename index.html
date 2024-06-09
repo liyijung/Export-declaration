@@ -12,7 +12,7 @@
     <div class="tabs">
         <div class="tab-links active" onclick="openTab('header')">報單表頭</div>
         <div class="tab-links" onclick="openTab('items')">報單項次</div>
-        <div class="tab-links" onclick="openTab('copy')">申報上傳</div>
+        <div class="tab-links" onclick="openTab('copy')">報單副本</div>
     </div>
 
     <!--報單表頭-->    
@@ -68,6 +68,10 @@
                 <input type="text" id="DOC_CTN_UM" name="DOC_CTN_UM"
                 placeholder="範例：CTN、PKG、BOX、PLT（英文代碼）">
             </div>
+            <div class="header-group">
+                <label for="CTN_DESC">包裝說明</label>
+                <input type="text" id="CTN_DESC" name="CTN_DESC">
+            </div>            
             <div class="header-group">
                 <label for="DCL_GW">總毛重</label>
                 <input type="number" id="DCL_GW" name="DCL_GW">
@@ -152,7 +156,6 @@
     <!--報單項次-->
     <div id="items" class="tab">
         <p style="margin-top: 30px;"></p>
-        <button id="export-to-excel">匯出EXCEL</button>        
         <button onclick="uploadFile()">批量導入</button>
         <input type="file" id="file-input" accept=".xlsx, .xls">
         <button onclick="openItemModal()" style="margin-right: 50px;">新增項次</button>                        
@@ -316,9 +319,6 @@
                 <label for="copy_5">申請報單副本第五聯（出口證明用聯）</label>
             </div>  
         </div>
-        <p style="margin-top: 20px;"></p>  
-        <button onclick="exportToPDF()">出口報單預覽</button>
-        <button id="export-to-xml">申報上傳 XML</button>   
     </div>
     
     <!-- 用於顯示變數值 -->
@@ -329,6 +329,12 @@
         <input type="hidden" id="COPY_QTY" value="0">
     </div>
         
+    <p style="margin-top: 30px;"></p>
+    <button id="export-to-excel">匯出 EXCEL</button>
+    <button id="export-to-xml">匯出 XML</button>
+    <button onclick="exportToPDF()">出口報單預覽</button>
+    <p style="margin-bottom: 50px;"></p>
+
     <script src="script.js"></script>    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>    
