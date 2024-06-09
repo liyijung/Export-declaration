@@ -12,6 +12,7 @@ function openTab(tabName) {
     document.getElementById(tabName).classList.add("active");
     event.currentTarget.classList.add("active");
 }
+
 // 開啟新增項次的彈跳框
 function openItemModal() {
     // 清空所有輸入框
@@ -31,11 +32,44 @@ function openItemModal() {
     document.getElementById('CERT_NO').value = '';
     document.getElementById('CERT_NO_ITEM').value = '';    
 
+    // 填充下拉選單
+    const copyItemSelect = document.getElementById('COPY_ITEM');
+    copyItemSelect.innerHTML = '<option value="">選擇項次</option>';
+    document.querySelectorAll('#item-container .item-row').forEach((item, index) => {
+        const description = item.querySelector('.DESCRIPTION').value;
+        copyItemSelect.innerHTML += `<option value="${index}">項次 ${index + 1} - ${description}</option>`;
+    });
+
     // 顯示彈跳框
     document.getElementById('item-modal').style.display = 'flex';
 
     // 滾動到最上方
     document.querySelector('#item-modal .modal-content').scrollTop = 0;
+}
+
+// 複製選定的項次內容
+function copyItem() {
+    const copyItemSelect = document.getElementById('COPY_ITEM');
+    const selectedItemIndex = copyItemSelect.value;
+
+    if (selectedItemIndex !== "") {
+        const item = document.querySelectorAll('#item-container .item-row')[selectedItemIndex];
+        document.getElementById('ITEM_NO').checked = item.querySelector('.ITEM_NO').checked;
+        document.getElementById('DESCRIPTION').value = item.querySelector('.DESCRIPTION').value;
+        document.getElementById('QTY').value = item.querySelector('.QTY').value;
+        document.getElementById('DOC_UM').value = item.querySelector('.DOC_UM').value;
+        document.getElementById('DOC_UNIT_P').value = item.querySelector('.DOC_UNIT_P').value;
+        document.getElementById('DOC_TOT_P').value = item.querySelector('.DOC_TOT_P').value;
+        document.getElementById('NET_WT').value = item.querySelector('.NET_WT').value;
+        document.getElementById('TRADE_MARK').value = item.querySelector('.TRADE_MARK').value;
+        document.getElementById('CCC_CODE').value = item.querySelector('.CCC_CODE').value;
+        document.getElementById('ST_MTD').value = item.querySelector('.ST_MTD').value;
+        document.getElementById('ORG_COUNTRY').value = item.querySelector('.ORG_COUNTRY').value;
+        document.getElementById('ORG_IMP_DCL_NO').value = item.querySelector('.ORG_IMP_DCL_NO').value;
+        document.getElementById('ORG_IMP_DCL_NO_ITEM').value = item.querySelector('.ORG_IMP_DCL_NO_ITEM').value;
+        document.getElementById('CERT_NO').value = item.querySelector('.CERT_NO').value;
+        document.getElementById('CERT_NO_ITEM').value = item.querySelector('.CERT_NO_ITEM').value;
+    }
 }
 
 // 關閉新增項次的彈跳框
