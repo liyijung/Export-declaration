@@ -168,7 +168,8 @@
         <p style="margin-top: 30px;"></p>
         <button onclick="uploadFile()">批量導入</button>
         <input type="file" id="file-input" accept=".xlsx, .xls">
-        <button onclick="openItemModal()" style="margin-right: 50px;">新增項次</button>                        
+        <button onclick="openItemModal()">新增項次</button>
+        <button onclick="openAdjustOrderModal()">調整順序</button>
         <p style="margin-top: 30px;"></p>
         <div class="item-row item-header">
             <div class="form-group fix">
@@ -227,11 +228,11 @@
         <div id="item-container"></div>
     </div>
 
-    <!--新增項次彈跳框-->
-    <div id="item-modal">
-        <div class="modal-content">
+    <!-- 新增項次彈跳框 -->
+    <div id="item-modal" class="modal">
+        <div class="modal-content large-modal">
             <h2>新增項次</h2>
-            <div class="flex-group"><P></P>
+            <div class="flex-group">
                 <input type="checkbox" id="ITEM_NO">
                 <label for="ITEM_NO">大品名註記（勾選大品名註記時，只需填寫品名）</label>
             </div>
@@ -296,15 +297,33 @@
             <div class="header-group">
                 <label for="CERT_NO_ITEM">產證項次</label>
                 <input type="text" id="CERT_NO_ITEM" placeholder="提示：ECFA 產證項次">
-            </div>           
+            </div>
             <!-- 將儲存和取消按鈕包裹在一個固定定位的div中 -->
-            <div class="buttons">
+            <div class="floating-buttons">
                 <button onclick="saveItem()">儲存</button>
                 <button onclick="closeItemModal()">取消</button>
             </div>
         </div>
-    </div>    
-    
+    </div>
+
+    <!-- 調整順序彈跳框 -->
+    <div id="adjust-order-modal" class="modal">
+        <div class="modal-content large-modal">
+            <div class="modal-header">
+                <h2>調整順序</h2>
+                <h4>【直接拖曳調整項次的排列順序】</h4>
+            </div>
+            <div id="order-list" class="order-list">
+                <!-- 動態生成的項次列表 -->
+            </div>
+            <div class="floating-buttons">
+                <button onclick="saveNewOrder()">儲存</button>
+                <button onclick="closeOrderModal()">取消</button>
+            </div>
+        </div>
+    </div>
+
+
     <!--報單副本-->
     <div id="copy" class="tab">
         <p style="margin-top: 30px;"></p>
