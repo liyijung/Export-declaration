@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>報單管理</title>
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
     <p style="margin-top: 50px;"></p>
@@ -231,11 +230,13 @@
         <p style="margin-top: 10px;"></p>        
         <div id="item-container"></div>
     </div>
-
+    
     <!-- 新增項次彈跳框 -->
     <div id="item-modal" class="modal">
         <div class="modal-content">
-            <h2>新增項次</h2>
+            <div class="modal-header" id="item-modal-header">
+                <h2>新增項次（可按住拖動）</h2>
+            </div>
             <div class="flex-group">
                 <input type="checkbox" id="ITEM_NO">
                 <label for="ITEM_NO">大品名註記（勾選大品名註記時，只需填寫品名）</label>
@@ -319,7 +320,9 @@
     <!-- 調整順序彈跳框 -->
     <div id="adjust-order-modal" class="modal">
         <div class="modal-content">
-            <h2>調整順序</h2>
+            <div class="modal-header" id="adjust-order-modal-header">
+                <h2>調整順序（可按住拖動）</h2>
+            </div>
             <h4>【直接拖曳調整項次的排列順序】</h4>
             <div id="order-list" class="order-list">
                 <!-- 動態生成的項次列表 -->
@@ -334,7 +337,9 @@
     <!-- 指定填列欄位資料的彈跳框 -->
     <div id="specify-field-modal" class="modal">
         <div class="modal-content">
-            <h2>指定填列欄位資料</h2>
+            <div class="modal-header" id="specify-field-modal-header">
+                <h2>指定填列欄位資料（可按住拖動）</h2>
+            </div>
             <div class="header-group">
                 <label for="specify-mode">模式</label>
                 <select id="specify-mode" onchange="toggleSpecifyMode()">
@@ -344,7 +349,7 @@
             </div>
             <div id="custom-content" class="specify-mode-content">
                 <div class="header-group">
-                    <label for="specify-item-numbers">項次 (例如: 3,5 或 3-5)</label>
+                    <label for="specify-item-numbers">項次 (例如: 3,5-7)</label>
                     <input type="text" id="specify-item-numbers">
                 </div>
                 <div class="header-group">
@@ -374,7 +379,7 @@
             <div id="copy-content" class="specify-mode-content" style="display:none;">
                 <div class="header-group">
                     <label for="source-item-number">源項次</label>
-                    <input type="text" id="source-item-number" placeholder="例如: 3">
+                    <input type="text" id="source-item-number" placeholder="例如: 3（單項次）">
                 </div>
                 <div class="header-group">
                     <label for="specify-field-names-copy">欄位名稱</label>
@@ -396,7 +401,7 @@
                     </select>
                 </div>
                 <div class="header-group">
-                    <label for="target-item-numbers">目標項次 (例如: 5-7)</label>
+                    <label for="target-item-numbers">目標項次 (例如: 1,7-8)</label>
                     <input type="text" id="target-item-numbers">
                 </div>
             </div>
@@ -496,9 +501,9 @@
     </div>
     <p style="margin-bottom: 50px;"></p>
 
-    <script src="script.js"></script>    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>    
+    <script src="script.js"></script>
 
 </body>
 </html>
