@@ -118,18 +118,19 @@ function handleFile(event) {
             document.getElementById('TO_DESC').value = headerJson[7][1] || '';
             document.getElementById('TOT_CTN').value = headerJson[8][1] || '';
             document.getElementById('DOC_CTN_UM').value = headerJson[9][1] || '';
-            document.getElementById('DCL_GW').value = headerJson[10][1] || '';
-            document.getElementById('DCL_NW').value = headerJson[11][1] || '';
-            document.getElementById('DCL_DOC_TYPE').value = headerJson[12][1] || '';
-            document.getElementById('TERMS_SALES').value = headerJson[13][1] || '';
-            document.getElementById('CURRENCY').value = headerJson[14][1] || '';
-            document.getElementById('CAL_IP_TOT_ITEM_AMT').value = headerJson[15][1] || '';
-            document.getElementById('FRT_AMT').value = headerJson[16][1] || '';
-            document.getElementById('INS_AMT').value = headerJson[17][1] || '';
-            document.getElementById('ADD_AMT').value = headerJson[18][1] || '';
-            document.getElementById('SUBTRACT_AMT').value = headerJson[19][1] || '';
-            document.getElementById('DOC_MARKS_DESC').value = headerJson[20][1] || '';
-            document.getElementById('DOC_OTR_DESC').value = headerJson[21][1] || '';
+            document.getElementById('CTN_DESC').value = headerJson[10][1] || '';
+            document.getElementById('DCL_GW').value = headerJson[11][1] || '';
+            document.getElementById('DCL_NW').value = headerJson[12][1] || '';
+            document.getElementById('DCL_DOC_TYPE').value = headerJson[13][1] || '';
+            document.getElementById('TERMS_SALES').value = headerJson[14][1] || '';
+            document.getElementById('CURRENCY').value = headerJson[15][1] || '';
+            document.getElementById('CAL_IP_TOT_ITEM_AMT').value = headerJson[16][1] || '';
+            document.getElementById('FRT_AMT').value = headerJson[17][1] || '';
+            document.getElementById('INS_AMT').value = headerJson[18][1] || '';
+            document.getElementById('ADD_AMT').value = headerJson[19][1] || '';
+            document.getElementById('SUBTRACT_AMT').value = headerJson[20][1] || '';
+            document.getElementById('DOC_MARKS_DESC').value = headerJson[21][1] || '';
+            document.getElementById('DOC_OTR_DESC').value = headerJson[22][1] || '';
         }
 
         if (itemsSheet) {
@@ -356,13 +357,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const headerFields = [
             'LOT_NO', 'SHPR_CODE', 'SHPR_C_NAME', 'CNEE_E_NAME', 'CNEE_E_ADDR', 
-            'CNEE_COUNTRY_CODE', 'TO_CODE', 'TO_DESC', 'TOT_CTN', 'DOC_CTN_UM', 'DCL_GW', 
-            'DCL_NW', 'DCL_DOC_TYPE', 'TERMS_SALES', 'CURRENCY', 'CAL_IP_TOT_ITEM_AMT', 
+            'CNEE_COUNTRY_CODE', 'TO_CODE', 'TO_DESC', 'TOT_CTN', 'DOC_CTN_UM', 'CTN_DESC', 
+            'DCL_GW', 'DCL_NW', 'DCL_DOC_TYPE', 'TERMS_SALES', 'CURRENCY', 'CAL_IP_TOT_ITEM_AMT', 
             'FRT_AMT', 'INS_AMT', 'ADD_AMT', 'SUBTRACT_AMT', 'DOC_MARKS_DESC', 
             'DOC_OTR_DESC', 'EXAM_TYPE', 'COPY_QTY', 'APP_DUTY_REFUND', 'MARK_TOT_LINES'
         ];
         const itemFields = [
-            'ITEM_NO', 'DESCRIPTION', 'QTY', 'DOC_UM', 'DOC_UNIT_P', 'DOC_TOT_P', 
+            'DESCRIPTION', 'QTY', 'DOC_UM', 'DOC_UNIT_P', 'DOC_TOT_P', 
             'NET_WT', 'TRADE_MARK', 'CCC_CODE', 'ST_MTD', 'ORG_COUNTRY', 
             'ORG_IMP_DCL_NO', 'ORG_IMP_DCL_NO_ITEM', 'CERT_NO', 'CERT_NO_ITEM'
         ];
@@ -373,19 +374,20 @@ document.addEventListener('DOMContentLoaded', function () {
             let element = document.getElementById(id);
             if (element) {
                 let value = element.value;
+                // 其它申報事項加入申請報單副本備註
                 if (id === 'DOC_OTR_DESC') {
                     let additionalDesc = '';
                     if (document.getElementById('copy_3_e').checked) {
                         additionalDesc = '申請沖退原料稅（E化退稅）\n';
                     }
                     if (document.getElementById('copy_3').checked) {
-                        additionalDesc += (additionalDesc ? ' 或 ' : '') + '申請報單副本第三聯（沖退原料稅用聯）\n';
+                        additionalDesc += (additionalDesc ? ' \n ' : '') + '申請報單副本第三聯（沖退原料稅用聯）\n';
                     }
                     if (document.getElementById('copy_4').checked) {
-                        additionalDesc += (additionalDesc ? ' 或 ' : '') + '申請報單副本第四聯（退內地稅用聯）\n';
+                        additionalDesc += (additionalDesc ? ' \n ' : '') + '申請報單副本第四聯（退內地稅用聯）\n';
                     }
                     if (document.getElementById('copy_5').checked) {
-                        additionalDesc += (additionalDesc ? ' 或 ' : '') + '申請報單副本第五聯（出口證明用聯）\n';
+                        additionalDesc += (additionalDesc ? ' \n ' : '') + '申請報單副本第五聯（出口證明用聯）\n';
                     }
                     value = additionalDesc ? additionalDesc + '\n' + value : value;
                 }
@@ -395,15 +397,19 @@ document.addEventListener('DOMContentLoaded', function () {
 
         xmlContent += '  </head>\n<detail>\n  <detail_table_name>DOCINVBD</detail_table_name>\n';
 
-        document.querySelectorAll("#item-container .item-row").forEach((item, index) => {
+        let itemCounter = 1; // 初始化計數參數
+        document.querySelectorAll("#item-container .item-row").forEach((item) => {
             xmlContent += '  <items>\n';
+            let itemNo = item.querySelector('.ITEM_NO').checked ? '*' : (itemCounter++).toString();
+        
+            xmlContent += `    <fields>\n      <field_name>ITEM_NO</field_name>\n      <field_value>${itemNo}</field_value>\n    </fields>\n`;
+        
             itemFields.forEach(className => {
                 let value = item.querySelector(`.${className}`).value;
                 xmlContent += `    <fields>\n      <field_name>${className}</field_name>\n      <field_value>${value}</field_value>\n    </fields>\n`;
             });
             xmlContent += '  </items>\n';
         });
-
         xmlContent += '</detail>\n</Root>';
 
         const blob = new Blob([xmlContent], { type: 'application/xml' });
@@ -434,6 +440,7 @@ function exportToExcel() {
         ["目的地(名稱)", document.getElementById('TO_DESC').value],
         ["總件數", document.getElementById('TOT_CTN').value],
         ["總件數單位", document.getElementById('DOC_CTN_UM').value],
+        ["包裝說明", document.getElementById('CTN_DESC').value],
         ["總毛重", document.getElementById('DCL_GW').value],
         ["總淨重", document.getElementById('DCL_NW').value],
         ["報單類別", document.getElementById('DCL_DOC_TYPE').value],
@@ -527,6 +534,7 @@ function exportToPDF() {
                 ["目的地(名稱)", document.getElementById('TO_DESC').value],
                 ["總件數", document.getElementById('TOT_CTN').value],
                 ["總件數單位", document.getElementById('DOC_CTN_UM').value],
+                ["包裝說明", document.getElementById('CTN_DESC').value],
                 ["總毛重", document.getElementById('DCL_GW').value],
                 ["總淨重", document.getElementById('DCL_NW').value],
                 ["報單類別", document.getElementById('DCL_DOC_TYPE').value],
