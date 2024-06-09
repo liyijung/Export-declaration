@@ -173,6 +173,7 @@
         <input type="file" id="file-input" accept=".xlsx, .xls">
         <button onclick="openItemModal()">新增項次</button>
         <button onclick="openAdjustOrderModal()">調整順序</button>
+        <button onclick="openSpecifyFieldModal()">指定填列欄位資料</button>
         <p style="margin-top: 30px;"></p>
         <div class="item-row item-header">
             <div class="form-group fix">
@@ -326,6 +327,90 @@
             <div class="floating-buttons">
                 <button onclick="saveNewOrder()">儲存</button>
                 <button onclick="closeOrderModal()">取消</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 指定填列欄位資料的彈跳框 -->
+    <div id="specify-field-modal" class="modal">
+        <div class="modal-content">
+            <h2>指定填列欄位資料</h2>
+            <div class="header-group">
+                <label for="specify-mode">模式</label>
+                <select id="specify-mode" onchange="toggleSpecifyMode()">
+                    <option value="custom">自定義填列內容</option>
+                    <option value="copy">從源項次複製內容</option>
+                </select>
+            </div>
+            <div id="custom-content" class="specify-mode-content">
+                <div class="header-group">
+                    <label for="specify-item-numbers">項次 (例如: 3,5 或 3-5)</label>
+                    <input type="text" id="specify-item-numbers">
+                </div>
+                <div class="header-group">
+                    <label for="specify-field-name">欄位名稱</label>
+                    <select id="specify-field-name">
+                        <option value="DESCRIPTION">品名</option>
+                        <option value="QTY">數量</option>
+                        <option value="DOC_UM">單位</option>
+                        <option value="DOC_UNIT_P">單價</option>
+                        <option value="DOC_TOT_P">金額</option>
+                        <option value="NET_WT">淨重</option>
+                        <option value="TRADE_MARK">商標</option>
+                        <option value="CCC_CODE">稅則</option>
+                        <option value="ST_MTD">統計方式</option>
+                        <option value="ORG_COUNTRY">生產國別</option>
+                        <option value="ORG_IMP_DCL_NO">原進口報單號碼</option>
+                        <option value="ORG_IMP_DCL_NO_ITEM">原進口報單項次</option>
+                        <option value="CERT_NO">產證號碼</option>
+                        <option value="CERT_NO_ITEM">產證項次</option>
+                    </select>
+                </div>
+                <div class="header-group">
+                    <label for="specify-field-value">填列內容</label>
+                    <textarea id="specify-field-value" rows="3"></textarea>
+                </div>
+            </div>
+            <div id="copy-content" class="specify-mode-content" style="display:none;">
+                <div class="header-group">
+                    <label for="source-item-number">源項次</label>
+                    <input type="text" id="source-item-number" placeholder="例如: 3">
+                </div>
+                <div class="header-group">
+                    <label for="specify-field-names-copy">欄位名稱</label>
+                    <select id="specify-field-names-copy" multiple style="height: 300px;">
+                        <option value="DESCRIPTION">品名</option>
+                        <option value="QTY">數量</option>
+                        <option value="DOC_UM">單位</option>
+                        <option value="DOC_UNIT_P">單價</option>
+                        <option value="DOC_TOT_P">金額</option>
+                        <option value="NET_WT">淨重</option>
+                        <option value="TRADE_MARK">商標</option>
+                        <option value="CCC_CODE">稅則</option>
+                        <option value="ST_MTD">統計方式</option>
+                        <option value="ORG_COUNTRY">生產國別</option>
+                        <option value="ORG_IMP_DCL_NO">原進口報單號碼</option>
+                        <option value="ORG_IMP_DCL_NO_ITEM">原進口報單項次</option>
+                        <option value="CERT_NO">產證號碼</option>
+                        <option value="CERT_NO_ITEM">產證項次</option>
+                    </select>
+                </div>
+                <div class="header-group">
+                    <label for="target-item-numbers">目標項次 (例如: 5-7)</label>
+                    <input type="text" id="target-item-numbers">
+                </div>
+            </div>
+            <div class="header-group">
+                <label for="overwrite-option">覆蓋選項</label>
+                <select id="overwrite-option">
+                    <option value="all">全部覆蓋</option>
+                    <option value="empty">覆蓋未填列之項次</option>
+                    <option value="specified">覆蓋已填列之項次</option>
+                </select>
+            </div>
+            <div class="floating-buttons">
+                <button onclick="applyFieldData()">應用</button>
+                <button onclick="closeSpecifyFieldModal()">取消</button>
             </div>
         </div>
     </div>
