@@ -159,8 +159,7 @@
             <hr>
             <div class="header-group">
                 <label for="REMARK1">REMARKS</label>
-                <textarea id="REMARK1" name="REMARK1" rows="5"
-                placeholder="（此欄不會出現在報單上，僅作為備註用）"></textarea>
+                <textarea id="REMARK1" name="REMARK1" rows="5"></textarea>
             </div>            
         </div>               
     </div>
@@ -168,8 +167,7 @@
     <!--報單項次-->
     <div id="items" class="tab">
         <p style="margin-top: 30px;"></p>
-        <button onclick="uploadFile()">批量導入</button>
-        <input type="file" id="file-input" accept=".xlsx, .xls">
+        <input type="file" id="import-xml" accept=".xml">
         <button onclick="openItemModal()">新增項次</button>
         <button onclick="openAdjustOrderModal()">調整順序</button>
         <button onclick="openSpecifyFieldModal()">指定填列欄位資料</button>
@@ -428,20 +426,16 @@
         </div>        
         <div class="header-section">
             <div class="flex-group">
-                <input type="checkbox" id="copy_3_e">
-                <label for="copy_3_e">申請沖退原料稅（E化退稅）</label>
+                <input type="checkbox" id="copy_3_e" name="copy_option">申請沖退原料稅（E化退稅）<br>
             </div>
             <div class="flex-group">
-                <input type="checkbox" id="copy_3">
-                <label for="copy_3">申請報單副本第三聯（沖退原料稅用聯）</label>
+                <input type="checkbox" id="copy_3" name="copy_option">申請報單副本第三聯（沖退原料稅用聯）<br>
             </div>
             <div class="flex-group">
-                <input type="checkbox" id="copy_4">
-                <label for="copy_4">申請報單副本第四聯（退內地稅用聯）</label>
+                <input type="checkbox" id="copy_4" name="copy_option">申請報單副本第四聯（退內地稅用聯）<br>
             </div>
             <div class="flex-group">
-                <input type="checkbox" id="copy_5">
-                <label for="copy_5">申請報單副本第五聯（出口證明用聯）</label>
+                <input type="checkbox" id="copy_5" name="copy_option">申請報單副本第五聯（出口證明用聯）<br>
             </div>  
         </div>
     </div>
@@ -495,7 +489,6 @@
     </div>
 
     <div style="margin-left: 20px;">
-        <button id="export-to-excel">匯出 EXCEL</button>
         <button id="export-to-xml">匯出 XML</button>
         <button onclick="exportToPDF()">出口報單預覽</button>
     </div>
