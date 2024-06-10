@@ -17,23 +17,25 @@ body {
 .tabs {
     display: flex;
     justify-content: flex-start; /* 將內容靠左對齊 */
-    padding: 10px 0;
-    gap: 5px; /* 減小間隔 */
-    padding-left: 10px; /* 左側留一些空間 */
+    padding: 10px 20px;
+    gap: 10px; /* 減小間隔 */
+    padding-left: 20px; /* 左側留一些空間 */
 }
 
 .tab-links {
     font-weight: bold;
     padding: 5px 10px; /* 減少內部填充 */
-    background: linear-gradient(to bottom, rgb(240, 240, 240), rgb(185, 185, 185));
+    background: linear-gradient(to bottom, rgb(240, 240, 240), rgb(206, 225, 253));
+    box-shadow: 0 2px 5px rgba(0,0,0,5);
     border-radius: 5px;
-    border: 1px solid #989898;
+    border: 0px solid #777777;
     cursor: pointer;
 }
 
 .tab-links.active {
-    background: linear-gradient(to bottom, rgb(240, 240, 240), rgb(79, 133, 221));
-    border: 1px solid #5f84cf;
+    background: linear-gradient(to bottom, rgb(240, 240, 240), rgb(125, 161, 253));
+    color: #000000;
+    border: 0px solid rgb(125, 160, 255);
 }
 
 .content {
@@ -47,6 +49,31 @@ body {
 
 .tab.active {
     display: block;
+}
+
+.import-export-buttons {
+    margin: 20px;
+}
+
+.excel-btn,
+.xml-btn,
+.pdf-btn {
+    box-shadow: 0 2px 5px rgba(0,0,0,5);
+    border-radius: 5px;
+    border: none;
+    cursor: pointer; /* 指向時顯示手的圖標 */
+}
+
+.excel-btn{
+    background: linear-gradient(to bottom, rgb(200, 200, 200), #c5ffef);
+}
+
+.xml-btn {
+    background: linear-gradient(to bottom, rgb(200, 200, 200), #ffc4ca);
+}
+
+.pdf-btn {
+    background: linear-gradient(to bottom, rgb(200, 200, 200), #fffcc0);
 }
 
 .item-header {
@@ -275,27 +302,6 @@ textarea {
 
 .delete-button:hover {
     background-color: #c82333;
-}
-
-.download-button,
-.add-button {
-    display: inline-block;
-    padding: 5px 10px;
-    font-size: 16px;
-    font-weight: bold;
-    color: #fff;
-    background-color: #426ed5;
-    border: none;
-    border-radius: 5px;
-    text-align: center;
-    text-decoration: none;
-    cursor: pointer;
-    margin-left: 10px;
-}
-
-.download-button:hover,
-.add-button:hover {
-    background-color: #1844ab;
 }
 
 h4 {
