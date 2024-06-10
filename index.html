@@ -167,7 +167,6 @@
     <!--報單項次-->
     <div id="items" class="tab">
         <p style="margin-top: 30px;"></p>
-        <input type="file" id="import-xml" accept=".xml">
         <button onclick="openItemModal()">新增項次</button>
         <button onclick="openAdjustOrderModal()">調整順序</button>
         <button onclick="openSpecifyFieldModal()">指定填列欄位資料</button>
@@ -421,9 +420,6 @@
     <!--報單副本-->
     <div id="copy" class="tab">
         <p style="margin-top: 30px;"></p>
-        <div style="height: 50px;">
-            <a href="Notes.pdf" target="_blank" class="download-button">報關文件需注意事項</a>                    
-        </div>        
         <div class="header-section">
             <div class="flex-group">
                 <input type="checkbox" id="copy_3_e" name="copy_option">申請沖退原料稅（E化退稅）<br>
@@ -488,9 +484,15 @@
         </div>
     </div>
 
-    <div style="margin-left: 20px;">
-        <button id="export-to-xml">匯出 XML</button>
-        <button onclick="exportToPDF()">出口報單預覽</button>
+    <div class="import-export-buttons">
+        <input type="file" id="import-excel" style="display:none;">
+        <button class="excel-btn" onclick="document.getElementById('import-excel').click();">匯入Excel</button>
+        <button class="excel-btn" id="export-excel">匯出Excel</button>
+        <input type="file" id="import-xml" style="display:none;">        
+        <button class="xml-btn" onclick="document.getElementById('import-xml').click();">匯入XML</button>        
+        <button class="xml-btn" id="export-to-xml">匯出XML</button>
+
+        <button class="pdf-btn" onclick="exportToPDF()">出口報單預覽</button>
     </div>
     <p style="margin-bottom: 50px;"></p>
 
