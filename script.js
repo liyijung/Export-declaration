@@ -49,9 +49,21 @@ function dragElement(element, header) {
 
 // 初始化拖動功能
 document.addEventListener('DOMContentLoaded', (event) => {
+    // 初始化拖動功能
     dragElement(document.getElementById("item-modal"), document.getElementById("item-modal-header"));
     dragElement(document.getElementById("adjust-order-modal"), document.getElementById("adjust-order-modal-header"));
     dragElement(document.getElementById("specify-field-modal"), document.getElementById("specify-field-modal-header"));
+    
+    // 添加事件監聽器到匯入XML按鈕
+    document.getElementById('import-xml').addEventListener('change', importXML, false);
+
+    // 添加事件監聽器到報單副本選項
+    document.querySelectorAll('input[type="checkbox"][name="copy_option"]').forEach(checkbox => {
+        checkbox.addEventListener('change', updateRemark1);
+    });
+
+    // 初始化時更新REMARK1的值
+    updateRemark1();
 });
 
 // 開啟新增項次的彈跳框
@@ -150,15 +162,6 @@ function removeItem(element) {
     const item = element.parentElement.parentElement;
     item.parentElement.removeChild(item);
     renumberItems();
-}
-
-// 重新編號所有項次
-function renumberItems() {
-    itemCount = 0;
-    document.querySelectorAll("#item-container .item-row").forEach((item, index) => {
-        itemCount++;
-        item.querySelector('label').textContent = `${itemCount}`; // 項次
-    });
 }
 
 // 引入 Sortable.js 庫
@@ -311,188 +314,62 @@ function applyFieldData() {
     closeSpecifyFieldModal();
 }
 
-// 處理文件上傳事件
-document.getElementById('file-input').addEventListener('change', handleFile, false);
+// 匯入XML文件的功能
+function importXML(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const parser = new DOMParser();
+            const xmlDoc = parser.parseFromString(e.target.result, "application/xml");
 
-function handleFile(event) {
-    const files = event.target.files;
-    if (files.length === 0) return;
+            // 解析表頭資料
+            const headerFields = xmlDoc.getElementsByTagName("head")[0].getElementsByTagName("fields");
+            Array.from(headerFields).forEach(field => {
+                const fieldName = field.getElementsByTagName("field_name")[0].textContent;
+                const fieldValue = field.getElementsByTagName("field_value")[0].textContent;
+                const element = document.getElementById(fieldName);
+                if (element) {
+                    element.value = fieldValue;
+                }
+            });
 
-    const file = files[0];
-    const reader = new FileReader();
+            // 解析項次資料
+            const items = xmlDoc.getElementsByTagName("detail")[0].getElementsByTagName("items");
+            const itemContainer = document.getElementById('item-container');
+            itemContainer.innerHTML = ''; // 清空現有項次
+            itemCount = 0; // 重置項次計數
 
-    reader.onload = function (event) {
-        const data = new Uint8Array(event.target.result);
-        const workbook = XLSX.read(data, { type: 'array' });
+            Array.from(items).forEach(item => {
+                const itemData = {};
+                const fields = item.getElementsByTagName("fields");
+                Array.from(fields).forEach(field => {
+                    const fieldName = field.getElementsByTagName("field_name")[0].textContent;
+                    const fieldValue = field.getElementsByTagName("field_value")[0].textContent;
+                    itemData[fieldName] = fieldValue;
+                });
+                const itemRow = createItemRow(itemData);
+                itemContainer.appendChild(itemRow);
+            });
 
-        const headerSheet = workbook.Sheets["報單表頭"];
-        const itemsSheet = workbook.Sheets["報單項次"];
-
-        if (headerSheet) {
-            const headerJson = XLSX.utils.sheet_to_json(headerSheet, { header: 1 });
-
-            // 清空表頭輸入框
-            document.getElementById('LOT_NO').value = headerJson[0][1] || '';
-            document.getElementById('SHPR_CODE').value = headerJson[1][1] || '';
-            document.getElementById('SHPR_C_NAME').value = headerJson[2][1] || '';
-            document.getElementById('CNEE_E_NAME').value = headerJson[3][1] || '';
-            document.getElementById('CNEE_E_ADDR').value = headerJson[4][1] || '';
-            document.getElementById('CNEE_COUNTRY_CODE').value = headerJson[5][1] || '';
-            document.getElementById('TO_CODE').value = headerJson[6][1] || '';
-            document.getElementById('TO_DESC').value = headerJson[7][1] || '';
-            document.getElementById('TOT_CTN').value = headerJson[8][1] || '';
-            document.getElementById('DOC_CTN_UM').value = headerJson[9][1] || '';
-            document.getElementById('CTN_DESC').value = headerJson[10][1] || '';
-            document.getElementById('DCL_GW').value = headerJson[11][1] || '';
-            document.getElementById('DCL_NW').value = headerJson[12][1] || '';
-            document.getElementById('DCL_DOC_TYPE').value = headerJson[13][1] || '';
-            document.getElementById('TERMS_SALES').value = headerJson[14][1] || '';
-            document.getElementById('CURRENCY').value = headerJson[15][1] || '';
-            document.getElementById('CAL_IP_TOT_ITEM_AMT').value = headerJson[16][1] || '';
-            document.getElementById('FRT_AMT').value = headerJson[17][1] || '';
-            document.getElementById('INS_AMT').value = headerJson[18][1] || '';
-            document.getElementById('ADD_AMT').value = headerJson[19][1] || '';
-            document.getElementById('SUBTRACT_AMT').value = headerJson[20][1] || '';
-            document.getElementById('DOC_MARKS_DESC').value = headerJson[21][1] || '';
-            document.getElementById('DOC_OTR_DESC').value = headerJson[22][1] || '';
-            document.getElementById('REMARK1').value = headerJson[23][1] || '';
-        }
-
-        if (itemsSheet) {
-            const itemsJson = XLSX.utils.sheet_to_json(itemsSheet, { header: 1 });
-            fileContent = itemsJson.slice(1); // 暫存項次數據，跳過表頭
-        } else {
-            fileContent = null;
-        }
-    };
-
-    reader.readAsArrayBuffer(file);
-}
-
-// 批量上傳項次
-function uploadFile() {
-    if (!fileContent) {
-        alert('請先選擇文件');
-        return;
+            renumberItems(); // 重新編號所有項次
+            updateRemark1FromImport(); // 更新REMARK1欄位並勾選對應的checkbox
+        };
+        reader.readAsText(file);
     }
-
-    // 清除原有的項次內容
-    document.getElementById('item-container').innerHTML = '';
-
-    const mergedItems = mergeItems(fileContent);
-    mergedItems.forEach((row, index) => {
-        addItemFromExcel(row);
-    });
-
-    fileContent = null;
-    document.getElementById('file-input').value = '';
-}
-
-
-// 合併項次的數據
-function mergeItems(data) {
-    const mergedItems = [];
-    let currentItem = null;
-
-    // 遍歷所有行
-    data.forEach((row) => {
-        const itemNo = row[0];
-        const majorNameFlag = row[1]; // B欄的註記
-        const description = row[2];
-
-        // 檢查A欄若為空且D欄之後的欄位有值，則將A欄標記為'V'
-        if (!itemNo && row.slice(3).some(cell => cell)) {
-            row[0] = 'V';
-        }
-
-        // 根據A欄的值決定是否創建新項次
-        if (row[0]) {
-            // 如果是新項次，保存當前項次並創建新項次
-            if (currentItem !== null) {
-                mergedItems.push(currentItem);
-            }
-            currentItem = {
-                ITEM_NO: row[0],
-                HAS_MAJOR_NAME: majorNameFlag ? true : false, // 根據B欄判斷是否有大品名註記
-                DESCRIPTION: description || '',
-                QTY: row[3] || '',
-                DOC_UM: row[4] || '',
-                DOC_UNIT_P: row[5] || '',
-                DOC_TOT_P: row[6] || '',
-                NET_WT: row[7] || '',                
-                TRADE_MARK: row[8] || '',
-                CCC_CODE: row[9] || '',
-                ST_MTD: row[10] || '',
-                ORG_COUNTRY: row[11] || '',
-                ORG_IMP_DCL_NO: row[12] || '',
-                ORG_IMP_DCL_NO_ITEM: row[13] || '',
-                CERT_NO: row[14] || '',
-                CERT_NO_ITEM: row[15] || ''
-            };
-        } else if (currentItem) {
-            // 如果是內容行，合併到當前項次
-            currentItem.DESCRIPTION += '\n' + description;
-            currentItem.QTY += '\n' + (row[3] || '');
-            currentItem.DOC_UM += '\n' + (row[4] || '');
-            currentItem.DOC_UNIT_P += '\n' + (row[5] || '');
-            currentItem.DOC_TOT_P += '\n' + (row[6] || '');
-            currentItem.NET_WT += '\n' + (row[7] || '');
-            currentItem.TRADE_MARK += '\n' + (row[8] || '');
-            currentItem.CCC_CODE += '\n' + (row[9] || '');
-            currentItem.ST_MTD += '\n' + (row[10] || '');
-            currentItem.ORG_COUNTRY += '\n' + (row[11] || '');
-            currentItem.ORG_IMP_DCL_NO += '\n' + (row[12] || '');
-            currentItem.ORG_IMP_DCL_NO_ITEM += '\n' + (row[13] || '');
-            currentItem.CERT_NO += '\n' + (row[14] || '');
-            currentItem.CERT_NO_ITEM += '\n' + (row[15] || '');
-        }
-    });
-
-    // 添加最後一個項次
-    if (currentItem !== null) {
-        mergedItems.push(currentItem);
-    }
-
-    return mergedItems;
-}
-
-// 從 Excel 文件中新增項次
-function addItemFromExcel(row) {
-    itemCount++;
-    const itemContainer = document.getElementById('item-container');
-    const item = createItemRow({
-        ITEM_NO: row.ITEM_NO,
-        HAS_MAJOR_NAME: row.HAS_MAJOR_NAME, // 根據B欄決定是否勾選
-        DESCRIPTION: row.DESCRIPTION || '',
-        QTY: row.QTY || '',
-        DOC_UM: row.DOC_UM || '',
-        DOC_UNIT_P: row.DOC_UNIT_P || '',
-        DOC_TOT_P: row.DOC_TOT_P || '',
-        NET_WT: row.NET_WT || '',        
-        TRADE_MARK: row.TRADE_MARK || '',
-        CCC_CODE: row.CCC_CODE || '',
-        ST_MTD: row.ST_MTD || '',
-        ORG_COUNTRY: row.ORG_COUNTRY || '',
-        ORG_IMP_DCL_NO: row.ORG_IMP_DCL_NO || '',
-        ORG_IMP_DCL_NO_ITEM: row.ORG_IMP_DCL_NO_ITEM || '',
-        CERT_NO: row.CERT_NO || '',
-        CERT_NO_ITEM: row.CERT_NO_ITEM || ''
-    });
-    itemContainer.appendChild(item);
-
-    renumberItems();
 }
 
 // 創建項次的HTML結構
 function createItemRow(data) {
     const item = document.createElement('div');
     item.className = 'item-row';
+    const isChecked = data.ITEM_NO === '*';
     item.innerHTML = `
         <div class="form-group fix">
             <label>${itemCount}</label>
         </div>
         <div class="form-group fix">
-            <input type="checkbox" class="ITEM_NO" ${data.HAS_MAJOR_NAME ? 'checked' : ''}>
+            <input type="checkbox" class="ITEM_NO" ${isChecked ? 'checked' : ''}>
         </div>
         ${createTextareaField('DESCRIPTION', data.DESCRIPTION)}
         ${createInputField('QTY', data.QTY)}
@@ -531,6 +408,49 @@ function createTextareaField(className, value) {
             <textarea class="${className}" rows="3">${value}</textarea>
         </div>
     `;
+}
+
+// 重新編號所有項次
+function renumberItems() {
+    itemCount = 0;
+    document.querySelectorAll("#item-container .item-row").forEach((item, index) => {
+        itemCount++;
+        item.querySelector('label').textContent = `${itemCount}`; // 項次
+    });
+}
+
+// 更新REMARK1的值
+function updateRemark1() {
+    let additionalDesc = '';
+    if (document.getElementById('copy_3_e').checked) {
+        additionalDesc = '申請沖退原料稅（E化退稅）';
+    }
+    if (document.getElementById('copy_3').checked) {
+        additionalDesc += (additionalDesc ? '\n' : '') + '申請報單副本第三聯（沖退原料稅用聯）';
+    }
+    if (document.getElementById('copy_4').checked) {
+        additionalDesc += (additionalDesc ? '\n' : '') + '申請報單副本第四聯（退內地稅用聯）';
+    }
+    if (document.getElementById('copy_5').checked) {
+        additionalDesc += (additionalDesc ? '\n' : '') + '申請報單副本第五聯（出口證明用聯）';
+    }
+
+    const remark1Element = document.getElementById('REMARK1');
+    const currentRemark = remark1Element.value.split('\n').filter(line => !line.startsWith('申請')).join('\n');
+    remark1Element.value = additionalDesc + (additionalDesc ? '\n' : '') + currentRemark;
+}
+
+// 根據REMARK1欄位更新checkbox的狀態
+function updateRemark1FromImport() {
+    const remark1Element = document.getElementById('REMARK1');
+    const remark1Value = remark1Element.value;
+
+    document.getElementById('copy_3_e').checked = remark1Value.includes('申請沖退原料稅（E化退稅）');
+    document.getElementById('copy_3').checked = remark1Value.includes('申請報單副本第三聯（沖退原料稅用聯）');
+    document.getElementById('copy_4').checked = remark1Value.includes('申請報單副本第四聯（退內地稅用聯）');
+    document.getElementById('copy_5').checked = remark1Value.includes('申請報單副本第五聯（出口證明用聯）');
+
+    updateRemark1(); // 確保REMARK1欄位值與checkbox狀態同步
 }
 
 // 報單副本
@@ -578,8 +498,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function exportToXML() {
-        updateVariables();  // 確保在匯出前更新變數
-
         const headerFields = [
             'LOT_NO', 'SHPR_CODE', 'SHPR_C_NAME', 'CNEE_E_NAME', 'CNEE_E_ADDR', 
             'CNEE_COUNTRY_CODE', 'TO_CODE', 'TO_DESC', 'TOT_CTN', 'DOC_CTN_UM', 'CTN_DESC', 
@@ -592,30 +510,12 @@ document.addEventListener('DOMContentLoaded', function () {
             'NET_WT', 'TRADE_MARK', 'CCC_CODE', 'ST_MTD', 'ORG_COUNTRY', 
             'ORG_IMP_DCL_NO', 'ORG_IMP_DCL_NO_ITEM', 'CERT_NO', 'CERT_NO_ITEM'
         ];
-
         let xmlContent = '<?xml version="1.0" encoding="UTF-8"?>\n<Root>\n  <sys_code>GICCDS</sys_code>\n<head>\n  <head_table_name>DOC_HEAD</head_table_name>\n';
         
         headerFields.forEach(id => {
             let element = document.getElementById(id);
             if (element) {
                 let value = element.value;
-                // 其它申報事項加入申請報單副本備註
-                if (id === 'DOC_OTR_DESC') {
-                    let additionalDesc = '';
-                    if (document.getElementById('copy_3_e').checked) {
-                        additionalDesc = '申請沖退原料稅（E化退稅）\n';
-                    }
-                    if (document.getElementById('copy_3').checked) {
-                        additionalDesc += (additionalDesc ? ' \n ' : '') + '申請報單副本第三聯（沖退原料稅用聯）\n';
-                    }
-                    if (document.getElementById('copy_4').checked) {
-                        additionalDesc += (additionalDesc ? ' \n ' : '') + '申請報單副本第四聯（退內地稅用聯）\n';
-                    }
-                    if (document.getElementById('copy_5').checked) {
-                        additionalDesc += (additionalDesc ? ' \n ' : '') + '申請報單副本第五聯（出口證明用聯）\n';
-                    }
-                    value = additionalDesc ? additionalDesc + '\n' + value : value;
-                }
                 xmlContent += `  <fields>\n    <field_name>${id}</field_name>\n    <field_value>${value}</field_value>\n  </fields>\n`;
             }
         });
@@ -648,83 +548,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     document.getElementById('export-to-xml').addEventListener('click', exportToXML);
 });
-
-// 匯出 EXCEL
-function exportToExcel() {
-    const workbook = XLSX.utils.book_new();
-
-    // 表頭數據，由上至下排列
-    const headerData = [
-        ["運單號", document.getElementById('LOT_NO').value],
-        ["出口人統一編號", document.getElementById('SHPR_CODE').value],
-        ["出口人名稱", document.getElementById('SHPR_C_NAME').value],
-        ["買方名稱", document.getElementById('CNEE_E_NAME').value],
-        ["買方地址", document.getElementById('CNEE_E_ADDR').value],
-        ["買方國家代碼", document.getElementById('CNEE_COUNTRY_CODE').value],
-        ["目的地(代碼)", document.getElementById('TO_CODE').value],
-        ["目的地(名稱)", document.getElementById('TO_DESC').value],
-        ["總件數", document.getElementById('TOT_CTN').value],
-        ["總件數單位", document.getElementById('DOC_CTN_UM').value],
-        ["包裝說明", document.getElementById('CTN_DESC').value],
-        ["總毛重", document.getElementById('DCL_GW').value],
-        ["總淨重", document.getElementById('DCL_NW').value],
-        ["報單類別", document.getElementById('DCL_DOC_TYPE').value],
-        ["貿易條件", document.getElementById('TERMS_SALES').value],
-        ["幣別", document.getElementById('CURRENCY').value],
-        ["總金額", document.getElementById('CAL_IP_TOT_ITEM_AMT').value],
-        ["運費", document.getElementById('FRT_AMT').value],
-        ["保險費", document.getElementById('INS_AMT').value],
-        ["應加費用", document.getElementById('ADD_AMT').value],
-        ["應減費用", document.getElementById('SUBTRACT_AMT').value],
-        ["標記及貨櫃號碼", document.getElementById('DOC_MARKS_DESC').value],
-        ["其它申報事項", document.getElementById('DOC_OTR_DESC').value],
-        ["REMARKS", document.getElementById('REMARK1').value]
-    ];
-
-    // 項次數據
-    const itemHeaderData = [
-        ["項次", "大品名註記", "品名", "數量", "單位", "單價", "金額", 
-        "淨重", "商標", "稅則", "統計方式", "生產國別", 
-        "原進口報單號碼", "原進口報單項次", "產證號碼", "產證項次"]
-    ];
-    const itemData = [];
-
-    document.querySelectorAll("#item-container .item-row").forEach((item, index) => {
-        const rowData = [
-            index + 1,
-            item.querySelector('.ITEM_NO').checked ? '*' : '',
-            item.querySelector('.DESCRIPTION').value,
-            item.querySelector('.QTY').value,
-            item.querySelector('.DOC_UM').value,
-            item.querySelector('.DOC_UNIT_P').value,
-            item.querySelector('.DOC_TOT_P').value,
-            item.querySelector('.NET_WT').value,                        
-            item.querySelector('.TRADE_MARK').value,
-            item.querySelector('.CCC_CODE').value,
-            item.querySelector('.ST_MTD').value,
-            item.querySelector('.ORG_COUNTRY').value,
-            item.querySelector('.ORG_IMP_DCL_NO').value,
-            item.querySelector('.ORG_IMP_DCL_NO_ITEM').value,
-            item.querySelector('.CERT_NO').value,
-            item.querySelector('.CERT_NO_ITEM').value
-        ];
-        itemData.push(rowData);
-    });
-
-    // 建立表頭工作表
-    const headerSheet = XLSX.utils.aoa_to_sheet(headerData);
-    headerSheet['!cols'] = [{ wch: 20 }];
-    XLSX.utils.book_append_sheet(workbook, headerSheet, "報單表頭");
-
-    // 建立項次工作表
-    const itemsSheet = XLSX.utils.aoa_to_sheet(itemHeaderData.concat(itemData));
-    itemsSheet['!cols'] = [{ wch: 20 }];
-    XLSX.utils.book_append_sheet(workbook, itemsSheet, "報單項次");
-
-    // 匯出 EXCEL 文件
-    XLSX.writeFile(workbook, 'report.xlsx');
-}
-document.getElementById('export-to-excel').addEventListener('click', exportToExcel);
 
 // 出口報單預覽
 function exportToPDF() {
@@ -775,7 +598,7 @@ function exportToPDF() {
                 ["應減費用", document.getElementById('SUBTRACT_AMT').value],
                 ["標記及貨櫃號碼", document.getElementById('DOC_MARKS_DESC').value],
                 ["其它申報事項", document.getElementById('DOC_OTR_DESC').value]
-                // REMARKS（此欄不會出現在報單上，僅作為備註用）
+                ["REMARKS", document.getElementById('REMARK1').value]
             ];
 
             let y = 30; // 更新初始 y 座標
