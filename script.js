@@ -154,10 +154,9 @@ function closeItemModal() {
 
 // 儲存新增的項次
 function saveItem() {
-    itemCount++;
     const itemContainer = document.getElementById('item-container');
     const item = createItemRow({
-        HAS_MAJOR_NAME: document.getElementById('ITEM_NO').checked, // 設置勾選狀態
+        ITEM_NO: document.getElementById('ITEM_NO').checked ? '*' : '', // 根據勾選狀態設置 ITEM_NO
         DESCRIPTION: document.getElementById('DESCRIPTION').value,
         QTY: document.getElementById('QTY').value,
         DOC_UM: document.getElementById('DOC_UM').value,
@@ -415,7 +414,7 @@ function handleFile(event) {
         itemContainer.innerHTML = ''; // 清空現有項次
         itemsData.slice(1).forEach((row, index) => {
             const itemRow = createItemRow({
-                ITEM_NO: row[1], // 直接傳遞 B 欄數據，後續判斷
+                ITEM_NO: row[1], // 直接傳遞 B 欄數據
                 DESCRIPTION: row[2] || '',
                 QTY: row[3] || '',
                 DOC_UM: row[4] || '',
@@ -430,7 +429,7 @@ function handleFile(event) {
                 ORG_IMP_DCL_NO_ITEM: row[13] || '',
                 CERT_NO: row[14] || '',
                 CERT_NO_ITEM: row[15] || ''
-            }, 'excel');
+            });
             itemContainer.appendChild(itemRow);
         });
         renumberItems();
@@ -438,7 +437,7 @@ function handleFile(event) {
     reader.readAsArrayBuffer(file);
 }
 
-function checkRemarkOptions(remarks, sourceType) {
+function checkRemarkOptions(remarks) {
     const options = {
         'copy_3_e': '申請沖退原料稅（E化退稅）',
         'copy_3': '申請報單副本第三聯（沖退原料稅用聯）',
@@ -569,11 +568,11 @@ function importXML(event) {
 }
 
 // 創建項次的HTML結構
-function createItemRow(data, sourceType) {
-    const item = document.createElement('div');
-    item.className = 'item-row';
-    const isChecked = data.ITEM_NO === '*';
-    item.innerHTML = `
+function createItemRow(data) {
+    const row = document.createElement('div');
+    row.className = 'item-row';
+    const isChecked = data.ITEM_NO === '*'; // 根據 ITEM_NO 判斷是否勾選
+    row.innerHTML = `
         <div class="form-group fix">
             <label>${itemCount + 1}</label>
         </div>
@@ -599,21 +598,23 @@ function createItemRow(data, sourceType) {
         </div>
     `;
     itemCount++;
-    return item;
+    return row;
 }
 
-function createInputField(className, value) {
+// 創建文本域
+function createTextareaField(name, value) {
     return `
         <div class="form-group">
-            <input type="text" class="${className}" value="${value}">
+            <textarea class="${name}">${value || ''}</textarea>
         </div>
     `;
 }
 
-function createTextareaField(className, value) {
+// 創建輸入域
+function createInputField(name, value) {
     return `
         <div class="form-group">
-            <textarea class="${className}" rows="3">${value}</textarea>
+            <input type="text" class="${name}" value="${value || ''}">
         </div>
     `;
 }
