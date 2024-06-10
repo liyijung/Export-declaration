@@ -62,6 +62,14 @@ document.addEventListener('DOMContentLoaded', (event) => {
         checkbox.addEventListener('change', updateRemark1);
     });
 
+    // 添加事件監聽器到所有checkbox以更新相關變量
+    document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+        checkbox.addEventListener('change', updateVariables);
+    });
+
+    // 添加鍵盤事件監聽器
+    document.addEventListener('keydown', handleKeyNavigation);
+    
     // 初始化時更新REMARK1的值
     updateRemark1();
 });
@@ -153,7 +161,6 @@ function saveItem() {
     });
     itemContainer.appendChild(item);
 
-    closeItemModal();
     renumberItems();
 }
 
@@ -470,11 +477,16 @@ document.addEventListener('DOMContentLoaded', function () {
         const copy4 = document.getElementById('copy_4');
         const copy5 = document.getElementById('copy_5');
 
+        const remark1 = document.getElementById('REMARK1');
+
         // 確保 申請沖退原料稅（E化退稅）和 申請報單副本第三聯（沖退原料稅用聯) 只能擇一
         if (copy3_e.checked && copy3.checked) {
             alert("申請沖退原料稅（E化退稅）\n申請報單副本第三聯（沖退原料稅用聯)\n\n請擇一選擇");
             copy3_e.checked = false;
             copy3.checked = false;
+            // 清空 REMARK1 欄位的值
+            remark1.value = '';
+            return; // 退出函数以确保不進行後續處理
         }
 
         // 更新 APP_DUTY_REFUND 和 MARK_TOT_LINES
