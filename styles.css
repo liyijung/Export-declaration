@@ -53,29 +53,14 @@ body {
 
 .import-export-buttons button{
     margin-top: 10px; /* 上方距離空間 */
+    margin-bottom: 30px; /* 上方距離空間 */
     margin-left: 30px; /* 左側距離空間 */
-    font-size: 14px; /* 指定按鈕字體大小，例如 16px */
-}
-
-.excel-btn,
-.xml-btn,
-.pdf-btn {
-    box-shadow: 0 2px 5px rgba(0,0,0,5);
+    font-size: 14px; /* 指定按鈕字體大小 */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.5);
     border-radius: 5px;
     border: none;
     cursor: pointer; /* 指向時顯示手的圖標 */
-}
-
-.excel-btn{
-    background: linear-gradient(to bottom, rgb(200, 200, 200), #c5ffef);
-}
-
-.xml-btn {
-    background: linear-gradient(to bottom, rgb(200, 200, 200), #ffc4ca);
-}
-
-.pdf-btn {
-    background: linear-gradient(to bottom, rgb(200, 200, 200), #fffcc0);
+    background-color: #e3e2e2;
 }
 
 .item-header {
