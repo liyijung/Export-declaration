@@ -161,6 +161,7 @@ function saveItem() {
     });
     itemContainer.appendChild(item);
 
+    closeItemModal();
     renumberItems();
 }
 
