@@ -484,7 +484,7 @@
         </div>
     </div>
 
-    <div class="import-export-buttons">
+    <div class="import-export-buttons"><hr>
         <input type="file" id="import-excel" accept=".xlsx, .xls" style="display:none;">
         <button class="excel-btn" onclick="document.getElementById('import-excel').click();">匯入Excel</button>
         <button class="excel-btn" id="export-excel">匯出Excel</button>
@@ -493,8 +493,6 @@
         <button class="xml-btn" id="export-to-xml">匯出XML</button>
         <button class="pdf-btn" onclick="exportToPDF()">出口報單預覽</button>
     </div>
-    
-    <p style="margin-bottom: 50px;"></p>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>    
