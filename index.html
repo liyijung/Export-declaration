@@ -166,16 +166,16 @@
 
     <!--報單項次-->
     <div id="items" class="tab">
-        <div class="import-export-buttons">
+        <div class="add-buttons">
             <button onclick="openItemModal()">新增項次</button>
             <button onclick="openAdjustOrderModal()">調整順序</button>
             <button onclick="openSpecifyFieldModal()">指定填列欄位資料</button>
         </div>        
         <div class="item-row item-header">
-            <div class="form-group fix">
+            <div class="form-group">
                 <label>項次</label>
             </div>
-            <div class="form-group fix">
+            <div class="form-group">
                 <label>大品名註記</label>
             </div>
             <div class="form-group">
@@ -493,7 +493,7 @@
         <button class="xml-btn" id="export-to-xml">匯出XML</button>
         <button class="pdf-btn" onclick="exportToPDF()">出口報單預覽</button>
     </div>
-
+    
     <p style="margin-bottom: 50px;"></p>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>    
