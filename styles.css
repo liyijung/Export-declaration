@@ -51,9 +51,10 @@ body {
     display: block;
 }
 
-.import-export-buttons {
-    margin: 20px;
-    font-size: 14px; /* 字體大小 */
+.import-export-buttons button{
+    margin-top: 10px; /* 上方距離空間 */
+    margin-left: 30px; /* 左側距離空間 */
+    font-size: 14px; /* 指定按鈕字體大小，例如 16px */
 }
 
 .excel-btn,
