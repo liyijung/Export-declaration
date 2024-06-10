@@ -51,16 +51,28 @@ body {
     display: block;
 }
 
-.import-export-buttons button{
+.import-export-buttons button {
     margin-top: 30px; /* 上方距離空間 */
     margin-bottom: 30px; /* 上方距離空間 */
     margin-left: 30px; /* 左側距離空間 */
-    font-size: 14px; /* 指定按鈕字體大小 */
     box-shadow: 0 2px 5px rgba(0,0,0,0.5);
     border-radius: 5px;
     border: none;
     cursor: pointer; /* 指向時顯示手的圖標 */
     background-color: #e3e2e2;
+    font-size: 14px; /* 指定按鈕字體大小 */
+}
+
+.add-buttons button{
+    margin-top: 30px; /* 上方距離空間 */
+    margin-bottom: 30px; /* 上方距離空間 */
+    margin-left: 5px; /* 左側距離空間 */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+    border-radius: 5px;
+    border: none;
+    cursor: pointer; /* 指向時顯示手的圖標 */
+    background-color: #e3e2e2;
+    font-size: 16px; /* 指定按鈕字體大小 */
 }
 
 .item-header {
