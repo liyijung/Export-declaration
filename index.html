@@ -14,13 +14,13 @@
             <div class="tab-links active" onclick="openTab('header')">出口報單表頭</div>
             <div class="tab-links" onclick="openTab('items')">出口報單項次</div>
             <div class="tab-links" onclick="openTab('copy')">申請報單副本</div>
-            <div class="tab-links" onclick="openTab('bonded')">保稅監管編號</div>
+            <div class="tab-links" onclick="openTab('bonded')">保稅相關信息</div>
         </div>
     </div>
 
     <!--報單表頭-->    
     <div id="header" class="tab active">
-        <p style="margin-top: 30px;"></p>        
+        <p style="margin-top: 30px;"></p>
         <div class="header-section">
             <div class="header-group">
                 <label for="LOT_NO">運單號</label>
@@ -49,7 +49,22 @@
                 <input type="text" id="CNEE_COUNTRY_CODE" name="CNEE_COUNTRY_CODE"
                 placeholder="範例：HK、CN、KR、SG（英文代碼）">
             </div>
+            <div class="header-group">
+                <label for="CNEE_BAN_ID">買方統一編號</label>
+                <input type="text" id="CNEE_BAN_ID" name="CNEE_BAN_ID"
+                placeholder="（非台灣營業公司此欄免填）">
+            </div>            
             <hr>
+            <div class="header-group">
+                <label for="BUYER_E_NAME">收方名稱</label>
+                <input type="text" id="BUYER_E_NAME" name="BUYER_E_NAME"
+                placeholder="（與買方名稱相同此欄免填）">
+            </div>
+            <div class="header-group">
+                <label for="BUYER_E_ADDR">收方地址</label>
+                <input type="text" id="BUYER_E_ADDR" name="BUYER_E_ADDR"
+                placeholder="（與買方地址相同此欄免填）">
+            </div>
             <div class="header-group">
                 <label for="TO_CODE">目的地(代碼)</label>
                 <input type="text" id="TO_CODE" name="TO_CODE"
@@ -76,7 +91,7 @@
             <div class="header-group">
                 <label for="CTN_DESC">包裝說明</label>
                 <input type="text" id="CTN_DESC" name="CTN_DESC"
-                placeholder="範例：5 CTN、5 PKG、5 ROL（一般倉或ECFA包裝說明）">
+                placeholder="範例：2CTN、5PKG、8ROL（一般倉或ECFA包裝說明）">
             </div>
             <div class="header-group">
                 <label for="DCL_GW">總毛重</label>
@@ -123,22 +138,23 @@
             <div class="header-group">
                 <label for="CAL_IP_TOT_ITEM_AMT">總金額</label>
                 <input type="number" id="CAL_IP_TOT_ITEM_AMT" name="CAL_IP_TOT_ITEM_AMT" min="0"
-                placeholder="提示：若為台幣金額不可有小數點">
+                placeholder="（若為台幣金額不可有小數點）">
             </div>
+            <hr>
             <div class="header-group">
                 <label for="FRT_AMT">運費</label>
                 <input type="number" id="FRT_AMT" name="FRT_AMT" min="0"
-                placeholder="提示：CFR、CIF 需填列運費">
+                placeholder="（CFR、CIF 需填列運費）">
             </div>   
             <div class="header-group">
                 <label for="INS_AMT">保險費</label>
                 <input type="number" id="INS_AMT" name="INS_AMT" min="0"
-                placeholder="提示：C&I、CIF 需填列保險費">
+                placeholder="（C&I、CIF 需填列保險費）">
             </div>
             <div class="header-group">
                 <label for="ADD_AMT">應加費用</label>
                 <input type="number" id="ADD_AMT" name="ADD_AMT" min="0"
-                placeholder="提示：EXW 需填列應加費用">
+                placeholder="（EXW 需填列應加費用）">
             </div>
             <div class="header-group">
                 <label for="SUBTRACT_AMT">應減費用</label>
@@ -146,7 +162,6 @@
             </div>       
         </div> 
         <hr>
-
         <div class="header-section">
             <div class="header-group">
                 <label for="DOC_MARKS_DESC">標記及貨櫃號碼</label>
@@ -160,17 +175,18 @@
             <div class="header-group">
                 <label for="REMARK1">REMARKS</label>
                 <textarea id="REMARK1" name="REMARK1" rows="5"></textarea>
-            </div>            
-        </div>               
+            </div>
+        </div>
+        <p style="margin-bottom: 50px;"></p>
     </div>
 
     <!--報單項次-->
     <div id="items" class="tab">
         <div class="add-buttons">
-            <button onclick="openItemModal()">新增項次</button>
+            <button onclick="openItemModal()">新增項次（可複製、查看、修改）</button>
             <button onclick="openAdjustOrderModal()">調整順序</button>
             <button onclick="openSpecifyFieldModal()">指定填列欄位資料</button>
-        </div>        
+        </div>
         <div class="item-row item-header">
             <div class="form-group fix">
                 <label>項次</label>
@@ -207,7 +223,7 @@
             </div>
             <div class="form-group">
                 <label>生產國別</label>
-            </div>            
+            </div>
             <div class="form-group">
                 <label>原進口報單號碼</label>
             </div>
@@ -215,10 +231,46 @@
                 <label>原進口報單項次</label>
             </div>
             <div class="form-group">
+                <label>賣方料號</label>
+            </div>
+            <div class="form-group">
+                <label>保稅貨物註記</label>
+            </div>            
+            <div class="form-group">
+                <label>型號</label>
+            </div>
+            <div class="form-group">
+                <label>規格</label>
+            </div>
+            <div class="form-group">
                 <label>產證號碼</label>
             </div>
             <div class="form-group">
                 <label>產證項次</label>
+            </div>
+            <div class="form-group">
+                <label>原進倉報單號碼</label>
+            </div>
+            <div class="form-group">
+                <label>原進倉報單項次</label>
+            </div>            
+            <div class="form-group">
+                <label>輸出許可號碼</label>
+            </div>
+            <div class="form-group">
+                <label>輸出許可項次</label>
+            </div>
+            <div class="form-group">
+                <label>寬度(幅寬)</label>
+            </div>
+            <div class="form-group">
+                <label>寬度單位</label>
+            </div>
+            <div class="form-group">
+                <label>長度(幅長)</label>
+            </div>
+            <div class="form-group">
+                <label>長度單位</label>
             </div>            
             <div class="form-group">
                 <label>操作</label>
@@ -232,7 +284,7 @@
     <div id="item-modal" class="modal">
         <div class="modal-content">
             <div class="modal-header" id="item-modal-header">
-                <h2>新增項次</h2>
+                <h2>新增項次（可複製、查看、修改）</h2>
             </div>
             <div class="flex-group">
                 <input type="checkbox" id="ITEM_NO" name="HAS_MAJOR_NAME">
@@ -300,6 +352,22 @@
                 <input type="text" id="ORG_IMP_DCL_NO_ITEM" class="ORG_IMP_DCL_NO_ITEM">
             </div>
             <div class="header-group">
+                <label for="SELLER_ITEM_CODE">賣方料號</label>
+                <input type="text" id="SELLER_ITEM_CODE" class="SELLER_ITEM_CODE">
+            </div>
+            <div class="header-group">
+                <label for="BOND_NOTE">保稅貨物註記</label>
+                <input type="text" id="BOND_NOTE" class="BOND_NOTE">
+            </div>            
+            <div class="header-group">
+                <label for="GOODS_MODEL">型號</label>
+                <input type="text" id="GOODS_MODEL" class="GOODS_MODEL">
+            </div>
+            <div class="header-group">
+                <label for="GOODS_SPEC">規格</label>
+                <input type="text" id="GOODS_SPEC" class="GOODS_SPEC">
+            </div>
+            <div class="header-group">
                 <label for="CERT_NO">產證號碼</label>
                 <input type="text" id="CERT_NO" class="CERT_NO" placeholder="提示：ECFA 產證號碼">
             </div>
@@ -307,6 +375,38 @@
                 <label for="CERT_NO_ITEM">產證項次</label>
                 <input type="text" id="CERT_NO_ITEM" class="CERT_NO_ITEM" placeholder="提示：ECFA 產證項次">
             </div>
+            <div class="header-group">
+                <label for="ORG_DCL_NO">原進倉報單號碼</label>
+                <input type="text" id="ORG_DCL_NO" class="ORG_DCL_NO">
+            </div>
+            <div class="header-group">
+                <label for="ORG_DCL_NO_ITEM">原進倉報單項次</label>
+                <input type="text" id="ORG_DCL_NO_ITEM" class="ORG_DCL_NO_ITEM">
+            </div>
+            <div class="header-group">
+                <label for="EXP_NO">輸出許可號碼</label>
+                <input type="text" id="EXP_NO" class="EXP_NO">
+            </div>
+            <div class="header-group">
+                <label for="EXP_SEQ_NO">輸出許可項次</label>
+                <input type="text" id="EXP_SEQ_NO" class="EXP_SEQ_NO">
+            </div>
+            <div class="header-group">
+                <label for="WIDE">寬度(幅寬)</label>
+                <input type="text" id="WIDE" class="WIDE">
+            </div>
+            <div class="header-group">
+                <label for="WIDE_UM">寬度單位</label>
+                <input type="text" id="WIDE_UM" class="WIDE_UM">
+            </div>
+            <div class="header-group">
+                <label for="LENGT_">長度(幅長)</label>
+                <input type="text" id="LENGT_" class="LENGT_">
+            </div>
+            <div class="header-group">
+                <label for="LENGTH_UM">長度單位</label>
+                <input type="text" id="LENGTH_UM" class="LENGTH_UM">
+            </div>            
             <div class="floating-buttons">
                 <button onclick="saveItem()">儲存</button>
                 <button onclick="closeItemModal()">取消</button>
@@ -364,8 +464,20 @@
                         <option value="ORG_COUNTRY">生產國別</option>
                         <option value="ORG_IMP_DCL_NO">原進口報單號碼</option>
                         <option value="ORG_IMP_DCL_NO_ITEM">原進口報單項次</option>
+                        <option value="SELLER_ITEM_CODE">賣方料號</option>
+                        <option value="BOND_NOTE">保稅貨物註記</option>
+                        <option value="GOODS_MODEL">型號</option>
+                        <option value="GOODS_SPEC">規格</option>
                         <option value="CERT_NO">產證號碼</option>
                         <option value="CERT_NO_ITEM">產證項次</option>
+                        <option value="ORG_DCL_NO">原進倉報單號碼</option>
+                        <option value="ORG_DCL_NO_ITEM">原進倉報單項次</option>
+                        <option value="EXP_NO">輸出許可號碼</option>
+                        <option value="EXP_SEQ_NO">輸出許可項次</option>
+                        <option value="WIDE">寬度(幅寬)</option>
+                        <option value="WIDE_UM">寬度單位</option>
+                        <option value="LENGT_">長度(幅長)</option>
+                        <option value="LENGTH_UM">長度單位</option>                        
                     </select>
                 </div>
                 <div class="header-group">
@@ -376,7 +488,9 @@
             <div id="copy-content" class="specify-mode-content" style="display:none;">
                 <div class="header-group">
                     <label for="source-item-number">源項次</label>
-                    <input type="text" id="source-item-number" placeholder="例如: 3（單項次）">
+                    <select id="source-item-number">
+                        <option value="">選擇項次</option>
+                    </select>
                 </div>
                 <div class="header-group">
                     <label for="specify-field-names-copy">欄位名稱</label>
@@ -393,8 +507,20 @@
                         <option value="ORG_COUNTRY">生產國別</option>
                         <option value="ORG_IMP_DCL_NO">原進口報單號碼</option>
                         <option value="ORG_IMP_DCL_NO_ITEM">原進口報單項次</option>
+                        <option value="SELLER_ITEM_CODE">賣方料號</option>
+                        <option value="BOND_NOTE">保稅貨物註記</option>
+                        <option value="GOODS_MODEL">型號</option>
+                        <option value="GOODS_SPEC">規格</option>
                         <option value="CERT_NO">產證號碼</option>
                         <option value="CERT_NO_ITEM">產證項次</option>
+                        <option value="ORG_DCL_NO">原進倉報單號碼</option>
+                        <option value="ORG_DCL_NO_ITEM">原進倉報單項次</option>
+                        <option value="EXP_NO">輸出許可號碼</option>
+                        <option value="EXP_SEQ_NO">輸出許可項次</option> 
+                        <option value="WIDE">寬度(幅寬)</option>
+                        <option value="WIDE_UM">寬度單位</option>
+                        <option value="LENGT_">長度(幅長)</option>
+                        <option value="LENGTH_UM">長度單位</option>                                               
                     </select>
                 </div>
                 <div class="header-group">
@@ -434,6 +560,10 @@
                 <input type="checkbox" id="copy_5" name="copy_option">申請報單副本第五聯（出口證明用聯）<br>
             </div>  
         </div>
+        <input type="hidden" id="APP_DUTY_REFUND" value="">
+        <input type="hidden" id="MARK_TOT_LINES" value="">
+        <input type="hidden" id="EXAM_TYPE" value="">
+        <input type="hidden" id="COPY_QTY" value="">
     </div>
     
     <!-- 用於顯示變數值 -->
@@ -457,12 +587,12 @@
                 <input type="text" id="FAC_BONDED_ID_EX" name="FAC_BONDED_ID_EX">
             </div>
             <div class="header-group">
-                <label for="BILL_OF_MATERIAL">用料清表文號</label>
-                <input type="text" id="BILL_OF_MATERIALS" name="BILL_OF_MATERIALS">
+                <label for="RESERVED_STR_1">用料清表文號</label>
+                <input type="text" id="RESERVED_STR_1" name="RESERVED_STR_1">
             </div>
             <div class="header-group">
-                <label for="BONDED_OUT">保出字號</label>
-                <input type="text" id="BONDED_OUT" name="BONDED_OUT">
+                <label for="RESERVED_STR_2">保出字號</label>
+                <input type="text" id="RESERVED_STR_2" name="RESERVED_STR_2">
             </div>
             <hr>
             <div class="header-group">
@@ -480,17 +610,17 @@
             <div class="header-group">
                 <label for="IN_BONDED_CODE">進倉保稅倉庫代碼</label>
                 <input type="text" id="IN_BONDED_CODE" name="IN_BONDED_CODE">
-            </div>                      
+            </div>
         </div>
     </div>
 
-    <div class="import-export-buttons"><hr>
+    <div class="import-export-buttons">
         <input type="file" id="import-excel" accept=".xlsx, .xls" style="display:none;">
         <button class="excel-btn" onclick="document.getElementById('import-excel').click();">匯入Excel</button>
-        <button class="excel-btn" id="export-excel">匯出Excel</button>
+        <button class="excel-btn" id="export-excel">匯出Excel（存檔）</button>
         <input type="file" id="import-xml" accept=".xml" style="display:none;">        
         <button class="xml-btn" onclick="document.getElementById('import-xml').click();">匯入XML</button>        
-        <button class="xml-btn" id="export-to-xml">匯出XML</button>
+        <button class="xml-btn" id="export-to-xml">匯出XML（存檔）</button>
         <button class="pdf-btn" onclick="exportToPDF()">出口報單預覽</button>
     </div>
 
