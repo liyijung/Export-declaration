@@ -224,6 +224,18 @@ function removeItem(element) {
     renumberItems();
 }
 
+// 顯示隱藏欄位
+function toggleFields() {
+    const hiddenFields = document.querySelectorAll('.hidden');
+    hiddenFields.forEach(field => {
+        if (field.style.display === 'none' || field.style.display === '') {
+            field.style.display = 'flex';
+        } else {
+            field.style.display = 'none';
+        }
+    });
+}
+
 // 引入 Sortable.js 庫
 document.write('<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.14.0/Sortable.min.js"><\/script>');
 
@@ -682,31 +694,31 @@ function createItemRow(data) {
             <input type="checkbox" class="ITEM_NO" ${isChecked ? 'checked' : ''}>
         </div>
         ${createTextareaField('DESCRIPTION', data.DESCRIPTION)}
-        ${createInputField('QTY', data.QTY)}
-        ${createInputField('DOC_UM', data.DOC_UM)}
-        ${createInputField('DOC_UNIT_P', data.DOC_UNIT_P)}
-        ${createInputField('DOC_TOT_P', data.DOC_TOT_P)}
-        ${createInputField('NET_WT', data.NET_WT)}
-        ${createInputField('TRADE_MARK', data.TRADE_MARK)}
-        ${createInputField('CCC_CODE', data.CCC_CODE)}
-        ${createInputField('ST_MTD', data.ST_MTD)}
-        ${createInputField('ORG_COUNTRY', data.ORG_COUNTRY)}
-        ${createInputField('ORG_IMP_DCL_NO', data.ORG_IMP_DCL_NO)}
-        ${createInputField('ORG_IMP_DCL_NO_ITEM', data.ORG_IMP_DCL_NO_ITEM)}
-        ${createInputField('SELLER_ITEM_CODE', data.SELLER_ITEM_CODE)}
-        ${createInputField('BOND_NOTE', data.BOND_NOTE)}        
-        ${createInputField('GOODS_MODEL', data.GOODS_MODEL)}
-        ${createInputField('GOODS_SPEC', data.GOODS_SPEC)}
-        ${createInputField('CERT_NO', data.CERT_NO)}
-        ${createInputField('CERT_NO_ITEM', data.CERT_NO_ITEM)}
-        ${createInputField('ORG_DCL_NO', data.ORG_DCL_NO)}
-        ${createInputField('ORG_DCL_NO_ITEM', data.ORG_DCL_NO_ITEM)}
-        ${createInputField('EXP_NO', data.EXP_NO)}
-        ${createInputField('EXP_SEQ_NO', data.EXP_SEQ_NO)}
-        ${createInputField('WIDE', data.WIDE)}
-        ${createInputField('WIDE_UM', data.WIDE_UM)}
-        ${createInputField('LENGT_', data.LENGT_)}
-        ${createInputField('LENGTH_UM', data.LENGTH_UM)}
+        ${createInputField('QTY', data.QTY, true)}
+        ${createInputField('DOC_UM', data.DOC_UM, true)}
+        ${createInputField('DOC_UNIT_P', data.DOC_UNIT_P, true)}
+        ${createInputField('DOC_TOT_P', data.DOC_TOT_P, true)}
+        ${createInputField('NET_WT', data.NET_WT, true)}
+        ${createInputField('TRADE_MARK', data.TRADE_MARK, true)}
+        ${createInputField('CCC_CODE', data.CCC_CODE, true)}
+        ${createInputField('ST_MTD', data.ST_MTD, true)}
+        ${createInputField('ORG_COUNTRY', data.ORG_COUNTRY, false)}
+        ${createInputField('ORG_IMP_DCL_NO', data.ORG_IMP_DCL_NO, false)}
+        ${createInputField('ORG_IMP_DCL_NO_ITEM', data.ORG_IMP_DCL_NO_ITEM, false)}
+        ${createInputField('SELLER_ITEM_CODE', data.SELLER_ITEM_CODE, false)}
+        ${createInputField('BOND_NOTE', data.BOND_NOTE, false)}        
+        ${createInputField('GOODS_MODEL', data.GOODS_MODEL, false)}
+        ${createInputField('GOODS_SPEC', data.GOODS_SPEC, false)}
+        ${createInputField('CERT_NO', data.CERT_NO, false)}
+        ${createInputField('CERT_NO_ITEM', data.CERT_NO_ITEM, false)}
+        ${createInputField('ORG_DCL_NO', data.ORG_DCL_NO, false)}
+        ${createInputField('ORG_DCL_NO_ITEM', data.ORG_DCL_NO_ITEM, false)}
+        ${createInputField('EXP_NO', data.EXP_NO, false)}
+        ${createInputField('EXP_SEQ_NO', data.EXP_SEQ_NO, false)}
+        ${createInputField('WIDE', data.WIDE, false)}
+        ${createInputField('WIDE_UM', data.WIDE_UM, false)}
+        ${createInputField('LENGT_', data.LENGT_, false)}
+        ${createInputField('LENGTH_UM', data.LENGTH_UM, false)}
         <div class="form-group">
             <button class="delete-button" onclick="removeItem(this)">Ｘ</button>
         </div>
@@ -725,9 +737,10 @@ function createTextareaField(name, value) {
 }
 
 // 創建輸入域
-function createInputField(name, value) {
+function createInputField(name, value, isVisible) {
+    const visibilityClass = isVisible ? '' : ' hidden';
     return `
-        <div class="form-group">
+        <div class="form-group${visibilityClass}">
             <input type="text" class="${name}" value="${value || ''}">
         </div>
     `;
