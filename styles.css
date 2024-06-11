@@ -12,6 +12,7 @@ body {
     z-index: 1000;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     font-size: 18px; /* 增大字體 */
+    padding: 10px;
 }
 
 .tabs {
@@ -52,15 +53,25 @@ body {
 }
 
 .import-export-buttons button {
-    margin-top: 10px; /* 上方距離空間 */
-    margin-bottom: 30px; /* 上方距離空間 */
     margin-left: 30px; /* 左側距離空間 */
     box-shadow: 0 2px 5px rgba(0,0,0,0.5);
     border-radius: 5px;
     border: 1px solid #ccc; /* 添加邊框 */
     cursor: pointer; /* 指向時顯示手的圖標 */
     background-color: #e3e2e2;
-    font-size: 14px; /* 指定按鈕字體大小 */
+    font-size: 16px; /* 指定按鈕字體大小 */
+}
+
+.import-export-buttons {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: linear-gradient(to bottom, rgb(240, 240, 240), rgb(225, 233, 246));
+    padding: 10px 0; /* 調整 padding 以去除多餘的留白 */
+    box-shadow: 0 -2px 5px rgba(0,0,0,0.1); /* 添加一點陰影以區分內容和固定欄 */
+    display: flex;
+    z-index: 1000; /* 確保它位於其他內容之上 */
 }
 
 .add-buttons button{
