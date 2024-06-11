@@ -319,3 +319,7 @@ textarea {
 h4 {
     color: rgb(0, 0, 183);
 }
+
+.hidden {
+    display: none;
+}
