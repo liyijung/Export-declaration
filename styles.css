@@ -53,7 +53,6 @@ body {
 }
 
 .import-export-buttons button {
-    margin-left: 20px; /* 左側距離空間 */
     box-shadow: 0 2px 5px rgba(0,0,0,0.5);
     border-radius: 5px;
     border: 1px solid #ccc; /* 添加邊框 */
@@ -68,9 +67,10 @@ body {
     width: 100%;
     padding: 5px 0; /* 調整 padding 以去除多餘的留白 */
     display: flex;
-    justify-content: center; /* 按鈕靠右對齊 */
-    margin-bottom: 50px; /* 下方距離空間減少 */
+    justify-content: center; /* 按鈕置中對齊 */
+    margin-bottom: 50px; /* 下方距離空間 */
     z-index: 1000; /* 確保它位於其他內容之上 */
+    gap: 10px; /* 按鈕之間的間距 */
 }
 
 .add-buttons button{
