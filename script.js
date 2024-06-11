@@ -891,7 +891,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const blob = new Blob([xmlContent], { type: 'application/xml' });
         const link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
-        link.download = 'report.xml';
+        link.download = 'export.xml';
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
