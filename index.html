@@ -171,8 +171,7 @@
                 <label for="DOC_OTR_DESC">其它申報事項</label>
                 <textarea id="DOC_OTR_DESC" name="DOC_OTR_DESC" rows="5"></textarea>
             </div>
-            <hr>
-            <div class="header-group">
+            <div class="header-group hidden">
                 <label for="REMARK1">REMARKS</label>
                 <textarea id="REMARK1" name="REMARK1" rows="5"></textarea>
             </div>
@@ -184,8 +183,9 @@
     <div id="items" class="tab">
         <div class="add-buttons">
             <button onclick="openItemModal()">新增項次（可複製）</button>
-            <button onclick="openAdjustOrderModal()">調整順序</button>
+            <button onclick="openAdjustOrderModal()">調整項次順序</button>
             <button onclick="openSpecifyFieldModal()">指定填列欄位資料</button>
+            <button onclick="toggleFields()">顯示隱藏欄位</button>
         </div>
         <div class="item-row item-header">
             <div class="form-group fix">
@@ -221,55 +221,55 @@
             <div class="form-group">
                 <label>統計方式</label>
             </div>
-            <div class="form-group">
+            <div class="form-group hidden">
                 <label>生產國別</label>
             </div>
-            <div class="form-group">
+            <div class="form-group hidden">
                 <label>原進口報單號碼</label>
             </div>
-            <div class="form-group">
+            <div class="form-group hidden">
                 <label>原進口報單項次</label>
             </div>
-            <div class="form-group">
+            <div class="form-group hidden">
                 <label>賣方料號</label>
             </div>
-            <div class="form-group">
+            <div class="form-group hidden">
                 <label>保稅貨物註記</label>
             </div>            
-            <div class="form-group">
+            <div class="form-group hidden">
                 <label>型號</label>
             </div>
-            <div class="form-group">
+            <div class="form-group hidden">
                 <label>規格</label>
             </div>
-            <div class="form-group">
+            <div class="form-group hidden">
                 <label>產證號碼</label>
             </div>
-            <div class="form-group">
+            <div class="form-group hidden">
                 <label>產證項次</label>
             </div>
-            <div class="form-group">
+            <div class="form-group hidden">
                 <label>原進倉報單號碼</label>
             </div>
-            <div class="form-group">
+            <div class="form-group hidden">
                 <label>原進倉報單項次</label>
             </div>            
-            <div class="form-group">
+            <div class="form-group hidden">
                 <label>輸出許可號碼</label>
             </div>
-            <div class="form-group">
+            <div class="form-group hidden">
                 <label>輸出許可項次</label>
             </div>
-            <div class="form-group">
+            <div class="form-group hidden">
                 <label>寬度(幅寬)</label>
             </div>
-            <div class="form-group">
+            <div class="form-group hidden">
                 <label>寬度單位</label>
             </div>
-            <div class="form-group">
+            <div class="form-group hidden">
                 <label>長度(幅長)</label>
             </div>
-            <div class="form-group">
+            <div class="form-group hidden">
                 <label>長度單位</label>
             </div>            
             <div class="form-group">
