@@ -57,7 +57,7 @@ body {
     border-radius: 5px;
     border: 1px solid #ccc; /* 添加邊框 */
     cursor: pointer; /* 指向時顯示手的圖標 */
-    background: radial-gradient(circle, rgb(240, 240, 240), rgb(222, 225, 229));
+    background: radial-gradient(circle, rgb(240, 240, 240), rgb(220, 231, 251));
     font-size: 14px; /* 指定按鈕字體大小 */
 }
 
