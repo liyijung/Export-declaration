@@ -18,7 +18,7 @@
         </div>
     </div>
 
-    <!--報單表頭-->    
+    <!--報單表頭-->
     <div id="header" class="tab active">
         <p style="margin-top: 30px;"></p>
         <div class="header-section">
@@ -185,7 +185,7 @@
             <button onclick="openItemModal()">新增項次（可複製）</button>
             <button onclick="openSpecifyFieldModal()">指定填列欄位資料</button>
             <button onclick="openAdjustOrderModal()">調整項次順序</button>
-            <button onclick="toggleFields()">顯示隱藏欄位</button>
+            <button onclick="openToggleColumnsModal()">顯示隱藏欄位</button>
         </div>
         <div class="item-row item-header">
             <div class="form-group fix">
@@ -210,9 +210,6 @@
                 <label>金額</label>
             </div>
             <div class="form-group">
-                <label>淨重</label>
-            </div>
-            <div class="form-group">
                 <label>商標</label>
             </div>
             <div class="form-group">
@@ -220,6 +217,9 @@
             </div>
             <div class="form-group">
                 <label>統計方式</label>
+            </div>
+            <div class="form-group">
+                <label>淨重</label>
             </div>
             <div class="form-group hidden">
                 <label>生產國別</label>
@@ -318,10 +318,6 @@
                 <input type="number" id="DOC_TOT_P" class="DOC_TOT_P" min="0">
             </div>
             <div class="header-group">
-                <label for="NET_WT">淨重</label>
-                <input type="number" id="NET_WT" class="NET_WT" min="0">
-            </div>
-            <div class="header-group">
                 <label for="TRADE_MARK">商標</label>
                 <input type="text" id="TRADE_MARK" class="TRADE_MARK" placeholder="範例：NO BRAND（無商標）、FIG（圖樣）、文字（字樣）">
             </div>
@@ -338,6 +334,10 @@
                     <option value="81">洋貨銷售</option>
                     <option value="82">洋貨樣品/贈送/不良品退回</option>
                 </datalist>
+            </div>
+            <div class="header-group">
+                <label for="NET_WT">淨重</label>
+                <input type="number" id="NET_WT" class="NET_WT" min="0">
             </div>
             <div class="header-group">
                 <label for="ORG_COUNTRY">生產國別</label>
@@ -457,10 +457,10 @@
                         <option value="DOC_UM">單位</option>
                         <option value="DOC_UNIT_P">單價</option>
                         <option value="DOC_TOT_P">金額</option>
-                        <option value="NET_WT">淨重</option>
                         <option value="TRADE_MARK">商標</option>
                         <option value="CCC_CODE">稅則</option>
                         <option value="ST_MTD">統計方式</option>
+                        <option value="NET_WT">淨重</option>
                         <option value="ORG_COUNTRY">生產國別</option>
                         <option value="ORG_IMP_DCL_NO">原進口報單號碼</option>
                         <option value="ORG_IMP_DCL_NO_ITEM">原進口報單項次</option>
@@ -500,10 +500,10 @@
                         <option value="DOC_UM">單位</option>
                         <option value="DOC_UNIT_P">單價</option>
                         <option value="DOC_TOT_P">金額</option>
-                        <option value="NET_WT">淨重</option>
                         <option value="TRADE_MARK">商標</option>
                         <option value="CCC_CODE">稅則</option>
                         <option value="ST_MTD">統計方式</option>
+                        <option value="NET_WT">淨重</option>
                         <option value="ORG_COUNTRY">生產國別</option>
                         <option value="ORG_IMP_DCL_NO">原進口報單號碼</option>
                         <option value="ORG_IMP_DCL_NO_ITEM">原進口報單項次</option>
@@ -539,6 +539,42 @@
             <div class="floating-buttons">
                 <button onclick="applyFieldData()">儲存</button>
                 <button onclick="closeSpecifyFieldModal()">取消</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 顯示隱藏欄位彈跳框 -->
+    <div id="toggle-columns-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header" id="toggle-columns-modal-header">
+                <h2>顯示隱藏欄位</h2>
+            </div>
+            <div class="header-group">
+                <label for="toggle-columns-select">選擇欄位（可複選）</label>
+                <select id="toggle-columns-select" multiple style="height: 300px;">
+                    <option value="生產國別">生產國別</option>
+                    <option value="原進口報單號碼">原進口報單號碼</option>
+                    <option value="原進口報單項次">原進口報單項次</option>
+                    <option value="賣方料號">賣方料號</option>
+                    <option value="保稅貨物註記">保稅貨物註記</option>
+                    <option value="型號">型號</option>
+                    <option value="規格">規格</option>
+                    <option value="產證號碼">產證號碼</option>
+                    <option value="產證項次">產證項次</option>
+                    <option value="原進倉報單號碼">原進倉報單號碼</option>
+                    <option value="原進倉報單項次">原進倉報單項次</option>
+                    <option value="輸出許可號碼">輸出許可號碼</option>
+                    <option value="輸出許可項次">輸出許可項次</option>
+                    <option value="寬度(布寬)">寬度(布寬)</option>
+                    <option value="寬度單位">寬度單位</option>
+                    <option value="長度(布長)">長度(布長)</option>
+                    <option value="長度單位">長度單位</option>
+                </select>
+            </div>
+            <div class="floating-buttons">
+                <button onclick="showSelectedColumns()">顯示</button>
+                <button onclick="hideSelectedColumns()">隱藏</button>
+                <button onclick="closeToggleColumnsModal()">取消</button>
             </div>
         </div>
     </div>
@@ -621,7 +657,11 @@
         <input type="file" id="import-xml" accept=".xml" style="display:none;">        
         <button class="xml-btn" onclick="document.getElementById('import-xml').click();">匯入XML</button>        
         <button class="xml-btn" id="export-to-xml">匯出XML</button>
-        <button class="pdf-btn" onclick="exportToPDF()">出口報單預覽</button>
+        <button class="Check-btn" onclick="Checklist()">檢核表</button>
+        <button class="invoice-btn" onclick="CommercialInvoice()">商業發票</button>
+        <button class="packing-btn" onclick="PackingList()">裝箱單</button>
+        <button class="export-btn" onclick="ExportDeclarationPreview()">出口報單預覽</button>
+        <button class="upload-btn" onclick="DeclarationUpload()">申報上傳</button>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>    
