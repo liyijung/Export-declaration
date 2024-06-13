@@ -145,7 +145,8 @@ body {
 
 #item-modal,
 #adjust-order-modal,
-#specify-field-modal {
+#specify-field-modal,
+#toggle-columns-modal {
     display: none;
     position: fixed;
     top: 0;
@@ -183,6 +184,13 @@ body {
     width: 500px; /* 設置寬度 */
     resize: both; /* 添加可調整大小屬性 */
     overflow: auto; /* 確保內容可滾動 */
+}
+
+#toggle-columns-select {
+    width: 100%;
+    height: 300px;
+    margin: 10px 0;
+    font-size: 14px;
 }
 
 #item-modal .modal-content {
@@ -247,12 +255,19 @@ body {
 }
 
 .floating-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
     position: absolute;
     top: 20px;
     right: 20px;
     z-index: 1001;
-    display: flex;
     gap: 10px;
+}
+
+.floating-buttons button {
+    flex: 1;
+    margin: 0 5px;
 }
 
 .item-row {
