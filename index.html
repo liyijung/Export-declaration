@@ -27,21 +27,36 @@
                 <input type="text" id="LOT_NO" name="LOT_NO">
             </div>
             <div class="header-group">
-                <!--介宏交易對象-->
-                <label for="SHPR_CODE">出口人統一編號</label>
-                <input type="text" id="SHPR_CODE" name="SHPR_CODE">
+                <label for="SHPR_BAN_ID">出口人統一編號</label>
+                <input type="text" id="SHPR_BAN_ID" name="SHPR_BAN_ID">
             </div>
             <div class="header-group">
-                <label for="SHPR_C_NAME">出口人名稱</label>
+                <label for="SHPR_BONDED_ID">海關監管編號</label>
+                <input type="text" id="SHPR_BONDED_ID" name="SHPR_BONDED_ID">
+            </div>
+            <div class="header-group">
+                <label for="SHPR_C_NAME">出口人中文名稱</label>
                 <input type="text" id="SHPR_C_NAME" name="SHPR_C_NAME">
+            </div>
+            <div class="header-group">
+                <label for="SHPR_E_NAME">出口人英文名稱</label>
+                <input type="text" id="SHPR_E_NAME" name="SHPR_E_NAME">
+            </div>
+            <div class="header-group">
+                <label for="SHPR_E_ADDR">出口人中/英地址</label>
+                <input type="text" id="SHPR_E_ADDR" name="SHPR_E_ADDR">
             </div>
             <hr>
             <div class="header-group">
-                <label for="CNEE_E_NAME">買方名稱</label>
+                <label for="CNEE_C_NAME">買方中文名稱</label>
+                <input type="text" id="CNEE_C_NAME" name="CNEE_C_NAME">
+            </div>
+            <div class="header-group">
+                <label for="CNEE_E_NAME">買方英文名稱</label>
                 <input type="text" id="CNEE_E_NAME" name="CNEE_E_NAME">
             </div>
             <div class="header-group">
-                <label for="CNEE_E_ADDR">買方地址</label>
+                <label for="CNEE_E_ADDR">買方中/英地址</label>
                 <input type="text" id="CNEE_E_ADDR" name="CNEE_E_ADDR">
             </div>
             <div class="header-group">
@@ -213,6 +228,8 @@
                         <div><input type="checkbox" id="field15" name="field15" value="WIDE_UM"><label for="field15">寬度單位</label></div>
                         <div><input type="checkbox" id="field16" name="field16" value="LENGT_"><label for="field16">長度(幅長)</label></div>
                         <div><input type="checkbox" id="field17" name="field17" value="LENGTH_UM"><label for="field17">長度單位</label></div>
+                        <div><input type="checkbox" id="field18" name="field18" value="ST_QTY"><label for="field18">統計數量</label></div>
+                        <div><input type="checkbox" id="field19" name="field19" value="ST_UM"><label for="field19">統計單位</label></div>
                     </div>
                 </div>
                 <div class="floating-buttons">
@@ -244,9 +261,6 @@
             <div class="form-group DOC_TOT_P">
                 <label>金額</label>
             </div>
-            <div class="form-group NET_WT">
-                <label>淨重</label>
-            </div>
             <div class="form-group TRADE_MARK">
                 <label>商標</label>
             </div>
@@ -255,6 +269,9 @@
             </div>
             <div class="form-group ST_MTD">
                 <label>統計方式</label>
+            </div>
+            <div class="form-group NET_WT">
+                <label>淨重</label>
             </div>
             <div class="form-group ORG_COUNTRY hidden">
                 <label>生產國別</label>
@@ -306,7 +323,13 @@
             </div>
             <div class="form-group LENGTH_UM hidden">
                 <label>長度單位</label>
-            </div>            
+            </div>     
+            <div class="form-group ST_QTY hidden">
+                <label>統計數量</label>
+            </div>  
+            <div class="form-group ST_UM hidden">
+                <label>統計單位</label>
+            </div>         
             <div class="form-group">
                 <label>操作</label>
             </div>
@@ -353,10 +376,6 @@
                 <input type="number" id="DOC_TOT_P" class="DOC_TOT_P" min="0">
             </div>
             <div class="header-group">
-                <label for="NET_WT">淨重</label>
-                <input type="number" id="NET_WT" class="NET_WT" min="0">
-            </div>
-            <div class="header-group">
                 <label for="TRADE_MARK">商標</label>
                 <input type="text" id="TRADE_MARK" class="TRADE_MARK" placeholder="範例：NO BRAND（無商標）、FIG（圖樣）、文字（字樣）">
             </div>
@@ -373,6 +392,10 @@
                     <option value="81">洋貨銷售</option>
                     <option value="82">洋貨樣品/贈送/不良品退回</option>
                 </datalist>
+            </div>
+            <div class="header-group">
+                <label for="NET_WT">淨重</label>
+                <input type="number" id="NET_WT" class="NET_WT" min="0">
             </div>
             <div class="header-group">
                 <label for="ORG_COUNTRY">生產國別</label>
@@ -441,7 +464,15 @@
             <div class="header-group">
                 <label for="LENGTH_UM">長度單位</label>
                 <input type="text" id="LENGTH_UM" class="LENGTH_UM">
-            </div>            
+            </div>  
+            <div class="header-group">
+                <label for="ST_QTY">統計數量</label>
+                <input type="text" id="ST_QTY" class="ST_QTY">
+            </div>
+            <div class="header-group">
+                <label for="ST_UM">統計單位</label>
+                <input type="text" id="ST_UM" class="ST_UM">
+            </div>           
             <div class="floating-buttons">
                 <button onclick="saveItem()">儲存</button>
                 <button onclick="closeItemModal()">取消</button>
@@ -492,10 +523,10 @@
                         <option value="DOC_UM">單位</option>
                         <option value="DOC_UNIT_P">單價</option>
                         <option value="DOC_TOT_P">金額</option>
-                        <option value="NET_WT">淨重</option>
                         <option value="TRADE_MARK">商標</option>
                         <option value="CCC_CODE">稅則</option>
                         <option value="ST_MTD">統計方式</option>
+                        <option value="NET_WT">淨重</option>
                         <option value="ORG_COUNTRY">生產國別</option>
                         <option value="ORG_IMP_DCL_NO">原進口報單號碼</option>
                         <option value="ORG_IMP_DCL_NO_ITEM">原進口報單項次</option>
@@ -512,7 +543,9 @@
                         <option value="WIDE">寬度(幅寬)</option>
                         <option value="WIDE_UM">寬度單位</option>
                         <option value="LENGT_">長度(幅長)</option>
-                        <option value="LENGTH_UM">長度單位</option>                        
+                        <option value="LENGTH_UM">長度單位</option>
+                        <option value="ST_QTY">統計數量</option>
+                        <option value="ST_UM">統計單位</option>
                     </select>
                 </div>
                 <div class="header-group">
@@ -535,10 +568,10 @@
                         <option value="DOC_UM">單位</option>
                         <option value="DOC_UNIT_P">單價</option>
                         <option value="DOC_TOT_P">金額</option>
-                        <option value="NET_WT">淨重</option>
                         <option value="TRADE_MARK">商標</option>
                         <option value="CCC_CODE">稅則</option>
                         <option value="ST_MTD">統計方式</option>
+                        <option value="NET_WT">淨重</option>
                         <option value="ORG_COUNTRY">生產國別</option>
                         <option value="ORG_IMP_DCL_NO">原進口報單號碼</option>
                         <option value="ORG_IMP_DCL_NO_ITEM">原進口報單項次</option>
@@ -555,7 +588,9 @@
                         <option value="WIDE">寬度(幅寬)</option>
                         <option value="WIDE_UM">寬度單位</option>
                         <option value="LENGT_">長度(幅長)</option>
-                        <option value="LENGTH_UM">長度單位</option>                                               
+                        <option value="LENGTH_UM">長度單位</option>
+                        <option value="ST_QTY">統計數量</option>
+                        <option value="ST_UM">統計單位</option>
                     </select>
                 </div>
                 <div class="header-group">
