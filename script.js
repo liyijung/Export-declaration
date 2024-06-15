@@ -284,6 +284,11 @@ function openAdjustOrderModal() {
             <input type="hidden" class="original-order" value="${index}">
         `;
         orderList.appendChild(orderItem);
+
+        // 添加觸摸事件處理
+        orderItem.addEventListener('touchstart', handleTouchStart, { passive: true });
+        orderItem.addEventListener('touchmove', handleTouchMove, { passive: false });
+        orderItem.addEventListener('touchend', handleTouchEnd);
     });
 
     // 初始化 Sortable.js
@@ -314,6 +319,33 @@ function saveNewOrder() {
 
     renumberItems();
     closeOrderModal();
+}
+
+let draggedItem = null;
+
+function handleTouchStart(event) {
+    draggedItem = event.target.closest('.order-item');
+    draggedItem.classList.add('dragging');
+    event.preventDefault();
+}
+
+function handleTouchMove(event) {
+    event.preventDefault();
+    const touch = event.touches[0];
+    const elementUnderTouch = document.elementFromPoint(touch.clientX, touch.clientY);
+    
+    if (elementUnderTouch && elementUnderTouch.classList.contains('order-item') && elementUnderTouch !== draggedItem) {
+        const target = elementUnderTouch;
+        const parent = target.parentNode;
+        parent.insertBefore(draggedItem, target.nextSibling || target);
+    }
+}
+
+function handleTouchEnd(event) {
+    if (draggedItem) {
+        draggedItem.classList.remove('dragging');
+        draggedItem = null;
+    }
 }
 
 // 開啟指定填列欄位資料的彈跳框
