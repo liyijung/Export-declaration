@@ -93,9 +93,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
 // 開啟新增項次的彈跳框
 function openItemModal() {
-    var modal = document.getElementById('item-modal');
-    modal.style.display = 'flex';
-
     // 清空所有輸入框
     document.getElementById('ITEM_NO').checked = false;
     document.getElementById('DESCRIPTION').value = '';
@@ -103,10 +100,10 @@ function openItemModal() {
     document.getElementById('DOC_UM').value = '';
     document.getElementById('DOC_UNIT_P').value = '';
     document.getElementById('DOC_TOT_P').value = '';
+    document.getElementById('NET_WT').value = '';        
     document.getElementById('TRADE_MARK').value = '';
     document.getElementById('CCC_CODE').value = '';
     document.getElementById('ST_MTD').value = '';
-    document.getElementById('NET_WT').value = '';        
     document.getElementById('ORG_COUNTRY').value = '';
     document.getElementById('ORG_IMP_DCL_NO').value = '';
     document.getElementById('ORG_IMP_DCL_NO_ITEM').value = '';
@@ -153,10 +150,10 @@ function copyItem() {
         document.getElementById('DOC_UM').value = item.querySelector('.DOC_UM').value;
         document.getElementById('DOC_UNIT_P').value = item.querySelector('.DOC_UNIT_P').value;
         document.getElementById('DOC_TOT_P').value = item.querySelector('.DOC_TOT_P').value;
+        document.getElementById('NET_WT').value = item.querySelector('.NET_WT').value;
         document.getElementById('TRADE_MARK').value = item.querySelector('.TRADE_MARK').value;
         document.getElementById('CCC_CODE').value = item.querySelector('.CCC_CODE').value;
         document.getElementById('ST_MTD').value = item.querySelector('.ST_MTD').value;
-        document.getElementById('NET_WT').value = item.querySelector('.NET_WT').value;
         document.getElementById('ORG_COUNTRY').value = item.querySelector('.ORG_COUNTRY').value;
         document.getElementById('ORG_IMP_DCL_NO').value = item.querySelector('.ORG_IMP_DCL_NO').value;
         document.getElementById('ORG_IMP_DCL_NO_ITEM').value = item.querySelector('.ORG_IMP_DCL_NO_ITEM').value;
@@ -179,8 +176,6 @@ function copyItem() {
 
 // 關閉新增項次的彈跳框
 function closeItemModal() {
-    var modal = document.getElementById('item-modal');
-    modal.style.display = 'none';
     document.getElementById('item-modal').style.display = 'none';
 }
 
@@ -194,10 +189,10 @@ function saveItem() {
         DOC_UM: document.getElementById('DOC_UM').value,
         DOC_UNIT_P: document.getElementById('DOC_UNIT_P').value,
         DOC_TOT_P: document.getElementById('DOC_TOT_P').value,
+        NET_WT: document.getElementById('NET_WT').value,        
         TRADE_MARK: document.getElementById('TRADE_MARK').value,
         CCC_CODE: document.getElementById('CCC_CODE').value,
         ST_MTD: document.getElementById('ST_MTD').value,
-        NET_WT: document.getElementById('NET_WT').value,        
         ORG_COUNTRY: document.getElementById('ORG_COUNTRY').value,
         ORG_IMP_DCL_NO: document.getElementById('ORG_IMP_DCL_NO').value,
         ORG_IMP_DCL_NO_ITEM: document.getElementById('ORG_IMP_DCL_NO_ITEM').value,
@@ -229,13 +224,40 @@ function removeItem(element) {
     renumberItems();
 }
 
+function openToggleFieldsModal() {
+    document.getElementById('toggle-fields-modal').style.display = 'flex';
+}
+
+function closeToggleFieldsModal() {
+    document.getElementById('toggle-fields-modal').style.display = 'none';
+}
+
+function applyToggleFields() {
+    var checkboxes = document.querySelectorAll('#field-checkboxes input[type="checkbox"]');
+    checkboxes.forEach(function(checkbox) {
+        var fieldClass = checkbox.value;
+
+        // 針對報單項次部分，包括標題和內容
+        var fieldElements = document.querySelectorAll(`.item-header .${fieldClass}, #item-container .${fieldClass}`);
+        fieldElements.forEach(function(fieldElement) {
+            var formGroup = fieldElement.closest('.form-group');
+            if (formGroup) {
+                if (checkbox.checked) {
+                    formGroup.classList.remove('hidden');
+                } else {
+                    formGroup.classList.add('hidden');
+                }
+            }
+        });
+    });
+    closeToggleFieldsModal();
+}
+
 // 引入 Sortable.js 庫
 document.write('<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.14.0/Sortable.min.js"><\/script>');
 
 // 開啟調整順序的彈跳框
 function openAdjustOrderModal() {
-    var modal = document.getElementById('adjust-order-modal');
-    modal.style.display = 'flex';
     const itemContainer = document.getElementById('item-container');
     const items = itemContainer.querySelectorAll('.item-row');
 
@@ -263,8 +285,6 @@ function openAdjustOrderModal() {
 
 // 關閉調整順序的彈跳框
 function closeOrderModal() {
-    var modal = document.getElementById('adjust-order-modal');
-    modal.style.display = 'none';
     document.getElementById('adjust-order-modal').style.display = 'none';
 }
 
@@ -397,107 +417,6 @@ function applyFieldData() {
     closeSpecifyFieldModal();
 }
 
-// 打開顯示隱藏欄位彈跳框
-function openToggleColumnsModal() {
-    document.getElementById('toggle-columns-modal').style.display = 'flex';
-}
-
-// 關閉顯示隱藏欄位彈跳框
-function closeToggleColumnsModal() {
-    document.getElementById('toggle-columns-modal').style.display = 'none';
-}
-
-// 顯示選定欄位
-function showSelectedColumns() {
-    const selectedOptions = Array.from(document.getElementById('toggle-columns-select').selectedOptions).map(option => option.value);
-
-    selectedOptions.forEach(columnName => {
-        const formGroups = document.querySelectorAll('.form-group');
-        formGroups.forEach(formGroup => {
-            const label = formGroup.querySelector('label');
-            if (label && label.textContent.trim() === columnName) {
-                formGroup.classList.remove('hidden');
-                // 如果是輸入域，也一起顯示
-                const input = formGroup.querySelector('input, textarea');
-                if (input && input.name === columnName) {
-                    formGroup.classList.remove('hidden');
-                }
-            }
-        });
-    });
-
-    closeToggleColumnsModal();
-}
-
-// 隱藏選定欄位
-function hideSelectedColumns() {
-    const selectedOptions = Array.from(document.getElementById('toggle-columns-select').selectedOptions).map(option => option.value);
-
-    selectedOptions.forEach(columnName => {
-        const formGroups = document.querySelectorAll('.form-group');
-        formGroups.forEach(formGroup => {
-            const label = formGroup.querySelector('label');
-            if (label && label.textContent.trim() === columnName) {
-                formGroup.classList.add('hidden');
-                // 如果是輸入域，也一起隱藏
-                const input = formGroup.querySelector('input, textarea');
-                if (input && input.name === columnName) {
-                    formGroup.classList.add('hidden');
-                }
-            }
-        });
-    });
-
-    closeToggleColumnsModal();
-}
-
-// 啟用彈跳框的拖拽功能
-function dragElement(elmnt) {
-    var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-    if (document.getElementById(elmnt.id + "-header")) {
-        // 如果存在頭部，就在頭部按下時開始拖動
-        document.getElementById(elmnt.id + "-header").onmousedown = dragMouseDown;
-    } else {
-        // 否則，在整個元素上按下時開始拖動
-        elmnt.onmousedown = dragMouseDown;
-    }
-
-    function dragMouseDown(e) {
-        e = e || window.event;
-        e.preventDefault();
-        // 獲取滑鼠光標開始的位置
-        pos3 = e.clientX;
-        pos4 = e.clientY;
-        document.onmouseup = closeDragElement;
-        // 當滑鼠光標移動時，調用 elementDrag 函數
-        document.onmousemove = elementDrag;
-    }
-
-    function elementDrag(e) {
-        e = e || window.event;
-        e.preventDefault();
-        // 計算滑鼠的新位置
-        pos1 = pos3 - e.clientX;
-        pos2 = pos4 - e.clientY;
-        pos3 = e.clientX;
-        pos4 = e.clientY;
-        // 設置元素的新位置
-        elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
-        elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
-    }
-
-    function closeDragElement() {
-        // 停止移動時，移除事件
-        document.onmouseup = null;
-        document.onmousemove = null;
-    }
-}
-
-// 啟用顯示隱藏欄位彈跳框的拖拽功能
-document.addEventListener('DOMContentLoaded', function() {
-    dragElement(document.getElementById("toggle-columns-modal"));
-});
-
 // 匯入新資料前清空所有欄位和選項
 function clearForm() {
     // 清空所有表單欄位
@@ -592,10 +511,10 @@ function handleFile(event) {
                 DOC_UM: row[4] || '',
                 DOC_UNIT_P: row[5] || '',
                 DOC_TOT_P: row[6] || '',
-                TRADE_MARK: row[7] || '',
-                CCC_CODE: row[8] || '',
-                ST_MTD: row[9] || '',
-                NET_WT: row[10] || '',
+                NET_WT: row[7] || '',
+                TRADE_MARK: row[8] || '',
+                CCC_CODE: row[9] || '',
+                ST_MTD: row[10] || '',
                 ORG_COUNTRY: row[11] || '',
                 ORG_IMP_DCL_NO: row[12] || '',
                 ORG_IMP_DCL_NO_ITEM: row[13] || '',
@@ -683,7 +602,7 @@ function exportToExcel() {
     // 收集報單項次數據
     const itemsData = [
     ['項次', '大品名註記', '品名', '數量', '單位', '單價', '金額', 
-    '商標', '稅則', '統計方式', '淨重', '生產國別', '原進口報單號碼', '原進口報單項次', 
+    '淨重', '商標', '稅則', '統計方式', '生產國別', '原進口報單號碼', '原進口報單項次', 
     '賣方料號', '保稅貨物註記', '型號', '規格', '產證號碼', '產證項次', 
     '原進倉報單號碼', '原進倉報單項次', '輸出許可號碼', '輸出許可項次', 
     '寬度(幅寬)', '寬度單位', '長度(幅長)', '長度單位']
@@ -697,10 +616,10 @@ function exportToExcel() {
             item.querySelector('.DOC_UM').value || '',
             item.querySelector('.DOC_UNIT_P').value || '',
             item.querySelector('.DOC_TOT_P').value || '',
+            item.querySelector('.NET_WT').value || '',
             item.querySelector('.TRADE_MARK').value || '',
             item.querySelector('.CCC_CODE').value || '',
             item.querySelector('.ST_MTD').value || '',
-            item.querySelector('.NET_WT').value || '',
             item.querySelector('.ORG_COUNTRY').value || '',
             item.querySelector('.ORG_IMP_DCL_NO').value || '',
             item.querySelector('.ORG_IMP_DCL_NO_ITEM').value || '',
@@ -791,32 +710,32 @@ function createItemRow(data) {
         <div class="form-group fix">
             <input type="checkbox" class="ITEM_NO" ${isChecked ? 'checked' : ''}>
         </div>
-        ${createTextareaField('品名', data.DESCRIPTION)}
-        ${createInputField('數量', data.QTY)}
-        ${createInputField('單位', data.DOC_UM)}
-        ${createInputField('單價', data.DOC_UNIT_P)}
-        ${createInputField('金額', data.DOC_TOT_P)}
-        ${createInputField('商標', data.TRADE_MARK)}
-        ${createInputField('稅則', data.CCC_CODE)}
-        ${createInputField('統計方式', data.ST_MTD)}
-        ${createInputField('淨重', data.NET_WT)}
-        ${createInputField('生產國別', data.ORG_COUNTRY)}
-        ${createInputField('原進口報單號碼', data.ORG_IMP_DCL_NO)}
-        ${createInputField('原進口報單項次', data.ORG_IMP_DCL_NO_ITEM)}
-        ${createInputField('賣方料號', data.SELLER_ITEM_CODE)}
-        ${createInputField('保稅貨物註記', data.BOND_NOTE)}        
-        ${createInputField('型號', data.GOODS_MODEL)}
-        ${createInputField('規格', data.GOODS_SPEC)}
-        ${createInputField('產證號碼', data.CERT_NO)}
-        ${createInputField('產證項次', data.CERT_NO_ITEM)}
-        ${createInputField('原進倉報單號碼', data.ORG_DCL_NO)}
-        ${createInputField('原進倉報單項次', data.ORG_DCL_NO_ITEM)}
-        ${createInputField('輸出許可號碼', data.EXP_NO)}
-        ${createInputField('輸出許可項次', data.EXP_SEQ_NO)}
-        ${createInputField('寬度(布寬)', data.WIDE)}
-        ${createInputField('寬度單位', data.WIDE_UM)}
-        ${createInputField('長度(布長)', data.LENGT_)}
-        ${createInputField('長度單位', data.LENGTH_UM)}
+        ${createTextareaField('DESCRIPTION', data.DESCRIPTION)}
+        ${createInputField('QTY', data.QTY, true)}
+        ${createInputField('DOC_UM', data.DOC_UM, true)}
+        ${createInputField('DOC_UNIT_P', data.DOC_UNIT_P, true)}
+        ${createInputField('DOC_TOT_P', data.DOC_TOT_P, true)}
+        ${createInputField('NET_WT', data.NET_WT, true)}
+        ${createInputField('TRADE_MARK', data.TRADE_MARK, true)}
+        ${createInputField('CCC_CODE', data.CCC_CODE, true)}
+        ${createInputField('ST_MTD', data.ST_MTD, true)}
+        ${createInputField('ORG_COUNTRY', data.ORG_COUNTRY, false)}
+        ${createInputField('ORG_IMP_DCL_NO', data.ORG_IMP_DCL_NO, false)}
+        ${createInputField('ORG_IMP_DCL_NO_ITEM', data.ORG_IMP_DCL_NO_ITEM, false)}
+        ${createInputField('SELLER_ITEM_CODE', data.SELLER_ITEM_CODE, false)}
+        ${createInputField('BOND_NOTE', data.BOND_NOTE, false)}        
+        ${createInputField('GOODS_MODEL', data.GOODS_MODEL, false)}
+        ${createInputField('GOODS_SPEC', data.GOODS_SPEC, false)}
+        ${createInputField('CERT_NO', data.CERT_NO, false)}
+        ${createInputField('CERT_NO_ITEM', data.CERT_NO_ITEM, false)}
+        ${createInputField('ORG_DCL_NO', data.ORG_DCL_NO, false)}
+        ${createInputField('ORG_DCL_NO_ITEM', data.ORG_DCL_NO_ITEM, false)}
+        ${createInputField('EXP_NO', data.EXP_NO, false)}
+        ${createInputField('EXP_SEQ_NO', data.EXP_SEQ_NO, false)}
+        ${createInputField('WIDE', data.WIDE, false)}
+        ${createInputField('WIDE_UM', data.WIDE_UM, false)}
+        ${createInputField('LENGT_', data.LENGT_, false)}
+        ${createInputField('LENGTH_UM', data.LENGTH_UM, false)}
         <div class="form-group">
             <button class="delete-button" onclick="removeItem(this)">Ｘ</button>
         </div>
@@ -825,30 +744,21 @@ function createItemRow(data) {
     return row;
 }
 
-// 檢查是否應該顯示該欄位
-function shouldShow(fieldName) {
-    const hiddenFields = document.querySelectorAll('.form-group.hidden label, .form-group.hidden input, .form-group.hidden textarea');
-    return !Array.from(hiddenFields).some(el => el.textContent.trim() === fieldName || el.name === fieldName);
-}
-
 // 創建文本域
 function createTextareaField(name, value) {
-    const visibilityClass = shouldShow(name) ? '' : 'hidden';
     return `
-        <div class="form-group ${visibilityClass}">
-            <label hidden>${name}</label>
-            <textarea class="${name}" name="${name}">${value || ''}</textarea>
+        <div class="form-group">
+            <textarea class="${name}">${value || ''}</textarea>
         </div>
     `;
 }
 
 // 創建輸入域
-function createInputField(name, value) {
-    const visibilityClass = shouldShow(name) ? '' : 'hidden';
+function createInputField(name, value, isVisible) {
+    const visibilityClass = isVisible ? '' : ' hidden';
     return `
-        <div class="form-group ${visibilityClass}">
-            <label hidden>${name}</label>
-            <input type="text" class="${name}" name="${name}" value="${value || ''}">
+        <div class="form-group${visibilityClass}">
+            <input type="text" class="${name}" value="${value || ''}">
         </div>
     `;
 }
@@ -962,7 +872,7 @@ document.addEventListener('DOMContentLoaded', function () {
         ];
         const itemFields = [
             'DESCRIPTION', 'QTY', 'DOC_UM', 'DOC_UNIT_P', 'DOC_TOT_P', 
-            'TRADE_MARK', 'CCC_CODE', 'ST_MTD', 'NET_WT', 'ORG_COUNTRY', 
+            'NET_WT', 'TRADE_MARK', 'CCC_CODE', 'ST_MTD', 'ORG_COUNTRY', 
             'ORG_IMP_DCL_NO', 'ORG_IMP_DCL_NO_ITEM', 'SELLER_ITEM_CODE', 'BOND_NOTE',
             'GOODS_MODEL', 'GOODS_SPEC', 'CERT_NO', 'CERT_NO_ITEM', 
             'ORG_DCL_NO', 'ORG_DCL_NO_ITEM', 'EXP_NO', 'EXP_SEQ_NO', 
@@ -1080,7 +990,7 @@ function exportToPDF() {
 
             const itemHeader = 
             ['項次', '大品名註記', '品名', '數量', '單位', '單價', '金額', 
-                '商標', '稅則', '統計方式', '淨重', '生產國別', '原進口報單號碼', '原進口報單項次', 
+                '淨重', '商標', '稅則', '統計方式', '生產國別', '原進口報單號碼', '原進口報單項次', 
                 '賣方料號', '保稅貨物註記', '型號', '規格', '產證號碼', '產證項次', 
                 '原進倉報單號碼', '原進倉報單項次', '輸出許可號碼', '輸出許可項次', 
                 '寬度(幅寬)', '寬度單位', '長度(幅長)', '長度單位'];
@@ -1096,10 +1006,10 @@ function exportToPDF() {
                     item.querySelector('.DOC_UM').value,
                     item.querySelector('.DOC_UNIT_P').value,
                     item.querySelector('.DOC_TOT_P').value,
+                    item.querySelector('.NET_WT').value,                    
                     item.querySelector('.TRADE_MARK').value,
                     item.querySelector('.CCC_CODE').value,
                     item.querySelector('.ST_MTD').value,
-                    item.querySelector('.NET_WT').value,                    
                     item.querySelector('.ORG_COUNTRY').value,
                     item.querySelector('.ORG_IMP_DCL_NO').value,
                     item.querySelector('.ORG_IMP_DCL_NO_ITEM').value,
