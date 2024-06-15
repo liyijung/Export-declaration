@@ -214,7 +214,6 @@
                         <option value="TRADE_MARK">商標</option>
                         <option value="CCC_CODE">稅則</option>
                         <option value="ST_MTD">統計方式</option>
-                        <option value="NET_WT">淨重</option>
                         <option value="ORG_COUNTRY">生產國別</option>
                         <option value="ORG_IMP_DCL_NO">原進口報單號碼</option>
                         <option value="ORG_IMP_DCL_NO_ITEM">原進口報單項次</option>
@@ -265,6 +264,9 @@
             <div class="form-group DOC_TOT_P">
                 <label>金額</label>
             </div>
+            <div class="form-group NET_WT">
+                <label>淨重</label>
+            </div>
             <div class="form-group TRADE_MARK hidden">
                 <label>商標</label>
             </div>
@@ -273,9 +275,6 @@
             </div>
             <div class="form-group ST_MTD hidden">
                 <label>統計方式</label>
-            </div>
-            <div class="form-group NET_WT hidden">
-                <label>淨重</label>
             </div>
             <div class="form-group ORG_COUNTRY hidden">
                 <label>生產國別</label>
@@ -380,6 +379,10 @@
                 <input type="number" id="DOC_TOT_P" class="DOC_TOT_P" min="0" readonly>
             </div>
             <div class="header-group">
+                <label for="NET_WT">淨重</label>
+                <input type="number" id="NET_WT" class="NET_WT" min="0">
+            </div>
+            <div class="header-group">
                 <label for="TRADE_MARK">商標</label>
                 <input type="text" id="TRADE_MARK" class="TRADE_MARK" placeholder="範例：NO BRAND（無商標）、FIG（圖樣）、文字（字樣）">
             </div>
@@ -396,10 +399,6 @@
                     <option value="81">洋貨銷售</option>
                     <option value="82">洋貨樣品/贈送/不良品退回</option>
                 </datalist>
-            </div>
-            <div class="header-group">
-                <label for="NET_WT">淨重</label>
-                <input type="number" id="NET_WT" class="NET_WT" min="0">
             </div>
             <div class="header-group">
                 <label for="ORG_COUNTRY">生產國別</label>
@@ -527,10 +526,10 @@
                         <option value="DOC_UM">單位</option>
                         <option value="DOC_UNIT_P">單價</option>
                         <option value="DOC_TOT_P">金額</option>
+                        <option value="NET_WT">淨重</option>
                         <option value="TRADE_MARK">商標</option>
                         <option value="CCC_CODE">稅則</option>
                         <option value="ST_MTD">統計方式</option>
-                        <option value="NET_WT">淨重</option>
                         <option value="ORG_COUNTRY">生產國別</option>
                         <option value="ORG_IMP_DCL_NO">原進口報單號碼</option>
                         <option value="ORG_IMP_DCL_NO_ITEM">原進口報單項次</option>
@@ -572,10 +571,10 @@
                         <option value="DOC_UM">單位</option>
                         <option value="DOC_UNIT_P">單價</option>
                         <option value="DOC_TOT_P">金額</option>
+                        <option value="NET_WT">淨重</option>
                         <option value="TRADE_MARK">商標</option>
                         <option value="CCC_CODE">稅則</option>
                         <option value="ST_MTD">統計方式</option>
-                        <option value="NET_WT">淨重</option>
                         <option value="ORG_COUNTRY">生產國別</option>
                         <option value="ORG_IMP_DCL_NO">原進口報單號碼</option>
                         <option value="ORG_IMP_DCL_NO_ITEM">原進口報單項次</option>
