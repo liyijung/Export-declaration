@@ -60,7 +60,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
     // 添加事件監聽器到匯入Excel按鈕
     document.getElementById('import-excel').addEventListener('change', handleFile, false);
     document.getElementById('import-excel').addEventListener('change', () => {
-        clearAllFields();
         handleFile();
     });
 
@@ -70,7 +69,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
     // 添加事件監聽器到匯入XML按鈕
     document.getElementById('import-xml').addEventListener('change', importXML, false);
     document.getElementById('import-xml').addEventListener('change', () => {
-        clearAllFields();
         importXML();
     });
 
@@ -100,10 +98,10 @@ function openItemModal() {
     document.getElementById('DOC_UM').value = '';
     document.getElementById('DOC_UNIT_P').value = '';
     document.getElementById('DOC_TOT_P').value = '';
-    document.getElementById('NET_WT').value = '';        
     document.getElementById('TRADE_MARK').value = '';
     document.getElementById('CCC_CODE').value = '';
     document.getElementById('ST_MTD').value = '';
+    document.getElementById('NET_WT').value = '';        
     document.getElementById('ORG_COUNTRY').value = '';
     document.getElementById('ORG_IMP_DCL_NO').value = '';
     document.getElementById('ORG_IMP_DCL_NO_ITEM').value = '';
@@ -120,7 +118,9 @@ function openItemModal() {
     document.getElementById('WIDE').value = '';
     document.getElementById('WIDE_UM').value = '';
     document.getElementById('LENGT_').value = '';
-    document.getElementById('LENGTH_UM').value = '';    
+    document.getElementById('LENGTH_UM').value = '';
+    document.getElementById('ST_QTY').value = '';
+    document.getElementById('ST_UM').value = '';
 
     // 填充下拉選單
     const copyItemSelect = document.getElementById('COPY_ITEM');
@@ -150,10 +150,10 @@ function copyItem() {
         document.getElementById('DOC_UM').value = item.querySelector('.DOC_UM').value;
         document.getElementById('DOC_UNIT_P').value = item.querySelector('.DOC_UNIT_P').value;
         document.getElementById('DOC_TOT_P').value = item.querySelector('.DOC_TOT_P').value;
-        document.getElementById('NET_WT').value = item.querySelector('.NET_WT').value;
         document.getElementById('TRADE_MARK').value = item.querySelector('.TRADE_MARK').value;
         document.getElementById('CCC_CODE').value = item.querySelector('.CCC_CODE').value;
         document.getElementById('ST_MTD').value = item.querySelector('.ST_MTD').value;
+        document.getElementById('NET_WT').value = item.querySelector('.NET_WT').value;
         document.getElementById('ORG_COUNTRY').value = item.querySelector('.ORG_COUNTRY').value;
         document.getElementById('ORG_IMP_DCL_NO').value = item.querySelector('.ORG_IMP_DCL_NO').value;
         document.getElementById('ORG_IMP_DCL_NO_ITEM').value = item.querySelector('.ORG_IMP_DCL_NO_ITEM').value;
@@ -170,7 +170,9 @@ function copyItem() {
         document.getElementById('WIDE').value = item.querySelector('.WIDE').value;
         document.getElementById('WIDE_UM').value = item.querySelector('.WIDE_UM').value;
         document.getElementById('LENGT_').value = item.querySelector('.LENGT_').value;
-        document.getElementById('LENGTH_UM').value = item.querySelector('.LENGTH_UM').value;        
+        document.getElementById('LENGTH_UM').value = item.querySelector('.LENGTH_UM').value;
+        document.getElementById('ST_QTY').value = item.querySelector('.ST_QTY').value;
+        document.getElementById('ST_UM').value = item.querySelector('.ST_UM').value;
     }
 }
 
@@ -189,10 +191,10 @@ function saveItem() {
         DOC_UM: document.getElementById('DOC_UM').value,
         DOC_UNIT_P: document.getElementById('DOC_UNIT_P').value,
         DOC_TOT_P: document.getElementById('DOC_TOT_P').value,
-        NET_WT: document.getElementById('NET_WT').value,        
         TRADE_MARK: document.getElementById('TRADE_MARK').value,
         CCC_CODE: document.getElementById('CCC_CODE').value,
         ST_MTD: document.getElementById('ST_MTD').value,
+        NET_WT: document.getElementById('NET_WT').value,        
         ORG_COUNTRY: document.getElementById('ORG_COUNTRY').value,
         ORG_IMP_DCL_NO: document.getElementById('ORG_IMP_DCL_NO').value,
         ORG_IMP_DCL_NO_ITEM: document.getElementById('ORG_IMP_DCL_NO_ITEM').value,
@@ -209,7 +211,9 @@ function saveItem() {
         WIDE: document.getElementById('WIDE').value,
         WIDE_UM: document.getElementById('WIDE_UM').value,
         LENGT_: document.getElementById('LENGT_').value,
-        LENGTH_UM: document.getElementById('LENGTH_UM').value,        
+        LENGTH_UM: document.getElementById('LENGTH_UM').value,
+        ST_QTY: document.getElementById('ST_QTY').value,
+        ST_UM: document.getElementById('ST_UM').value,
     });
     itemContainer.appendChild(item);
 
@@ -418,49 +422,8 @@ function applyFieldData() {
     closeSpecifyFieldModal();
 }
 
-// 匯入新資料前清空所有欄位和選項
-function clearForm() {
-    // 清空所有表單欄位
-    const inputs = document.querySelectorAll('input[type="text"], input[type="number"], textarea');
-    inputs.forEach(input => {
-        input.value = '';
-    });
-
-    // 清空所有checkbox
-    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-    checkboxes.forEach(checkbox => {
-        checkbox.checked = false;
-    });
-
-    // 清空報單項次
-    const itemContainer = document.getElementById('item-container');
-    itemContainer.innerHTML = '';
-}
-
-// 清空所有欄位和選項的函數
-function clearAllFields() {
-    // 清空報單表頭欄位
-    document.querySelectorAll('#header input').forEach(input => input.value = '');
-    document.querySelectorAll('#header textarea').forEach(textarea => textarea.value = '');
-    document.querySelectorAll('#header select').forEach(select => select.selectedIndex = 0);
-
-    // 清空報單項次欄位
-    document.getElementById('item-container').innerHTML = '';
-
-    // 清空報單副本選項
-    document.querySelectorAll('#copy input[type="checkbox"]').forEach(checkbox => checkbox.checked = false);
-
-    // 清空保稅貨物欄位
-    document.querySelectorAll('#bonded input').forEach(input => input.value = '');
-
-    // 清空所有隱藏的變量
-    document.querySelectorAll('#variables input').forEach(input => input.value = '');
-}
-
 // 匯入Excel文件的功能
 function handleFile(event) {
-    clearForm(); // 匯入新資料前清空所有欄位和選項
-
     const file = event.target.files[0];
     const reader = new FileReader();
     reader.onload = function(event) {
@@ -472,8 +435,10 @@ function handleFile(event) {
         const headerData = XLSX.utils.sheet_to_json(headerSheet, { header: 1 });
 
         // 將報單表頭數據填充到表單中
-        const headerFields = ['LOT_NO', 'SHPR_CODE', 'SHPR_C_NAME', 
-            'CNEE_E_NAME', 'CNEE_E_ADDR', 'CNEE_COUNTRY_CODE', 'CNEE_BAN_ID',
+        const headerFields = ['LOT_NO', 'SHPR_BAN_ID', 'SHPR_BONDED_ID',
+            'SHPR_C_NAME', 'SHPR_E_NAME', 'SHPR_E_ADDR', 
+            'CNEE_C_NAME', 'CNEE_E_NAME', 'CNEE_E_ADDR', 
+            'CNEE_COUNTRY_CODE', 'CNEE_BAN_ID',
             'BUYER_E_NAME', 'BUYER_E_ADDR', 'TO_CODE', 'TO_DESC', 
             'TOT_CTN', 'DOC_CTN_UM', 'CTN_DESC', 'DCL_GW', 'DCL_NW', 
             'DCL_DOC_TYPE', 'TERMS_SALES', 'CURRENCY', 'CAL_IP_TOT_ITEM_AMT', 
@@ -512,10 +477,10 @@ function handleFile(event) {
                 DOC_UM: row[4] || '',
                 DOC_UNIT_P: row[5] || '',
                 DOC_TOT_P: row[6] || '',
-                NET_WT: row[7] || '',
-                TRADE_MARK: row[8] || '',
-                CCC_CODE: row[9] || '',
-                ST_MTD: row[10] || '',
+                TRADE_MARK: row[7] || '',
+                CCC_CODE: row[8] || '',
+                ST_MTD: row[9] || '',
+                NET_WT: row[10] || '',
                 ORG_COUNTRY: row[11] || '',
                 ORG_IMP_DCL_NO: row[12] || '',
                 ORG_IMP_DCL_NO_ITEM: row[13] || '',
@@ -532,7 +497,9 @@ function handleFile(event) {
                 WIDE: row[24] || '',
                 WIDE_UM: row[25] || '',
                 LENGT_: row[26] || '',
-                LENGTH_UM: row[27] || '',                
+                LENGTH_UM: row[27] || '',
+                ST_QTY: row[28] || '',
+                ST_UM: row[29] || '',
             });
             itemContainer.appendChild(itemRow);
         });
@@ -564,10 +531,14 @@ function exportToExcel() {
     // 收集報單表頭數據
     const headerData = [
         ['運單號', document.getElementById('LOT_NO').value],
-        ['出口人統一編號', document.getElementById('SHPR_CODE').value],
-        ['出口人名稱', document.getElementById('SHPR_C_NAME').value],
-        ['買方名稱', document.getElementById('CNEE_E_NAME').value],
-        ['買方地址', document.getElementById('CNEE_E_ADDR').value],
+        ['出口人統一編號', document.getElementById('SHPR_BAN_ID').value],
+        ['海關監管編號', document.getElementById('SHPR_BONDED_ID').value],
+        ['出口人中文名稱', document.getElementById('SHPR_C_NAME').value],
+        ['出口人英文名稱', document.getElementById('SHPR_E_NAME').value],
+        ['出口人中/英地址', document.getElementById('SHPR_E_ADDR').value],
+        ['買方中文名稱', document.getElementById('CNEE_C_NAME').value],
+        ['買方英文名稱', document.getElementById('CNEE_E_NAME').value],
+        ['買方中/英地址', document.getElementById('CNEE_E_ADDR').value],
         ['買方國家代碼', document.getElementById('CNEE_COUNTRY_CODE').value],
         ['買方統一編號', document.getElementById('CNEE_BAN_ID').value],
         ['收方名稱', document.getElementById('BUYER_E_NAME').value],
@@ -603,10 +574,10 @@ function exportToExcel() {
     // 收集報單項次數據
     const itemsData = [
     ['項次', '大品名註記', '品名', '數量', '單位', '單價', '金額', 
-    '淨重', '商標', '稅則', '統計方式', '生產國別', '原進口報單號碼', '原進口報單項次', 
+    '商標', '稅則', '統計方式', '淨重', '生產國別', '原進口報單號碼', '原進口報單項次', 
     '賣方料號', '保稅貨物註記', '型號', '規格', '產證號碼', '產證項次', 
     '原進倉報單號碼', '原進倉報單項次', '輸出許可號碼', '輸出許可項次', 
-    '寬度(幅寬)', '寬度單位', '長度(幅長)', '長度單位']
+    '寬度(幅寬)', '寬度單位', '長度(幅長)', '長度單位' ,'統計數量' ,'統計單位']
     ];
     document.querySelectorAll("#item-container .item-row").forEach((item, index) => {
         itemsData.push([
@@ -617,10 +588,10 @@ function exportToExcel() {
             item.querySelector('.DOC_UM').value || '',
             item.querySelector('.DOC_UNIT_P').value || '',
             item.querySelector('.DOC_TOT_P').value || '',
-            item.querySelector('.NET_WT').value || '',
             item.querySelector('.TRADE_MARK').value || '',
             item.querySelector('.CCC_CODE').value || '',
             item.querySelector('.ST_MTD').value || '',
+            item.querySelector('.NET_WT').value || '',
             item.querySelector('.ORG_COUNTRY').value || '',
             item.querySelector('.ORG_IMP_DCL_NO').value || '',
             item.querySelector('.ORG_IMP_DCL_NO_ITEM').value || '',
@@ -638,6 +609,8 @@ function exportToExcel() {
             item.querySelector('.WIDE_UM').value || '',
             item.querySelector('.LENGT_').value || '',
             item.querySelector('.LENGTH_UM').value || '',
+            item.querySelector('.ST_QTY').value || '',
+            item.querySelector('.ST_UM').value || '',
         ]);
     });
 
@@ -716,10 +689,10 @@ function createItemRow(data) {
         ${createInputField('DOC_UM', data.DOC_UM, true)}
         ${createInputField('DOC_UNIT_P', data.DOC_UNIT_P, true)}
         ${createInputField('DOC_TOT_P', data.DOC_TOT_P, true)}
-        ${createInputField('NET_WT', data.NET_WT, true)}
         ${createInputField('TRADE_MARK', data.TRADE_MARK, true)}
         ${createInputField('CCC_CODE', data.CCC_CODE, true)}
         ${createInputField('ST_MTD', data.ST_MTD, true)}
+        ${createInputField('NET_WT', data.NET_WT, true)}
         ${createInputField('ORG_COUNTRY', data.ORG_COUNTRY, false)}
         ${createInputField('ORG_IMP_DCL_NO', data.ORG_IMP_DCL_NO, false)}
         ${createInputField('ORG_IMP_DCL_NO_ITEM', data.ORG_IMP_DCL_NO_ITEM, false)}
@@ -737,6 +710,8 @@ function createItemRow(data) {
         ${createInputField('WIDE_UM', data.WIDE_UM, false)}
         ${createInputField('LENGT_', data.LENGT_, false)}
         ${createInputField('LENGTH_UM', data.LENGTH_UM, false)}
+        ${createInputField('ST_QTY', data.ST_QTY, false)}
+        ${createInputField('ST_UM', data.ST_UM, false)}
         <div class="form-group">
             <button class="delete-button" onclick="removeItem(this)">Ｘ</button>
         </div>
@@ -860,8 +835,10 @@ document.addEventListener('DOMContentLoaded', function () {
         updateVariables(); // 在匯出XML之前更新變數
 
         const headerFields = [
-            'LOT_NO', 'SHPR_CODE', 'SHPR_C_NAME', 
-            'CNEE_E_NAME', 'CNEE_E_ADDR', 'CNEE_COUNTRY_CODE', 'CNEE_BAN_ID',
+            'LOT_NO', 'SHPR_BAN_ID', 'SHPR_BONDED_ID', 
+            'SHPR_C_NAME', 'SHPR_E_NAME', 'SHPR_E_ADDR', 
+            'CNEE_C_NAME', 'CNEE_E_NAME', 'CNEE_E_ADDR', 
+            'CNEE_COUNTRY_CODE', 'CNEE_BAN_ID',
             'BUYER_E_NAME', 'BUYER_E_ADDR', 'TO_CODE', 'TO_DESC', 
             'TOT_CTN', 'DOC_CTN_UM', 'CTN_DESC', 'DCL_GW', 'DCL_NW', 
             'DCL_DOC_TYPE', 'TERMS_SALES', 'CURRENCY', 'CAL_IP_TOT_ITEM_AMT', 
@@ -873,11 +850,11 @@ document.addEventListener('DOMContentLoaded', function () {
         ];
         const itemFields = [
             'DESCRIPTION', 'QTY', 'DOC_UM', 'DOC_UNIT_P', 'DOC_TOT_P', 
-            'NET_WT', 'TRADE_MARK', 'CCC_CODE', 'ST_MTD', 'ORG_COUNTRY', 
+            'TRADE_MARK', 'CCC_CODE', 'ST_MTD', 'NET_WT', 'ORG_COUNTRY', 
             'ORG_IMP_DCL_NO', 'ORG_IMP_DCL_NO_ITEM', 'SELLER_ITEM_CODE', 'BOND_NOTE',
             'GOODS_MODEL', 'GOODS_SPEC', 'CERT_NO', 'CERT_NO_ITEM', 
             'ORG_DCL_NO', 'ORG_DCL_NO_ITEM', 'EXP_NO', 'EXP_SEQ_NO', 
-            'WIDE', 'WIDE_UM', 'LENGT_', 'LENGTH_UM', 
+            'WIDE', 'WIDE_UM', 'LENGT_', 'LENGTH_UM', 'ST_QTY' ,'ST_UM',
         ];
         let xmlContent = '<?xml version="1.0" encoding="UTF-8"?>\n<Root>\n  <sys_code>GICCDS</sys_code>\n<head>\n  <head_table_name>DOC_HEAD</head_table_name>\n';
         
@@ -945,10 +922,14 @@ function exportToPDF() {
             // 添加表頭
             const headerData = [
                 ['運單號', document.getElementById('LOT_NO').value],
-                ['出口人統一編號', document.getElementById('SHPR_CODE').value],
-                ['出口人名稱', document.getElementById('SHPR_C_NAME').value],
-                ['買方名稱', document.getElementById('CNEE_E_NAME').value],
-                ['買方地址', document.getElementById('CNEE_E_ADDR').value],
+                ['出口人統一編號', document.getElementById('SHPR_BAN_ID').value],
+                ['海關監管編號', document.getElementById('SHPR_BONDED_ID').value],
+                ['出口人中文名稱', document.getElementById('SHPR_C_NAME').value],
+                ['出口人英文名稱', document.getElementById('SHPR_E_NAME').value],
+                ['出口人中/英地址', document.getElementById('SHPR_E_ADDR').value],
+                ['買方中文名稱', document.getElementById('CNEE_C_NAME').value],
+                ['買方英文名稱', document.getElementById('CNEE_E_NAME').value],
+                ['買方中/英地址', document.getElementById('CNEE_E_ADDR').value],
                 ['買方國家代碼', document.getElementById('CNEE_COUNTRY_CODE').value],
                 ['買方統一編號', document.getElementById('CNEE_BAN_ID').value],
                 ['收方名稱', document.getElementById('BUYER_E_NAME').value],
@@ -991,10 +972,10 @@ function exportToPDF() {
 
             const itemHeader = 
             ['項次', '大品名註記', '品名', '數量', '單位', '單價', '金額', 
-                '淨重', '商標', '稅則', '統計方式', '生產國別', '原進口報單號碼', '原進口報單項次', 
+                '商標', '稅則', '統計方式', '淨重', '生產國別', '原進口報單號碼', '原進口報單項次', 
                 '賣方料號', '保稅貨物註記', '型號', '規格', '產證號碼', '產證項次', 
                 '原進倉報單號碼', '原進倉報單項次', '輸出許可號碼', '輸出許可項次', 
-                '寬度(幅寬)', '寬度單位', '長度(幅長)', '長度單位'];
+                '寬度(幅寬)', '寬度單位', '長度(幅長)', '長度單位' ,'統計數量' ,'統計單位'];
 
             const items = document.querySelectorAll("#item-container .item-row");
 
@@ -1007,10 +988,10 @@ function exportToPDF() {
                     item.querySelector('.DOC_UM').value,
                     item.querySelector('.DOC_UNIT_P').value,
                     item.querySelector('.DOC_TOT_P').value,
-                    item.querySelector('.NET_WT').value,                    
                     item.querySelector('.TRADE_MARK').value,
                     item.querySelector('.CCC_CODE').value,
                     item.querySelector('.ST_MTD').value,
+                    item.querySelector('.NET_WT').value,                    
                     item.querySelector('.ORG_COUNTRY').value,
                     item.querySelector('.ORG_IMP_DCL_NO').value,
                     item.querySelector('.ORG_IMP_DCL_NO_ITEM').value,
@@ -1028,6 +1009,8 @@ function exportToPDF() {
                     item.querySelector('.WIDE_UM').value,
                     item.querySelector('.LENGT_').value,
                     item.querySelector('.LENGTH_UM').value,
+                    item.querySelector('.ST_QTY').value,
+                    item.querySelector('.ST_UM').value,
                 ];
 
                 rowData.forEach((field, i) => {
