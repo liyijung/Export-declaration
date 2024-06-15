@@ -336,3 +336,11 @@ h4 {
     border-radius: 5px;
     border: 1px solid #ccc;
 }
+
+input, textarea, select {
+    font-size: 16px; /* 調整這裡的值以達到所需的字體大小 */
+}
+
+.header-group input {
+    font-size: 16px; /* 這裡設定表頭區域的input字體大小 */
+}
