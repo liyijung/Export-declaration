@@ -215,6 +215,7 @@ function saveItem() {
 
     closeItemModal();
     renumberItems();
+    applyToggleFields();
 }
 
 // 刪除項次
