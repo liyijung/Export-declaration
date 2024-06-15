@@ -323,3 +323,16 @@ h4 {
 .hidden {
     display: none;
 }
+
+#toggle-fields-modal .modal-content {
+    width: 600px; /* 調整寬度以適應多選框 */
+}
+
+#field-select {
+    width: 100%;
+    height: 300px; /* 設定高度來顯示多個選項 */
+    box-sizing: border-box;
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
