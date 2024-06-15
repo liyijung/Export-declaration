@@ -18,7 +18,7 @@
         </div>
     </div>
 
-    <!--報單表頭-->
+    <!--報單表頭-->    
     <div id="header" class="tab active">
         <p style="margin-top: 30px;"></p>
         <div class="header-section">
@@ -185,8 +185,43 @@
             <button onclick="openItemModal()">新增項次（可複製）</button>
             <button onclick="openSpecifyFieldModal()">指定填列欄位資料</button>
             <button onclick="openAdjustOrderModal()">調整項次順序</button>
-            <button onclick="openToggleColumnsModal()">顯示隱藏欄位</button>
+            <button onclick="openToggleFieldsModal()">顯示隱藏欄位</button>
         </div>
+        <!-- 顯示隱藏欄位彈跳框 -->
+        <div id="toggle-fields-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>顯示/隱藏欄位</h2>
+                </div>
+                <div class="header-group">
+                    <label for="field-checkboxes">選擇欄位</label>
+                    <div id="field-checkboxes">
+                        <div><input type="checkbox" id="field1" name="field1" value="ORG_COUNTRY"><label for="field1">生產國別</label></div>
+                        <div><input type="checkbox" id="field2" name="field2" value="ORG_IMP_DCL_NO"><label for="field2">原進口報單號碼</label></div>
+                        <div><input type="checkbox" id="field3" name="field3" value="ORG_IMP_DCL_NO_ITEM"><label for="field3">原進口報單項次</label></div>
+                        <div><input type="checkbox" id="field4" name="field4" value="SELLER_ITEM_CODE"><label for="field4">賣方料號</label></div>
+                        <div><input type="checkbox" id="field5" name="field5" value="BOND_NOTE"><label for="field5">保稅貨物註記</label></div>
+                        <div><input type="checkbox" id="field6" name="field6" value="GOODS_MODEL"><label for="field6">型號</label></div>
+                        <div><input type="checkbox" id="field7" name="field7" value="GOODS_SPEC"><label for="field7">規格</label></div>
+                        <div><input type="checkbox" id="field8" name="field8" value="CERT_NO"><label for="field8">產證號碼</label></div>
+                        <div><input type="checkbox" id="field9" name="field9" value="CERT_NO_ITEM"><label for="field9">產證項次</label></div>
+                        <div><input type="checkbox" id="field10" name="field10" value="ORG_DCL_NO"><label for="field10">原進倉報單號碼</label></div>
+                        <div><input type="checkbox" id="field11" name="field11" value="ORG_DCL_NO_ITEM"><label for="field11">原進倉報單項次</label></div>
+                        <div><input type="checkbox" id="field12" name="field12" value="EXP_NO"><label for="field12">輸出許可號碼</label></div>
+                        <div><input type="checkbox" id="field13" name="field13" value="EXP_SEQ_NO"><label for="field13">輸出許可項次</label></div>
+                        <div><input type="checkbox" id="field14" name="field14" value="WIDE"><label for="field14">寬度(幅寬)</label></div>
+                        <div><input type="checkbox" id="field15" name="field15" value="WIDE_UM"><label for="field15">寬度單位</label></div>
+                        <div><input type="checkbox" id="field16" name="field16" value="LENGT_"><label for="field16">長度(幅長)</label></div>
+                        <div><input type="checkbox" id="field17" name="field17" value="LENGTH_UM"><label for="field17">長度單位</label></div>
+                    </div>
+                </div>
+                <div class="floating-buttons">
+                    <button onclick="applyToggleFields()">套用</button>
+                    <button onclick="closeToggleFieldsModal()">取消</button>
+                </div>
+            </div>
+        </div>
+
         <div class="item-row item-header">
             <div class="form-group fix">
                 <label>項次</label>
@@ -194,82 +229,82 @@
             <div class="form-group fix">
                 <label>大品名註記</label>
             </div>
-            <div class="form-group">
+            <div class="form-group DESCRIPTION">
                 <label>品名</label>
             </div>
-            <div class="form-group">
+            <div class="form-group QTY">
                 <label>數量</label>
             </div>
-            <div class="form-group">
+            <div class="form-group DOC_UM">
                 <label>單位</label>
             </div>
-            <div class="form-group">
+            <div class="form-group DOC_UNIT_P">
                 <label>單價</label>
             </div>
-            <div class="form-group">
+            <div class="form-group DOC_TOT_P">
                 <label>金額</label>
             </div>
-            <div class="form-group">
-                <label>商標</label>
-            </div>
-            <div class="form-group">
-                <label>稅則</label>
-            </div>
-            <div class="form-group">
-                <label>統計方式</label>
-            </div>
-            <div class="form-group">
+            <div class="form-group NET_WT">
                 <label>淨重</label>
             </div>
-            <div class="form-group hidden">
+            <div class="form-group TRADE_MARK">
+                <label>商標</label>
+            </div>
+            <div class="form-group CCC_CODE">
+                <label>稅則</label>
+            </div>
+            <div class="form-group ST_MTD">
+                <label>統計方式</label>
+            </div>
+            <div class="form-group ORG_COUNTRY hidden">
                 <label>生產國別</label>
             </div>
-            <div class="form-group hidden">
+            <div class="form-group ORG_IMP_DCL_NO hidden">
                 <label>原進口報單號碼</label>
             </div>
-            <div class="form-group hidden">
+            <div class="form-group ORG_IMP_DCL_NO_ITEM hidden">
                 <label>原進口報單項次</label>
             </div>
-            <div class="form-group hidden">
+            <div class="form-group SELLER_ITEM_CODE hidden">
                 <label>賣方料號</label>
             </div>
-            <div class="form-group hidden">
+            <div class="form-group BOND_NOTE hidden">
                 <label>保稅貨物註記</label>
-            </div>            
-            <div class="form-group hidden">
+            </div>
+            <div class="form-group GOODS_MODEL hidden">
                 <label>型號</label>
             </div>
-            <div class="form-group hidden">
+            <div class="form-group GOODS_SPEC hidden">
                 <label>規格</label>
             </div>
-            <div class="form-group hidden">
+            <div class="form-group CERT_NO hidden">
                 <label>產證號碼</label>
             </div>
-            <div class="form-group hidden">
+            <div class="form-group CERT_NO_ITEM hidden">
                 <label>產證項次</label>
             </div>
-            <div class="form-group hidden">
+            <div class="form-group ORG_DCL_NO hidden">
                 <label>原進倉報單號碼</label>
             </div>
-            <div class="form-group hidden">
+            <div class="form-group ORG_DCL_NO_ITEM hidden">
                 <label>原進倉報單項次</label>
-            </div>            
-            <div class="form-group hidden">
+            </div>
+            <div class="form-group EXP_NO hidden">
                 <label>輸出許可號碼</label>
             </div>
-            <div class="form-group hidden">
+            <div class="form-group EXP_SEQ_NO hidden">
                 <label>輸出許可項次</label>
             </div>
-            <div class="form-group hidden">
+            <div class="form-group WIDE hidden">
                 <label>寬度(布寬)</label>
             </div>
-            <div class="form-group hidden">
+            <div class="form-group WIDE_UM hidden">
                 <label>寬度單位</label>
             </div>
-            <div class="form-group hidden">
+            <div class="form-group LENGT_ hidden">
                 <label>長度(布長)</label>
             </div>
-            <div class="form-group hidden">
+            <div class="form-group LENGTH_UM hidden">
                 <label>長度單位</label>
             </div>            
             <div class="form-group">
@@ -318,6 +353,10 @@
                 <input type="number" id="DOC_TOT_P" class="DOC_TOT_P" min="0">
             </div>
             <div class="header-group">
+                <label for="NET_WT">淨重</label>
+                <input type="number" id="NET_WT" class="NET_WT" min="0">
+            </div>
+            <div class="header-group">
                 <label for="TRADE_MARK">商標</label>
                 <input type="text" id="TRADE_MARK" class="TRADE_MARK" placeholder="範例：NO BRAND（無商標）、FIG（圖樣）、文字（字樣）">
             </div>
@@ -334,10 +373,6 @@
                     <option value="81">洋貨銷售</option>
                     <option value="82">洋貨樣品/贈送/不良品退回</option>
                 </datalist>
-            </div>
-            <div class="header-group">
-                <label for="NET_WT">淨重</label>
-                <input type="number" id="NET_WT" class="NET_WT" min="0">
             </div>
             <div class="header-group">
                 <label for="ORG_COUNTRY">生產國別</label>
@@ -457,10 +492,10 @@
                         <option value="DOC_UM">單位</option>
                         <option value="DOC_UNIT_P">單價</option>
                         <option value="DOC_TOT_P">金額</option>
+                        <option value="NET_WT">淨重</option>
                         <option value="TRADE_MARK">商標</option>
                         <option value="CCC_CODE">稅則</option>
                         <option value="ST_MTD">統計方式</option>
-                        <option value="NET_WT">淨重</option>
                         <option value="ORG_COUNTRY">生產國別</option>
                         <option value="ORG_IMP_DCL_NO">原進口報單號碼</option>
                         <option value="ORG_IMP_DCL_NO_ITEM">原進口報單項次</option>
@@ -500,10 +535,10 @@
                         <option value="DOC_UM">單位</option>
                         <option value="DOC_UNIT_P">單價</option>
                         <option value="DOC_TOT_P">金額</option>
+                        <option value="NET_WT">淨重</option>
                         <option value="TRADE_MARK">商標</option>
                         <option value="CCC_CODE">稅則</option>
                         <option value="ST_MTD">統計方式</option>
-                        <option value="NET_WT">淨重</option>
                         <option value="ORG_COUNTRY">生產國別</option>
                         <option value="ORG_IMP_DCL_NO">原進口報單號碼</option>
                         <option value="ORG_IMP_DCL_NO_ITEM">原進口報單項次</option>
@@ -539,42 +574,6 @@
             <div class="floating-buttons">
                 <button onclick="applyFieldData()">儲存</button>
                 <button onclick="closeSpecifyFieldModal()">取消</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- 顯示隱藏欄位彈跳框 -->
-    <div id="toggle-columns-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header" id="toggle-columns-modal-header">
-                <h2>顯示隱藏欄位</h2>
-            </div>
-            <div class="header-group">
-                <label for="toggle-columns-select">選擇欄位（可複選）</label>
-                <select id="toggle-columns-select" multiple style="height: 300px;">
-                    <option value="生產國別">生產國別</option>
-                    <option value="原進口報單號碼">原進口報單號碼</option>
-                    <option value="原進口報單項次">原進口報單項次</option>
-                    <option value="賣方料號">賣方料號</option>
-                    <option value="保稅貨物註記">保稅貨物註記</option>
-                    <option value="型號">型號</option>
-                    <option value="規格">規格</option>
-                    <option value="產證號碼">產證號碼</option>
-                    <option value="產證項次">產證項次</option>
-                    <option value="原進倉報單號碼">原進倉報單號碼</option>
-                    <option value="原進倉報單項次">原進倉報單項次</option>
-                    <option value="輸出許可號碼">輸出許可號碼</option>
-                    <option value="輸出許可項次">輸出許可項次</option>
-                    <option value="寬度(布寬)">寬度(布寬)</option>
-                    <option value="寬度單位">寬度單位</option>
-                    <option value="長度(布長)">長度(布長)</option>
-                    <option value="長度單位">長度單位</option>
-                </select>
-            </div>
-            <div class="floating-buttons">
-                <button onclick="showSelectedColumns()">顯示</button>
-                <button onclick="hideSelectedColumns()">隱藏</button>
-                <button onclick="closeToggleColumnsModal()">取消</button>
             </div>
         </div>
     </div>
@@ -657,11 +656,7 @@
         <input type="file" id="import-xml" accept=".xml" style="display:none;">        
         <button class="xml-btn" onclick="document.getElementById('import-xml').click();">匯入XML</button>        
         <button class="xml-btn" id="export-to-xml">匯出XML</button>
-        <button class="Check-btn" onclick="Checklist()">檢核表</button>
-        <button class="invoice-btn" onclick="CommercialInvoice()">商業發票</button>
-        <button class="packing-btn" onclick="PackingList()">裝箱單</button>
-        <button class="export-btn" onclick="ExportDeclarationPreview()">出口報單預覽</button>
-        <button class="upload-btn" onclick="DeclarationUpload()">申報上傳</button>
+        <button class="pdf-btn" onclick="exportToPDF()">出口報單預覽</button>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>    
