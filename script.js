@@ -238,16 +238,21 @@ function closeToggleFieldsModal() {
 }
 
 function applyToggleFields() {
-    var checkboxes = document.querySelectorAll('#field-checkboxes input[type="checkbox"]');
-    checkboxes.forEach(function(checkbox) {
-        var fieldClass = checkbox.value;
+    const selectedOptions = Array.from(document.getElementById('field-select').selectedOptions).map(option => option.value);
+    
+    const allFields = [
+        'TRADE_MARK', 'CCC_CODE', 'ST_MTD', 'NET_WT', 'ORG_COUNTRY', 'ORG_IMP_DCL_NO', 
+        'ORG_IMP_DCL_NO_ITEM', 'SELLER_ITEM_CODE', 'BOND_NOTE', 'GOODS_MODEL', 'GOODS_SPEC', 
+        'CERT_NO', 'CERT_NO_ITEM', 'ORG_DCL_NO', 'ORG_DCL_NO_ITEM', 'EXP_NO', 'EXP_SEQ_NO', 
+        'WIDE', 'WIDE_UM', 'LENGT_', 'LENGTH_UM', 'ST_QTY', 'ST_UM'
+    ];
 
-        // 針對報單項次部分，包括標題和內容
-        var fieldElements = document.querySelectorAll(`.item-header .${fieldClass}, #item-container .${fieldClass}`);
-        fieldElements.forEach(function(fieldElement) {
-            var formGroup = fieldElement.closest('.form-group');
+    allFields.forEach(field => {
+        const fieldElements = document.querySelectorAll(`.item-header .${field}, #item-container .${field}`);
+        fieldElements.forEach(fieldElement => {
+            const formGroup = fieldElement.closest('.form-group');
             if (formGroup) {
-                if (checkbox.checked) {
+                if (selectedOptions.includes(field)) {
                     formGroup.classList.remove('hidden');
                 } else {
                     formGroup.classList.add('hidden');
@@ -255,6 +260,7 @@ function applyToggleFields() {
             }
         });
     });
+
     closeToggleFieldsModal();
 }
 
@@ -689,10 +695,10 @@ function createItemRow(data) {
         ${createInputField('DOC_UM', data.DOC_UM, true)}
         ${createInputField('DOC_UNIT_P', data.DOC_UNIT_P, true)}
         ${createInputField('DOC_TOT_P', data.DOC_TOT_P, true)}
-        ${createInputField('TRADE_MARK', data.TRADE_MARK, true)}
-        ${createInputField('CCC_CODE', data.CCC_CODE, true)}
-        ${createInputField('ST_MTD', data.ST_MTD, true)}
-        ${createInputField('NET_WT', data.NET_WT, true)}
+        ${createInputField('TRADE_MARK', data.TRADE_MARK, false)}
+        ${createInputField('CCC_CODE', data.CCC_CODE, false)}
+        ${createInputField('ST_MTD', data.ST_MTD, false)}
+        ${createInputField('NET_WT', data.NET_WT, false)}
         ${createInputField('ORG_COUNTRY', data.ORG_COUNTRY, false)}
         ${createInputField('ORG_IMP_DCL_NO', data.ORG_IMP_DCL_NO, false)}
         ${createInputField('ORG_IMP_DCL_NO_ITEM', data.ORG_IMP_DCL_NO_ITEM, false)}
@@ -731,10 +737,15 @@ function createTextareaField(name, value) {
 
 // 創建輸入域
 function createInputField(name, value, isVisible) {
-    const visibilityClass = isVisible ? '' : ' hidden';
+    const visibilityClass = isVisible ? '' : 'hidden';
+    const inputType = (name === 'QTY' || name === 'DOC_UNIT_P') ? 'number' : 'text';
+    const onInputAttribute = (name === 'QTY' || name === 'DOC_UNIT_P') ? 'oninput="calculateAmount(event)"' : '';
+    const minAttribute = (name === 'QTY' || name === 'DOC_UNIT_P' || name === 'DOC_TOT_P') ? 'min="0"' : '';
+    const readonlyAttribute = (name === 'DOC_TOT_P') ? 'readonly' : '';
+
     return `
-        <div class="form-group${visibilityClass}">
-            <input type="text" class="${name}" value="${value || ''}">
+        <div class="form-group ${visibilityClass}">
+            <input type="${inputType}" class="${name}" value="${value || ''}" ${onInputAttribute} ${minAttribute} ${readonlyAttribute}>
         </div>
     `;
 }
@@ -746,6 +757,28 @@ function renumberItems() {
         itemCount++;
         item.querySelector('label').textContent = `${itemCount}`; // 項次
     });
+}
+
+// 計算金額的函數
+function calculateAmount(event) {
+    if (event) {
+        // 處理特定行中的數量和單價
+        const row = event.target.closest('.item-row') || event.target.closest('.modal-content'); // 找到當前輸入域所在的行或彈跳框
+        const qty = parseFloat(row.querySelector('.QTY').value) || 0;
+        const unitPrice = parseFloat(row.querySelector('.DOC_UNIT_P').value) || 0;
+        const amount = qty * unitPrice;
+        
+        // 如果數量或單價為0，顯示空值，否則顯示計算結果
+        row.querySelector('.DOC_TOT_P').value = (qty === 0 || unitPrice === 0) ? '' : amount.toFixed(2);
+    } else {
+        // 處理整個表單中的數量和單價
+        const qty = parseFloat(document.querySelector('#QTY').value) || 0;
+        const unitPrice = parseFloat(document.querySelector('#DOC_UNIT_P').value) || 0;
+        const amount = qty * unitPrice;
+
+        // 如果數量或單價為0，顯示空值，否則顯示計算結果
+        document.querySelector('#DOC_TOT_P').value = (qty === 0 || unitPrice === 0) ? '' : amount.toFixed(2);
+    }
 }
 
 // 更新REMARK1的值
@@ -782,8 +815,12 @@ function updateRemark1FromImport() {
     updateRemark1(); // 確保REMARK1欄位值與checkbox狀態同步
 }
 
-// 報單副本
+// 添加事件監聽器
 document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.QTY, .DOC_UNIT_P').forEach(function (element) {
+        element.addEventListener('input', calculateAmount);
+    });
+
     document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
         checkbox.addEventListener('change', updateVariables);
     });
