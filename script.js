@@ -384,6 +384,23 @@ function toggleSpecifyMode() {
     }
 }
 
+// 當指定的欄位變更時檢查是否顯示起始編號輸入框和填列內容
+document.getElementById('specify-field-name').addEventListener('change', function () {
+    const fieldName = document.getElementById('specify-field-name').value;
+    const startNumberContainer = document.getElementById('start-number-container');
+    const customContent = document.getElementById('custom-content');
+    const specifyFieldValue = document.getElementById('specify-field-value');
+
+    if (fieldName === 'CERT_NO_ITEM') {
+        startNumberContainer.style.display = 'inline-block';
+        specifyFieldValue.value = '';  // 清除填列內容的文字
+        specifyFieldValue.style.display = 'none';  // 隱藏填列內容
+    } else {
+        startNumberContainer.style.display = 'none';
+        specifyFieldValue.style.display = 'block';  // 顯示填列內容
+    }
+});
+
 // 應用填列資料的函數
 function applyFieldData() {
     const mode = document.getElementById('specify-mode').value;
@@ -395,6 +412,9 @@ function applyFieldData() {
         const itemNumbers = document.getElementById('specify-item-numbers').value;
         const fieldName = document.getElementById('specify-field-name').value;
         const fieldValue = document.getElementById('specify-field-value').value;
+        const startNumber = parseInt(document.getElementById('start-number').value, 10); // 新增：起始編號
+        let currentNumber = startNumber; // 新增：當前編號
+
         const ranges = itemNumbers.split(',').map(range => range.trim());
         let indices = [];
 
@@ -414,7 +434,13 @@ function applyFieldData() {
                 const item = items[index];
                 const fieldElement = item.querySelector(`.${fieldName}`);
                 if (overwriteOption === 'all' || (overwriteOption === 'empty' && !fieldElement.value) || (overwriteOption === 'specified' && fieldElement.value)) {
-                    fieldElement.value = fieldValue;
+                    // 如果選擇的是產證序號，則填入指定的編號
+                    if (fieldName === 'CERT_NO_ITEM') {
+                        fieldElement.value = `${currentNumber}`; // 新增：填入指定的編號
+                        currentNumber++; // 新增：編號遞增
+                    } else {
+                        fieldElement.value = fieldValue;
+                    }
                 }
             }
         });
