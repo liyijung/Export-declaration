@@ -214,23 +214,30 @@
                         <option value="TRADE_MARK">商標</option>
                         <option value="CCC_CODE">稅則</option>
                         <option value="ST_MTD">統計方式</option>
+                        <option class="separator" disabled>──────────</option>
                         <option value="ORG_COUNTRY">生產國別</option>
                         <option value="ORG_IMP_DCL_NO">原進口報單號碼</option>
                         <option value="ORG_IMP_DCL_NO_ITEM">原進口報單項次</option>
+                        <option class="separator" disabled>──────────</option>
                         <option value="SELLER_ITEM_CODE">賣方料號</option>
                         <option value="BOND_NOTE">保稅貨物註記</option>
+                        <option class="separator" disabled>──────────</option>
                         <option value="GOODS_MODEL">型號</option>
                         <option value="GOODS_SPEC">規格</option>
                         <option value="CERT_NO">產證號碼</option>
                         <option value="CERT_NO_ITEM">產證項次</option>
+                        <option class="separator" disabled>──────────</option>
                         <option value="ORG_DCL_NO">原進倉報單號碼</option>
                         <option value="ORG_DCL_NO_ITEM">原進倉報單項次</option>
+                        <option class="separator" disabled>──────────</option>
                         <option value="EXP_NO">輸出許可號碼</option>
                         <option value="EXP_SEQ_NO">輸出許可項次</option>
+                        <option class="separator" disabled>──────────</option>
                         <option value="WIDE">寬度(幅寬)</option>
                         <option value="WIDE_UM">寬度單位</option>
                         <option value="LENGT_">長度(幅長)</option>
                         <option value="LENGTH_UM">長度單位</option>
+                        <option class="separator" disabled>──────────</option>
                         <option value="ST_QTY">統計數量</option>
                         <option value="ST_UM">統計單位</option>
                     </select>
@@ -400,6 +407,8 @@
                     <option value="82">洋貨樣品/贈送/不良品退回</option>
                 </datalist>
             </div>
+            <hr>
+            <div class="header-group">洋貨復出口核銷欄位</div>
             <div class="header-group">
                 <label for="ORG_COUNTRY">生產國別</label>
                 <input type="text" id="ORG_COUNTRY" class="ORG_COUNTRY" placeholder="範例：TW、US、CN、JP、GB（英文代碼）">
@@ -412,6 +421,8 @@
                 <label for="ORG_IMP_DCL_NO_ITEM">原進口報單項次</label>
                 <input type="text" id="ORG_IMP_DCL_NO_ITEM" class="ORG_IMP_DCL_NO_ITEM">
             </div>
+            <hr>
+            <div class="header-group">保稅貨物欄位</div>
             <div class="header-group">
                 <label for="SELLER_ITEM_CODE">賣方料號</label>
                 <input type="text" id="SELLER_ITEM_CODE" class="SELLER_ITEM_CODE">
@@ -420,6 +431,8 @@
                 <label for="BOND_NOTE">保稅貨物註記</label>
                 <input type="text" id="BOND_NOTE" class="BOND_NOTE">
             </div>            
+            <hr>
+            <div class="header-group">ECFA產證欄位</div>
             <div class="header-group">
                 <label for="GOODS_MODEL">型號</label>
                 <input type="text" id="GOODS_MODEL" class="GOODS_MODEL">
@@ -436,6 +449,8 @@
                 <label for="CERT_NO_ITEM">產證項次</label>
                 <input type="text" id="CERT_NO_ITEM" class="CERT_NO_ITEM" placeholder="提示：ECFA 產證項次">
             </div>
+            <hr>
+            <div class="header-group">D5保稅倉核銷欄位</div>
             <div class="header-group">
                 <label for="ORG_DCL_NO">原進倉報單號碼</label>
                 <input type="text" id="ORG_DCL_NO" class="ORG_DCL_NO">
@@ -444,6 +459,8 @@
                 <label for="ORG_DCL_NO_ITEM">原進倉報單項次</label>
                 <input type="text" id="ORG_DCL_NO_ITEM" class="ORG_DCL_NO_ITEM">
             </div>
+            <hr>
+            <div class="header-group">管制品欄位</div>
             <div class="header-group">
                 <label for="EXP_NO">輸出許可號碼</label>
                 <input type="text" id="EXP_NO" class="EXP_NO">
@@ -452,6 +469,8 @@
                 <label for="EXP_SEQ_NO">輸出許可項次</label>
                 <input type="text" id="EXP_SEQ_NO" class="EXP_SEQ_NO">
             </div>
+            <hr>
+            <div class="header-group">布貨品欄位</div>
             <div class="header-group">
                 <label for="WIDE">寬度(幅寬)</label>
                 <input type="text" id="WIDE" class="WIDE">
@@ -467,7 +486,9 @@
             <div class="header-group">
                 <label for="LENGTH_UM">長度單位</label>
                 <input type="text" id="LENGTH_UM" class="LENGTH_UM">
-            </div>  
+            </div> 
+            <hr>
+            <div class="header-group">與數量單位不同另外填列</div>
             <div class="header-group">
                 <label for="ST_QTY">統計數量</label>
                 <input type="text" id="ST_QTY" class="ST_QTY">
@@ -530,23 +551,30 @@
                         <option value="TRADE_MARK">商標</option>
                         <option value="CCC_CODE">稅則</option>
                         <option value="ST_MTD">統計方式</option>
+                        <option class="separator" disabled>──────────</option>
                         <option value="ORG_COUNTRY">生產國別</option>
                         <option value="ORG_IMP_DCL_NO">原進口報單號碼</option>
                         <option value="ORG_IMP_DCL_NO_ITEM">原進口報單項次</option>
+                        <option class="separator" disabled>──────────</option>
                         <option value="SELLER_ITEM_CODE">賣方料號</option>
                         <option value="BOND_NOTE">保稅貨物註記</option>
+                        <option class="separator" disabled>──────────</option>
                         <option value="GOODS_MODEL">型號</option>
                         <option value="GOODS_SPEC">規格</option>
                         <option value="CERT_NO">產證號碼</option>
                         <option value="CERT_NO_ITEM">產證項次</option>
+                        <option class="separator" disabled>──────────</option>
                         <option value="ORG_DCL_NO">原進倉報單號碼</option>
                         <option value="ORG_DCL_NO_ITEM">原進倉報單項次</option>
+                        <option class="separator" disabled>──────────</option>
                         <option value="EXP_NO">輸出許可號碼</option>
                         <option value="EXP_SEQ_NO">輸出許可項次</option>
+                        <option class="separator" disabled>──────────</option>
                         <option value="WIDE">寬度(幅寬)</option>
                         <option value="WIDE_UM">寬度單位</option>
                         <option value="LENGT_">長度(幅長)</option>
                         <option value="LENGTH_UM">長度單位</option>
+                        <option class="separator" disabled>──────────</option>
                         <option value="ST_QTY">統計數量</option>
                         <option value="ST_UM">統計單位</option>
                     </select>
@@ -575,23 +603,30 @@
                         <option value="TRADE_MARK">商標</option>
                         <option value="CCC_CODE">稅則</option>
                         <option value="ST_MTD">統計方式</option>
+                        <option class="separator" disabled>──────────</option>
                         <option value="ORG_COUNTRY">生產國別</option>
                         <option value="ORG_IMP_DCL_NO">原進口報單號碼</option>
                         <option value="ORG_IMP_DCL_NO_ITEM">原進口報單項次</option>
+                        <option class="separator" disabled>──────────</option>
                         <option value="SELLER_ITEM_CODE">賣方料號</option>
                         <option value="BOND_NOTE">保稅貨物註記</option>
+                        <option class="separator" disabled>──────────</option>
                         <option value="GOODS_MODEL">型號</option>
                         <option value="GOODS_SPEC">規格</option>
                         <option value="CERT_NO">產證號碼</option>
                         <option value="CERT_NO_ITEM">產證項次</option>
+                        <option class="separator" disabled>──────────</option>
                         <option value="ORG_DCL_NO">原進倉報單號碼</option>
                         <option value="ORG_DCL_NO_ITEM">原進倉報單項次</option>
+                        <option class="separator" disabled>──────────</option>
                         <option value="EXP_NO">輸出許可號碼</option>
                         <option value="EXP_SEQ_NO">輸出許可項次</option> 
+                        <option class="separator" disabled>──────────</option>
                         <option value="WIDE">寬度(幅寬)</option>
                         <option value="WIDE_UM">寬度單位</option>
                         <option value="LENGT_">長度(幅長)</option>
                         <option value="LENGTH_UM">長度單位</option>
+                        <option class="separator" disabled>──────────</option>
                         <option value="ST_QTY">統計數量</option>
                         <option value="ST_UM">統計單位</option>
                     </select>
