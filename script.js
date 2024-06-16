@@ -1027,14 +1027,19 @@ function exportToPDF() {
             doc.setFontSize(12);
             headerData.forEach((row, index) => {
                 const x = index % 2 === 0 ? 10 : 110; // 根據索引偶數放左邊，奇數放右邊
-                doc.text(`${row[0]}: ${row[1]}`, x, y);
-                if (index % 2 === 1) { // 每次奇數索引增加 y
-                    y += 10;
-                }
+                let lines = doc.splitTextToSize(`${row[0]}: ${row[1]}`, 90); // 將文本分行
+                lines.forEach((line) => {
+                    doc.text(line, x, y);
+                    y += 5; // 每行文本增加 y
+                    if (y > 270) { // 判斷是否需要換頁
+                        doc.addPage();
+                        y = 10; // 重置 y 座標
+                    }
+                });
             });
 
             // 添加項次數據
-            y += 20;
+            y += 10;
             doc.setFontSize(14);
             doc.text('---------------------------------------------------------------------------------------------------------------', 10, y);
             y += 10;
