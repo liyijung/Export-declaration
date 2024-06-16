@@ -344,3 +344,16 @@ input, textarea, select {
 .header-group input {
     font-size: 16px; /* 這裡設定表頭區域的input字體大小 */
 }
+
+#start-number {
+    width: 50px;
+    padding: 2px 5px;  /* 調整內邊距，使高度變小 */
+    font-size: 14px;
+    height: 20px;  /* 明確設置高度 */
+    line-height: 1.2;  /* 調整行高 */
+    margin-bottom: 5px;  /* 增加下邊距 */
+}
+
+#start-number-container label {
+    margin-right: 10px;
+}
