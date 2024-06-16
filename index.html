@@ -579,6 +579,12 @@
                         <option value="ST_UM">統計單位</option>
                     </select>
                 </div>
+                <!-- 新增起始編號輸入框，只在選擇產證序號時顯示 -->
+                <div id="start-number-container" style="display: none;">
+                    <label for="start-number">起始編號:</label>
+                    <input type="number" id="start-number" value="1" min="1" class="small-input">
+                </div>
+
                 <div class="header-group">
                     <label for="specify-field-value">填列內容</label>
                     <textarea id="specify-field-value" rows="3"></textarea>
