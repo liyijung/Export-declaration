@@ -365,10 +365,3 @@ input, textarea, select {
 #source-item-number, #COPY_ITEM {
     width: 200px; /* 限制文字框的寬度，可以根據需要調整 */
 }
-
-.header-group .unit {
-    flex: 1 1 10%; /* 單位欄位佔10% */
-}
-.header-group .description {
-    flex: 1 1 30%; /* 品名欄位佔30% */
-}
