@@ -784,14 +784,41 @@ function createItemRow(data) {
     return row;
 }
 
+let textareaCounter = 0;
+let allExpanded = false; // 用於跟蹤所有文本域的展開/折疊狀態
+
 // 創建文本域
 function createTextareaField(name, value) {
+    const id = `textarea-${name}-${textareaCounter++}`;
     return `
-        <div class="form-group">
-            <textarea class="${name}">${value || ''}</textarea>
+        <div class="form-group declaration-item">
+            <textarea id="${id}" class="${name}" rows="1">${value || ''}</textarea>
         </div>
     `;
 }
+
+// 切換所有報單項次頁面的文本域的顯示和隱藏
+function toggleAllTextareas() {
+    allExpanded = !allExpanded;
+    const newRows = allExpanded ? 5 : 1;
+    document.querySelectorAll('.declaration-item textarea').forEach(textarea => {
+        textarea.rows = newRows;
+    });
+    // 更新按鈕文本
+    document.getElementById('toggle-all-btn').textContent = allExpanded ? '折疊全部品名' : '展開全部品名';
+}
+
+// 添加文本域的示例函數
+function addTextarea() {
+    const container = document.getElementById('textarea-container');
+    const textareaHTML = createTextareaField('example-textarea', '這是初始值');
+    container.innerHTML += textareaHTML;
+}
+
+// 初次調用以填充下拉選單
+document.addEventListener('DOMContentLoaded', (event) => {
+    addTextarea();
+});
 
 // 創建輸入域
 function createInputField(name, value, isVisible) {
