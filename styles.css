@@ -357,3 +357,11 @@ input, textarea, select {
 #start-number-container label {
     margin-right: 10px;
 }
+
+#start-number-container label {
+    margin-right: 10px;
+}
+
+#source-item-number, #COPY_ITEM {
+    width: 200px; /* 限制文字框的寬度，可以根據需要調整 */
+}
