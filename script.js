@@ -791,7 +791,7 @@ let allExpanded = false; // 用於跟蹤所有文本域的展開/折疊狀態
 function createTextareaField(name, value) {
     const id = `textarea-${name}-${textareaCounter++}`;
     return `
-        <div class="form-group declaration-item">
+        <div class="form-group declaration-item" style="width: 200%;">
             <textarea id="${id}" class="${name}" rows="1">${value || ''}</textarea>
         </div>
     `;
@@ -828,11 +828,23 @@ function createInputField(name, value, isVisible) {
     const minAttribute = (name === 'QTY' || name === 'DOC_UNIT_P' || name === 'DOC_TOT_P') ? 'min="0"' : '';
     const readonlyAttribute = (name === 'DOC_TOT_P') ? 'readonly' : '';
 
-    return `
+    if (name === 'DOC_UM' || name === 'NET_WT' || name === 'ST_MTD' || name === 'ORG_COUNTRY' 
+        || name === 'ORG_IMP_DCL_NO_ITEM' || name === 'BOND_NOTE' || name === 'CERT_NO_ITEM' 
+        || name === 'ORG_DCL_NO_ITEM' || name === 'EXP_SEQ_NO' || name === 'WIDE_UM'
+        || name === 'LENGTH_UM' || name === 'ST_UM'
+    ) {
+        return `
+        <div class="form-group ${visibilityClass}" style="width: 50%;">
+            <input type="${inputType}" class="${name}" value="${value || ''}" ${onInputAttribute} ${minAttribute} ${readonlyAttribute}>
+        </div>
+    `;
+    } else {
+        return `
         <div class="form-group ${visibilityClass}">
             <input type="${inputType}" class="${name}" value="${value || ''}" ${onInputAttribute} ${minAttribute} ${readonlyAttribute}>
         </div>
     `;
+    }
 }
 
 // 重新編號所有項次
