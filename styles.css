@@ -362,6 +362,6 @@ input, textarea, select {
     margin-right: 10px;
 }
 
-#source-item-number, #COPY_ITEM, #header-section {
+#source-item-number, #COPY_ITEM , #DOC_MARKS_DESC, #DOC_OTR_DESC, #REMARK1 {
     width: 200px; /* 限制文字框的寬度，可以根據需要調整 */
 }
