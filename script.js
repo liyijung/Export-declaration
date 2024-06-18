@@ -534,7 +534,7 @@ function handleFile(event) {
         const headerData = XLSX.utils.sheet_to_json(headerSheet, { header: 1 });
 
         // 將報單表頭數據填充到表單中
-        const headerFields = ['LOT_NO', 'SHPR_CODE', 'SHPR_BAN_ID', 'SHPR_BONDED_ID',
+        const headerFields = ['LOT_NO', 'SHPR_BAN_ID', 'SHPR_BONDED_ID',
             'SHPR_C_NAME', 'SHPR_E_NAME', 'SHPR_E_ADDR', 
             'CNEE_C_NAME', 'CNEE_E_NAME', 'CNEE_E_ADDR', 
             'CNEE_COUNTRY_CODE', 'CNEE_BAN_ID',
@@ -630,7 +630,6 @@ function exportToExcel() {
     // 收集報單表頭數據
     const headerData = [
         ['運單號', document.getElementById('LOT_NO').value],
-        ['出口人代碼', document.getElementById('SHPR_CODE').value],
         ['出口人統一編號', document.getElementById('SHPR_BAN_ID').value],
         ['海關監管編號', document.getElementById('SHPR_BONDED_ID').value],
         ['出口人中文名稱', document.getElementById('SHPR_C_NAME').value],
@@ -1005,7 +1004,7 @@ document.addEventListener('DOMContentLoaded', function () {
         updateVariables(); // 在匯出XML之前更新變數
 
         const headerFields = [
-            'LOT_NO', 'SHPR_CODE', 'SHPR_BAN_ID', 'SHPR_BONDED_ID', 
+            'LOT_NO', 'SHPR_BAN_ID', 'SHPR_BONDED_ID', 
             'SHPR_C_NAME', 'SHPR_E_NAME', 'SHPR_E_ADDR', 
             'CNEE_C_NAME', 'CNEE_E_NAME', 'CNEE_E_ADDR', 
             'CNEE_COUNTRY_CODE', 'CNEE_BAN_ID',
@@ -1092,7 +1091,6 @@ function exportToPDF() {
             // 添加表頭
             const headerData = [
                 ['運單號', document.getElementById('LOT_NO').value],
-                ['出口人代碼', document.getElementById('SHPR_CODE').value],
                 ['出口人統一編號', document.getElementById('SHPR_BAN_ID').value],
                 ['海關監管編號', document.getElementById('SHPR_BONDED_ID').value],
                 ['出口人中文名稱', document.getElementById('SHPR_C_NAME').value],
