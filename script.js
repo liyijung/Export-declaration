@@ -48,67 +48,39 @@ function dragElement(element, header) {
 }
 
 // 輸入統一編號以查找資料
-let csvFiles = [
-    'companyData1.csv',
-    'companyData2.csv',
-    'companyData3.csv',
-    'companyData4.csv',
-    'companyData5.csv'
-];
+let csvData = [];
 
-function fillForm(record) {
-    if (record) {
-        document.getElementById('SHPR_CODE').value = record['統一編號'] || '';
-        document.getElementById('SHPR_BAN_ID').value = record['統一編號'] || '';
-        document.getElementById('SHPR_C_NAME').value = record['廠商中文名稱'] || '';
-        document.getElementById('SHPR_E_NAME').value = record['廠商英文名稱'] || '';
-        document.getElementById('SHPR_C_ADDR').value = record['中文營業地址'] || '';
-        document.getElementById('SHPR_E_ADDR').value = record['英文營業地址'] || '';
-    } else {
-        console.log('Record not found');
-        alert('未找到匹配的資料');
+    function fillForm(record) {
+        if (record) {
+            document.getElementById('SHPR_BAN_ID').value = record['統一編號'] || '';
+            document.getElementById('SHPR_C_NAME').value = record['廠商中文名稱'] || '';
+            document.getElementById('SHPR_E_NAME').value = record['廠商英文名稱'] || '';
+            document.getElementById('SHPR_C_ADDR').value = record['中文營業地址'] || '';
+            document.getElementById('SHPR_E_ADDR').value = record['英文營業地址'] || '';
+        } else {
+            console.log('Record not found');
+            alert('未找到匹配的資料');
+        }
     }
-}
 
-function searchInFile(file, searchCode, callback) {
-    Papa.parse(file, {
-        download: true,
-        header: true,
-        complete: function(results) {
-            const record = results.data.find(row => row['統一編號'] === searchCode);
-            callback(record);
-        }
-    });
-}
+    function searchData() {
+        const searchCode = document.getElementById('SHPR_BAN_ID').value.trim(); // 確保去除前後空格
+        console.log('Searching for:', searchCode);
+        const record = csvData.find(row => row['統一編號'] === searchCode);
+        console.log('Found record:', record);
+        fillForm(record);
+    }
 
-function searchData() {
-    const searchCode = document.getElementById('SHPR_CODE').value.trim(); // 確保去除前後空格
-    console.log('Searching for:', searchCode);
-    let found = false;
-
-    function searchNextFile(index) {
-        if (index >= csvFiles.length) {
-            if (!found) {
-                fillForm(null);
-            }
-            return;
-        }
-        searchInFile(csvFiles[index], searchCode, record => {
-            if (record) {
-                found = true;
-                fillForm(record);
-            } else {
-                searchNextFile(index + 1);
+    document.addEventListener('DOMContentLoaded', () => {
+        Papa.parse('companyData.csv', {
+            download: true,
+            header: true,
+            complete: function(results) {
+                console.log('CSV Data:', results.data);
+                csvData = results.data;
             }
         });
-    }
-
-    searchNextFile(0);
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-    // Initial setup if necessary
-});
+    });
 
 // 初始化拖動功能
 document.addEventListener('DOMContentLoaded', (event) => {
