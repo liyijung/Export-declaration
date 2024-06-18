@@ -47,6 +47,42 @@ function dragElement(element, header) {
     }
 }
 
+// 輸入統一編號以查找資料
+let csvData = [];
+
+function fillForm(record) {
+    if (record) {
+        document.getElementById('SHPR_CODE').value = record['統一編號'] || '';
+        document.getElementById('SHPR_BAN_ID').value = record['統一編號'] || '';
+        document.getElementById('SHPR_C_NAME').value = record['廠商中文名稱'] || '';
+        document.getElementById('SHPR_E_NAME').value = record['廠商英文名稱'] || '';
+        document.getElementById('SHPR_C_ADDR').value = record['中文營業地址'] || '';
+        document.getElementById('SHPR_E_ADDR').value = record['英文營業地址'] || '';
+    } else {
+        console.log('Record not found');
+        alert('未找到匹配的資料');
+    }
+}
+
+function searchData() {
+    const searchCode = document.getElementById('SHPR_CODE').value.trim(); // 確保去除前後空格
+    console.log('Searching for:', searchCode);
+    const record = csvData.find(row => row['統一編號'] === searchCode);
+    console.log('Found record:', record);
+    fillForm(record);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    Papa.parse('companyData.csv', {
+        download: true,
+        header: true,
+        complete: function(results) {
+            console.log('CSV Data:', results.data);
+            csvData = results.data;
+        }
+    });
+});
+
 // 初始化拖動功能
 document.addEventListener('DOMContentLoaded', (event) => {
     // 初始化拖動功能
