@@ -276,7 +276,7 @@ function applyToggleFields() {
     const selectedOptions = Array.from(document.getElementById('field-select').selectedOptions).map(option => option.value);
     
     const allFields = [
-        'TRADE_MARK', 'CCC_CODE', 'ST_MTD', 'ORG_COUNTRY', 'ORG_IMP_DCL_NO', 
+        'ORG_COUNTRY', 'ORG_IMP_DCL_NO', 
         'ORG_IMP_DCL_NO_ITEM', 'SELLER_ITEM_CODE', 'BOND_NOTE', 'GOODS_MODEL', 'GOODS_SPEC', 
         'CERT_NO', 'CERT_NO_ITEM', 'ORG_DCL_NO', 'ORG_DCL_NO_ITEM', 'EXP_NO', 'EXP_SEQ_NO', 
         'WIDE', 'WIDE_UM', 'LENGT_', 'LENGTH_UM', 'ST_QTY', 'ST_UM'
@@ -789,9 +789,9 @@ function createItemRow(data) {
         ${createInputField('DOC_UNIT_P', data.DOC_UNIT_P, true)}
         ${createInputField('DOC_TOT_P', data.DOC_TOT_P, true)}
         ${createInputField('NET_WT', data.NET_WT, true)}
-        ${createInputField('TRADE_MARK', data.TRADE_MARK, false)}
-        ${createInputField('CCC_CODE', data.CCC_CODE, false)}
-        ${createInputField('ST_MTD', data.ST_MTD, false)}
+        ${createInputField('TRADE_MARK', data.TRADE_MARK, true)}
+        ${createInputField('CCC_CODE', data.CCC_CODE, true)}
+        ${createInputField('ST_MTD', data.ST_MTD, true)}
         ${createInputField('ORG_COUNTRY', data.ORG_COUNTRY, false)}
         ${createInputField('ORG_IMP_DCL_NO', data.ORG_IMP_DCL_NO, false)}
         ${createInputField('ORG_IMP_DCL_NO_ITEM', data.ORG_IMP_DCL_NO_ITEM, false)}
