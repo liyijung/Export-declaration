@@ -48,7 +48,13 @@ function dragElement(element, header) {
 }
 
 // 輸入統一編號以查找資料
-let csvData = [];
+let csvFiles = [
+    'companyData1.csv',
+    'companyData2.csv',
+    'companyData3.csv',
+    'companyData4.csv',
+    'companyData5.csv'
+];
 
 function fillForm(record) {
     if (record) {
@@ -63,23 +69,44 @@ function fillForm(record) {
     }
 }
 
-function searchData() {
-    const searchCode = document.getElementById('SHPR_BAN_ID').value.trim(); // 確保去除前後空格
-    console.log('Searching for:', searchCode);
-    const record = csvData.find(row => row['統一編號'] === searchCode);
-    console.log('Found record:', record);
-    fillForm(record);
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-    Papa.parse('companyData.csv', {
+function searchInFile(file, searchCode, callback) {
+    Papa.parse(file, {
         download: true,
         header: true,
         complete: function(results) {
-            console.log('CSV Data:', results.data);
-            csvData = results.data;
+            const record = results.data.find(row => row['統一編號'] === searchCode);
+            callback(record);
         }
     });
+}
+
+function searchData() {
+    const searchCode = document.getElementById('SHPR_BAN_ID').value.trim(); // 確保去除前後空格
+    console.log('Searching for:', searchCode);
+    let found = false;
+
+    function searchNextFile(index) {
+        if (index >= csvFiles.length) {
+            if (!found) {
+                fillForm(null);
+            }
+            return;
+        }
+        searchInFile(csvFiles[index], searchCode, record => {
+            if (record) {
+                found = true;
+                fillForm(record);
+            } else {
+                searchNextFile(index + 1);
+            }
+        });
+    }
+
+    searchNextFile(0);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Initial setup if necessary
 });
 
 // 初始化拖動功能
@@ -534,8 +561,8 @@ function handleFile(event) {
         const headerData = XLSX.utils.sheet_to_json(headerSheet, { header: 1 });
 
         // 將報單表頭數據填充到表單中
-        const headerFields = ['LOT_NO', 'SHPR_BAN_ID', 'SHPR_BONDED_ID',
-            'SHPR_C_NAME', 'SHPR_E_NAME', 'SHPR_E_ADDR', 
+        const headerFields = ['FILE_NO', 'LOT_NO', 'SHPR_BAN_ID', 'SHPR_BONDED_ID',
+            'SHPR_C_NAME', 'SHPR_E_NAME', 'SHPR_C_ADDR', 'SHPR_E_ADDR', 
             'CNEE_C_NAME', 'CNEE_E_NAME', 'CNEE_E_ADDR', 
             'CNEE_COUNTRY_CODE', 'CNEE_BAN_ID',
             'BUYER_E_NAME', 'BUYER_E_ADDR', 'TO_CODE', 'TO_DESC', 
@@ -629,12 +656,14 @@ function checkRemarkOptions(remarks) {
 function exportToExcel() {
     // 收集報單表頭數據
     const headerData = [
+        ['文件編號', document.getElementById('FILE_NO').value],
         ['運單號', document.getElementById('LOT_NO').value],
         ['出口人統一編號', document.getElementById('SHPR_BAN_ID').value],
         ['海關監管編號', document.getElementById('SHPR_BONDED_ID').value],
         ['出口人中文名稱', document.getElementById('SHPR_C_NAME').value],
         ['出口人英文名稱', document.getElementById('SHPR_E_NAME').value],
-        ['出口人中/英地址', document.getElementById('SHPR_E_ADDR').value],
+        ['出口人中文地址', document.getElementById('SHPR_C_ADDR').value],
+        ['出口人英文地址', document.getElementById('SHPR_E_ADDR').value],
         ['買方中文名稱', document.getElementById('CNEE_C_NAME').value],
         ['買方英文名稱', document.getElementById('CNEE_E_NAME').value],
         ['買方中/英地址', document.getElementById('CNEE_E_ADDR').value],
@@ -722,8 +751,12 @@ function exportToExcel() {
     XLSX.utils.book_append_sheet(workbook, headerWorksheet, '報單表頭');
     XLSX.utils.book_append_sheet(workbook, itemsWorksheet, '報單項次');
 
+    // 文件名
+    const fileName = document.getElementById('FILE_NO').value || '';
+    const exporterName = document.getElementById('SHPR_C_NAME').value || '';
+
     // 下載 Excel 文件
-    XLSX.writeFile(workbook, 'export.xlsx');
+    XLSX.writeFile(workbook, `${fileName}-${exporterName}.xlsx`);
 }
 
 // 匯入XML文件的功能
@@ -1005,7 +1038,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const headerFields = [
             'LOT_NO', 'SHPR_BAN_ID', 'SHPR_BONDED_ID', 
-            'SHPR_C_NAME', 'SHPR_E_NAME', 'SHPR_E_ADDR', 
+            'SHPR_C_NAME', 'SHPR_E_NAME', 'SHPR_C_ADDR', 'SHPR_E_ADDR', 
             'CNEE_C_NAME', 'CNEE_E_NAME', 'CNEE_E_ADDR', 
             'CNEE_COUNTRY_CODE', 'CNEE_BAN_ID',
             'BUYER_E_NAME', 'BUYER_E_ADDR', 'TO_CODE', 'TO_DESC', 
@@ -1052,10 +1085,14 @@ document.addEventListener('DOMContentLoaded', function () {
         });
         xmlContent += '</detail>\n</Root>';
 
+        const fileName = document.getElementById('FILE_NO').value || '';
+        const exporterName = document.getElementById('SHPR_C_NAME').value || '';
+        const fullFileName = `${fileName}-${exporterName}.xml`;
+
         const blob = new Blob([xmlContent], { type: 'application/xml' });
         const link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
-        link.download = 'export.xml';
+        link.download = fullFileName;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
@@ -1090,12 +1127,14 @@ function exportToPDF() {
 
             // 添加表頭
             const headerData = [
+                ['文件編號', document.getElementById('FILE_NO').value],
                 ['運單號', document.getElementById('LOT_NO').value],
                 ['出口人統一編號', document.getElementById('SHPR_BAN_ID').value],
                 ['海關監管編號', document.getElementById('SHPR_BONDED_ID').value],
                 ['出口人中文名稱', document.getElementById('SHPR_C_NAME').value],
                 ['出口人英文名稱', document.getElementById('SHPR_E_NAME').value],
-                ['出口人中/英地址', document.getElementById('SHPR_E_ADDR').value],
+                ['出口人中文地址', document.getElementById('SHPR_C_ADDR').value],
+                ['出口人英文地址', document.getElementById('SHPR_E_ADDR').value],
                 ['買方中文名稱', document.getElementById('CNEE_C_NAME').value],
                 ['買方英文名稱', document.getElementById('CNEE_E_NAME').value],
                 ['買方中/英地址', document.getElementById('CNEE_E_ADDR').value],
@@ -1203,8 +1242,13 @@ function exportToPDF() {
                 y += 10; // 每個項次結束後增加 y
             });
 
-            // 保存 PDF
-            doc.save('report.pdf');
+            // 文件名
+            const fileName = document.getElementById('FILE_NO').value || '';
+            const exporterName = document.getElementById('SHPR_C_NAME').value || '';            
+
+            // 保存 PDF，文件名為 FILE_NO 的值
+            doc.save(`${fileName}-${exporterName}.pdf`);
+
         })
         .catch(error => console.error('讀取字體文件失敗:', error));
 }
