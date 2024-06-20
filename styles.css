@@ -13,6 +13,7 @@ body {
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     font-size: 18px; /* 增大字體 */
     padding: 10px;
+    color: rgb(39, 39, 52);
 }
 
 .tabs {
@@ -60,6 +61,9 @@ body {
     background: radial-gradient(circle, rgb(240, 240, 240), rgb(206, 225, 253));
     font-size: 16px; /* 指定按鈕字體大小 */
     height: 30px;
+    font-size: 16px; /* 指定按鈕字體大小 */
+    color: #50648c; /* 文字顏色設置為較淡 */    
+    font-weight: bold; /* 設置文字粗體 */
 }
 
 .import-export-buttons {
@@ -74,7 +78,7 @@ body {
     gap: 10px; /* 按鈕之間的間距 */
 }
 
-.add-buttons button{
+.add-buttons button {
     margin-top: 50px; /* 上方距離空間 */
     margin-bottom: 20px; /* 下方距離空間 */
     margin-left: 5px; /* 左側距離空間 */
@@ -84,9 +88,13 @@ body {
     cursor: pointer; /* 指向時顯示手的圖標 */
     background: linear-gradient(to bottom, rgb(240, 240, 240), rgb(194, 214, 248));
     font-size: 16px; /* 指定按鈕字體大小 */
+    color: #50648c; /* 文字顏色設置為較淡 */    
+    font-weight: bold; /* 設置文字粗體 */
 }
+
 .add-buttons button:hover {
     background-color: #97b3eb;
+    color: #333; /* 設置文字在懸停時的顏色 */
 }
 
 .item-header {
@@ -105,6 +113,8 @@ body {
     margin-left: 2px;
     margin-right: 2px;
     text-align: center;
+    font-weight: bold; /* 文字設為粗體 */
+    color: #50648c; /* 文字顏色設置為較淡 */
 }
 
 .header-section {
@@ -120,6 +130,8 @@ body {
     align-items: left;
     justify-content: flex-start;
     margin-bottom: 5px;
+    font-weight: bold; /* 文字設為粗體 */
+    color: #50648c; /* 文字顏色設置為較淡 */
 }
 
 .header-group label {
