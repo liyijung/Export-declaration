@@ -23,9 +23,14 @@
         <p style="margin-top: 30px;"></p>
         <div class="header-section">
             <div class="header-group">
+                <label for="FILE_NO">文件編號</label>
+                <input type="text" id="FILE_NO" name="FILE_NO">
+            </div>
+            <div class="header-group">
                 <label for="LOT_NO">運單號</label>
                 <input type="text" id="LOT_NO" name="LOT_NO">
             </div>
+            <hr>
             <div class="header-group">
                 <label for="SHPR_BAN_ID">出口人統一編號</label>
                 <input type="text" id="SHPR_BAN_ID" name="SHPR_BAN_ID"
@@ -68,33 +73,33 @@
             <div class="header-group">
                 <label for="CNEE_COUNTRY_CODE">買方國家代碼</label>
                 <input type="text" id="CNEE_COUNTRY_CODE" name="CNEE_COUNTRY_CODE"
-                placeholder="範例：HK、CN、KR、SG（英文代碼）">
+                placeholder="範例：HK、CN、KR、SG(英文代碼)">
             </div>
             <div class="header-group">
                 <label for="CNEE_BAN_ID">買方統一編號</label>
                 <input type="text" id="CNEE_BAN_ID" name="CNEE_BAN_ID"
-                placeholder="（非台灣營業公司此欄免填）">
+                placeholder="(非台灣營業公司此欄免填)">
             </div>            
             <hr>
             <div class="header-group">
                 <label for="BUYER_E_NAME">收方名稱</label>
                 <input type="text" id="BUYER_E_NAME" name="BUYER_E_NAME"
-                placeholder="（與買方名稱相同此欄免填）">
+                placeholder="(與買方名稱相同此欄免填)">
             </div>
             <div class="header-group">
                 <label for="BUYER_E_ADDR">收方地址</label>
                 <input type="text" id="BUYER_E_ADDR" name="BUYER_E_ADDR"
-                placeholder="（與買方地址相同此欄免填）">
+                placeholder="(與買方地址相同此欄免填)">
             </div>
             <div class="header-group">
                 <label for="TO_CODE">目的地(代碼)</label>
                 <input type="text" id="TO_CODE" name="TO_CODE"
-                placeholder="範例：HKHKG、CNCAN、KRICN、SGSIN（英文代碼）">
+                placeholder="範例：HKHKG、CNCAN、KRICN、SGSIN(英文代碼)">
             </div>
             <div class="header-group">
                 <label for="TO_DESC">目的地(名稱)</label>
                 <input type="text" id="TO_DESC" name="TO_DESC"
-                placeholder="範例：HONG KONG、GUANGZHOU、KOREA、SINGAPORE（英文名稱）">
+                placeholder="範例：HONG KONG、GUANGZHOU、KOREA、SINGAPORE(英文名稱)">
             </div>
         </div>
         <hr>
@@ -107,12 +112,12 @@
             <div class="header-group">
                 <label for="DOC_CTN_UM">總件數單位</label>
                 <input type="text" id="DOC_CTN_UM" name="DOC_CTN_UM"
-                placeholder="範例：CTN、PKG、BOX、PLT（英文代碼）">
+                placeholder="範例：CTN、PKG、BOX、PLT(英文代碼)">
             </div>
             <div class="header-group">
                 <label for="CTN_DESC">包裝說明</label>
                 <input type="text" id="CTN_DESC" name="CTN_DESC"
-                placeholder="（一般倉或ECFA包裝說明）">
+                placeholder="(一般倉或ECFA包裝說明)">
             </div>
             <div class="header-group">
                 <label for="DCL_GW">總毛重</label>
@@ -129,11 +134,11 @@
             <div class="header-group">
                 <label for="DCL_DOC_TYPE">報單類別</label>
                 <input type="text" id="DCL_DOC_TYPE" name="DCL_DOC_TYPE" list="member"
-                placeholder="（下拉式選單）">
+                placeholder="(下拉式選單)">
                 <datalist id="member">
                     <option value="G5">國貨出口</option>
                     <option value="G3">外貨復出口</option>
-                    <option value="B8">保稅廠進口貨物（原料）復出口</option>
+                    <option value="B8">保稅廠進口貨物(原料)復出口</option>
                     <option value="B9">保稅廠產品出口</option>
                     <option value="D5">保稅倉貨物出口</option>
                     <option value="F5">自由港區貨物出口</option>
@@ -142,7 +147,7 @@
             <div class="header-group">
                 <label for="TERMS_SALES">貿易條件</label>
                 <input type="text" id="TERMS_SALES" name="TERMS_SALES" list="terms"
-                placeholder="（下拉式選單）">
+                placeholder="(下拉式選單)">
                 <datalist id="terms">
                     <option value="EXW">需填列應加費用，不得填列運保費</option>
                     <option value="FOB">不含運費、保險費</option>
@@ -154,28 +159,28 @@
             <div class="header-group">
                 <label for="CURRENCY">幣別</label>
                 <input type="text" id="CURRENCY" name="CURRENCY"
-                placeholder="範例：TWD、USD、CNY、JPY、EUR（英文代碼）">
+                placeholder="範例：TWD、USD、CNY、JPY、EUR(英文代碼)">
             </div>
             <div class="header-group">
                 <label for="CAL_IP_TOT_ITEM_AMT">總金額</label>
                 <input type="number" id="CAL_IP_TOT_ITEM_AMT" name="CAL_IP_TOT_ITEM_AMT" min="0"
-                placeholder="（若為台幣金額不可有小數點）">
+                placeholder="(若為台幣金額不可有小數點)">
             </div>
             <hr>
             <div class="header-group">
                 <label for="FRT_AMT">運費</label>
                 <input type="number" id="FRT_AMT" name="FRT_AMT" min="0"
-                placeholder="（CFR、CIF 需填列運費）">
+                placeholder="(CFR、CIF 需填列運費)">
             </div>   
             <div class="header-group">
                 <label for="INS_AMT">保險費</label>
                 <input type="number" id="INS_AMT" name="INS_AMT" min="0"
-                placeholder="（C&I、CIF 需填列保險費）">
+                placeholder="(C&I、CIF 需填列保險費)">
             </div>
             <div class="header-group">
                 <label for="ADD_AMT">應加費用</label>
                 <input type="number" id="ADD_AMT" name="ADD_AMT" min="0"
-                placeholder="（EXW 需填列應加費用）">
+                placeholder="(EXW 需填列應加費用)">
             </div>
             <div class="header-group">
                 <label for="SUBTRACT_AMT">應減費用</label>
@@ -203,11 +208,11 @@
     <!--報單項次-->
     <div id="items" class="tab">
         <div class="add-buttons">
-            <button onclick="openItemModal()">新增項次（可複製）</button>
+            <button onclick="openItemModal()">新增項次(可複製)</button>
             <button onclick="openSpecifyFieldModal()">指定填列欄位資料</button>
             <button onclick="openAdjustOrderModal()">調整項次順序</button>
-            <button id="toggle-all-btn" onclick="toggleAllTextareas()">展開全部品名</button>
             <button onclick="openToggleFieldsModal()">顯示隱藏欄位</button>
+            <button id="toggle-all-btn" onclick="toggleAllTextareas()">展開全部品名</button>
         </div>
         <!-- 顯示隱藏欄位彈跳框 -->
         <div id="toggle-fields-modal" class="modal">
@@ -216,8 +221,10 @@
                     <h2>顯示/隱藏欄位</h2>
                 </div>
                 <div class="header-group">
-                    <label for="field-select">選擇欄位</label>
+                    <label for="field-select">選擇欄位(可複選)</label>
                     <select id="field-select" multiple style="height: 300px;">
+                        <option>必填欄位</option>
+                        <option class="separator" disabled>──────────</option>
                         <option value="ORG_COUNTRY">生產國別</option>
                         <option value="ORG_IMP_DCL_NO">原進口報單號碼</option>
                         <option value="ORG_IMP_DCL_NO_ITEM">原進口報單項次</option>
@@ -355,11 +362,11 @@
     <div id="item-modal" class="modal">
         <div class="modal-content">
             <div class="modal-header" id="item-modal-header">
-                <h2>新增項次（可複製）</h2>
+                <h2>新增項次(可複製)</h2>
             </div>
             <div class="flex-group">
                 <input type="checkbox" id="ITEM_NO" name="HAS_MAJOR_NAME" onchange="toggleMajorName(event)">
-                <label for="ITEM_NO">大品名註記（勾選大品名註記時，只需填寫品名）</label>
+                <label for="ITEM_NO">大品名註記(勾選大品名註記時，只需填寫品名)</label>
             </div>
             <div class="header-group">
                 <label for="COPY_ITEM">選擇要複製的項次</label>
@@ -378,7 +385,7 @@
             </div>
             <div class="header-group">
                 <label for="DOC_UM">單位</label>
-                <input type="text" id="DOC_UM" class="DOC_UM" placeholder="範例：EAC、PCE、SET、YRD、MTR（英文代碼）">
+                <input type="text" id="DOC_UM" class="DOC_UM" placeholder="範例：EAC、PCE、SET、YRD、MTR(英文代碼)">
             </div>
             <div class="header-group">
                 <label for="DOC_UNIT_P">單價</label>
@@ -394,7 +401,7 @@
             </div>
             <div class="header-group">
                 <label for="TRADE_MARK">商標</label>
-                <input type="text" id="TRADE_MARK" class="TRADE_MARK" placeholder="範例：NO BRAND（無商標）、FIG（圖樣）、文字（字樣）">
+                <input type="text" id="TRADE_MARK" class="TRADE_MARK" placeholder="範例：NO BRAND(無商標)、FIG(圖樣)、文字(字樣)">
             </div>
             <div class="header-group">
                 <label for="CCC_CODE">稅則</label>
@@ -414,11 +421,13 @@
             <div class="header-group">洋貨復出口核銷欄位</div>
             <div class="header-group">
                 <label for="ORG_COUNTRY">生產國別</label>
-                <input type="text" id="ORG_COUNTRY" class="ORG_COUNTRY" placeholder="範例：US、CN、JP、GB（英文代碼）">
+                <input type="text" id="ORG_COUNTRY" class="ORG_COUNTRY" 
+                placeholder="範例：US、CN、JP、GB(英文代碼)">
             </div>
             <div class="header-group">
                 <label for="ORG_IMP_DCL_NO">原進口報單號碼</label>
-                <input type="text" id="ORG_IMP_DCL_NO" class="ORG_IMP_DCL_NO" placeholder="範例：CX  13709IPORT（中間為兩位空格）">
+                <input type="text" id="ORG_IMP_DCL_NO" class="ORG_IMP_DCL_NO" 
+                placeholder="範例：CX  13709IPORT(中間為兩位空格)">
             </div>
             <div class="header-group">
                 <label for="ORG_IMP_DCL_NO_ITEM">原進口報單項次</label>
@@ -539,7 +548,7 @@
             </div>
             <div id="custom-content" class="specify-mode-content">
                 <div class="header-group">
-                    <label for="specify-item-numbers">項次 (例如: 3,5-7)</label>
+                    <label for="specify-item-numbers">項次(例如: 3,5-7)</label>
                     <input type="text" id="specify-item-numbers">
                 </div>
                 <div class="header-group">
@@ -601,7 +610,7 @@
                     </select>
                 </div>
                 <div class="header-group">
-                    <label for="specify-field-names-copy">欄位名稱</label>
+                    <label for="specify-field-names-copy">欄位名稱(可複選)</label>
                     <select id="specify-field-names-copy" multiple style="height: 300px;">
                         <option value="DESCRIPTION">品名</option>
                         <option value="QTY">數量</option>
@@ -641,7 +650,7 @@
                     </select>
                 </div>
                 <div class="header-group">
-                    <label for="target-item-numbers">目標項次 (例如: 1,7-8)</label>
+                    <label for="target-item-numbers">目標項次(例如: 1,7-8)</label>
                     <input type="text" id="target-item-numbers">
                 </div>
             </div>
@@ -665,16 +674,16 @@
         <p style="margin-top: 30px;"></p>
         <div class="header-section">
             <div class="flex-group">
-                <input type="checkbox" id="copy_3_e" name="copy_option">申請沖退原料稅（E化退稅）<br>
+                <input type="checkbox" id="copy_3_e" name="copy_option">申請沖退原料稅(E化退稅)<br>
             </div>
             <div class="flex-group">
-                <input type="checkbox" id="copy_3" name="copy_option">申請報單副本第三聯（沖退原料稅用聯）<br>
+                <input type="checkbox" id="copy_3" name="copy_option">申請報單副本第三聯(沖退原料稅用聯)<br>
             </div>
             <div class="flex-group">
-                <input type="checkbox" id="copy_4" name="copy_option">申請報單副本第四聯（退內地稅用聯）<br>
+                <input type="checkbox" id="copy_4" name="copy_option">申請報單副本第四聯(退內地稅用聯)<br>
             </div>
             <div class="flex-group">
-                <input type="checkbox" id="copy_5" name="copy_option">申請報單副本第五聯（出口證明用聯）<br>
+                <input type="checkbox" id="copy_5" name="copy_option">申請報單副本第五聯(出口證明用聯)<br>
             </div>  
         </div>
         <input type="hidden" id="APP_DUTY_REFUND" value="">
@@ -733,11 +742,13 @@
 
     <div class="import-export-buttons">
         <input type="file" id="import-excel" accept=".xlsx, .xls" style="display:none;">
-        <button class="excel-btn" onclick="document.getElementById('import-excel').click();">匯入Excel</button>
-        <button class="excel-btn" id="export-excel">匯出Excel</button>
-        <input type="file" id="import-xml" accept=".xml" style="display:none;">        
-        <button class="xml-btn" onclick="document.getElementById('import-xml').click();">匯入XML</button>        
-        <button class="xml-btn" id="export-to-xml">匯出XML</button>
+        <button class="excel-btn" onclick="document.getElementById('import-excel').click();">👆匯入Excel</button>
+        <button class="excel-btn" id="export-excel">⬇️匯出Excel</button>
+        <div>｜</div>
+        <input type="file" id="import-xml" accept=".xml" style="display:none;">
+        <button class="xml-btn" onclick="document.getElementById('import-xml').click();">👆匯入XML</button>
+        <button class="xml-btn" id="export-to-xml">⬇️匯出XML</button>
+        <div>｜</div>
         <button class="pdf-btn" onclick="exportToPDF()">出口報單預覽</button>
     </div>
 
