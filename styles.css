@@ -34,9 +34,9 @@ body {
 }
 
 .tab-links.active {
-    background: linear-gradient(to bottom, rgb(156, 184, 255), rgb(10, 35, 174));
+    background: linear-gradient(to bottom, rgb(95, 149, 220), rgb(52, 114, 195));
     color: #ffffff;
-    border: 0px solid rgb(125, 160, 255);
+    border: 0px solid rgb(81, 128, 255);
 }
 
 .content {
@@ -57,8 +57,9 @@ body {
     border-radius: 5px;
     border: 1px solid #ccc; /* 添加邊框 */
     cursor: pointer; /* 指向時顯示手的圖標 */
-    background: linear-gradient(to bottom, rgb(240, 240, 240), rgb(194, 214, 248));
+    background: radial-gradient(circle, rgb(240, 240, 240), rgb(206, 225, 253));
     font-size: 16px; /* 指定按鈕字體大小 */
+    height: 30px;
 }
 
 .import-export-buttons {
