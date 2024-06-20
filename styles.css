@@ -34,8 +34,8 @@ body {
 }
 
 .tab-links.active {
-    background: linear-gradient(to bottom, rgb(240, 240, 240), rgb(125, 161, 253));
-    color: #000000;
+    background: linear-gradient(to bottom, rgb(156, 184, 255), rgb(10, 35, 174));
+    color: #ffffff;
     border: 0px solid rgb(125, 160, 255);
 }
 
@@ -57,7 +57,7 @@ body {
     border-radius: 5px;
     border: 1px solid #ccc; /* 添加邊框 */
     cursor: pointer; /* 指向時顯示手的圖標 */
-    background: radial-gradient(circle, rgb(240, 240, 240), rgb(206, 225, 253));
+    background: linear-gradient(to bottom, rgb(240, 240, 240), rgb(194, 214, 248));
     font-size: 16px; /* 指定按鈕字體大小 */
 }
 
@@ -338,7 +338,16 @@ h4 {
 }
 
 input, textarea, select {
+    border: 1px solid #ccc; /* 淡一點的灰色框線 */
     font-size: 16px; /* 調整這裡的值以達到所需的字體大小 */
+    border-radius: 4px; /* 圓角 */
+    padding: 4px;
+}
+
+/* 當 input 和 textarea 聚焦時框線顏色變化 */
+input:focus, textarea:focus {
+    border-color: #bbb; /* 聚焦時稍微加深的灰色 */
+    outline: none; /* 移除默認的聚焦邊框 */
 }
 
 .header-group input {
