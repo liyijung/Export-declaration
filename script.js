@@ -1087,6 +1087,7 @@ function spreadWeight() {
 
         for (let i = 0; Math.abs(discrepancy) >= Math.pow(10, -decimalPlaces) && i < distributedWeights.length; i++) {
             distributedWeights[i].netWeight += sign * Math.pow(10, -decimalPlaces);
+            distributedWeights[i].netWeight = parseFloat(distributedWeights[i].netWeight.toFixed(decimalPlaces));
             discrepancy -= sign * Math.pow(10, -decimalPlaces);
         }
     }
@@ -1097,10 +1098,16 @@ function spreadWeight() {
         netWtElement.value = item.netWeight.toFixed(decimalPlaces);
     });
 
+    // 顯示各項次的攤重
+    items.forEach(item => {
+        const netWeight = item.querySelector('.NET_WT').value;
+        console.log(`項次 ${item.dataset.index} 的淨重: ${netWeight}`);
+    });
+
     // 確保固定重量項次的值不變
     fixedWeights.forEach(fixed => {
         const netWtElement = items[fixed.index].querySelector('.NET_WT');
-        netWtElement.value = fixed.netWeight.toFixed(decimalPlaces);
+        netWtElement.value = fixed.netWeight;
     });
 
     // 最後調整確保分配重量總和等於總淨重
