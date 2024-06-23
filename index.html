@@ -39,7 +39,8 @@
             </div>
             <div class="header-group">
                 <label for="SHPR_BONDED_ID">海關監管編號</label>
-                <input type="text" id="SHPR_BONDED_ID" name="SHPR_BONDED_ID">
+                <input type="text" id="SHPR_BONDED_ID" name="SHPR_BONDED_ID"
+                placeholder="(非保稅此欄免填)">
             </div>
             <div class="header-group">
                 <label for="SHPR_C_NAME">出口人中文名稱</label>
@@ -59,11 +60,7 @@
             </div>
             <hr>
             <div class="header-group">
-                <label for="CNEE_C_NAME">買方中文名稱</label>
-                <input type="text" id="CNEE_C_NAME" name="CNEE_C_NAME">
-            </div>
-            <div class="header-group">
-                <label for="CNEE_E_NAME">買方英文名稱</label>
+                <label for="CNEE_E_NAME">買方中/英名稱</label>
                 <input type="text" id="CNEE_E_NAME" name="CNEE_E_NAME">
             </div>
             <div class="header-group">
@@ -199,7 +196,7 @@
             </div>
             <div class="header-group">
                 <label for="REMARK1">REMARKS</label>
-                <textarea id="REMARK1" name="REMARK1" rows="5">聯繫人電話/分機:</textarea>
+                <textarea id="REMARK1" name="REMARK1" rows="5"></textarea>
             </div>
         </div>
         <p style="margin-bottom: 50px;"></p>
@@ -213,6 +210,8 @@
             <button onclick="openAdjustOrderModal()">調整項次順序</button>
             <button onclick="openToggleFieldsModal()">顯示隱藏欄位</button>
             <button id="toggle-all-btn" onclick="toggleAllTextareas()">展開全部品名</button>
+            <button id="calculate-amounts-btn" onclick="calculateAmounts()">金額核算</button>
+            <button id="spread-weight-btn" onclick="spreadWeight()">攤重</button>
         </div>
         <!-- 顯示隱藏欄位彈跳框 -->
         <div id="toggle-fields-modal" class="modal">
@@ -272,7 +271,7 @@
             <div class="form-group QTY">
                 <label>數量</label>
             </div>
-            <div class="form-group DOC_UM" style="width: 50%;">
+            <div class="form-group DOC_UM" style="width: 40%;">
                 <label>單位</label>
             </div>
             <div class="form-group DOC_UNIT_P">
@@ -281,31 +280,34 @@
             <div class="form-group DOC_TOT_P">
                 <label>金額</label>
             </div>
-            <div class="form-group NET_WT" style="width: 50%;">
-                <label>淨重</label>
-            </div>
             <div class="form-group TRADE_MARK">
                 <label>商標</label>
             </div>
             <div class="form-group CCC_CODE">
                 <label>稅則</label>
             </div>
-            <div class="form-group ST_MTD" style="width: 50%;">
+            <div class="form-group ST_MTD" style="width: 30%;">
                 <label>統計方式</label>
             </div>
-            <div class="form-group ORG_COUNTRY hidden" style="width: 50%;">
+            <div class="form-group" style="width: 20%;">
+                <label>鎖定</label>
+            </div>
+            <div class="form-group NET_WT" style="width: 60%;">
+                <label>淨重</label>
+            </div>
+            <div class="form-group ORG_COUNTRY hidden" style="width: 30%;">
                 <label>生產國別</label>
             </div>
             <div class="form-group ORG_IMP_DCL_NO hidden">
                 <label>原進口報單號碼</label>
             </div>
-            <div class="form-group ORG_IMP_DCL_NO_ITEM hidden" style="width: 50%;">
+            <div class="form-group ORG_IMP_DCL_NO_ITEM hidden" style="width: 30%;">
                 <label>原進口報單項次</label>
             </div>
             <div class="form-group SELLER_ITEM_CODE hidden">
                 <label>賣方料號</label>
             </div>
-            <div class="form-group BOND_NOTE hidden" style="width: 50%;">
+            <div class="form-group BOND_NOTE hidden" style="width: 30%;">
                 <label>保稅貨物註記</label>
             </div>
             <div class="form-group GOODS_MODEL hidden">
@@ -317,41 +319,41 @@
             <div class="form-group CERT_NO hidden">
                 <label>產證號碼</label>
             </div>
-            <div class="form-group CERT_NO_ITEM hidden" style="width: 50%;">
+            <div class="form-group CERT_NO_ITEM hidden" style="width: 30%;">
                 <label>產證項次</label>
             </div>
             <div class="form-group ORG_DCL_NO hidden">
                 <label>原進倉報單號碼</label>
             </div>
-            <div class="form-group ORG_DCL_NO_ITEM hidden" style="width: 50%;">
+            <div class="form-group ORG_DCL_NO_ITEM hidden" style="width: 30%;">
                 <label>原進倉報單項次</label>
             </div>
             <div class="form-group EXP_NO hidden">
                 <label>輸出許可號碼</label>
             </div>
-            <div class="form-group EXP_SEQ_NO hidden" style="width: 50%;">
+            <div class="form-group EXP_SEQ_NO hidden" style="width: 30%;">
                 <label>輸出許可項次</label>
             </div>
             <div class="form-group WIDE hidden">
                 <label>寬度(布寬)</label>
             </div>
-            <div class="form-group WIDE_UM hidden"  style="width: 50%;">
+            <div class="form-group WIDE_UM hidden"  style="width: 40%;">
                 <label>寬度單位</label>
             </div>
             <div class="form-group LENGT_ hidden">
                 <label>長度(布長)</label>
             </div>
-            <div class="form-group LENGTH_UM hidden" style="width: 50%;">
+            <div class="form-group LENGTH_UM hidden" style="width: 40%;">
                 <label>長度單位</label>
             </div>     
             <div class="form-group ST_QTY hidden">
                 <label>統計數量</label>
             </div>  
-            <div class="form-group ST_UM hidden" style="width: 50%;">
+            <div class="form-group ST_UM hidden" style="width: 40%;">
                 <label>統計單位</label>
             </div>         
-            <div class="form-group">
-                <label>操作</label>
+            <div class="form-group fix">
+                <label>刪除</label>
             </div>
         </div>
         <p style="margin-top: 10px;"></p>        
@@ -396,10 +398,6 @@
                 <input type="number" id="DOC_TOT_P" class="DOC_TOT_P" min="0" readonly>
             </div>
             <div class="header-group">
-                <label for="NET_WT">淨重</label>
-                <input type="number" id="NET_WT" class="NET_WT" min="0">
-            </div>
-            <div class="header-group">
                 <label for="TRADE_MARK">商標</label>
                 <input type="text" id="TRADE_MARK" class="TRADE_MARK" placeholder="範例：NO BRAND(無商標)、FIG(圖樣)、文字(字樣)">
             </div>
@@ -417,6 +415,10 @@
                     <option value="82">洋貨樣品/贈送/不良品退回</option>
                 </datalist>
             </div>
+            <div class="header-group">
+                <label for="NET_WT">淨重</label>
+                <input type="number" id="NET_WT" class="NET_WT" min="0">
+            </div>            
             <hr>
             <div class="header-group">洋貨復出口核銷欄位</div>
             <div class="header-group">
@@ -559,10 +561,10 @@
                         <option value="DOC_UM">單位</option>
                         <option value="DOC_UNIT_P">單價</option>
                         <option value="DOC_TOT_P">金額</option>
-                        <option value="NET_WT">淨重</option>
                         <option value="TRADE_MARK">商標</option>
                         <option value="CCC_CODE">稅則</option>
                         <option value="ST_MTD">統計方式</option>
+                        <option value="NET_WT">淨重</option>                        
                         <option class="separator" disabled>──────────</option>
                         <option value="ORG_COUNTRY">生產國別</option>
                         <option value="ORG_IMP_DCL_NO">原進口報單號碼</option>
@@ -617,10 +619,10 @@
                         <option value="DOC_UM">單位</option>
                         <option value="DOC_UNIT_P">單價</option>
                         <option value="DOC_TOT_P">金額</option>
-                        <option value="NET_WT">淨重</option>
                         <option value="TRADE_MARK">商標</option>
                         <option value="CCC_CODE">稅則</option>
                         <option value="ST_MTD">統計方式</option>
+                        <option value="NET_WT">淨重</option>
                         <option class="separator" disabled>──────────</option>
                         <option value="ORG_COUNTRY">生產國別</option>
                         <option value="ORG_IMP_DCL_NO">原進口報單號碼</option>
@@ -748,8 +750,7 @@
         <input type="file" id="import-xml" accept=".xml" style="display:none;">
         <button class="xml-btn" onclick="document.getElementById('import-xml').click();">匯入XML</button>
         <button class="xml-btn" id="export-to-xml">匯出XML</button>
-        <div>｜</div>
-        <button class="pdf-btn" onclick="exportToPDF()">出口報單預覽</button>
+        <!--<button class="pdf-btn" onclick="exportToPDF()">出口報單預覽(尚未完工)</button>-->
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>    
