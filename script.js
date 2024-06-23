@@ -944,7 +944,7 @@ function createInputField(name, value, isVisible) {
     if (name === 'NET_WT') {
         return `
             <div class="form-group ${visibilityClass}" style="width: 20%; display: flex; align-items: center;">
-                <input type="checkbox" class="FIX_WEIGHT" style="margin-left: 5px;">
+                <input type="checkbox" class="ISCALC_WT" style="margin-left: 5px;">
             </div>
             <div class="form-group ${visibilityClass}" style="width: 60%; display: flex; align-items: center;">
                 <input type="${inputType}" class="${name}" value="${value || ''}" ${onInputAttribute} ${minAttribute} ${readonlyAttribute} style="flex: 1; margin-right: 0;">
@@ -1047,7 +1047,7 @@ function spreadWeight() {
 
     // 確定哪些項次是固定的
     items.forEach((item, index) => {
-        const checkbox = item.querySelector('.FIX_WEIGHT');
+        const checkbox = item.querySelector('.ISCALC_WT');
         const netWeight = parseFloat(item.querySelector('.NET_WT').value);
         if (checkbox && checkbox.checked && !isNaN(netWeight)) {
             fixedWeights.push({ index, netWeight });
@@ -1235,7 +1235,7 @@ document.addEventListener('DOMContentLoaded', function () {
         ];
         const itemFields = [
             'DESCRIPTION', 'QTY', 'DOC_UM', 'DOC_UNIT_P', 'DOC_TOT_P',
-            'TRADE_MARK', 'CCC_CODE', 'ST_MTD', 'NET_WT', 'ORG_COUNTRY', 
+            'TRADE_MARK', 'CCC_CODE', 'ST_MTD', 'ISCALC_WT', 'NET_WT', 'ORG_COUNTRY', 
             'ORG_IMP_DCL_NO', 'ORG_IMP_DCL_NO_ITEM', 'SELLER_ITEM_CODE', 'BOND_NOTE',
             'GOODS_MODEL', 'GOODS_SPEC', 'CERT_NO', 'CERT_NO_ITEM', 
             'ORG_DCL_NO', 'ORG_DCL_NO_ITEM', 'EXP_NO', 'EXP_SEQ_NO', 
@@ -1261,7 +1261,12 @@ document.addEventListener('DOMContentLoaded', function () {
             xmlContent += `    <fields>\n      <field_name>ITEM_NO</field_name>\n      <field_value>${itemNo}</field_value>\n    </fields>\n`;
         
             itemFields.forEach(className => {
-                let value = item.querySelector(`.${className}`).value;
+                let value;
+                if (className === 'ISCALC_WT') {
+                    value = item.querySelector(`.${className}`).checked ? 'V' : '';
+                } else {
+                    value = item.querySelector(`.${className}`).value;
+                }
                 xmlContent += `    <fields>\n      <field_name>${className}</field_name>\n      <field_value>${value}</field_value>\n    </fields>\n`;
             });
             xmlContent += '  </items>\n';
