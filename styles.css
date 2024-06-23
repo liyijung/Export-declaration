@@ -8,40 +8,40 @@ body {
     position: fixed;
     top: 0;
     width: 100%;
-    background-color: rgb(255, 255, 255);
+    background-color: #fff;
     z-index: 1000;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    font-size: 18px; /* 增大字體 */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    font-size: 18px;
     padding: 10px;
-    color: rgb(39, 39, 52);
+    color: #272734;
 }
 
 .tabs {
     display: flex;
-    justify-content: flex-start; /* 將內容靠左對齊 */
+    justify-content: flex-start;
     padding: 10px 20px;
-    gap: 10px; /* 減小間隔 */
-    padding-left: 20px; /* 左側留一些空間 */
+    gap: 10px;
+    padding-left: 20px;
 }
 
 .tab-links {
     font-weight: bold;
-    padding: 5px 10px; /* 減少內部填充 */
-    background: linear-gradient(to bottom, rgb(240, 240, 240), rgb(206, 225, 253));
-    box-shadow: 0 2px 5px rgba(0,0,0,5);
+    padding: 5px 10px;
+    background: linear-gradient(to bottom, #f0f0f0, #cee1fd);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
     border-radius: 5px;
-    border: 0px solid #777777;
+    border: 0;
     cursor: pointer;
 }
 
 .tab-links.active {
-    background: linear-gradient(to bottom, rgb(95, 149, 220), rgb(52, 114, 195));
-    color: #ffffff;
-    border: 0px solid rgb(81, 128, 255);
+    background: linear-gradient(to bottom, #5f95dc, #3472c3);
+    color: #fff;
+    border: 0;
 }
 
 .content {
-    margin-top: 50px; /* 確保內容不被固定的導航欄遮住 */
+    margin-top: 50px;
 }
 
 .tab {
@@ -53,53 +53,52 @@ body {
     display: block;
 }
 
-.import-export-buttons button {
-    box-shadow: 0 2px 5px rgba(0,0,0,0.5);
-    border-radius: 5px;
-    border: 1px solid #ccc; /* 添加邊框 */
-    cursor: pointer; /* 指向時顯示手的圖標 */
-    background: radial-gradient(circle, rgb(240, 240, 240), rgb(206, 225, 253));
-    font-size: 16px; /* 指定按鈕字體大小 */
-    height: 30px;
-    font-size: 16px; /* 指定按鈕字體大小 */
-    color: #50648c; /* 文字顏色設置為較淡 */    
-    font-weight: bold; /* 設置文字粗體 */
-}
-
 .import-export-buttons {
     bottom: 0;
     left: 0;
     width: 100%;
-    padding: 5px 0; /* 調整 padding 以去除多餘的留白 */
+    padding: 5px 0;
     display: flex;
-    justify-content: center; /* 按鈕置中對齊 */
-    margin-bottom: 50px; /* 下方距離空間 */
-    z-index: 1000; /* 確保它位於其他內容之上 */
-    gap: 10px; /* 按鈕之間的間距 */
+    justify-content: center;
+    margin-bottom: 50px;
+    z-index: 1000;
+    gap: 10px;
+}
+
+.import-export-buttons button {
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    background: radial-gradient(circle, #f0f0f0, #cee1fd);
+    font-size: 16px;
+    height: 30px;
+    color: #50648c;
+    font-weight: bold;
 }
 
 .add-buttons button {
-    margin-top: 50px; /* 上方距離空間 */
-    margin-bottom: 20px; /* 下方距離空間 */
-    margin-left: 5px; /* 左側距離空間 */
-    box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+    margin-top: 50px;
+    margin-bottom: 20px;
+    margin-left: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
     border-radius: 5px;
-    border: 1px solid #ccc; /* 添加邊框 */
-    cursor: pointer; /* 指向時顯示手的圖標 */
-    background: linear-gradient(to bottom, rgb(240, 240, 240), rgb(194, 214, 248));
-    font-size: 16px; /* 指定按鈕字體大小 */
-    color: #50648c; /* 文字顏色設置為較淡 */    
-    font-weight: bold; /* 設置文字粗體 */
+    border: 1px solid #ccc;
+    cursor: pointer;
+    background: linear-gradient(to bottom, #f0f0f0, #c2d6f8);
+    font-size: 16px;
+    color: #50648c;
+    font-weight: bold;
 }
 
 .add-buttons button:hover {
     background-color: #97b3eb;
-    color: #333; /* 設置文字在懸停時的顏色 */
+    color: #333;
 }
 
 .item-header {
     text-align: center;
-    background: linear-gradient(to bottom, rgb(240, 240, 240), rgb(174, 205, 255));
+    background: linear-gradient(to bottom, #f0f0f0, #aecdfd);
     border-radius: 5px;
     border: 1px solid #97b3eb;
 }
@@ -113,8 +112,8 @@ body {
     margin-left: 2px;
     margin-right: 2px;
     text-align: center;
-    font-weight: bold; /* 文字設為粗體 */
-    color: #50648c; /* 文字顏色設置為較淡 */
+    font-weight: bold;
+    color: #50648c;
 }
 
 .header-section {
@@ -130,14 +129,14 @@ body {
     align-items: left;
     justify-content: flex-start;
     margin-bottom: 5px;
-    font-weight: bold; /* 文字設為粗體 */
-    color: #50648c; /* 文字顏色設置為較淡 */
+    font-weight: bold;
+    color: #50648c;
 }
 
 .header-group label {
     width: 170px;
-    margin-bottom: 0px;
-    background: linear-gradient(to left, rgb(240, 240, 240), rgb(199, 218, 248));
+    margin-bottom: 0;
+    background: linear-gradient(to left, #f0f0f0, #c7daf8);
     padding: 5px;
     text-align: left;
     border-radius: 5px;
@@ -149,10 +148,11 @@ body {
     flex: 1;
     padding: 5px;
     box-sizing: border-box;
+    font-size: 16px; /* 確保所有輸入框和文字區域的字型大小一致 */
 }
 
 .form-group .remove-item {
-    background: linear-gradient(to bottom, rgb(240, 240, 240), rgb(213, 213, 213));
+    background: linear-gradient(to bottom, #f0f0f0, #d5d5d5);
     border: 1px solid #9e9e9e;
 }
 
@@ -165,8 +165,8 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    max-height: 95%; /* 調整高度 */
-    background-color: rgba(0, 0, 0, 0); /* 完全透明背景 */
+    max-height: 95%;
+    background-color: rgba(0, 0, 0, 0);
     justify-content: center;
     align-items: center;
 }
@@ -178,10 +178,10 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(211, 211, 211, 0.8); /* 設置為淡灰色並增加一些透明度 */
+    background-color: rgba(211, 211, 211, 0.8);
     justify-content: center;
     align-items: center;
-    z-index: 1001; /* 確保彈跳框在其他內容前面 */
+    z-index: 1001;
 }
 
 .modal-content {
@@ -189,13 +189,13 @@ body {
     background-color: #efefef;
     padding: 20px;
     border-radius: 5px;
-    max-height: 95%; /* 調整高度 */
+    max-height: 95%;
     overflow-y: auto;
     box-sizing: border-box;
-    border: 2px solid #ccc; /* 添加邊框 */
-    width: 500px; /* 設置寬度 */
-    resize: both; /* 添加可調整大小屬性 */
-    overflow: auto; /* 確保內容可滾動 */
+    border: 2px solid #ccc;
+    width: 500px;
+    resize: both;
+    overflow: auto;
 }
 
 #item-modal .modal-content {
@@ -203,24 +203,24 @@ body {
 }
 
 #adjust-order-modal .modal-content {
-    width: 500px; /* 調整順序彈跳框的寬度 */
-    background: linear-gradient(to left, rgb(240, 240, 240), rgb(199, 218, 248));
+    width: 500px;
+    background: linear-gradient(to left, #f0f0f0, #c7daf8);
 }
 
 #adjust-order-modal .modal-header {
-    background: linear-gradient(to left, rgb(240, 240, 240), rgb(199, 218, 248));
+    background: linear-gradient(to left, #f0f0f0, #c7daf8);
     padding: 10px;
     border-radius: 5px 5px 0 0;
-    color: #333; /* 標題文字顏色 */
-    font-size: 1em; /* 標題文字大小 */
+    color: #333;
+    font-size: 1em;
 }
 
 #specify-field-modal .modal-content {
-    max-height: 95%; /* 將高度增加到95% */
+    max-height: 95%;
 }
 
 #specify-field-modal .header-group label {
-    width: 200px; /* 調整左邊文字區塊的寬度 */
+    width: 200px;
 }
 
 #specify-field-modal .header-group input,
@@ -229,6 +229,7 @@ body {
     flex: 1;
     padding: 5px;
     box-sizing: border-box;
+    font-size: 16px; /* 確保所有輸入框和文字區域的字型大小一致 */
 }
 
 .modal-header {
@@ -251,12 +252,12 @@ body {
     justify-content: space-between;
     padding: 10px;
     border-bottom: 1px solid #ddd;
-    cursor: move; /* 添加移動圖標 */
+    cursor: move;
 }
 
 .order-item span {
     flex: 1;
-    cursor: pointer; /* 指向品名時顯示手的圖標 */
+    cursor: pointer;
 }
 
 .floating-buttons {
@@ -291,6 +292,7 @@ body {
 .item-row textarea {
     width: 100%;
     box-sizing: border-box;
+    font-size: 16px; /* 確保所有輸入框和文字區域的字型大小一致 */
 }
 
 textarea {
@@ -330,7 +332,7 @@ textarea {
 }
 
 h4 {
-    color: rgb(0, 0, 183);
+    color: #0000b7;
 }
 
 .hidden {
@@ -338,52 +340,70 @@ h4 {
 }
 
 #toggle-fields-modal .modal-content {
-    width: 600px; /* 調整寬度以適應多選框 */
+    width: 600px;
 }
 
 #field-select {
     width: 100%;
-    height: 300px; /* 設定高度來顯示多個選項 */
+    height: 300px;
     box-sizing: border-box;
     padding: 5px;
     border-radius: 5px;
     border: 1px solid #ccc;
 }
 
-input, textarea, select {
-    border: 1px solid #ccc; /* 淡一點的灰色框線 */
-    font-size: 16px; /* 調整這裡的值以達到所需的字體大小 */
-    border-radius: 4px; /* 圓角 */
-    padding: 4px;
+input,
+textarea,
+select {
+    border: 1px solid #ccc;
+    font-size: 16px;
+    border-radius: 4px;
+    padding: 2px;
+    font-family: 'Source Han Sans TC', sans-serif; /* 確保字型一致 */
 }
 
-/* 當 input 和 textarea 聚焦時框線顏色變化 */
-input:focus, textarea:focus {
-    border-color: #bbb; /* 聚焦時稍微加深的灰色 */
-    outline: none; /* 移除默認的聚焦邊框 */
+input:focus,
+textarea:focus {
+    border-color: #bbb;
+    outline: none;
 }
 
 .header-group input {
-    font-size: 16px; /* 這裡設定表頭區域的input字體大小 */
+    font-size: 16px;
 }
 
 #start-number {
     width: 50px;
-    padding: 2px 5px;  /* 調整內邊距，使高度變小 */
+    padding: 2px 5px;
     font-size: 14px;
-    height: 20px;  /* 明確設置高度 */
-    line-height: 1.2;  /* 調整行高 */
-    margin-bottom: 5px;  /* 增加下邊距 */
+    height: 20px;
+    line-height: 1.2;
+    margin-bottom: 5px;
 }
 
 #start-number-container label {
     margin-right: 10px;
 }
 
-#start-number-container label {
-    margin-right: 10px;
+#source-item-number,
+#COPY_ITEM {
+    width: 200px;
 }
 
-#source-item-number, #COPY_ITEM {
-    width: 200px; /* 限制文字框的寬度，可以根據需要調整 */
+.net-wt-container {
+    display: flex;
+    align-items: center;
+}
+
+.net-wt-container input[type="checkbox"] {
+    margin-left: 5px; /* 可調整間距 */
+}
+
+.actions {
+    display: flex;
+    align-items: center;
+}
+
+.actions .delete-button {
+    margin-left: 10px; /* 可調整間距 */
 }
