@@ -1367,6 +1367,10 @@ document.addEventListener('DOMContentLoaded', function () {
             'FAC_BAN_ID', 'FAC_BONDED_ID', 'IN_BONDED_BAN', 'IN_BONDED_CODE',
             'APP_DUTY_REFUND', 'MARK_TOT_LINES', 'EXAM_TYPE', 'COPY_QTY',
         ];
+
+        // 將 PROC_NO 的值固定設置為 'X8CS'
+        let procNo = 'X8CS';
+
         const itemFields = [
             'DESCRIPTION', 'QTY', 'DOC_UM', 'DOC_UNIT_P', 'DOC_TOT_P',
             'TRADE_MARK', 'CCC_CODE', 'ST_MTD', 'ISCALC_WT', 'NET_WT', 'ORG_COUNTRY', 
@@ -1377,6 +1381,9 @@ document.addEventListener('DOMContentLoaded', function () {
         ];
         let xmlContent = '<?xml version="1.0" encoding="UTF-8"?>\n<Root>\n  <sys_code>GICCDS</sys_code>\n<head>\n  <head_table_name>DOC_HEAD</head_table_name>\n';
         
+        // 添加 PROC_NO
+        xmlContent += `  <fields>\n    <field_name>PROC_NO</field_name>\n    <field_value>${procNo}</field_value>\n  </fields>\n`;
+
         headerFields.forEach(id => {
             let element = document.getElementById(id);
             if (element) {
