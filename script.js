@@ -105,8 +105,32 @@ function searchData() {
     searchNextFile(0);
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    // Initial setup if necessary
+// 儲存目的地數據
+let destinations = {};
+
+// 讀取CSV文件並解析
+fetch('destinations.csv')
+    .then(response => response.text())
+    .then(data => {
+        Papa.parse(data, {
+            header: true,
+            skipEmptyLines: true,
+            complete: function(results) {
+                results.data.forEach(item => {
+                    destinations[item["目的地代碼"]] = item["目的地名稱"];
+                });
+            }
+        });
+    });
+
+// 當用戶填入目的地代碼時，自動填入相應的名稱
+document.getElementById('TO_CODE').addEventListener('input', function() {
+    let code = this.value.toUpperCase();
+    if (destinations[code]) {
+        document.getElementById('TO_DESC').value = destinations[code];
+    } else {
+        document.getElementById('TO_DESC').value = '';
+    }
 });
 
 // 初始化拖動功能
@@ -145,6 +169,116 @@ document.addEventListener('DOMContentLoaded', (event) => {
     // 初始化時更新REMARK1的值
     updateRemark1();
 });
+
+// 當按下計算運費按鈕時，觸發 calculateFreight 函數
+document.getElementById('calculate-freight-button').addEventListener('click', calculateFreight);
+
+// 當按下計算保險費按鈕時，觸發 calculateInsurance 函數
+document.getElementById('calculate-insurance-button').addEventListener('click', calculateInsurance);
+
+// 當按下計算應加費用按鈕時，觸發 calculateAdditional 函數
+document.getElementById('calculate-additional-button').addEventListener('click', calculateAdditional);
+
+// 從 gc331_current.json 檔案中獲取匯率數據
+function fetchExchangeRates() {
+    return fetch('gc331_current.json')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP 錯誤！狀態碼：${response.status}`);
+            }
+            return response.json();
+        })
+        .catch(error => {
+            console.error('獲取匯率數據時出錯:', error);
+            return null;
+        });
+}
+
+// 計算運費並顯示結果
+function calculateFreight() {
+    // 獲取使用者輸入的幣別和總毛重
+    const currency = document.getElementById('CURRENCY').value.toUpperCase();
+    const weight = parseFloat(document.getElementById('DCL_GW').value);
+
+    // 從JSON檔案中獲取匯率數據
+    fetchExchangeRates().then(exchangeRates => {
+        if (!exchangeRates) {
+            document.getElementById('FRT_AMT').value = "無法獲取匯率數據";
+            return;
+        }
+
+        // 找到 USD 和指定幣別的匯率
+        const usdRate = exchangeRates.items.find(item => item.code === "USD").buyValue;
+        const currencyRate = exchangeRates.items.find(item => item.code === currency)?.buyValue;
+
+        // 如果匯率和總毛重有效，計算運費並顯示
+        if (currencyRate && !isNaN(weight)) {
+            const freight = (weight * 3 * usdRate) / currencyRate;
+            const decimalPlaces = currency === "TWD" ? 0 : 2;
+            document.getElementById('FRT_AMT').value = freight.toFixed(decimalPlaces);
+        } else {
+            // 如果輸入無效，顯示錯誤訊息
+            document.getElementById('FRT_AMT').value = "輸入無效";
+        }
+    });
+}
+
+// 計算保險費並顯示結果
+function calculateInsurance() {
+    const totalAmount = parseFloat(document.getElementById('CAL_IP_TOT_ITEM_AMT').value);
+    const currency = document.getElementById('CURRENCY').value.toUpperCase();
+
+    // 從JSON檔案中獲取匯率數據
+    fetchExchangeRates().then(exchangeRates => {
+        if (!exchangeRates) {
+            document.getElementById('INS_AMT').value = "無法獲取匯率數據";
+            return;
+        }
+
+        // 找到指定幣別的匯率
+        const currencyRate = exchangeRates.items.find(item => item.code === currency)?.buyValue;
+
+        // 如果匯率和總金額有效，計算保險費並顯示
+        if (currencyRate && !isNaN(totalAmount)) {
+            let insurance = totalAmount * 0.0011;
+            const minimumInsurance = 450 / currencyRate;
+            if (insurance < minimumInsurance) {
+                insurance = minimumInsurance;
+            }
+            const decimalPlaces = currency === "TWD" ? 0 : 2;
+            document.getElementById('INS_AMT').value = insurance.toFixed(decimalPlaces);
+        } else {
+            // 如果輸入無效，顯示錯誤訊息
+            document.getElementById('INS_AMT').value = "輸入無效";
+        }
+    });
+}
+
+// 計算應加費用並顯示結果
+function calculateAdditional() {
+    const currency = document.getElementById('CURRENCY').value.toUpperCase();
+
+    // 從JSON檔案中獲取匯率數據
+    fetchExchangeRates().then(exchangeRates => {
+        if (!exchangeRates) {
+            document.getElementById('ADD_AMT').value = "無法獲取匯率數據";
+            return;
+        }
+
+        // 找到指定幣別的匯率
+        const currencyRate = exchangeRates.items.find(item => item.code === currency)?.buyValue;
+
+        // 如果匯率有效，計算應加費用並顯示
+        if (currencyRate) {
+            const additionalFee = 500 / currencyRate;
+            const decimalPlaces = currency === "TWD" ? 0 : 2;
+            document.getElementById('ADD_AMT').value = additionalFee.toFixed(decimalPlaces);
+        } else {
+            // 如果輸入無效，顯示錯誤訊息
+            document.getElementById('ADD_AMT').value = "輸入無效";
+        }
+    });
+}
 
 // 開啟新增項次的彈跳框
 function openItemModal() {
@@ -990,7 +1124,7 @@ function calculateAmount(event) {
         const amount = qty * unitPrice;
         
         // 如果數量或單價為0，顯示空值，否則顯示計算結果
-        row.querySelector('.DOC_TOT_P').value = (qty === 0 || unitPrice === 0) ? '' : amount.toFixed(2);
+        row.querySelector('.DOC_TOT_P').value = (qty === 0 || unitPrice === 0) ? '' : amount.toFixed(2); // 小數點2位
     } else {
         // 處理整個表單中的數量和單價
         const qty = parseFloat(document.querySelector('#QTY').value) || 0;
@@ -998,7 +1132,7 @@ function calculateAmount(event) {
         const amount = qty * unitPrice;
 
         // 如果數量或單價為0，顯示空值，否則顯示計算結果
-        document.querySelector('#DOC_TOT_P').value = (qty === 0 || unitPrice === 0) ? '' : amount.toFixed(2);
+        document.querySelector('#DOC_TOT_P').value = (qty === 0 || unitPrice === 0) ? '' : amount.toFixed(2); // 小數點2位
     }
 }
 
