@@ -1571,7 +1571,7 @@ async function exportToPDF() {
             values: [
                 { value: item.querySelector('.CCC_CODE').value || '', x: 89 },
                 { value: item.querySelector('.DOC_UNIT_P').value || '', x: 130 },
-                { value: (item.querySelector('.QTY').value || '') + ' ' + (item.querySelector('.DOC_UM').value || ''), x: 155 },
+                { value: (item.querySelector('.QTY').value || '') + ' ' + (item.querySelector('.DOC_UM').value || ''), x: 150 },
                 { value: item.querySelector('.ST_MTD').value || '', x: 200 },
             ]
         });
