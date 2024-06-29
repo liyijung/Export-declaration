@@ -1569,9 +1569,9 @@ async function exportToPDF() {
             tradeMark: item.querySelector('.TRADE_MARK').value || '', // 商標
             description: item.querySelector('.DESCRIPTION').value || '', // 品名
             values: [
-                { value: item.querySelector('.CCC_CODE').value || '', x: 90 },
-                { value: item.querySelector('.DOC_UNIT_P').value || '', x: 135 },
-                { value: (item.querySelector('.QTY').value || '') + ' ' + (item.querySelector('.DOC_UM').value || ''), x: 160 },
+                { value: item.querySelector('.CCC_CODE').value || '', x: 89 },
+                { value: item.querySelector('.DOC_UNIT_P').value || '', x: 130 },
+                { value: (item.querySelector('.QTY').value || '') + ' ' + (item.querySelector('.DOC_UM').value || ''), x: 155 },
                 { value: item.querySelector('.ST_MTD').value || '', x: 200 },
             ]
         });
