@@ -143,7 +143,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
     // 初始化源項次下拉選單
     populateSourceItemDropdown();
 
-
     // 添加事件監聽器到匯入Excel按鈕
     document.getElementById('import-excel').addEventListener('change', handleFile, false);
 
@@ -1443,154 +1442,222 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 // 出口報單預覽
-function exportToPDF() {
-    fetch('NotoSansTC-Regular.ttf')
-        .then(response => response.arrayBuffer())
-        .then(fontBuffer => {
-            const fontBase64 = btoa(
-                new Uint8Array(fontBuffer)
-                    .reduce((data, byte) => data + String.fromCharCode(byte), '')
-            );
+async function exportToPDF() {
+    const { jsPDF } = window.jspdf;
 
-            const { jsPDF } = window.jspdf;
+    // 創建新的 jsPDF 實例
+    const doc = new jsPDF();
 
-            // 創建新的 jsPDF 實例
-            const doc = new jsPDF();
+    // 加載字體
+    const fontBytes = await fetch('NotoSansTC-Regular.ttf').then(res => res.arrayBuffer());
+    const fontBase64 = arrayBufferToBase64(fontBytes);
+    doc.addFileToVFS("NotoSansTC-Regular.ttf", fontBase64);
+    doc.addFont("NotoSansTC-Regular.ttf", "NotoSansTC", "normal");
+    doc.setFont("NotoSansTC");
 
-            // 加載字體
-            doc.addFileToVFS("NotoSansTC-Regular.ttf", fontBase64);
-            doc.addFont("NotoSansTC-Regular.ttf", "NotoSansTC", "normal");
-            doc.setFont("NotoSansTC");
+    // 設置字體顏色為紅色
+    doc.setTextColor(255, 0, 0);
 
-            // 添加標題
-            doc.setFontSize(20);
-            doc.text('出口報單', 10, 10);
+    // 加載模板 PDF
+    const templateHomeBytes = await fetch('Template_Home.pdf').then(res => res.arrayBuffer());
+    const templateContinuationBytes = await fetch('Template_Continuation.pdf').then(res => res.arrayBuffer());
 
-            // 添加表頭
-            const headerData = [
-                ['文件編號', document.getElementById('FILE_NO').value],
-                ['運單號', document.getElementById('LOT_NO').value],
-                ['出口人統一編號', document.getElementById('SHPR_BAN_ID').value],
-                ['海關監管編號', document.getElementById('SHPR_BONDED_ID').value],
-                ['出口人中文名稱', document.getElementById('SHPR_C_NAME').value],
-                ['出口人英文名稱', document.getElementById('SHPR_E_NAME').value],
-                ['出口人中文地址', document.getElementById('SHPR_C_ADDR').value],
-                ['出口人英文地址', document.getElementById('SHPR_E_ADDR').value],
-                ['買方中/英名稱', document.getElementById('CNEE_E_NAME').value],
-                ['買方中/英地址', document.getElementById('CNEE_E_ADDR').value],
-                ['買方國家代碼', document.getElementById('CNEE_COUNTRY_CODE').value],
-                ['買方統一編號', document.getElementById('CNEE_BAN_ID').value],
-                ['收方名稱', document.getElementById('BUYER_E_NAME').value],
-                ['收方地址', document.getElementById('BUYER_E_ADDR').value],
-                ['目的地(代碼)', document.getElementById('TO_CODE').value],
-                ['目的地(名稱)', document.getElementById('TO_DESC').value],
-                ['總件數', document.getElementById('TOT_CTN').value],
-                ['總件數單位', document.getElementById('DOC_CTN_UM').value],
-                ['包裝說明', document.getElementById('CTN_DESC').value],
-                ['總毛重', document.getElementById('DCL_GW').value],
-                ['總淨重', document.getElementById('DCL_NW').value],
-                ['報單類別', document.getElementById('DCL_DOC_TYPE').value],
-                ['貿易條件', document.getElementById('TERMS_SALES').value],
-                ['幣別', document.getElementById('CURRENCY').value],
-                ['總金額', document.getElementById('CAL_IP_TOT_ITEM_AMT').value],
-                ['運費', document.getElementById('FRT_AMT').value],
-                ['保險費', document.getElementById('INS_AMT').value],
-                ['應加費用', document.getElementById('ADD_AMT').value],
-                ['應減費用', document.getElementById('SUBTRACT_AMT').value],
-                ['標記及貨櫃號碼', document.getElementById('DOC_MARKS_DESC').value],
-                ['其它申報事項', document.getElementById('DOC_OTR_DESC').value],
-                ['REMARKS', document.getElementById('REMARK1').value]
-            ];
+    const templateHome = await pdfjsLib.getDocument({ data: templateHomeBytes }).promise;
+    const templateContinuation = await pdfjsLib.getDocument({ data: templateContinuationBytes }).promise;
 
-            let y = 30; // 更新初始 y 座標
-            doc.setFontSize(12);
-            headerData.forEach((row, index) => {
-                const x = index % 2 === 0 ? 10 : 110; // 根據索引偶數放左邊，奇數放右邊
-                let lines = doc.splitTextToSize(`${row[0]}: ${row[1]}`, 90); // 將文本分行
-                lines.forEach((line) => {
-                    doc.text(line, x, y);
-                    y += 5; // 每行文本增加 y
-                    if (y > 270) { // 判斷是否需要換頁
-                        doc.addPage();
-                        y = 10; // 重置 y 座標
-                    }
-                });
-            });
+    // 獲取並渲染模板頁面
+    async function renderTemplate(doc, templatePdf, pageNum, scale = 4.0) {
+        const page = await templatePdf.getPage(pageNum);
+        const viewport = page.getViewport({ scale: scale });
 
-            // 添加項次數據
-            y += 10;
-            doc.setFontSize(14);
-            doc.text('---------------------------------------------------------------------------------------------------------------', 10, y);
-            y += 10;
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+        canvas.height = viewport.height;
+        canvas.width = viewport.width;
 
-            const itemHeader = 
-            ['項次', '大品名註記', '品名', '數量', '單位', '單價', '金額', '淨重', 
-                '商標', '稅則', '統計方式', '生產國別', '原進口報單號碼', '原進口報單項次', 
-                '賣方料號', '保稅貨物註記', '型號', '規格', '產證號碼', '產證項次', 
-                '原進倉報單號碼', '原進倉報單項次', '輸出許可號碼', '輸出許可項次', 
-                '寬度(幅寬)', '寬度單位', '長度(幅長)', '長度單位' ,'統計數量' ,'統計單位'];
+        const renderContext = {
+            canvasContext: context,
+            viewport: viewport
+        };
+        await page.render(renderContext).promise;
 
-            const items = document.querySelectorAll("#item-container .item-row");
+        const imgData = canvas.toDataURL('image/png');
+        const pdfWidth = doc.internal.pageSize.getWidth();
+        const pdfHeight = doc.internal.pageSize.getHeight();
+        doc.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+    }
 
-            items.forEach((item, index) => {
-                const rowData = [
-                    index + 1,
-                    item.querySelector('.ITEM_NO').checked ? '*' : '',
-                    item.querySelector('.DESCRIPTION').value,
-                    item.querySelector('.QTY').value,
-                    item.querySelector('.DOC_UM').value,
-                    item.querySelector('.DOC_UNIT_P').value,
-                    item.querySelector('.DOC_TOT_P').value,
-                    item.querySelector('.TRADE_MARK').value,
-                    item.querySelector('.CCC_CODE').value,
-                    item.querySelector('.ST_MTD').value,
-                    item.querySelector('.NET_WT').value,
-                    item.querySelector('.ORG_COUNTRY').value,
-                    item.querySelector('.ORG_IMP_DCL_NO').value,
-                    item.querySelector('.ORG_IMP_DCL_NO_ITEM').value,
-                    item.querySelector('.SELLER_ITEM_CODE').value,
-                    item.querySelector('.BOND_NOTE').value,
-                    item.querySelector('.GOODS_MODEL').value,
-                    item.querySelector('.GOODS_SPEC').value,
-                    item.querySelector('.CERT_NO').value,
-                    item.querySelector('.CERT_NO_ITEM').value,
-                    item.querySelector('.ORG_DCL_NO').value,
-                    item.querySelector('.ORG_DCL_NO_ITEM').value,
-                    item.querySelector('.EXP_NO').value,
-                    item.querySelector('.EXP_SEQ_NO').value,
-                    item.querySelector('.WIDE').value,
-                    item.querySelector('.WIDE_UM').value,
-                    item.querySelector('.LENGT_').value,
-                    item.querySelector('.LENGTH_UM').value,
-                    item.querySelector('.ST_QTY').value,
-                    item.querySelector('.ST_UM').value,
-                ];
+    // 渲染第一頁模板
+    await renderTemplate(doc, templateHome, 1);
 
-                rowData.forEach((field, i) => {
-                    const x = i % 2 === 0 ? 10 : 110; // 根據索引偶數放左邊，奇數放右邊
-                    let lines = doc.splitTextToSize(`${itemHeader[i]}: ${field}`, 90); // 將文本分行
-                    lines.forEach((line) => {
-                        doc.text(line, x, y);
-                        y += 5; // 每行文本增加 y
-                        if (y > 270) { // 判斷是否需要換頁
-                            doc.addPage();
-                            y = 10; // 重置 y 座標
-                        }
-                    });
-                });
-                doc.text('---------------------------------------------------------------------------------------------------------------', 10, y);
-                y += 10; // 每個項次結束後增加 y
-            });
+    // 獲取報單類別的值和文本
+    const dclDocTypeElement = document.getElementById('DCL_DOC_TYPE');
+    const dclDocTypeValue = dclDocTypeElement.value;
+    const dclDocTypeText = dclDocTypeElement.list.querySelector(`option[value="${dclDocTypeValue}"]`).text;
 
-            // 文件名
-            const fileName = document.getElementById('FILE_NO').value || '';
-            const exporterName = document.getElementById('SHPR_C_NAME').value || '';            
+    // 獲取並格式化數字值
+    const calIpTotItemAmt = document.getElementById('CAL_IP_TOT_ITEM_AMT').value ? parseFloat(document.getElementById('CAL_IP_TOT_ITEM_AMT').value).toFixed(2).toLocaleString() : 'NIL';
+    const frtAmt = document.getElementById('FRT_AMT').value ? parseFloat(document.getElementById('FRT_AMT').value).toFixed(2).toLocaleString() : 'NIL';
+    const insAmt = document.getElementById('INS_AMT').value ? parseFloat(document.getElementById('INS_AMT').value).toFixed(2).toLocaleString() : 'NIL';
+    const addAmt = document.getElementById('ADD_AMT').value ? parseFloat(document.getElementById('ADD_AMT').value).toFixed(2).toLocaleString() : 'NIL';
+    const subtractAmt = document.getElementById('SUBTRACT_AMT').value ? parseFloat(document.getElementById('SUBTRACT_AMT').value).toFixed(2).toLocaleString() : 'NIL';
 
-            // 保存 PDF，文件名為 FILE_NO 的值
-            doc.save(`${fileName}-${exporterName}.pdf`);
+    const pageWidth = 210; // A4 尺寸的寬度
+    const rightMargin = 1; // 右邊距
+    // 計算右對齊的 x 位置
+    const calculateRightAlignedX = (value) => {
+        const textWidth = doc.getTextWidth(value);
+        return pageWidth - rightMargin - textWidth;
+    };
 
-        })
-        .catch(error => console.error('讀取字體文件失敗:', error));
+    // 添加二維條碼
+    const barcodeCanvas = document.createElement('canvas');
+    JsBarcode(barcodeCanvas, 'CX  13696', { format: 'CODE128' });
+    const barcodeImgData = barcodeCanvas.toDataURL('image/png');
+    doc.addImage(barcodeImgData, 'PNG', 118, 12, 20, 10); // 調整位置和大小
+
+    // 表頭欄位與位置
+    const headerData = [
+        { value: `空運`, x: 75, y: 10 },
+        { value: `CX/  /13/696/`, x: 75, y: 18.5 },
+        { value: `113/06/`, x: 62, y: 35 },
+        { value: `TWTPE`, x: 30, y: 40.5 },
+        { value: `TAOYUAN`, x: 24, y: 44 },
+        { value: `AIRPORT`, x: 24, y: 48 },
+        { value: `42`, x: 136, y: 44 },
+        { value: `${dclDocTypeValue}${dclDocTypeText}`, x: 103, y: 10 },
+        { value: document.getElementById('CURRENCY').value || 'NIL', x: 171, y: 29 },
+        { value: document.getElementById('CURRENCY').value || 'NIL', x: 171, y: 36 },
+        { value: document.getElementById('CURRENCY').value || 'NIL', x: 171, y: 43 },
+        { value: calIpTotItemAmt, x: calculateRightAlignedX(calIpTotItemAmt), y: 29 },
+        { value: frtAmt, x: calculateRightAlignedX(frtAmt), y: 36 },
+        { value: insAmt, x: calculateRightAlignedX(insAmt), y: 43 },
+        { value: addAmt, x: calculateRightAlignedX(addAmt), y: 49 },
+        { value: subtractAmt, x: calculateRightAlignedX(subtractAmt), y: 54 },
+        { value: document.getElementById('TO_CODE').value || 'NIL', x: 70, y: 40.5 },
+        { value: document.getElementById('TO_DESC').value || 'NIL', x: 61, y: 45 },
+        { value: document.getElementById('SHPR_BAN_ID').value || 'NIL', x: 30, y: 60 },
+        { value: document.getElementById('SHPR_BONDED_ID').value || 'NIL', x: 90, y: 60 },
+        { value: document.getElementById('SHPR_C_NAME').value || 'NIL', x: 30, y: 66.5 },
+        { value: document.getElementById('SHPR_E_NAME').value || 'NIL', x: 30, y: 71.5 },
+        { value: document.getElementById('SHPR_C_ADDR').value || 'NIL', x: 30, y: 76.5 },
+        { value: document.getElementById('CNEE_E_NAME').value || 'NIL', x: 30, y: 88 },
+        { value: document.getElementById('CNEE_E_ADDR').value || 'NIL', x: 30, y: 94 },
+        { value: document.getElementById('CNEE_COUNTRY_CODE').value || 'NIL', x: 30, y: 100.5 },
+        { value: document.getElementById('CNEE_BAN_ID').value || 'NIL', x: 63, y: 100.5 },
+        { value: document.getElementById('TERMS_SALES').value || 'NIL', x: 165, y: 100.5 },
+        { value: document.getElementById('TOT_CTN').value || 'NIL', x: 43, y: 201.5 },
+        { value: document.getElementById('DOC_CTN_UM').value || 'NIL', x: 50, y: 201.5 },
+        { value: (`(=${document.getElementById('CTN_DESC').value || 'NIL'})`), x: 85, y: 201.5 },
+        { value: document.getElementById('DCL_GW').value || 'NIL', x: 190, y: 201.5 },
+        { value: document.getElementById('DOC_MARKS_DESC').value || 'NIL', x: 8, y: 211 },
+        { value: document.getElementById('DOC_OTR_DESC').value || 'NIL', x: 7, y: 260 },
+    ];
+
+    // 設置表頭字體大小並添加文本
+    doc.setFontSize(10);
+    headerData.forEach(row => {
+        const value = row.value || 'NIL'; // 檢查空值，若是空值則設置為 "NIL"
+        doc.text(value, row.x, row.y);
+    });
+
+    // 添加項次資料
+    const itemsData = [];
+    document.querySelectorAll("#item-container .item-row").forEach((item, index) => {
+        itemsData.push({
+            index: item.querySelector('.ITEM_NO').checked ? '*' : index + 1,  // 如果選中則顯示'*'，否則顯示編號
+            tradeMark: item.querySelector('.TRADE_MARK').value || '', // 商標
+            description: item.querySelector('.DESCRIPTION').value || '', // 品名
+            values: [
+                { value: item.querySelector('.CCC_CODE').value || '', x: 90 },
+                { value: item.querySelector('.DOC_UNIT_P').value || '', x: 135 },
+                { value: (item.querySelector('.QTY').value || '') + ' ' + (item.querySelector('.DOC_UM').value || ''), x: 160 },
+                { value: item.querySelector('.ST_MTD').value || '', x: 200 },
+            ]
+        });
+    });
+
+    // 添加項次資料到 PDF
+    let startY = 134;  // 設置初始的 Y 坐標
+    const maxYHome = 190;  // 首頁的頁面底部的 Y 坐標
+    const maxYContinuation = 270;  // 續頁的頁面底部的 Y 坐標
+    const lineHeight = 5;  // 每行的高度
+    const tradeMarkLineSpacing = 5; // 商標換行時的間距
+
+    let itemCounter = 1; // 用於標記項次編號
+
+    for (const item of itemsData) {
+        let currentMaxY = doc.internal.getCurrentPageInfo().pageNumber === 1 ? maxYHome : maxYContinuation;
+
+        // 檢查空間是否足夠
+        const itemDescriptionLines = doc.splitTextToSize(item.description, 150).length;
+        const itemLinesNeeded = item.index === '*' ? itemDescriptionLines + 2 : itemDescriptionLines + 1;
+
+        if (startY + lineHeight * itemLinesNeeded > currentMaxY) {
+            doc.addPage();  // 換頁
+            await renderTemplate(doc, templateContinuation, 1); // 渲染新頁面的模板
+            startY = 63;  // 新頁面的起始 Y 坐標
+            currentMaxY = maxYContinuation; // 更新續頁的頁面底部 Y 坐標
+        }
+
+        // 顯示項次編號和商標在同一行
+        doc.text(`${item.index === '*' ? '*' : itemCounter}`, 8, startY); // 顯示項次編號
+
+        const tradeMarkLines = doc.splitTextToSize(item.tradeMark, 20); // 將商標文本拆分為多行，每行最多寬度20
+        let tradeMarkY = startY;
+        tradeMarkLines.forEach(line => {
+            doc.text(line, 60, tradeMarkY); // 顯示商標，每行都從 x 軸 60 開始
+            tradeMarkY += tradeMarkLineSpacing;
+        });
+        startY = tradeMarkY;
+
+        // 顯示品名
+        const descriptionLines = doc.splitTextToSize(item.description, 150);
+        descriptionLines.forEach(line => {
+            doc.text(line, 15, startY);
+            startY += lineHeight;
+        });
+
+        // 顯示稅則、單價、數量
+        item.values.forEach(field => {
+            doc.text(field.value, field.x, startY - (descriptionLines.length * lineHeight)); // 顯示在商標行
+        });
+
+        // 如果是 '*' 項次，添加 '*' 行
+        if (item.index === '*') {
+            const stars = '*'.repeat(descriptionLines.join('').length);
+            doc.text(stars, 15, startY);
+            startY += lineHeight;  // 增加 Y 坐標以顯示下一行
+        } else {
+            itemCounter++; // 增加項次計數器
+        }
+    }
+
+    // 添加底部固定欄位
+    const footerData = [
+        { value: document.getElementById('FILE_NO').value, x: 10, y: 380 },
+        { value: document.getElementById('LOT_NO').value, x: 30, y: 380 }
+    ];
+
+    footerData.forEach(row => {
+        doc.text(row.value, row.x, row.y);
+    });
+
+    // 保存 PDF，文件名為 FILE_NO 的值
+    const fileName = document.getElementById('FILE_NO').value || 'export';
+    const exporterName = document.getElementById('SHPR_C_NAME').value || 'exporter';
+    doc.save(`${fileName}-${exporterName}.pdf`);
+}
+
+// 將 ArrayBuffer 轉換為 Base64 編碼的函數
+function arrayBufferToBase64(buffer) {
+    let binary = '';
+    const bytes = new Uint8Array(buffer);
+    const len = bytes.byteLength;
+    for (let i = 0; i < len; i++) {
+        binary += String.fromCharCode(bytes[i]);
+    }
+    return btoa(binary);
 }
 
 // 為輸出PDF按鈕添加事件監聽器
