@@ -1454,7 +1454,7 @@ async function exportToPDF() {
     doc.setFont("NotoSansTC");
 
     // 設置字體顏色為紅色
-    doc.setTextColor(255, 0, 0);
+    // doc.setTextColor(255, 0, 0);
 
     // 加載模板 PDF
     const templateHomeBytes = await fetch('Template_Home.pdf').then(res => res.arrayBuffer());
