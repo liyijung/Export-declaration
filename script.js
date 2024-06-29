@@ -1556,7 +1556,7 @@ async function exportToPDF() {
     // 設置表頭字體大小並添加文本
     doc.setFontSize(9);
     headerData.forEach(row => {
-        const value = row.value || 'NIL'; // 檢查空值，若是空值則設置為 "NIL"
+        const value = row.value || ''; // 檢查空值，若是空值則設置為 "NIL"
         doc.text(value, row.x, row.y);
     });
 
