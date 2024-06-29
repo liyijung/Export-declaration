@@ -51,9 +51,7 @@ function dragElement(element, header) {
 let csvFiles = [
     'companyData1.csv',
     'companyData2.csv',
-    'companyData3.csv',
-    'companyData4.csv',
-    'companyData5.csv'
+    'companyData3.csv'
 ];
 
 function fillForm(record) {
