@@ -1524,6 +1524,7 @@ async function exportToPDF() {
         { value: `TAOYUAN`, x: 24, y: 44 },
         { value: `AIRPORT`, x: 24, y: 48 },
         { value: `42`, x: 136, y: 44 },
+        { value: `C2051 遠雄第四快遞貨棧`, x: 30, y: 53.5 },
         { value: `${dclDocTypeValue}${dclDocTypeText}`, x: 103, y: 10 },
         { value: document.getElementById('CURRENCY').value, x: 171, y: 29 },
         { value: document.getElementById('CURRENCY').value, x: 171, y: 36 },
