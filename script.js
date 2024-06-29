@@ -1453,8 +1453,9 @@ async function exportToPDF() {
     doc.addFont("NotoSansTC-Regular.ttf", "NotoSansTC", "normal");
     doc.setFont("NotoSansTC");
 
-    // 設置字體顏色為紅色
-    // doc.setTextColor(255, 0, 0);
+    // 設置字體顏色
+    // doc.setTextColor(255, 0, 0); // 紅色
+    doc.setTextColor(0, 0, 0); // 黑色
 
     // 加載模板 PDF
     const templateHomeBytes = await fetch('Template_Home.pdf').then(res => res.arrayBuffer());
