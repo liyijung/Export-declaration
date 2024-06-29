@@ -1547,7 +1547,7 @@ async function exportToPDF() {
         { value: document.getElementById('TERMS_SALES').value, x: 165, y: 100.5 },
         { value: document.getElementById('TOT_CTN').value, x: 43, y: 201.5 },
         { value: document.getElementById('DOC_CTN_UM').value, x: 50, y: 201.5 },
-        { value: (`(=${document.getElementById('CTN_DESC').value})`), x: 85, y: 201.5 },
+        { value: document.getElementById('CTN_DESC').value, x: 85, y: 201.5 },
         { value: document.getElementById('DCL_GW').value, x: 190, y: 201.5 },
         { value: document.getElementById('DOC_MARKS_DESC').value, x: 8, y: 211 },
         { value: document.getElementById('DOC_OTR_DESC').value, x: 7, y: 260 },
