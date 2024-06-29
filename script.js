@@ -1580,8 +1580,8 @@ async function exportToPDF() {
     let startY = 134;  // 設置初始的 Y 坐標
     const maxYHome = 200;  // 首頁的頁面底部的 Y 坐標
     const maxYContinuation = 280;  // 續頁的頁面底部的 Y 坐標
-    const lineHeight = 1;  // 每行的高度
-    const tradeMarkLineSpacing = 1; // 商標換行時的間距
+    const lineHeight = 2;  // 每行的高度
+    const tradeMarkLineSpacing = 2; // 商標換行時的間距
 
     let itemCounter = 1; // 用於標記項次編號
 
