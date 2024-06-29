@@ -1528,7 +1528,7 @@ async function exportToPDF() {
         { value: `00718`, x: 190, y: 255 },
         { value: `台灣順豐速運`, x: 170, y: 250 },
         { value: `股份有限公司`, x: 170, y: 255 },
-        { value: `696`, x: 170, 180: 260 },
+        { value: `696`, x: 170, y: 260 },
         { value: `C2051 遠雄第四快遞貨棧`, x: 30, y: 53.5 },
         { value: `${dclDocTypeValue}${dclDocTypeText}`, x: 103, y: 10 },
         { value: document.getElementById('CURRENCY').value, x: 171, y: 29 },
