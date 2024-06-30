@@ -1464,10 +1464,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // 出口報單預覽
 async function exportToPDF() {
-    
     const loadingMessage = document.getElementById('loadingMessage');
     loadingMessage.style.display = 'block'; // 顯示提示訊息
-    
+
     try {
         const { jsPDF } = window.jspdf;
 
@@ -1619,33 +1618,61 @@ async function exportToPDF() {
         const itemsData = [];
         document.querySelectorAll("#item-container .item-row").forEach((item, index) => {
             itemsData.push({
-                index: item.querySelector('.ITEM_NO').checked ? '*' : index + 1,  // 如果選中則顯示'*'，否則顯示編號
-                tradeMark: item.querySelector('.TRADE_MARK').value || '', // 商標
-                expNo: item.querySelector('.EXP_NO').value || '', // 輸出許可號碼
-                expSeqNo: item.querySelector('.EXP_SEQ_NO').value || '', // 輸出許可項次
-                currency: document.getElementById('CURRENCY').value || '', // 確保獲取正確的幣別值
-                netWt: item.querySelector('.NET_WT').value || '', // 淨重
-                description: item.querySelector('.DESCRIPTION').value || '', // 品名
-                statQty: item.querySelector('.ST_QTY').value || '', // 統計數量
-                statUnit: item.querySelector('.ST_UM').value || '', // 統計單位
-                origImpDclNo: item.querySelector('.ORG_IMP_DCL_NO').value || '', // 原進口報單號碼
-                origImpDclNoItem: item.querySelector('.ORG_IMP_DCL_NO_ITEM').value || '', // 原進口報單項次
-                certNo: item.querySelector('.CERT_NO').value || '', // 產證號碼
-                certNoItem: item.querySelector('.CERT_NO_ITEM').value || '', // 產證項次
-                origDclNo: item.querySelector('.ORG_DCL_NO').value || '', // 原進倉報單號碼
-                origDclNoItem: item.querySelector('.ORG_DCL_NO_ITEM').value || '', // 原進倉報單項次
-                sellerItemCode: item.querySelector('.SELLER_ITEM_CODE').value || '', // 賣方料號
-                goodsModel: item.querySelector('.GOODS_MODEL').value || '', // 型號
-                goodsSpec: item.querySelector('.GOODS_SPEC').value || '', // 規格
-                bondNote: item.querySelector('.BOND_NOTE').value || '', // 保稅貨物註記
+                index: item.querySelector('.ITEM_NO')?.checked ? '*' : index + 1,  // 如果選中則顯示'*'，否則顯示編號
+                tradeMark: item.querySelector('.TRADE_MARK')?.value || '', // 商標
+                expNo: item.querySelector('.EXP_NO')?.value || '', // 輸出許可號碼
+                expSeqNo: item.querySelector('.EXP_SEQ_NO')?.value || '', // 輸出許可項次
+                currency: document.getElementById('CURRENCY')?.value || '', // 確保獲取正確的幣別值
+                netWt: parseFloat(item.querySelector('.NET_WT')?.value) || 0, // 淨重
+                description: item.querySelector('.DESCRIPTION')?.value || '', // 品名
+                statQty: parseFloat(item.querySelector('.ST_QTY')?.value) || 0, // 統計數量
+                statUnit: item.querySelector('.ST_UM')?.value || '', // 統計單位
+                origImpDclNo: item.querySelector('.ORG_IMP_DCL_NO')?.value || '', // 原進口報單號碼
+                origImpDclNoItem: item.querySelector('.ORG_IMP_DCL_NO_ITEM')?.value || '', // 原進口報單項次
+                certNo: item.querySelector('.CERT_NO')?.value || '', // 產證號碼
+                certNoItem: item.querySelector('.CERT_NO_ITEM')?.value || '', // 產證項次
+                origDclNo: item.querySelector('.ORG_DCL_NO')?.value || '', // 原進倉報單號碼
+                origDclNoItem: item.querySelector('.ORG_DCL_NO_ITEM')?.value || '', // 原進倉報單項次
+                sellerItemCode: item.querySelector('.SELLER_ITEM_CODE')?.value || '', // 賣方料號
+                goodsModel: item.querySelector('.GOODS_MODEL')?.value || '', // 型號
+                goodsSpec: item.querySelector('.GOODS_SPEC')?.value || '', // 規格
+                bondNote: item.querySelector('.BOND_NOTE')?.value || '', // 保稅貨物註記
                 values: [
-                    { value: item.querySelector('.CCC_CODE').value || '', x: 89 },
-                    { value: item.querySelector('.DOC_UNIT_P').value || '', x: 130 },
-                    { value: (item.querySelector('.QTY').value || '') + ' ' + (item.querySelector('.DOC_UM').value || ''), x: 160 },
-                    { value: item.querySelector('.ST_MTD').value || '', x: 200 },
-                ]
+                    { value: item.querySelector('.CCC_CODE')?.value || '', x: 89 },
+                    { value: item.querySelector('.DOC_UNIT_P')?.value || '', x: 130 },
+                    { value: (item.querySelector('.QTY')?.value || '') + ' ' + (item.querySelector('.DOC_UM')?.value || ''), x: 160 },
+                    { value: item.querySelector('.ST_MTD')?.value || '', x: 200 },
+                ],
+                qty: parseFloat(item.querySelector('.QTY')?.value) || 0, // 數量
+                unit: item.querySelector('.DOC_UM')?.value || '', // 單位
+                itemAmt: parseFloat(item.querySelector('.ITEM_AMT')?.value) || 0 // 金額
             });
         });
+
+
+        // 計算加總值，根據單位分組
+        const totalNetWt = itemsData.reduce((sum, item) => sum + item.netWt, 0);
+        const totalAmt = itemsData.reduce((sum, item) => sum + item.itemAmt, 0);
+
+        const totalQtyMap = itemsData.reduce((acc, item) => {
+            if (item.unit) {
+                if (!acc[item.unit]) {
+                    acc[item.unit] = 0;
+                }
+                acc[item.unit] += item.qty;
+            }
+            return acc;
+        }, {});
+
+        const totalStatQtyMap = itemsData.reduce((acc, item) => {
+            if (item.statUnit) {
+                if (!acc[item.statUnit]) {
+                    acc[item.statUnit] = 0;
+                }
+                acc[item.statUnit] += item.statQty;
+            }
+            return acc;
+        }, {});
 
         // 添加項次資料到 PDF
         let startY = 130;  // 設置初始的 Y 坐標
@@ -1655,6 +1682,7 @@ async function exportToPDF() {
         const tradeMarkLineSpacing = 4; // 商標換行時的間距
 
         let itemCounter = 1; // 用於標記項次編號
+        let lastY = startY; // 用於保存最後一個項次的位置
 
         function addUnderlinedText(doc, text, x, y, lineHeight) {
             doc.text(text, x, y);
@@ -1823,8 +1851,8 @@ async function exportToPDF() {
                 }
             });
             
-            startY += lineHeight;        
-            
+            startY += lineHeight;
+            lastY = startY; // 更新最後一個項次的位置
         }
 
         // 添加底部固定欄位
@@ -1836,6 +1864,71 @@ async function exportToPDF() {
         footerData.forEach(row => {
             doc.text(row.value, row.x, row.y);
         });
+
+        // 確保最後一頁
+        if (doc.internal.getCurrentPageInfo().pageNumber < totalPages) {
+            doc.addPage();
+            await renderTemplate(doc, templateContinuation, 1); // 渲染最後一頁模板
+            const currentPage = doc.internal.getCurrentPageInfo().pageNumber;
+            addPageNumber(doc, currentPage, totalPages); // 添加頁碼
+        }
+
+        // 在最後一頁的最後一行往下10單位的位置顯示加總，靠右對齊距離右邊38px
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const marginRight = 38;
+        let yPosition = lastY + 10;
+
+        const totalData = [
+            { label: '', value: totalNetWt > 0 ? totalNetWt.toFixed(2) + ' KGM' : '', y: yPosition },
+        ];
+
+        yPosition += 5;
+
+        Object.entries(totalQtyMap).forEach(([unit, qty], index) => {
+            if (qty > 0) {
+                totalData.push({
+                    label: '',
+                    value: qty.toFixed(2) + ' ' + unit,
+                    y: yPosition
+                });
+                yPosition += 5;
+            }
+        });
+
+        Object.entries(totalStatQtyMap).forEach(([unit, qty], index) => {
+            if (qty > 0) {
+                totalData.push({
+                    label: '',
+                    value: `(${qty.toFixed(2)} ${unit})`,
+                    y: yPosition
+                });
+                yPosition += 5;
+            }
+        });
+
+        if (totalAmt > 0) {
+            totalData.push({
+                label: '',
+                value: totalAmt.toFixed(2),
+                y: yPosition
+            });
+            yPosition += 5;
+        }
+
+        totalData.forEach(row => {
+            if (row.value) {
+                const text = row.label + row.value;
+                const textWidth = doc.getTextWidth(text);
+                doc.text(text, pageWidth - textWidth - marginRight, row.y);
+            }
+        });
+
+        // 根據 totalStatQtyMap 顯示情況動態調整 'VVVVVVVVVVVVVVVVVVVVV' 的位置
+        const vvvY = yPosition;
+        const vvvText = 'VVVVVVVVVVVVVVVVVVVVV';
+        const vvvTextWidth = doc.getTextWidth(vvvText);
+        doc.text(vvvText, pageWidth - vvvTextWidth - marginRight, vvvY);
+
 
         // 保存 PDF，文件名為 FILE_NO 的值
         const fileName = document.getElementById('FILE_NO').value || 'export';
