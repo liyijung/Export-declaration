@@ -340,6 +340,20 @@ function openItemModal() {
 
     // 滾動到最上方
     document.querySelector('#item-modal .modal-content').scrollTop = 0;
+
+    // 監聽數量和單價輸入框的變化事件，進行自動計算
+    document.getElementById('QTY').addEventListener('input', calculateModalAmount);
+    document.getElementById('DOC_UNIT_P').addEventListener('input', calculateModalAmount);
+}
+
+// 計算彈跳框中的金額
+function calculateModalAmount() {
+    const qty = parseFloat(document.getElementById('QTY').value) || 0;
+    const unitPrice = parseFloat(document.getElementById('DOC_UNIT_P').value) || 0;
+    const decimalPlacesInput = document.getElementById('decimal-places');
+    const decimalPlaces = parseInt(decimalPlacesInput.value) || 2; // 默認為2位小數
+    const amount = qty * unitPrice;
+    document.getElementById('DOC_TOT_P').value = (qty === 0 || unitPrice === 0) ? '' : amount.toFixed(decimalPlaces);
 }
 
 // 複製選定的項次內容
@@ -425,6 +439,19 @@ function saveItem() {
     closeItemModal();
     renumberItems();
     applyToggleFields();
+
+    // 自動計算新項次的金額
+    const decimalPlacesInput = document.getElementById('decimal-places');
+    const decimalPlaces = parseInt(decimalPlacesInput.value) || 2; // 默認為2位小數
+    calculateAmountsForRow(item, decimalPlaces);
+}
+
+// 計算特定行的金額
+function calculateAmountsForRow(row, decimalPlaces) {
+    const qty = parseFloat(row.querySelector('.QTY').value) || 0;
+    const unitPrice = parseFloat(row.querySelector('.DOC_UNIT_P').value) || 0;
+    const amount = qty * unitPrice;
+    row.querySelector('.DOC_TOT_P').value = (qty === 0 || unitPrice === 0) ? '' : amount.toFixed(decimalPlaces);
 }
 
 // 刪除項次
@@ -1134,34 +1161,20 @@ function renumberItems() {
     });
 }
 
-// 計算金額的函數
-function calculateAmount(event) {
-    if (event) {
-        // 處理特定行中的數量和單價
-        const row = event.target.closest('.item-row') || event.target.closest('.modal-content'); // 找到當前輸入域所在的行或彈跳框
-        const qty = parseFloat(row.querySelector('.QTY').value) || 0;
-        const unitPrice = parseFloat(row.querySelector('.DOC_UNIT_P').value) || 0;
-        const amount = qty * unitPrice;
-        
-        // 如果數量或單價為0，顯示空值，否則顯示計算結果
-        row.querySelector('.DOC_TOT_P').value = (qty === 0 || unitPrice === 0) ? '' : amount.toFixed(2); // 小數點2位
-    } else {
-        // 處理整個表單中的數量和單價
-        const qty = parseFloat(document.querySelector('#QTY').value) || 0;
-        const unitPrice = parseFloat(document.querySelector('#DOC_UNIT_P').value) || 0;
-        const amount = qty * unitPrice;
-
-        // 如果數量或單價為0，顯示空值，否則顯示計算結果
-        document.querySelector('#DOC_TOT_P').value = (qty === 0 || unitPrice === 0) ? '' : amount.toFixed(2); // 小數點2位
-    }
-}
-
+// 計算所有行的金額
 function calculateAmounts() {
+    const decimalPlacesInput = document.getElementById('decimal-places');
+    const decimalPlaces = parseInt(decimalPlacesInput.value) || 2; // 默認為2位小數
+
     const items = document.querySelectorAll('#item-container .item-row');
     if (items.length === 0) {
         alert('請先新增至少一個項次');
         return;
     }
+
+    items.forEach(row => {
+        calculateAmountsForRow(row, decimalPlaces);
+    });
 
     // 計算各項次金額的加總
     let totalItemsAmount = Array.from(items).reduce((sum, item) => {
@@ -1176,6 +1189,7 @@ function calculateAmounts() {
     alert(`報單表頭的總金額為：${currency} ${totalDocumentAmount.toFixed(2)}\n各項次金額的加總為：${currency} ${totalItemsAmount.toFixed(2)}`);
 }
 
+// 攤重
 function spreadWeight() {
     const totalNetWeight = parseFloat(document.getElementById('DCL_NW').value);
     if (isNaN(totalNetWeight) || totalNetWeight <= 0) {
@@ -1189,11 +1203,8 @@ function spreadWeight() {
         return;
     }
 
-    const decimalPlaces = parseInt(prompt('請輸入小數位數（預設值：4）', '4'), 10);
-    if (isNaN(decimalPlaces) || decimalPlaces < 0) {
-        alert('請輸入有效的小數位數');
-        return;
-    }
+    const decimalPlacesInput = document.getElementById('decimal-places-weight');
+    const decimalPlaces = parseInt(decimalPlacesInput.value) || 2; // 默認為2位小數
 
     let fixedWeights = [];
     let remainingNetWeight = totalNetWeight;
@@ -1250,12 +1261,6 @@ function spreadWeight() {
     distributedWeights.forEach(item => {
         const netWtElement = items[item.index].querySelector('.NET_WT');
         netWtElement.value = item.netWeight.toFixed(decimalPlaces);
-    });
-
-    // 顯示各項次的攤重
-    items.forEach(item => {
-        const netWeight = item.querySelector('.NET_WT').value;
-        console.log(`項次 ${item.dataset.index} 的淨重: ${netWeight}`);
     });
 
     // 確保固定重量項次的值不變
@@ -1676,7 +1681,7 @@ async function exportToPDF() {
 
         // 添加項次資料到 PDF
         let startY = 130;  // 設置初始的 Y 坐標
-        const maxYHome = 180;  // 首頁的頁面底部的 Y 坐標
+        const maxYHome = 190;  // 首頁的頁面底部的 Y 坐標
         const maxYContinuation = 280;  // 續頁的頁面底部的 Y 坐標
         const lineHeight = 4;  // 每行的高度
         const tradeMarkLineSpacing = 4; // 商標換行時的間距
@@ -1821,14 +1826,14 @@ async function exportToPDF() {
 
             if (item.index === '*') {
                 const combinedDescription = descriptionText.join('\n');
-                const descriptionLines = doc.splitTextToSize(combinedDescription, 75);
+                const descriptionLines = doc.splitTextToSize(combinedDescription, 68);
                 descriptionLines.forEach(line => {
                     addUnderlinedText(doc, line, 14, startY, lineHeight);
                     startY += lineHeight;
                 });
             } else {
                 const combinedDescription = descriptionText.join('\n');
-                const descriptionLines = doc.splitTextToSize(combinedDescription, 75);
+                const descriptionLines = doc.splitTextToSize(combinedDescription, 68);
                 descriptionLines.forEach(line => {
                     doc.text(line, 14, startY);
                     startY += lineHeight;
