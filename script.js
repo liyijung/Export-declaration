@@ -1441,379 +1441,388 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // 出口報單預覽
 async function exportToPDF() {
-    const { jsPDF } = window.jspdf;
+    
+    const loadingMessage = document.getElementById('loadingMessage');
+    loadingMessage.style.display = 'block'; // 顯示提示訊息
+    
+    try {
+        const { jsPDF } = window.jspdf;
 
-    // 創建新的 jsPDF 實例
-    const doc = new jsPDF();
+        // 創建新的 jsPDF 實例
+        const doc = new jsPDF();
 
-    // 加載字體
-    const fontBytes = await fetch('NotoSansTC-Regular.ttf').then(res => res.arrayBuffer());
-    const fontBase64 = arrayBufferToBase64(fontBytes);
-    doc.addFileToVFS("NotoSansTC-Regular.ttf", fontBase64);
-    doc.addFont("NotoSansTC-Regular.ttf", "NotoSansTC", "normal");
-    doc.setFont("NotoSansTC");
+        // 加載字體
+        const fontBytes = await fetch('NotoSansTC-Regular.ttf').then(res => res.arrayBuffer());
+        const fontBase64 = arrayBufferToBase64(fontBytes);
+        doc.addFileToVFS("NotoSansTC-Regular.ttf", fontBase64);
+        doc.addFont("NotoSansTC-Regular.ttf", "NotoSansTC", "normal");
+        doc.setFont("NotoSansTC");
 
-    // 設置字體顏色
-    doc.setTextColor(0, 0, 0); // 黑色
+        // 設置字體顏色
+        doc.setTextColor(0, 0, 0); // 黑色
 
-    // 加載模板 PDF
-    const templateHomeBytes = await fetch('Template_Home.pdf').then(res => res.arrayBuffer());
-    const templateContinuationBytes = await fetch('Template_Continuation.pdf').then(res => res.arrayBuffer());
+        // 加載模板 PDF
+        const templateHomeBytes = await fetch('Template_Home.pdf').then(res => res.arrayBuffer());
+        const templateContinuationBytes = await fetch('Template_Continuation.pdf').then(res => res.arrayBuffer());
 
-    const templateHome = await pdfjsLib.getDocument({ data: templateHomeBytes }).promise;
-    const templateContinuation = await pdfjsLib.getDocument({ data: templateContinuationBytes }).promise;
+        const templateHome = await pdfjsLib.getDocument({ data: templateHomeBytes }).promise;
+        const templateContinuation = await pdfjsLib.getDocument({ data: templateContinuationBytes }).promise;
 
-    // 獲取並渲染模板頁面
-    async function renderTemplate(doc, templatePdf, pageNum, scale = 4.0) {
-        const page = await templatePdf.getPage(pageNum);
-        const viewport = page.getViewport({ scale: scale });
+        // 獲取並渲染模板頁面
+        async function renderTemplate(doc, templatePdf, pageNum, scale = 4.0) {
+            const page = await templatePdf.getPage(pageNum);
+            const viewport = page.getViewport({ scale: scale });
 
-        const canvas = document.createElement('canvas');
-        const context = canvas.getContext('2d');
-        canvas.height = viewport.height;
-        canvas.width = viewport.width;
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            canvas.height = viewport.height;
+            canvas.width = viewport.width;
 
-        const renderContext = {
-            canvasContext: context,
-            viewport: viewport
+            const renderContext = {
+                canvasContext: context,
+                viewport: viewport
+            };
+            await page.render(renderContext).promise;
+
+            const imgData = canvas.toDataURL('image/png');
+            const pdfWidth = doc.internal.pageSize.getWidth();
+            const pdfHeight = doc.internal.pageSize.getHeight();
+            doc.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+        }
+
+        // 渲染第一頁模板
+        await renderTemplate(doc, templateHome, 1);
+
+        // 獲取報單類別的值和文本
+        const dclDocTypeElement = document.getElementById('DCL_DOC_TYPE');
+        const dclDocTypeValue = dclDocTypeElement.value;
+        const dclDocTypeText = dclDocTypeElement.list.querySelector(`option[value="${dclDocTypeValue}"]`).text;
+
+        // 獲取並格式化數字值
+        const calIpTotItemAmt = formatNumberValue('CAL_IP_TOT_ITEM_AMT');
+        const frtAmt = formatNumberValue('FRT_AMT');
+        const insAmt = formatNumberValue('INS_AMT');
+        const addAmt = formatNumberValue('ADD_AMT');
+        const subtractAmt = formatNumberValue('SUBTRACT_AMT');
+
+        function formatNumberValue(elementId) {
+            const value = document.getElementById(elementId).value;
+            return value ? parseFloat(value).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',') : 'NIL';
+        }
+
+        // 計算右對齊的 x 位置，考慮到文本內容的寬度
+        const calculateRightAlignedX = (value, minWidth, maxWidth) => {
+            const textWidth = doc.getTextWidth(value);
+            const calculatedWidth = Math.max(textWidth, minWidth);
+            if (value === 'NIL') {
+                return maxWidth - calculatedWidth - 2; // 如果是NIL，返回 maxWidh - calculatedWidth - 2
+            } else if (value === calIpTotItemAmt) {
+                return maxWidth - calculatedWidth + 3; // 如果是 calIpTotItemAmt，返回 maxWidh - calculatedWidth + 3
+            } else {
+                return maxWidth - calculatedWidth;
+            }
         };
-        await page.render(renderContext).promise;
 
-        const imgData = canvas.toDataURL('image/png');
-        const pdfWidth = doc.internal.pageSize.getWidth();
-        const pdfHeight = doc.internal.pageSize.getHeight();
-        doc.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-    }
+        // 添加二維條碼
+        const barcodeCanvas = document.createElement('canvas');
+        JsBarcode(barcodeCanvas, 'CX  13696', { format: 'CODE128' });
+        const barcodeImgData = barcodeCanvas.toDataURL('image/png');
+        doc.addImage(barcodeImgData, 'PNG', 118, 12, 20, 10); // 調整位置和大小
 
-    // 渲染第一頁模板
-    await renderTemplate(doc, templateHome, 1);
-
-    // 獲取報單類別的值和文本
-    const dclDocTypeElement = document.getElementById('DCL_DOC_TYPE');
-    const dclDocTypeValue = dclDocTypeElement.value;
-    const dclDocTypeText = dclDocTypeElement.list.querySelector(`option[value="${dclDocTypeValue}"]`).text;
-
-    // 獲取並格式化數字值
-    const calIpTotItemAmt = formatNumberValue('CAL_IP_TOT_ITEM_AMT');
-    const frtAmt = formatNumberValue('FRT_AMT');
-    const insAmt = formatNumberValue('INS_AMT');
-    const addAmt = formatNumberValue('ADD_AMT');
-    const subtractAmt = formatNumberValue('SUBTRACT_AMT');
-
-    function formatNumberValue(elementId) {
-        const value = document.getElementById(elementId).value;
-        return value ? parseFloat(value).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',') : 'NIL';
-    }
-
-    // 計算右對齊的 x 位置，考慮到文本內容的寬度
-    const calculateRightAlignedX = (value, minWidth, maxWidth) => {
-        const textWidth = doc.getTextWidth(value);
-        const calculatedWidth = Math.max(textWidth, minWidth);
-        if (value === 'NIL') {
-            return maxWidth - calculatedWidth - 2; // 如果是NIL，返回 maxWidh - calculatedWidth - 2
-        } else if (value === calIpTotItemAmt) {
-            return maxWidth - calculatedWidth + 3; // 如果是 calIpTotItemAmt，返回 maxWidh - calculatedWidth + 3
-        } else {
-            return maxWidth - calculatedWidth;
-        }
-    };
-
-    // 添加二維條碼
-    const barcodeCanvas = document.createElement('canvas');
-    JsBarcode(barcodeCanvas, 'CX  13696', { format: 'CODE128' });
-    const barcodeImgData = barcodeCanvas.toDataURL('image/png');
-    doc.addImage(barcodeImgData, 'PNG', 118, 12, 20, 10); // 調整位置和大小
-
-    // 設置表頭欄位與位置
-    const headerData = [
-        { value: `空運`, x: 75, y: 10 },
-        { value: `CX/  /13/696/`, x: 75, y: 18.5 },
-        { value: `113/07/`, x: 62, y: 35 },
-        { value: `TWTPE`, x: 30, y: 40.5 },
-        { value: `TAOYUAN`, x: 24, y: 44 },
-        { value: `AIRPORT`, x: 24, y: 48 },
-        { value: `42`, x: 136, y: 44 },
-        { value: `台灣順豐速運`, x: 148, y: 271 },
-        { value: `股份有限公司`, x: 148, y: 276 },
-        { value: `696`, x: 148, y: 281 },
-        { value: `紀書琴`, x: 188, y: 271 },
-        { value: `00718`, x: 188, y: 276 },
-        { value: `C2051 遠雄第四快遞貨棧`, x: 30, y: 53.5 },
-        { value: `${dclDocTypeValue}${dclDocTypeText}`, x: 103, y: 10 },
-        { value: document.getElementById('CURRENCY').value, x: 171, y: 29 },
-        { value: document.getElementById('CURRENCY').value, x: 171, y: 36 },
-        { value: document.getElementById('CURRENCY').value, x: 171, y: 43 },
-        { value: calIpTotItemAmt, x: calculateRightAlignedX(calIpTotItemAmt, 0, 210), y: 29 },
-        { value: frtAmt, x: calculateRightAlignedX(frtAmt, 0, 210), y: 36 },
-        { value: insAmt, x: calculateRightAlignedX(insAmt, 0, 210), y: 43 },
-        { value: addAmt, x: calculateRightAlignedX(addAmt, 0, 210), y: 49 },
-        { value: subtractAmt, x: calculateRightAlignedX(subtractAmt, 0, 210), y: 54 },
-        { value: document.getElementById('TO_CODE').value, x: 69.5, y: 40.5 },
-        { value: document.getElementById('TO_DESC').value, x: 61, y: 45 },
-        { value: document.getElementById('SHPR_BAN_ID').value, x: 30, y: 60 },
-        { value: document.getElementById('SHPR_BONDED_ID').value, x: 94, y: 60 },
-        { value: document.getElementById('SHPR_C_NAME').value, x: 30, y: 66.5 },
-        { value: document.getElementById('SHPR_E_NAME').value, x: 30, y: 71.5 },
-        { value: document.getElementById('SHPR_C_ADDR').value, x: 30, y: 76.5 },
-        { value: document.getElementById('CNEE_E_NAME').value, x: 30, y: 88 },
-        { value: document.getElementById('CNEE_E_ADDR').value, x: 30, y: 94 },
-        { value: document.getElementById('CNEE_COUNTRY_CODE').value, x: 30, y: 100.5 },
-        { value: document.getElementById('CNEE_BAN_ID').value, x: 63, y: 100.5 },
-        { value: document.getElementById('TERMS_SALES').value, x: 165, y: 100.5 },
-        { value: document.getElementById('TOT_CTN').value, x: 43, y: 201.5 },
-        { value: document.getElementById('DOC_CTN_UM').value, x: 50, y: 201.5 },
-        { value: document.getElementById('CTN_DESC').value, x: 85, y: 201.5 },
-        { value: document.getElementById('DCL_GW').value, x: 190, y: 201.5 },
-        { value: document.getElementById('DOC_MARKS_DESC').value, x: 8, y: 211 },
-        { value: document.getElementById('DOC_OTR_DESC').value, x: 7, y: 260 },
-    ];
-
-    // 設置表頭字體大小並添加文本
-    doc.setFontSize(10);
-    headerData.forEach(row => {
-        const value = row.value;
-        doc.text(value, row.x, row.y);
-    });
-    
-    // 在 PDF 上指定位置顯示 "Y" 或 "N"，根據 copy_3_e 和 copy_3 checkbox 狀態
-    if (document.getElementById('copy_3_e').checked || document.getElementById('copy_3').checked) {
-        doc.text('Y', 106, 44);
-    } else {
-        doc.text('N', 106, 44);
-    }
-
-    // 在 PDF 上指定位置顯示 "8"，根據 copy_3 copy_4 copy_5 checkbox 狀態
-    if (document.getElementById('copy_3').checked || document.getElementById('copy_4').checked || document.getElementById('copy_5').checked) {
-        doc.text('8', 199, 248);
-    }
-
-    // 添加項次資料
-    const itemsData = [];
-    document.querySelectorAll("#item-container .item-row").forEach((item, index) => {
-        itemsData.push({
-            index: item.querySelector('.ITEM_NO').checked ? '*' : index + 1,  // 如果選中則顯示'*'，否則顯示編號
-            tradeMark: item.querySelector('.TRADE_MARK').value || '', // 商標
-            expNo: item.querySelector('.EXP_NO').value || '', // 輸出許可號碼
-            expSeqNo: item.querySelector('.EXP_SEQ_NO').value || '', // 輸出許可項次
-            currency: document.getElementById('CURRENCY').value || '', // 確保獲取正確的幣別值
-            netWt: item.querySelector('.NET_WT').value || '', // 淨重
-            description: item.querySelector('.DESCRIPTION').value || '', // 品名
-            statQty: item.querySelector('.ST_QTY').value || '', // 統計數量
-            statUnit: item.querySelector('.ST_UM').value || '', // 統計單位
-            origImpDclNo: item.querySelector('.ORG_IMP_DCL_NO').value || '', // 原進口報單號碼
-            origImpDclNoItem: item.querySelector('.ORG_IMP_DCL_NO_ITEM').value || '', // 原進口報單項次
-            certNo: item.querySelector('.CERT_NO').value || '', // 產證號碼
-            certNoItem: item.querySelector('.CERT_NO_ITEM').value || '', // 產證項次
-            origDclNo: item.querySelector('.ORG_DCL_NO').value || '', // 原進倉報單號碼
-            origDclNoItem: item.querySelector('.ORG_DCL_NO_ITEM').value || '', // 原進倉報單項次
-            sellerItemCode: item.querySelector('.SELLER_ITEM_CODE').value || '', // 賣方料號
-            goodsModel: item.querySelector('.GOODS_MODEL').value || '', // 型號
-            goodsSpec: item.querySelector('.GOODS_SPEC').value || '', // 規格
-            bondNote: item.querySelector('.BOND_NOTE').value || '', // 保稅貨物註記
-            values: [
-                { value: item.querySelector('.CCC_CODE').value || '', x: 89 },
-                { value: item.querySelector('.DOC_UNIT_P').value || '', x: 130 },
-                { value: (item.querySelector('.QTY').value || '') + ' ' + (item.querySelector('.DOC_UM').value || ''), x: 160 },
-                { value: item.querySelector('.ST_MTD').value || '', x: 200 },
-            ]
-        });
-    });
-
-    // 添加項次資料到 PDF
-    let startY = 130;  // 設置初始的 Y 坐標
-    const maxYHome = 180;  // 首頁的頁面底部的 Y 坐標
-    const maxYContinuation = 280;  // 續頁的頁面底部的 Y 坐標
-    const lineHeight = 4;  // 每行的高度
-    const tradeMarkLineSpacing = 4; // 商標換行時的間距
-
-    let itemCounter = 1; // 用於標記項次編號
-
-    function addUnderlinedText(doc, text, x, y, lineHeight) {
-        doc.text(text, x, y);
-        const textWidth = doc.getTextWidth(text);
-        doc.line(x, y + 1, x + textWidth, y + 1); // 添加底線，+1 是為了讓底線在文字下方
-    }
-
-    // 計算總頁數
-    let totalPages = 1;
-    let currentMaxY = maxYHome;
-    for (const item of itemsData) {
-        const itemDescriptionLines = doc.splitTextToSize(item.description, 150).length;
-        const itemLinesNeeded = item.index === '*' ? itemDescriptionLines + 2 : itemDescriptionLines + 1;
-        if (startY + lineHeight * itemLinesNeeded > currentMaxY) {
-            totalPages++;
-            currentMaxY = maxYContinuation;
-            startY = 63;
-        }
-        startY += lineHeight * itemLinesNeeded;
-    }
-
-    startY = 130;  // 重置初始的 Y 坐標
-    currentMaxY = maxYHome;
-
-    function addPageNumber(doc, currentPage, totalPages, isHomePage) {
-        doc.setFontSize(10);
-        if (isHomePage) {
-            doc.text(`${currentPage}`, 186, 10); // 首頁頁碼位置
-            doc.text(`${totalPages}`, 198, 10); // 首頁總頁數位置
-        } else {
-            doc.text(`${currentPage}`, 184, 12); // 續頁頁碼位置
-            doc.text(`${totalPages}`, 198, 12); // 續頁總頁數位置
-        }
-    }
-
-    for (const item of itemsData) {
-        const itemDescriptionLines = doc.splitTextToSize(item.description, 150).length;
-        const itemLinesNeeded = item.index === '*' ? itemDescriptionLines + 2 : itemDescriptionLines + 1;
-
-        if (startY + lineHeight * itemLinesNeeded > currentMaxY) {
-            doc.addPage();  // 換頁
-            await renderTemplate(doc, templateContinuation, 1); // 渲染新頁面的模板
-            startY = 63;  // 新頁面的起始 Y 坐標
-            currentMaxY = maxYContinuation; // 更新續頁的頁面底部 Y 坐標
-
-            // 在新頁面右上角添加頁碼
-            const currentPage = doc.internal.getCurrentPageInfo().pageNumber;
-            addPageNumber(doc, currentPage, totalPages);
-        }
-
-        // 在首頁右上角添加頁碼
-        if (doc.internal.getCurrentPageInfo().pageNumber === 1) {
-            const currentPage = doc.internal.getCurrentPageInfo().pageNumber;
-            addPageNumber(doc, currentPage, totalPages);
-        }
-
-        // 顯示項次編號
-        doc.text(`${item.index === '*' ? '*' : itemCounter}`, 7, startY); // 顯示項次編號
-
-        // 顯示商標
-        const tradeMarkLines = doc.splitTextToSize(item.tradeMark, 20); // 將商標文本拆分為多行，每行最多寬度20
-        let tradeMarkY = startY;
-        const tradeMarkX = 61;
-        tradeMarkLines.forEach(line => {
-            const textWidth = doc.getTextWidth(line); // 取得文本寬度
-            const x = tradeMarkX + (20 - textWidth); // 計算右對齊的 x 位置
-            doc.text(line, x, tradeMarkY);
-            tradeMarkY += tradeMarkLineSpacing;
-        });
-
-        if (item.index !== '*') {
-            // 顯示輸出許可號碼和輸出許可項次，居中對齊
-            const expNoX = 102;
-            const combinedText = item.expNo ? `${item.expNo}-${item.expSeqNo}` : 'NIL';
-            const combinedTextWidth = doc.getTextWidth(combinedText);
-            const startX = expNoX - combinedTextWidth / 2;
-            doc.text(combinedText, startX, startY);
-    
-            // 顯示幣別
-            const currencyX = 131;
-            doc.text(item.currency, currencyX, startY);
-    
-            // 顯示淨重，靠右對齊
-            const netWtX = 172.5;
-            const netWtWidth = doc.getTextWidth(`${item.netWt} KGM`);
-            doc.text(`${item.netWt} KGM`, netWtX - netWtWidth, startY);
-        }
-
-        startY = tradeMarkY;
-
-        // 顯示稅則、單價、數量、統計方式
-        const taxX = 102;
-        const unitPriceX = 134;
-        const qtyX = 172.5;
-        const statMethodX = 200;
-
-        // 稅則居中對齊
-        const taxWidth = doc.getTextWidth(item.values[0].value);
-        const taxStartX = taxX - taxWidth / 2;
-        doc.text(item.values[0].value, taxStartX, startY);
-        
-        // 單價居中對齊
-        const unitPriceWidth = doc.getTextWidth(item.values[1].value);
-        const unitPriceStartX = unitPriceX - unitPriceWidth / 2;
-        doc.text(item.values[1].value, unitPriceStartX, startY);
-
-        // 數量靠右對齊
-        const qtyWidth = doc.getTextWidth(item.values[2].value);
-        doc.text(item.values[2].value, qtyX - qtyWidth, startY);
-
-        // 統計方式顯示
-        doc.text(item.values[3].value, statMethodX, startY);
-
-        // 顯示統計數量及統計單位在數量的下方
-        const statQtyX = 172.5;
-        const statQty = item.statQty || ''; // 統計數量
-        const statUnit = item.statUnit || ''; // 統計單位
-        const combinedStatText = statQty ? `(${statQty} ${statUnit})` : '' ;
-        const combinedStatTextWidth = doc.getTextWidth(combinedStatText);
-
-        // 統計數量和統計單位一起顯示，靠右對齊
-        doc.text(combinedStatText, statQtyX - combinedStatTextWidth, startY + lineHeight);
-
-        // 顯示保稅貨物註記
-        const bondNoteText = item.bondNote ? item.bondNote : '';
-        const bondNoteWidth = doc.getTextWidth(bondNoteText);
-        const bondNoteX = 102 - bondNoteWidth / 2;
-        doc.text(bondNoteText, bondNoteX, startY + lineHeight);
-        
-        // 顯示前置描述和品名
-        const descriptionText = [];
-        if (item.sellerItemCode) descriptionText.push(`S/N: ${item.sellerItemCode}`);
-        if (item.goodsModel) descriptionText.push(`型號: ${item.goodsModel}`);
-        if (item.goodsSpec) descriptionText.push(`規格: ${item.goodsSpec}`);
-        descriptionText.push(item.description); // 添加品名描述
-
-        if (item.index === '*') {
-            const combinedDescription = descriptionText.join('\n');
-            const descriptionLines = doc.splitTextToSize(combinedDescription, 75);
-            descriptionLines.forEach(line => {
-                addUnderlinedText(doc, line, 14, startY, lineHeight);
-                startY += lineHeight;
-            });
-        } else {
-            const combinedDescription = descriptionText.join('\n');
-            const descriptionLines = doc.splitTextToSize(combinedDescription, 75);
-            descriptionLines.forEach(line => {
-                doc.text(line, 14, startY);
-                startY += lineHeight;
-            });
-            itemCounter++; // 增加項次計數器
-        }
-
-        // 顯示原進口報單號碼、原進口報單項次、產證號碼、產證項次、原進倉報單號碼、原進倉報單項次
-        const fieldsToShow = [
-            { name: '原進口報單號碼', value: item.origImpDclNo, itemValue: item.origImpDclNoItem },
-            { name: '產證號碼', value: item.certNo, itemValue: item.certNoItem },
-            { name: '原進倉報單號碼', value: item.origDclNo, itemValue: item.origDclNoItem }
+        // 設置表頭欄位與位置
+        const headerData = [
+            { value: `空運`, x: 75, y: 10 },
+            { value: `CX/  /13/696/`, x: 75, y: 18.5 },
+            { value: `113/07/`, x: 62, y: 35 },
+            { value: `TWTPE`, x: 30, y: 40.5 },
+            { value: `TAOYUAN`, x: 24, y: 44 },
+            { value: `AIRPORT`, x: 24, y: 48 },
+            { value: `42`, x: 136, y: 44 },
+            { value: `台灣順豐速運`, x: 148, y: 271 },
+            { value: `股份有限公司`, x: 148, y: 276 },
+            { value: `696`, x: 148, y: 281 },
+            { value: `紀書琴`, x: 188, y: 271 },
+            { value: `00718`, x: 188, y: 276 },
+            { value: `C2051 遠雄第四快遞貨棧`, x: 30, y: 53.5 },
+            { value: `${dclDocTypeValue}${dclDocTypeText}`, x: 103, y: 10 },
+            { value: document.getElementById('CURRENCY').value, x: 171, y: 29 },
+            { value: document.getElementById('CURRENCY').value, x: 171, y: 36 },
+            { value: document.getElementById('CURRENCY').value, x: 171, y: 43 },
+            { value: calIpTotItemAmt, x: calculateRightAlignedX(calIpTotItemAmt, 0, 210), y: 29 },
+            { value: frtAmt, x: calculateRightAlignedX(frtAmt, 0, 210), y: 36 },
+            { value: insAmt, x: calculateRightAlignedX(insAmt, 0, 210), y: 43 },
+            { value: addAmt, x: calculateRightAlignedX(addAmt, 0, 210), y: 49 },
+            { value: subtractAmt, x: calculateRightAlignedX(subtractAmt, 0, 210), y: 54 },
+            { value: document.getElementById('TO_CODE').value, x: 69.5, y: 40.5 },
+            { value: document.getElementById('TO_DESC').value, x: 61, y: 45 },
+            { value: document.getElementById('SHPR_BAN_ID').value, x: 30, y: 60 },
+            { value: document.getElementById('SHPR_BONDED_ID').value, x: 94, y: 60 },
+            { value: document.getElementById('SHPR_C_NAME').value, x: 30, y: 66.5 },
+            { value: document.getElementById('SHPR_E_NAME').value, x: 30, y: 71.5 },
+            { value: document.getElementById('SHPR_C_ADDR').value, x: 30, y: 76.5 },
+            { value: document.getElementById('CNEE_E_NAME').value, x: 30, y: 88 },
+            { value: document.getElementById('CNEE_E_ADDR').value, x: 30, y: 94 },
+            { value: document.getElementById('CNEE_COUNTRY_CODE').value, x: 30, y: 100.5 },
+            { value: document.getElementById('CNEE_BAN_ID').value, x: 63, y: 100.5 },
+            { value: document.getElementById('TERMS_SALES').value, x: 165, y: 100.5 },
+            { value: document.getElementById('TOT_CTN').value, x: 43, y: 201.5 },
+            { value: document.getElementById('DOC_CTN_UM').value, x: 50, y: 201.5 },
+            { value: document.getElementById('CTN_DESC').value, x: 85, y: 201.5 },
+            { value: document.getElementById('DCL_GW').value, x: 190, y: 201.5 },
+            { value: document.getElementById('DOC_MARKS_DESC').value, x: 8, y: 211 },
+            { value: document.getElementById('DOC_OTR_DESC').value, x: 7, y: 260 },
         ];
 
-        fieldsToShow.forEach(field => {
-            if (field.value) {
-                const fieldText = field.itemValue ? `${field.name}: ${field.value} 項次 ${field.itemValue}` : `${field.name}${field.value}`;
-                doc.text(fieldText, 14, startY);
-                startY += lineHeight;
-            }
+        // 設置表頭字體大小並添加文本
+        doc.setFontSize(10);
+        headerData.forEach(row => {
+            const value = row.value;
+            doc.text(value, row.x, row.y);
         });
         
-        startY += lineHeight;        
+        // 在 PDF 上指定位置顯示 "Y" 或 "N"，根據 copy_3_e 和 copy_3 checkbox 狀態
+        if (document.getElementById('copy_3_e').checked || document.getElementById('copy_3').checked) {
+            doc.text('Y', 106, 44);
+        } else {
+            doc.text('N', 106, 44);
+        }
+
+        // 在 PDF 上指定位置顯示 "8"，根據 copy_3 copy_4 copy_5 checkbox 狀態
+        if (document.getElementById('copy_3').checked || document.getElementById('copy_4').checked || document.getElementById('copy_5').checked) {
+            doc.text('8', 199, 248);
+        }
+
+        // 添加項次資料
+        const itemsData = [];
+        document.querySelectorAll("#item-container .item-row").forEach((item, index) => {
+            itemsData.push({
+                index: item.querySelector('.ITEM_NO').checked ? '*' : index + 1,  // 如果選中則顯示'*'，否則顯示編號
+                tradeMark: item.querySelector('.TRADE_MARK').value || '', // 商標
+                expNo: item.querySelector('.EXP_NO').value || '', // 輸出許可號碼
+                expSeqNo: item.querySelector('.EXP_SEQ_NO').value || '', // 輸出許可項次
+                currency: document.getElementById('CURRENCY').value || '', // 確保獲取正確的幣別值
+                netWt: item.querySelector('.NET_WT').value || '', // 淨重
+                description: item.querySelector('.DESCRIPTION').value || '', // 品名
+                statQty: item.querySelector('.ST_QTY').value || '', // 統計數量
+                statUnit: item.querySelector('.ST_UM').value || '', // 統計單位
+                origImpDclNo: item.querySelector('.ORG_IMP_DCL_NO').value || '', // 原進口報單號碼
+                origImpDclNoItem: item.querySelector('.ORG_IMP_DCL_NO_ITEM').value || '', // 原進口報單項次
+                certNo: item.querySelector('.CERT_NO').value || '', // 產證號碼
+                certNoItem: item.querySelector('.CERT_NO_ITEM').value || '', // 產證項次
+                origDclNo: item.querySelector('.ORG_DCL_NO').value || '', // 原進倉報單號碼
+                origDclNoItem: item.querySelector('.ORG_DCL_NO_ITEM').value || '', // 原進倉報單項次
+                sellerItemCode: item.querySelector('.SELLER_ITEM_CODE').value || '', // 賣方料號
+                goodsModel: item.querySelector('.GOODS_MODEL').value || '', // 型號
+                goodsSpec: item.querySelector('.GOODS_SPEC').value || '', // 規格
+                bondNote: item.querySelector('.BOND_NOTE').value || '', // 保稅貨物註記
+                values: [
+                    { value: item.querySelector('.CCC_CODE').value || '', x: 89 },
+                    { value: item.querySelector('.DOC_UNIT_P').value || '', x: 130 },
+                    { value: (item.querySelector('.QTY').value || '') + ' ' + (item.querySelector('.DOC_UM').value || ''), x: 160 },
+                    { value: item.querySelector('.ST_MTD').value || '', x: 200 },
+                ]
+            });
+        });
+
+        // 添加項次資料到 PDF
+        let startY = 130;  // 設置初始的 Y 坐標
+        const maxYHome = 180;  // 首頁的頁面底部的 Y 坐標
+        const maxYContinuation = 280;  // 續頁的頁面底部的 Y 坐標
+        const lineHeight = 4;  // 每行的高度
+        const tradeMarkLineSpacing = 4; // 商標換行時的間距
+
+        let itemCounter = 1; // 用於標記項次編號
+
+        function addUnderlinedText(doc, text, x, y, lineHeight) {
+            doc.text(text, x, y);
+            const textWidth = doc.getTextWidth(text);
+            doc.line(x, y + 1, x + textWidth, y + 1); // 添加底線，+1 是為了讓底線在文字下方
+        }
+
+        // 計算總頁數
+        let totalPages = 1;
+        let currentMaxY = maxYHome;
+        for (const item of itemsData) {
+            const itemDescriptionLines = doc.splitTextToSize(item.description, 150).length;
+            const itemLinesNeeded = item.index === '*' ? itemDescriptionLines + 2 : itemDescriptionLines + 1;
+            if (startY + lineHeight * itemLinesNeeded > currentMaxY) {
+                totalPages++;
+                currentMaxY = maxYContinuation;
+                startY = 63;
+            }
+            startY += lineHeight * itemLinesNeeded;
+        }
+
+        startY = 130;  // 重置初始的 Y 坐標
+        currentMaxY = maxYHome;
+
+        function addPageNumber(doc, currentPage, totalPages, isHomePage) {
+            doc.setFontSize(10);
+            if (isHomePage) {
+                doc.text(`${currentPage}`, 186, 10); // 首頁頁碼位置
+                doc.text(`${totalPages}`, 198, 10); // 首頁總頁數位置
+            } else {
+                doc.text(`${currentPage}`, 184, 12); // 續頁頁碼位置
+                doc.text(`${totalPages}`, 198, 12); // 續頁總頁數位置
+            }
+        }
+
+        for (const item of itemsData) {
+            const itemDescriptionLines = doc.splitTextToSize(item.description, 150).length;
+            const itemLinesNeeded = item.index === '*' ? itemDescriptionLines + 2 : itemDescriptionLines + 1;
+
+            if (startY + lineHeight * itemLinesNeeded > currentMaxY) {
+                doc.addPage();  // 換頁
+                await renderTemplate(doc, templateContinuation, 1); // 渲染新頁面的模板
+                startY = 63;  // 新頁面的起始 Y 坐標
+                currentMaxY = maxYContinuation; // 更新續頁的頁面底部 Y 坐標
+
+                // 在新頁面右上角添加頁碼
+                const currentPage = doc.internal.getCurrentPageInfo().pageNumber;
+                addPageNumber(doc, currentPage, totalPages);
+            }
+
+            // 在首頁右上角添加頁碼
+            if (doc.internal.getCurrentPageInfo().pageNumber === 1) {
+                const currentPage = doc.internal.getCurrentPageInfo().pageNumber;
+                addPageNumber(doc, currentPage, totalPages);
+            }
+
+            // 顯示項次編號
+            doc.text(`${item.index === '*' ? '*' : itemCounter}`, 7, startY); // 顯示項次編號
+
+            // 顯示商標
+            const tradeMarkLines = doc.splitTextToSize(item.tradeMark, 20); // 將商標文本拆分為多行，每行最多寬度20
+            let tradeMarkY = startY;
+            const tradeMarkX = 61;
+            tradeMarkLines.forEach(line => {
+                const textWidth = doc.getTextWidth(line); // 取得文本寬度
+                const x = tradeMarkX + (20 - textWidth); // 計算右對齊的 x 位置
+                doc.text(line, x, tradeMarkY);
+                tradeMarkY += tradeMarkLineSpacing;
+            });
+
+            if (item.index !== '*') {
+                // 顯示輸出許可號碼和輸出許可項次，居中對齊
+                const expNoX = 102;
+                const combinedText = item.expNo ? `${item.expNo}-${item.expSeqNo}` : 'NIL';
+                const combinedTextWidth = doc.getTextWidth(combinedText);
+                const startX = expNoX - combinedTextWidth / 2;
+                doc.text(combinedText, startX, startY);
         
+                // 顯示幣別
+                const currencyX = 131;
+                doc.text(item.currency, currencyX, startY);
+        
+                // 顯示淨重，靠右對齊
+                const netWtX = 172.5;
+                const netWtWidth = doc.getTextWidth(`${item.netWt} KGM`);
+                doc.text(`${item.netWt} KGM`, netWtX - netWtWidth, startY);
+            }
+
+            startY = tradeMarkY;
+
+            // 顯示稅則、單價、數量、統計方式
+            const taxX = 102;
+            const unitPriceX = 134;
+            const qtyX = 172.5;
+            const statMethodX = 200;
+
+            // 稅則居中對齊
+            const taxWidth = doc.getTextWidth(item.values[0].value);
+            const taxStartX = taxX - taxWidth / 2;
+            doc.text(item.values[0].value, taxStartX, startY);
+            
+            // 單價居中對齊
+            const unitPriceWidth = doc.getTextWidth(item.values[1].value);
+            const unitPriceStartX = unitPriceX - unitPriceWidth / 2;
+            doc.text(item.values[1].value, unitPriceStartX, startY);
+
+            // 數量靠右對齊
+            const qtyWidth = doc.getTextWidth(item.values[2].value);
+            doc.text(item.values[2].value, qtyX - qtyWidth, startY);
+
+            // 統計方式顯示
+            doc.text(item.values[3].value, statMethodX, startY);
+
+            // 顯示統計數量及統計單位在數量的下方
+            const statQtyX = 172.5;
+            const statQty = item.statQty || ''; // 統計數量
+            const statUnit = item.statUnit || ''; // 統計單位
+            const combinedStatText = statQty ? `(${statQty} ${statUnit})` : '' ;
+            const combinedStatTextWidth = doc.getTextWidth(combinedStatText);
+
+            // 統計數量和統計單位一起顯示，靠右對齊
+            doc.text(combinedStatText, statQtyX - combinedStatTextWidth, startY + lineHeight);
+
+            // 顯示保稅貨物註記
+            const bondNoteText = item.bondNote ? item.bondNote : '';
+            const bondNoteWidth = doc.getTextWidth(bondNoteText);
+            const bondNoteX = 102 - bondNoteWidth / 2;
+            doc.text(bondNoteText, bondNoteX, startY + lineHeight);
+            
+            // 顯示前置描述和品名
+            const descriptionText = [];
+            if (item.sellerItemCode) descriptionText.push(`S/N: ${item.sellerItemCode}`);
+            if (item.goodsModel) descriptionText.push(`型號: ${item.goodsModel}`);
+            if (item.goodsSpec) descriptionText.push(`規格: ${item.goodsSpec}`);
+            descriptionText.push(item.description); // 添加品名描述
+
+            if (item.index === '*') {
+                const combinedDescription = descriptionText.join('\n');
+                const descriptionLines = doc.splitTextToSize(combinedDescription, 75);
+                descriptionLines.forEach(line => {
+                    addUnderlinedText(doc, line, 14, startY, lineHeight);
+                    startY += lineHeight;
+                });
+            } else {
+                const combinedDescription = descriptionText.join('\n');
+                const descriptionLines = doc.splitTextToSize(combinedDescription, 75);
+                descriptionLines.forEach(line => {
+                    doc.text(line, 14, startY);
+                    startY += lineHeight;
+                });
+                itemCounter++; // 增加項次計數器
+            }
+
+            // 顯示原進口報單號碼、原進口報單項次、產證號碼、產證項次、原進倉報單號碼、原進倉報單項次
+            const fieldsToShow = [
+                { name: '原進口報單號碼', value: item.origImpDclNo, itemValue: item.origImpDclNoItem },
+                { name: '產證號碼', value: item.certNo, itemValue: item.certNoItem },
+                { name: '原進倉報單號碼', value: item.origDclNo, itemValue: item.origDclNoItem }
+            ];
+
+            fieldsToShow.forEach(field => {
+                if (field.value) {
+                    const fieldText = field.itemValue ? `${field.name}: ${field.value} 項次 ${field.itemValue}` : `${field.name}${field.value}`;
+                    doc.text(fieldText, 14, startY);
+                    startY += lineHeight;
+                }
+            });
+            
+            startY += lineHeight;        
+            
+        }
+
+        // 添加底部固定欄位
+        const footerData = [
+            { value: document.getElementById('FILE_NO').value, x: 10, y: 290 },
+            { value: document.getElementById('LOT_NO').value, x: 35, y: 290 }
+        ];
+
+        footerData.forEach(row => {
+            doc.text(row.value, row.x, row.y);
+        });
+
+        // 保存 PDF，文件名為 FILE_NO 的值
+        const fileName = document.getElementById('FILE_NO').value || 'export';
+        const exporterName = document.getElementById('SHPR_C_NAME').value || 'exporter';
+        doc.save(`${fileName}-${exporterName}.pdf`);
+    } catch (error) {
+        console.error("生成PDF時出現錯誤：", error);
+    } finally {
+        loadingMessage.style.display = 'none'; // 隱藏提示訊息
     }
-
-    // 添加底部固定欄位
-    const footerData = [
-        { value: document.getElementById('FILE_NO').value, x: 10, y: 290 },
-        { value: document.getElementById('LOT_NO').value, x: 35, y: 290 }
-    ];
-
-    footerData.forEach(row => {
-        doc.text(row.value, row.x, row.y);
-    });
-
-    // 保存 PDF，文件名為 FILE_NO 的值
-    const fileName = document.getElementById('FILE_NO').value || 'export';
-    const exporterName = document.getElementById('SHPR_C_NAME').value || 'exporter';
-    doc.save(`${fileName}-${exporterName}.pdf`);
-
 }
 
 // 將 ArrayBuffer 轉換為 Base64 編碼的函數
