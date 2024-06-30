@@ -1327,6 +1327,15 @@ function updateRemark1FromImport() {
 // 添加事件監聽器
 document.addEventListener('DOMContentLoaded', function () {
     
+    // 定義 calculateAmount 函數
+    function calculateAmount(event) {
+        const row = event.target.closest('.item-row');
+        const qty = parseFloat(row.querySelector('.QTY').value) || 0;
+        const unitPrice = parseFloat(row.querySelector('.DOC_UNIT_P').value) || 0;
+        const totalPrice = qty * unitPrice;
+        row.querySelector('.DOC_TOT_P').value = totalPrice.toFixed(2);
+    }
+    
     // 為 QTY 和 DOC_UNIT_P 輸入框添加事件監聽器
     document.querySelectorAll('.QTY, .DOC_UNIT_P').forEach(function (element) {
         element.addEventListener('input', calculateAmount);
@@ -1346,13 +1355,24 @@ document.addEventListener('DOMContentLoaded', function () {
         const remark1 = document.getElementById('REMARK1');
 
         // 確保 申請沖退原料稅（E化退稅）和 申請報單副本第三聯（沖退原料稅用聯) 只能擇一
-        if (copy3_e.checked && copy3.checked) {
-            alert("申請沖退原料稅（E化退稅）\n申請報單副本第三聯（沖退原料稅用聯)\n\n請擇一選擇");
-            copy3_e.checked = false;
-            copy3.checked = false;
-            // 清空 REMARK1 欄位的值
-            remark1.value = '';
-            return; // 退出函数以确保不進行後續處理
+        if (copy3_e.checked) {
+            if (copy3.checked) {
+                alert("申請沖退原料稅（E化退稅）\n申請報單副本第三聯（沖退原料稅用聯)\n\n請擇一選擇");
+                copy3_e.checked = false;
+                copy3.checked = false;
+                // 清空 REMARK1 欄位的值
+                remark1.value = '';
+                return; // 退出函数以确保不進行後續處理
+            }
+        } else if (copy3.checked) {
+            if (copy3_e.checked) {
+                alert("申請沖退原料稅（E化退稅）\n申請報單副本第三聯（沖退原料稅用聯)\n\n請擇一選擇");
+                copy3_e.checked = false;
+                copy3.checked = false;
+                // 清空 REMARK1 欄位的值
+                remark1.value = '';
+                return; // 退出函数以确保不進行後續處理
+            }
         }
 
         // 更新 APP_DUTY_REFUND 和 MARK_TOT_LINES
@@ -1452,7 +1472,6 @@ document.addEventListener('DOMContentLoaded', function () {
         } else {
             fullFileName = 'export.xml';
         }
-
 
         const blob = new Blob([xmlContent], { type: 'application/xml' });
         const link = document.createElement('a');
