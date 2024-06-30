@@ -1190,6 +1190,34 @@ function calculateAmounts() {
     alert(`報單表頭的總金額為：${currency} ${totalDocumentAmount.toFixed(2)}\n各項次金額的加總為：${currency} ${totalItemsAmount.toFixed(2)}`);
 }
 
+// 重量核算
+function calculateWeight() {
+    const totalNetWeight = parseFloat(document.getElementById('DCL_NW').value);
+    if (isNaN(totalNetWeight) || totalNetWeight <= 0) {
+        alert('請先填寫有效的總淨重');
+        return;
+    }
+
+    const items = document.querySelectorAll('#item-container .item-row');
+    if (items.length === 0) {
+        alert('請先新增至少一個項次');
+        return;
+    }
+
+    let totalCalculatedWeight = 0;
+
+    items.forEach((item) => {
+        const netWeight = parseFloat(item.querySelector('.NET_WT').value);
+        if (!isNaN(netWeight)) {
+            totalCalculatedWeight += netWeight;
+        }
+    });
+
+    // 顯示最終加總的重量
+    totalCalculatedWeight = totalCalculatedWeight.toFixed(2);
+    alert(`報單表頭的總淨重為：${totalNetWeight}\n各項次的淨重加總為：${totalCalculatedWeight}`);
+}
+
 // 攤重
 function spreadWeight() {
     const totalNetWeight = parseFloat(document.getElementById('DCL_NW').value);
