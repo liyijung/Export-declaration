@@ -1259,6 +1259,11 @@ function spreadWeight() {
         return;
     }
 
+    // 確認是否進行分配
+    if (!confirm('確定要分配淨重嗎？')) {
+        return;
+    }
+
     // 將剩餘淨重按比例分配到未固定的項次
     let distributedWeights = [];
     items.forEach((item, index) => {
