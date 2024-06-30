@@ -1794,7 +1794,7 @@ async function exportToPDF() {
             doc.text(`${item.index === '*' ? '*' : itemCounter}`, 7, startY); // 顯示項次編號
 
             // 顯示商標
-            const tradeMarkLines = doc.splitTextToSize(item.tradeMark, 20); // 將商標文本拆分為多行，每行最多寬度20
+            const tradeMarkLines = doc.splitTextToSize(item.tradeMark, 30); // 將商標文本拆分為多行，每行最多寬度30
             let tradeMarkY = startY;
             const tradeMarkX = 61;
             tradeMarkLines.forEach(line => {
