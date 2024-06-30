@@ -277,6 +277,23 @@ function calculateAdditional() {
     });
 }
 
+// 其它申報事項備註選單
+document.addEventListener('DOMContentLoaded', () => {
+    const dropdown = document.getElementById('doc_otr_desc_dropdown');
+    const textarea = document.getElementById('DOC_OTR_DESC');
+
+    dropdown.addEventListener('change', () => {
+        if (dropdown.value) {
+            if (textarea.value) {
+                textarea.value += '\n' + dropdown.value; // 在已有內容後添加新內容
+            } else {
+                textarea.value = dropdown.value; // 如果textarea是空的，直接添加內容
+            }
+            dropdown.value = ''; // 重置下拉選單
+        }
+    });
+});
+
 // 開啟新增項次的彈跳框
 function openItemModal() {
     // 清空所有輸入框
