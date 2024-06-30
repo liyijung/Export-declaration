@@ -998,7 +998,7 @@ function importXML(event) {
             const headerFields = xmlDoc.getElementsByTagName("head")[0].getElementsByTagName("fields");
             Array.from(headerFields).forEach(field => {
                 const fieldName = field.getElementsByTagName("field_name")[0].textContent;
-                const fieldValue = field.getElementsByTagName("field_value")[0].textContent;
+                const fieldValue = unescapeXml(field.getElementsByTagName("field_value")[0].textContent);
                 const element = document.getElementById(fieldName);
                 if (element) {
                     element.value = fieldValue;
@@ -1016,7 +1016,7 @@ function importXML(event) {
                 const fields = item.getElementsByTagName("fields");
                 Array.from(fields).forEach(field => {
                     const fieldName = field.getElementsByTagName("field_name")[0].textContent;
-                    const fieldValue = field.getElementsByTagName("field_value")[0].textContent;
+                    const fieldValue = unescapeXml(field.getElementsByTagName("field_value")[0].textContent);
                     itemData[fieldName] = fieldValue;
                 });
                 const itemRow = createItemRow(itemData);
@@ -1121,6 +1121,7 @@ function createInputField(name, value, isVisible) {
     const onInputAttribute = (name === 'QTY' || name === 'DOC_UNIT_P') ? 'oninput="calculateAmount(event)"' : '';
     const minAttribute = (name === 'QTY' || name === 'DOC_UNIT_P' || name === 'DOC_TOT_P') ? 'min="0"' : '';
     const readonlyAttribute = (name === 'DOC_TOT_P') ? 'readonly' : '';
+    const escapedValue = escapeXml(value || '');
 
     if (name === 'NET_WT') {
         return `
@@ -1128,25 +1129,25 @@ function createInputField(name, value, isVisible) {
                 <input type="checkbox" class="ISCALC_WT" style="margin-left: 5px;">
             </div>
             <div class="form-group ${visibilityClass}" style="width: 60%; display: flex; align-items: center;">
-                <input type="${inputType}" class="${name}" value="${value || ''}" ${onInputAttribute} ${minAttribute} ${readonlyAttribute} style="flex: 1; margin-right: 0;">
+                <input type="${inputType}" class="${name}" value="${escapedValue}" ${onInputAttribute} ${minAttribute} ${readonlyAttribute} style="flex: 1; margin-right: 0;">
             </div>
         `;
     } else if (name === 'DOC_UM' || name === 'WIDE_UM' || name === 'LENGTH_UM' || name === 'ST_UM') {
         return `
             <div class="form-group ${visibilityClass}" style="width: 40%;">
-                <input type="${inputType}" class="${name}" value="${value || ''}" ${onInputAttribute} ${minAttribute} ${readonlyAttribute}>
+                <input type="${inputType}" class="${name}" value="${escapedValue}" ${onInputAttribute} ${minAttribute} ${readonlyAttribute}>
             </div>
         `;
     } else if (name === 'DOC_UM' || name === 'ST_MTD' || name === 'ORG_COUNTRY' || name === 'ORG_IMP_DCL_NO_ITEM' || name === 'BOND_NOTE' || name === 'CERT_NO_ITEM' || name === 'ORG_DCL_NO_ITEM' || name === 'EXP_SEQ_NO') {
         return `
             <div class="form-group ${visibilityClass}" style="width: 30%;">
-                <input type="${inputType}" class="${name}" value="${value || ''}" ${onInputAttribute} ${minAttribute} ${readonlyAttribute}>
+                <input type="${inputType}" class="${name}" value="${escapedValue}" ${onInputAttribute} ${minAttribute} ${readonlyAttribute}>
             </div>
         `;
     } else {
         return `
             <div class="form-group ${visibilityClass}">
-                <input type="${inputType}" class="${name}" value="${value || ''}" ${onInputAttribute} ${minAttribute} ${readonlyAttribute}>
+                <input type="${inputType}" class="${name}" value="${escapedValue}" ${onInputAttribute} ${minAttribute} ${readonlyAttribute}>
             </div>
         `;
     }
@@ -1432,7 +1433,7 @@ document.addEventListener('DOMContentLoaded', function () {
         headerFields.forEach(id => {
             let element = document.getElementById(id);
             if (element) {
-                let value = element.value;
+                let value = escapeXml(element.value);
                 xmlContent += `  <fields>\n    <field_name>${id}</field_name>\n    <field_value>${value}</field_value>\n  </fields>\n`;
             }
         });
@@ -1451,7 +1452,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (className === 'ISCALC_WT') {
                     value = item.querySelector(`.${className}`).checked ? 'V' : '';
                 } else {
-                    value = item.querySelector(`.${className}`).value;
+                    value = escapeXml(item.querySelector(`.${className}`).value);
                 }
                 xmlContent += `    <fields>\n      <field_name>${className}</field_name>\n      <field_value>${value}</field_value>\n    </fields>\n`;
             });
@@ -1485,6 +1486,32 @@ document.addEventListener('DOMContentLoaded', function () {
     // 為輸出XML按鈕添加事件監聽器
     document.getElementById('export-to-xml').addEventListener('click', exportToXML);
 });
+
+// 轉義 XML 保留字符的函數
+function escapeXml(unsafe) {
+    return unsafe.replace(/[<>&'"]/g, function (match) {
+        switch (match) {
+            case '<': return '&lt;';
+            case '>': return '&gt;';
+            case '&': return '&amp;';
+            case '"': return '&quot;';
+            case "'": return '&apos;';
+        }
+    });
+}
+
+// 取消轉義 XML 保留字符的函數
+function unescapeXml(escaped) {
+    return escaped.replace(/&lt;|&gt;|&amp;|&quot;|&apos;/g, function (match) {
+        switch (match) {
+            case '&lt;': return '<';
+            case '&gt;': return '>';
+            case '&amp;': return '&';
+            case '&quot;': return '"';
+            case '&apos;': return "'";
+        }
+    });
+}
 
 // 出口報單預覽
 async function exportToPDF() {
