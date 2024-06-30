@@ -956,6 +956,12 @@ function exportToExcel() {
 function importXML(event) {
     const file = event.target.files[0];
     if (file) {
+        
+        // 匹配檔名前面的數字部分
+        const match = file.name.match(/^\d+/);
+        const fileNumber = match ? match[0] : ''; // 如果沒有匹配到，設為空字符串
+        document.getElementById('FILE_NO').value = fileNumber;
+
         const reader = new FileReader();
         reader.onload = function(e) {
             const parser = new DOMParser();
