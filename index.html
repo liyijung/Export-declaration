@@ -763,6 +763,10 @@
         <div>｜</div>
         <button id="export-to-pdf">出口報單預覽</button>
     </div>
+    <!-- 提示訊息 -->
+    <div id="loadingMessage" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); padding:20px; background-color:#f8f8f8; border:1px solid #ccc; z-index:1000;">
+        生成PDF需等候，請勿重複點選
+    </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>    
