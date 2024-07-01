@@ -1173,7 +1173,13 @@ function calculateAmount(event) {
     const decimalPlacesInput = document.getElementById('decimal-places');
     const decimalPlaces = parseInt(decimalPlacesInput.value) || 2; // 默認為2位小數
     const totalPrice = qty * unitPrice;
-    row.querySelector('.DOC_TOT_P').value = totalPrice.toFixed(decimalPlaces);
+    
+    const totalPriceField = row.querySelector('.DOC_TOT_P');
+    if (totalPrice === 0) {
+        totalPriceField.value = '';
+    } else {
+        totalPriceField.value = totalPrice.toFixed(decimalPlaces);
+    }
 }
 
 // 計算所有行的金額
