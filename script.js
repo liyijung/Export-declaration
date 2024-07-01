@@ -165,6 +165,9 @@ document.addEventListener('DOMContentLoaded', (event) => {
     
     // 初始化時更新REMARK1的值
     updateRemark1();
+
+    // 初次調用以填充下拉選單
+    addTextarea();
 });
 
 // 當按下計算運費按鈕時，觸發 calculateFreight 函數
@@ -1108,11 +1111,6 @@ function addTextarea() {
     const textareaHTML = createTextareaField('example-textarea', '這是初始值');
     container.innerHTML += textareaHTML;
 }
-
-// 初次調用以填充下拉選單
-document.addEventListener('DOMContentLoaded', (event) => {
-    addTextarea();
-});
 
 // 創建輸入域
 function createInputField(name, value, isVisible) {
