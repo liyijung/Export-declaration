@@ -1136,7 +1136,7 @@ function createInputField(name, value, isVisible) {
                 <input type="${inputType}" class="${name}" value="${escapedValue}" ${onInputAttribute} ${minAttribute} ${readonlyAttribute}>
             </div>
         `;
-    } else if (name === 'DOC_UM' || name === 'ST_MTD' || name === 'ORG_COUNTRY' || name === 'ORG_IMP_DCL_NO_ITEM' || name === 'BOND_NOTE' || name === 'CERT_NO_ITEM' || name === 'ORG_DCL_NO_ITEM' || name === 'EXP_SEQ_NO') {
+    } else if (name === 'ST_MTD' || name === 'ORG_COUNTRY' || name === 'ORG_IMP_DCL_NO_ITEM' || name === 'BOND_NOTE' || name === 'CERT_NO_ITEM' || name === 'ORG_DCL_NO_ITEM' || name === 'EXP_SEQ_NO') {
         return `
             <div class="form-group ${visibilityClass}" style="width: 30%;">
                 <input type="${inputType}" class="${name}" value="${escapedValue}" ${onInputAttribute} ${minAttribute} ${readonlyAttribute}>
