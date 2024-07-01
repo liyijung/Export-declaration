@@ -1119,7 +1119,7 @@ function createInputField(name, value, isVisible) {
     const onInputAttribute = (name === 'QTY' || name === 'DOC_UNIT_P') ? 'oninput="calculateAmount(event)"' : '';
     const minAttribute = (name === 'QTY' || name === 'DOC_UNIT_P' || name === 'DOC_TOT_P') ? 'min="0"' : '';
     const readonlyAttribute = (name === 'DOC_TOT_P') ? 'readonly' : '';
-    const escapedValue = escapeXml(value || '');
+    const escapedValue = value ? escapeXml(value) : ''; // 確保只有在必要時才轉義值
 
     if (name === 'NET_WT') {
         return `
@@ -1158,6 +1158,22 @@ function renumberItems() {
         itemCount++;
         item.querySelector('label').textContent = `${itemCount}`; // 項次
     });
+}
+
+// 監聽數量和單價輸入框的變化事件，進行自動計算
+document.querySelectorAll('.QTY, .DOC_UNIT_P').forEach(input => {
+    input.addEventListener('input', calculateAmount);
+});
+
+// 定義 calculateAmount 函數
+function calculateAmount(event) {
+    const row = event.target.closest('.item-row');
+    const qty = parseFloat(row.querySelector('.QTY').value) || 0;
+    const unitPrice = parseFloat(row.querySelector('.DOC_UNIT_P').value) || 0;
+    const decimalPlacesInput = document.getElementById('decimal-places');
+    const decimalPlaces = parseInt(decimalPlacesInput.value) || 2; // 默認為2位小數
+    const totalPrice = qty * unitPrice;
+    row.querySelector('.DOC_TOT_P').value = totalPrice.toFixed(decimalPlaces);
 }
 
 // 計算所有行的金額
@@ -1358,16 +1374,6 @@ function updateRemark1FromImport() {
 
 // 添加事件監聽器
 document.addEventListener('DOMContentLoaded', function () {
-    
-    // 定義 calculateAmount 函數
-    function calculateAmount(event) {
-        const row = event.target.closest('.item-row');
-        const qty = parseFloat(row.querySelector('.QTY').value) || 0;
-        const unitPrice = parseFloat(row.querySelector('.DOC_UNIT_P').value) || 0;
-        const totalPrice = qty * unitPrice;
-        row.querySelector('.DOC_TOT_P').value = totalPrice.toFixed(2);
-    }
-    
     // 為 QTY 和 DOC_UNIT_P 輸入框添加事件監聽器
     document.querySelectorAll('.QTY, .DOC_UNIT_P').forEach(function (element) {
         element.addEventListener('input', calculateAmount);
