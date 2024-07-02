@@ -354,9 +354,15 @@ function calculateModalAmount() {
     const qty = parseFloat(document.getElementById('QTY').value) || 0;
     const unitPrice = parseFloat(document.getElementById('DOC_UNIT_P').value) || 0;
     const decimalPlacesInput = document.getElementById('decimal-places');
-    const decimalPlaces = parseInt(decimalPlacesInput.value) || 2; // 默認為2位小數
+    let decimalPlaces = parseInt(decimalPlacesInput.value);
+
+    // 確保小數點位數最小為0，並預設為2
+    if (isNaN(decimalPlaces) || decimalPlaces < 0) {
+        decimalPlaces = 2;
+    }
+
     const amount = qty * unitPrice;
-    document.getElementById('DOC_TOT_P').value = (qty === 0 || unitPrice === 0) ? '' : amount.toFixed(decimalPlaces);
+    document.getElementById('DOC_TOT_P').value = (amount === 0) ? '' : (Math.round(amount * Math.pow(10, decimalPlaces)) / Math.pow(10, decimalPlaces)).toFixed(decimalPlaces);
 }
 
 // 複製選定的項次內容
@@ -445,16 +451,28 @@ function saveItem() {
 
     // 自動計算新項次的金額
     const decimalPlacesInput = document.getElementById('decimal-places');
-    const decimalPlaces = parseInt(decimalPlacesInput.value) || 2; // 默認為2位小數
+    let decimalPlaces = parseInt(decimalPlacesInput.value);
+
+    // 確保小數點位數最小為0，並預設為2
+    if (isNaN(decimalPlaces) || decimalPlaces < 0) {
+        decimalPlaces = 2;
+    }
+
     calculateAmountsForRow(item, decimalPlaces);
 }
 
-// 計算特定行的金額
+// 計算單行金額的函數
 function calculateAmountsForRow(row, decimalPlaces) {
     const qty = parseFloat(row.querySelector('.QTY').value) || 0;
     const unitPrice = parseFloat(row.querySelector('.DOC_UNIT_P').value) || 0;
-    const amount = qty * unitPrice;
-    row.querySelector('.DOC_TOT_P').value = (qty === 0 || unitPrice === 0) ? '' : amount.toFixed(decimalPlaces);
+    const totalPrice = qty * unitPrice;
+    const totalPriceField = row.querySelector('.DOC_TOT_P');
+    
+    if (totalPrice === 0) {
+        totalPriceField.value = '';
+    } else {
+        totalPriceField.value = (Math.round(totalPrice * Math.pow(10, decimalPlaces)) / Math.pow(10, decimalPlaces)).toFixed(decimalPlaces);
+    }
 }
 
 // 刪除項次
@@ -1171,21 +1189,32 @@ function calculateAmount(event) {
     const qty = parseFloat(row.querySelector('.QTY').value) || 0;
     const unitPrice = parseFloat(row.querySelector('.DOC_UNIT_P').value) || 0;
     const decimalPlacesInput = document.getElementById('decimal-places');
-    const decimalPlaces = parseInt(decimalPlacesInput.value) || 2; // 默認為2位小數
+    let decimalPlaces = parseInt(decimalPlacesInput.value);
+
+    // 確保小數點位數最小為0，並預設為2
+    if (isNaN(decimalPlaces) || decimalPlaces < 0) {
+        decimalPlaces = 2;
+    }
+
     const totalPrice = qty * unitPrice;
-    
     const totalPriceField = row.querySelector('.DOC_TOT_P');
+    
     if (totalPrice === 0) {
         totalPriceField.value = '';
     } else {
-        totalPriceField.value = totalPrice.toFixed(decimalPlaces);
+        totalPriceField.value = (Math.round(totalPrice * Math.pow(10, decimalPlaces)) / Math.pow(10, decimalPlaces)).toFixed(decimalPlaces);
     }
 }
 
 // 計算所有行的金額
 function calculateAmounts() {
     const decimalPlacesInput = document.getElementById('decimal-places');
-    const decimalPlaces = parseInt(decimalPlacesInput.value) || 2; // 默認為2位小數
+    let decimalPlaces = parseInt(decimalPlacesInput.value);
+
+    // 確保小數點位數最小為0，並預設為2
+    if (isNaN(decimalPlaces) || decimalPlaces < 0) {
+        decimalPlaces = 2;
+    }
 
     const items = document.querySelectorAll('#item-container .item-row');
     if (items.length === 0) {
@@ -1253,7 +1282,12 @@ function spreadWeight() {
     }
 
     const decimalPlacesInput = document.getElementById('decimal-places-weight');
-    const decimalPlaces = parseInt(decimalPlacesInput.value) || 2; // 默認為2位小數
+    let decimalPlaces = parseInt(decimalPlacesInput.value);
+
+    // 確保小數點位數最小為0，並預設為2
+    if (isNaN(decimalPlaces) || decimalPlaces < 0) {
+        decimalPlaces = 2;
+    }
 
     let fixedWeights = [];
     let remainingNetWeight = totalNetWeight;
@@ -1320,7 +1354,7 @@ function spreadWeight() {
     // 確保固定重量項次的值不變
     fixedWeights.forEach(fixed => {
         const netWtElement = items[fixed.index].querySelector('.NET_WT');
-        netWtElement.value = fixed.netWeight;
+        netWtElement.value = fixed.netWeight.toFixed(decimalPlaces);
     });
 
     // 最後調整確保分配重量總和等於總淨重
