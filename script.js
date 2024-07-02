@@ -1566,6 +1566,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // 轉義 XML 保留字符的函數
 function escapeXml(unsafe) {
+    if (typeof unsafe !== 'string') {
+        unsafe = String(unsafe);
+    }
     return unsafe.replace(/[<>&'"]/g, function (match) {
         switch (match) {
             case '<': return '&lt;';
