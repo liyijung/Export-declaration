@@ -1356,20 +1356,43 @@ function spreadWeight() {
 
     if (finalDiscrepancy !== 0) {
         // 找到數量值最大的未鎖定項次
-        let maxQuantityItem = null;
+        let maxQuantityItems = [];
         let maxQuantity = -Infinity;
 
         items.forEach((item, index) => {
             const quantity = parseFloat(item.querySelector('.QTY').value);
             const checkbox = item.querySelector('.ISCALC_WT');
-            if (quantity > maxQuantity && (!checkbox || !checkbox.checked)) {
-                maxQuantity = quantity;
-                maxQuantityItem = item;
+            if (quantity >= maxQuantity && (!checkbox || !checkbox.checked)) {
+                if (quantity > maxQuantity) {
+                    maxQuantityItems = [{ item, quantity }];
+                    maxQuantity = quantity;
+                } else {
+                    maxQuantityItems.push({ item, quantity });
+                }
             }
         });
 
-        if (maxQuantityItem) {
-            const netWtElement = maxQuantityItem.querySelector('.NET_WT');
+        if (maxQuantityItems.length > 0) {
+            let totalMaxQuantity = maxQuantityItems.reduce((sum, item) => sum + item.quantity, 0);
+            maxQuantityItems.forEach(itemData => {
+                const netWtElement = itemData.item.querySelector('.NET_WT');
+                const adjustment = (itemData.quantity / totalMaxQuantity) * finalDiscrepancy;
+                const adjustedWeight = parseFloat(netWtElement.value) + adjustment;
+                netWtElement.value = adjustedWeight.toFixed(decimalPlaces);
+            });
+        }
+
+        // 再次計算總重量，確保最終總和正確
+        finalTotalWeight = Array.from(items).reduce((sum, item) => {
+            const netWeight = parseFloat(item.querySelector('.NET_WT').value);
+            return sum + (isNaN(netWeight) ? 0 : netWeight);
+        }, 0);
+
+        finalDiscrepancy = totalNetWeight - finalTotalWeight;
+
+        if (finalDiscrepancy !== 0) {
+            const largestItem = maxQuantityItems.reduce((prev, current) => (prev.quantity > current.quantity ? prev : current));
+            const netWtElement = largestItem.item.querySelector('.NET_WT');
             const adjustedWeight = parseFloat(netWtElement.value) + finalDiscrepancy;
             netWtElement.value = adjustedWeight.toFixed(decimalPlaces);
         }
