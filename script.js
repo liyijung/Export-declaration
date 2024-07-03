@@ -1320,30 +1320,19 @@ function spreadWeight() {
 
     // 將剩餘淨重按比例分配到未固定的項次
     let distributedWeights = [];
+    const minWeight = Math.pow(10, -decimalPlaces); // 確保最小值不為0
     items.forEach((item, index) => {
         if (!fixedWeights.some(fixed => fixed.index === index)) {
             const quantity = parseFloat(item.querySelector('.QTY').value);
             if (!isNaN(quantity) && quantity > 0) {
-                const netWeight = parseFloat(((quantity / totalQuantity) * remainingNetWeight).toFixed(decimalPlaces));
+                let netWeight = parseFloat(((quantity / totalQuantity) * remainingNetWeight).toFixed(decimalPlaces));
+                if (netWeight <= 0) {
+                    netWeight = minWeight; // 確保最小值不為0
+                }
                 distributedWeights.push({ index, netWeight });
             }
         }
     });
-
-    // 計算分配的總重量和差異
-    let totalDistributedWeight = distributedWeights.reduce((sum, item) => sum + item.netWeight, 0);
-    let discrepancy = remainingNetWeight - totalDistributedWeight;
-
-    // 將餘數重新分配給未固定的項次
-    if (distributedWeights.length > 0 && Math.abs(discrepancy) >= Math.pow(10, -decimalPlaces)) {
-        const sign = discrepancy > 0 ? 1 : -1;
-
-        for (let i = 0; Math.abs(discrepancy) >= Math.pow(10, -decimalPlaces) && i < distributedWeights.length; i++) {
-            distributedWeights[i].netWeight += sign * Math.pow(10, -decimalPlaces);
-            distributedWeights[i].netWeight = parseFloat(distributedWeights[i].netWeight.toFixed(decimalPlaces));
-            discrepancy -= sign * Math.pow(10, -decimalPlaces);
-        }
-    }
 
     // 將分配的重量應用到每個項次
     distributedWeights.forEach(item => {
@@ -1364,10 +1353,26 @@ function spreadWeight() {
     }, 0);
 
     let finalDiscrepancy = totalNetWeight - finalTotalWeight;
-    if (Math.abs(finalDiscrepancy) >= Math.pow(10, -decimalPlaces)) {
-        const lastItem = items[distributedWeights[distributedWeights.length - 1].index];
-        const lastItemWeight = parseFloat(lastItem.querySelector('.NET_WT').value);
-        lastItem.querySelector('.NET_WT').value = (lastItemWeight + finalDiscrepancy).toFixed(decimalPlaces);
+
+    if (finalDiscrepancy !== 0) {
+        // 找到數量值最大的未鎖定項次
+        let maxQuantityItem = null;
+        let maxQuantity = -Infinity;
+
+        items.forEach((item, index) => {
+            const quantity = parseFloat(item.querySelector('.QTY').value);
+            const checkbox = item.querySelector('.ISCALC_WT');
+            if (quantity > maxQuantity && (!checkbox || !checkbox.checked)) {
+                maxQuantity = quantity;
+                maxQuantityItem = item;
+            }
+        });
+
+        if (maxQuantityItem) {
+            const netWtElement = maxQuantityItem.querySelector('.NET_WT');
+            const adjustedWeight = parseFloat(netWtElement.value) + finalDiscrepancy;
+            netWtElement.value = adjustedWeight.toFixed(decimalPlaces);
+        }
     }
 
     // 顯示最終加總的重量
