@@ -1206,6 +1206,68 @@ function calculateAmount(event) {
     }
 }
 
+// 計算各單位的數量總計
+function calculateQuantities() {
+    const items = document.querySelectorAll('#item-container .item-row');
+    if (items.length === 0) {
+        alert('請先新增至少一個項次');
+        return;
+    }
+
+    let unitQuantities = {};
+    let stUnitQuantities = {};
+
+    items.forEach(row => {
+        // 計算 DOC_UM 和 QTY
+        const unit = row.querySelector('.DOC_UM').value;
+        const quantityElement = row.querySelector('.QTY');
+        if (quantityElement && quantityElement.value.trim() !== '') {
+            const quantity = parseFloat(quantityElement.value);
+            if (!isNaN(quantity)) {
+                if (!unitQuantities[unit]) {
+                    unitQuantities[unit] = 0;
+                }
+                unitQuantities[unit] += quantity;
+            }
+        }
+
+        // 計算 ST_UM 和 ST_QTY
+        const stUnit = row.querySelector('.ST_UM').value;
+        const stQuantityElement = row.querySelector('.ST_QTY');
+        if (stQuantityElement && stQuantityElement.value.trim() !== '') {
+            const stQuantity = parseFloat(stQuantityElement.value);
+            if (!isNaN(stQuantity)) {
+                if (!stUnitQuantities[stUnit]) {
+                    stUnitQuantities[stUnit] = 0;
+                }
+                stUnitQuantities[stUnit] += stQuantity;
+            }
+        }
+    });
+
+    // 構建數量總計字符串
+    let unitQuantitiesString = '數量單位加總為：';
+    for (const [unit, totalQuantity] of Object.entries(unitQuantities)) {
+        unitQuantitiesString += `\n${totalQuantity} ${unit}`;
+    }
+
+    let stUnitQuantitiesString = '統計用數量單位加總為：';
+    let hasStUnitQuantities = false;
+    for (const [unit, stTotalQuantity] of Object.entries(stUnitQuantities)) {
+        if (stTotalQuantity > 0) {
+            hasStUnitQuantities = true;
+        }
+        stUnitQuantitiesString += `\n${stTotalQuantity} ${unit}`;
+    }
+
+    // 顯示數量總計
+    if (hasStUnitQuantities) {
+        alert(`${unitQuantitiesString}\n\n${stUnitQuantitiesString}`);
+    } else {
+        alert(unitQuantitiesString);
+    }
+}
+
 // 計算所有行的金額
 function calculateAmounts() {
     const decimalPlacesInput = document.getElementById('decimal-places');
