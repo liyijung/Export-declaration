@@ -1137,7 +1137,7 @@ function createInputField(name, value, isVisible) {
     const onInputAttribute = (name === 'QTY' || name === 'DOC_UNIT_P') ? 'oninput="calculateAmount(event)"' : '';
     const minAttribute = (name === 'QTY' || name === 'DOC_UNIT_P' || name === 'DOC_TOT_P') ? 'min="0"' : '';
     const readonlyAttribute = (name === 'DOC_TOT_P') ? 'readonly' : '';
-    const escapedValue = value ? escapeXml(value) : ''; // 確保只有在必要時才轉義值
+    const escapedValue = value ? escapeXml(value.trim()) : ''; // 確保只有在必要時才轉義值
 
     if (name === 'NET_WT') {
         return `
