@@ -339,7 +339,8 @@ function openItemModal() {
     });
 
     // 顯示彈跳框
-    document.getElementById('item-modal').style.display = 'flex';
+    const itemModal = document.getElementById('item-modal');
+    itemModal.style.display = 'flex';
 
     // 滾動到最上方
     document.querySelector('#item-modal .modal-content').scrollTop = 0;
@@ -353,6 +354,14 @@ function openItemModal() {
     document.getElementById('DOC_UNIT_P').addEventListener('keydown', preventArrowKeyAdjustment);
     document.getElementById('NET_WT').addEventListener('keydown', preventArrowKeyAdjustment);
     
+    // 監聽 ESC 鍵，表示取消
+    document.addEventListener('keydown', handleEscKeyForCancel);
+}
+
+function handleEscKeyForCancel(event) {
+    if (event.key === 'Escape') {
+        closeItemModal();
+    }
 }
 
 // 計算彈跳框中的金額
@@ -495,12 +504,25 @@ function removeItem(element) {
     renumberItems();
 }
 
+// 開啟顯示隱藏欄位彈跳框
 function openToggleFieldsModal() {
-    document.getElementById('toggle-fields-modal').style.display = 'flex';
+    const toggleFieldsModal = document.getElementById('toggle-fields-modal');
+    toggleFieldsModal.style.display = 'flex';
+
+    // 監聽 ESC 鍵，表示取消
+    document.addEventListener('keydown', handleEscKeyForToggleFieldsCancel);
+}
+
+function handleEscKeyForToggleFieldsCancel(event) {
+    if (event.key === 'Escape') {
+        closeToggleFieldsModal();
+    }
 }
 
 function closeToggleFieldsModal() {
-    document.getElementById('toggle-fields-modal').style.display = 'none';
+    const toggleFieldsModal = document.getElementById('toggle-fields-modal');
+    toggleFieldsModal.style.display = 'none';
+    document.removeEventListener('keydown', handleEscKeyForToggleFieldsCancel);
 }
 
 function applyToggleFields() {
@@ -562,7 +584,23 @@ function openAdjustOrderModal() {
         animation: 150
     });
 
-    document.getElementById('adjust-order-modal').style.display = 'flex';
+    const adjustOrderModal = document.getElementById('adjust-order-modal');
+    adjustOrderModal.style.display = 'flex';
+
+    // 監聽 ESC 鍵，表示取消
+    document.addEventListener('keydown', handleEscKeyForAdjustOrderCancel);
+}
+
+function handleEscKeyForAdjustOrderCancel(event) {
+    if (event.key === 'Escape') {
+        closeAdjustOrderModal();
+    }
+}
+
+function closeAdjustOrderModal() {
+    const adjustOrderModal = document.getElementById('adjust-order-modal');
+    adjustOrderModal.style.display = 'none';
+    document.removeEventListener('keydown', handleEscKeyForAdjustOrderCancel);
 }
 
 // 關閉調整順序的彈跳框
@@ -616,12 +654,25 @@ function handleTouchEnd(event) {
 
 // 開啟指定填列欄位資料的彈跳框
 function openSpecifyFieldModal() {
-    document.getElementById('specify-field-modal').style.display = 'flex';
+    // 顯示彈跳框
+    const specifyFieldModal = document.getElementById('specify-field-modal');
+    specifyFieldModal.style.display = 'flex';
+
+    // 監聽 ESC 鍵，表示取消
+    document.addEventListener('keydown', handleEscKeyForSpecifyFieldCancel);
+}
+
+function handleEscKeyForSpecifyFieldCancel(event) {
+    if (event.key === 'Escape') {
+        closeSpecifyFieldModal();
+    }
 }
 
 // 關閉指定填列欄位資料的彈跳框
 function closeSpecifyFieldModal() {
-    document.getElementById('specify-field-modal').style.display = 'none';
+    const specifyFieldModal = document.getElementById('specify-field-modal');
+    specifyFieldModal.style.display = 'none';
+    document.removeEventListener('keydown', handleEscKeyForSpecifyFieldCancel);
 }
 
 // 動態生成源項次下拉選單的選項
