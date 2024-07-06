@@ -407,3 +407,21 @@ textarea:focus {
 .actions .delete-button {
     margin-left: 10px; /* 可調整間距 */
 }
+
+/* 隱藏數字輸入框的上下調整鍵 */
+input[type=number] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin: 0;
+}
+
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type=number]::-moz-appearance {
+    appearance: none;
+}
