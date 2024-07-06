@@ -2,6 +2,25 @@ let itemCount = 0; // 初始化項次計數
 let fileContent = null; // 儲存上傳文件的內容
 
 // 切換報單表頭與報單項次的tab
+document.addEventListener('keydown', function(event) {
+    if (event.ctrlKey && (event.key === 'ArrowLeft' || event.key === 'ArrowRight')) {
+        const tabLinks = Array.from(document.querySelectorAll('.tab-links'));
+
+        let currentIndex = tabLinks.findIndex(link => link.classList.contains('active'));
+        let newIndex;
+
+        if (event.key === 'ArrowLeft') {
+            newIndex = (currentIndex > 0) ? currentIndex - 1 : tabLinks.length - 1;
+        } else if (event.key === 'ArrowRight') {
+            newIndex = (currentIndex < tabLinks.length - 1) ? currentIndex + 1 : 0;
+        }
+
+        const newTabName = tabLinks[newIndex].getAttribute('onclick').match(/'([^']+)'/)[1];
+        openTab(newTabName);
+        tabLinks[newIndex].focus(); // 將焦點移至新選中的 tab
+    }
+});
+
 function openTab(tabName) {
     const tabs = document.querySelectorAll(".tab");
     const tabLinks = document.querySelectorAll(".tab-links");
@@ -10,7 +29,7 @@ function openTab(tabName) {
     tabLinks.forEach(link => link.classList.remove("active"));
 
     document.getElementById(tabName).classList.add("active");
-    event.currentTarget.classList.add("active");
+    document.querySelector(`.tab-links[onclick="openTab('${tabName}')"]`).classList.add("active");
 }
 
 function dragElement(element, header) {
