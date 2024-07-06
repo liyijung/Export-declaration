@@ -1245,7 +1245,7 @@ function createInputField(name, value, isVisible) {
     const onInputAttribute = numberFields.includes(name) ? 'oninput="calculateAmount(event); validateNumberInput(event)"' : '';
     const minAttribute = numberFields.includes(name) ? 'min="0"' : '';
     const readonlyAttribute = (name === 'DOC_TOT_P') ? 'readonly' : '';
-    const escapedValue = value ? escapeXml(value.trim()) : ''; // 確保只有在必要時才轉義值
+    const escapedValue = value ? escapeXml(value) : ''; // 確保只有在必要時才轉義值
 
     const inputField = `<input type="${inputType}" class="${name}" value="${escapedValue}" ${onInputAttribute} ${minAttribute} ${readonlyAttribute} style="flex: 1; margin-right: 0;" onkeydown="handleArrowKeyNavigation(event)">`;
 
