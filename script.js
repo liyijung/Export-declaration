@@ -1440,6 +1440,23 @@ function updateRemark1FromImport() {
     updateRemark1(); // 確保REMARK1欄位值與checkbox狀態同步
 }
 
+// REMARK1欄位值與RESERVED_STR_1及RESERVED_STR_2同步
+document.addEventListener('DOMContentLoaded', function() {
+    var reservedStr1 = document.getElementById('RESERVED_STR_1');
+    var reservedStr2 = document.getElementById('RESERVED_STR_2');
+    var remarks = document.getElementById('REMARK1');
+
+    function updateRemarks() {
+        // 保存原有內容
+        var originalContent = remarks.value.split(/用料清表文號: .*\n保出字號: .*/)[0].trim();
+        var newContent = originalContent + (originalContent ? '\n' : '') + '用料清表文號: ' + reservedStr1.value + '\n保出字號: ' + reservedStr2.value;
+        remarks.value = newContent;
+    }
+
+    reservedStr1.addEventListener('input', updateRemarks);
+    reservedStr2.addEventListener('input', updateRemarks);
+});
+
 // 添加事件監聽器
 document.addEventListener('DOMContentLoaded', function () {
     // 為 QTY 和 DOC_UNIT_P 輸入框添加事件監聽器
