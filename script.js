@@ -1240,9 +1240,10 @@ function addTextarea() {
 // 創建輸入域
 function createInputField(name, value, isVisible) {
     const visibilityClass = isVisible ? '' : 'hidden';
-    const inputType = (name === 'QTY' || name === 'DOC_UNIT_P' || name === 'NET_WT') ? 'number' : 'text';
-    const onInputAttribute = (name === 'QTY' || name === 'DOC_UNIT_P') ? 'oninput="calculateAmount(event); validateNumberInput(event)"' : '';
-    const minAttribute = (name === 'QTY' || name === 'DOC_UNIT_P' || name === 'DOC_TOT_P' || name === 'NET_WT') ? 'min="0"' : '';
+    const numberFields = ['QTY', 'DOC_UNIT_P', 'NET_WT', 'ORG_IMP_DCL_NO_ITEM', 'CERT_NO_ITEM', 'ORG_DCL_NO_ITEM', 'EXP_SEQ_NO', 'WIDE', 'LENGT_', 'ST_QTY'];
+    const inputType = numberFields.includes(name) ? 'number' : 'text';
+    const onInputAttribute = numberFields.includes(name) ? 'oninput="calculateAmount(event); validateNumberInput(event)"' : '';
+    const minAttribute = numberFields.includes(name) ? 'min="0"' : '';
     const readonlyAttribute = (name === 'DOC_TOT_P') ? 'readonly' : '';
     const escapedValue = value ? escapeXml(value.trim()) : ''; // 確保只有在必要時才轉義值
 
@@ -1257,13 +1258,13 @@ function createInputField(name, value, isVisible) {
                 ${inputField}
             </div>
         `;
-    } else if (name === 'DOC_UM' || name === 'WIDE_UM' || name === 'LENGTH_UM' || name === 'ST_UM') {
+    } else if (['DOC_UM', 'WIDE_UM', 'LENGTH_UM', 'ST_UM'].includes(name)) {
         return `
             <div class="form-group ${visibilityClass}" style="width: 40%;">
                 ${inputField}
             </div>
         `;
-    } else if (name === 'ST_MTD' || name === 'ORG_COUNTRY' || name === 'ORG_IMP_DCL_NO_ITEM' || name === 'BOND_NOTE' || name === 'CERT_NO_ITEM' || name === 'ORG_DCL_NO_ITEM' || name === 'EXP_SEQ_NO') {
+    } else if (['ST_MTD', 'ORG_COUNTRY', 'ORG_IMP_DCL_NO_ITEM', 'BOND_NOTE', 'CERT_NO_ITEM', 'ORG_DCL_NO_ITEM', 'EXP_SEQ_NO'].includes(name)) {
         return `
             <div class="form-group ${visibilityClass}" style="width: 30%;">
                 ${inputField}
