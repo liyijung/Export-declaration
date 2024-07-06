@@ -1324,8 +1324,16 @@ function calculateWeight() {
         }
     });
 
+    const decimalPlacesInput = document.getElementById('decimal-places-weight');
+    let decimalPlaces = parseInt(decimalPlacesInput.value);
+
+    // 確保小數點位數最小為0，並預設為2
+    if (isNaN(decimalPlaces) || decimalPlaces < 0) {
+        decimalPlaces = 2;
+    }
+
     // 顯示最終加總的重量
-    totalCalculatedWeight = totalCalculatedWeight.toFixed(2);
+    totalCalculatedWeight = totalCalculatedWeight.toFixed(decimalPlaces);
     alert(`報單表頭的總淨重為：${totalNetWeight}\n各項次的淨重加總為：${totalCalculatedWeight}`);
 }
 
