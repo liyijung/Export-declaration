@@ -37,8 +37,8 @@
             <hr>
             <div class="header-group">
                 <label for="SHPR_BAN_ID">出口人統一編號</label>
-                <input type="text" id="SHPR_BAN_ID" name="SHPR_BAN_ID"
-                placeholder="輸入統一編號以查找資料">
+                <input type="number" id="SHPR_BAN_ID" name="SHPR_BAN_ID"
+                placeholder="輸入統一編號以查找資料" onkeydown="preventArrowKeyAdjustment(event)">
                 <button type="button" onclick="searchData()">搜尋</button>
             </div>
             <div class="header-group">
@@ -78,8 +78,8 @@
             </div>
             <div class="header-group">
                 <label for="CNEE_BAN_ID">買方統一編號</label>
-                <input type="text" id="CNEE_BAN_ID" name="CNEE_BAN_ID"
-                placeholder="(非台灣營業公司此欄免填)">
+                <input type="number" id="CNEE_BAN_ID" name="CNEE_BAN_ID"
+                placeholder="(非台灣營業公司此欄免填)" onkeydown="preventArrowKeyAdjustment(event)">
             </div>            
             <hr>
             <div class="header-group">
@@ -108,7 +108,7 @@
         <div class="header-section">
             <div class="header-group">
                 <label for="TOT_CTN">總件數</label>
-                <input type="number" id="TOT_CTN" name="TOT_CTN" min="0" step="1">
+                <input type="number" id="TOT_CTN" name="TOT_CTN" min="1" step="1" onkeydown="preventArrowKeyAdjustment(event)">
             </div>
             <div class="header-group">
                 <label for="DOC_CTN_UM">總件數單位</label>
@@ -122,11 +122,11 @@
             </div>
             <div class="header-group">
                 <label for="DCL_GW">總毛重</label>
-                <input type="number" id="DCL_GW" name="DCL_GW" min="0">
+                <input type="number" id="DCL_GW" name="DCL_GW" onkeydown="preventArrowKeyAdjustment(event)">
             </div>
             <div class="header-group">
                 <label for="DCL_NW">總淨重</label>
-                <input type="number" id="DCL_NW" name="DCL_NW" min="0">
+                <input type="number" id="DCL_NW" name="DCL_NW" onkeydown="preventArrowKeyAdjustment(event)">
             </div>
         </div>
         <hr>
@@ -164,33 +164,33 @@
             </div>
             <div class="header-group">
                 <label for="CAL_IP_TOT_ITEM_AMT">總金額</label>
-                <input type="number" id="CAL_IP_TOT_ITEM_AMT" name="CAL_IP_TOT_ITEM_AMT" min="0"
-                placeholder="(若為台幣金額不可有小數點)">
+                <input type="number" id="CAL_IP_TOT_ITEM_AMT" name="CAL_IP_TOT_ITEM_AMT"
+                placeholder="(若為台幣金額不可有小數點)" onkeydown="preventArrowKeyAdjustment(event)">
             </div>
             <hr>
             <div class="header-group">
                 <label for="FRT_AMT">運費</label>
-                <input type="number" id="FRT_AMT" name="FRT_AMT" min="0"
-                placeholder="(CFR、CIF 需填列運費)">
+                <input type="number" id="FRT_AMT" name="FRT_AMT"
+                placeholder="(CFR、CIF 需填列運費)" onkeydown="preventArrowKeyAdjustment(event)">
                 <button id="calculate-freight-button">計算運費</button>
             </div>   
             <div class="header-group">
                 <label for="INS_AMT">保險費</label>
-                <input type="number" id="INS_AMT" name="INS_AMT" min="0"
-                placeholder="(C&I、CIF 需填列保險費)">
+                <input type="number" id="INS_AMT" name="INS_AMT"
+                placeholder="(C&I、CIF 需填列保險費)" onkeydown="preventArrowKeyAdjustment(event)">
                 <button id="calculate-insurance-button">計算保險費</button>
             </div>
             <div class="header-group">
                 <label for="ADD_AMT">應加費用</label>
-                <input type="number" id="ADD_AMT" name="ADD_AMT" min="0"
-                placeholder="(EXW 需填列應加費用)">
+                <input type="number" id="ADD_AMT" name="ADD_AMT"
+                placeholder="(EXW 需填列應加費用)" onkeydown="preventArrowKeyAdjustment(event)">
                 <button id="calculate-additional-button">計算應加費用(TWD500)</button>
             </div>
             <div class="header-group">
                 <label for="SUBTRACT_AMT">應減費用</label>
-                <input type="number" id="SUBTRACT_AMT" name="SUBTRACT_AMT" min="0">
+                <input type="number" id="SUBTRACT_AMT" name="SUBTRACT_AMT" onkeydown="preventArrowKeyAdjustment(event)">
             </div>
-        </div> 
+        </div>
         <hr>
         <div class="header-section">
             <div class="header-group">
@@ -471,7 +471,7 @@
             </div>
             <div class="header-group">
                 <label for="ORG_IMP_DCL_NO_ITEM">原進口報單項次</label>
-                <input type="text" id="ORG_IMP_DCL_NO_ITEM" class="ORG_IMP_DCL_NO_ITEM">
+                <input type="number" id="ORG_IMP_DCL_NO_ITEM" class="ORG_IMP_DCL_NO_ITEM">
             </div>
             <hr>
             <div class="header-group">保稅貨物欄位</div>
@@ -499,7 +499,7 @@
             </div>
             <div class="header-group">
                 <label for="CERT_NO_ITEM">產證項次</label>
-                <input type="text" id="CERT_NO_ITEM" class="CERT_NO_ITEM">
+                <input type="number" id="CERT_NO_ITEM" class="CERT_NO_ITEM">
             </div>
             <hr>
             <div class="header-group">D5保稅倉核銷欄位</div>
@@ -509,7 +509,7 @@
             </div>
             <div class="header-group">
                 <label for="ORG_DCL_NO_ITEM">原進倉報單項次</label>
-                <input type="text" id="ORG_DCL_NO_ITEM" class="ORG_DCL_NO_ITEM">
+                <input type="number" id="ORG_DCL_NO_ITEM" class="ORG_DCL_NO_ITEM">
             </div>
             <hr>
             <div class="header-group">管制品欄位</div>
@@ -519,13 +519,13 @@
             </div>
             <div class="header-group">
                 <label for="EXP_SEQ_NO">輸出許可項次</label>
-                <input type="text" id="EXP_SEQ_NO" class="EXP_SEQ_NO">
+                <input type="number" id="EXP_SEQ_NO" class="EXP_SEQ_NO">
             </div>
             <hr>
             <div class="header-group">布貨品欄位</div>
             <div class="header-group">
                 <label for="WIDE">寬度(幅寬)</label>
-                <input type="text" id="WIDE" class="WIDE">
+                <input type="number" id="WIDE" class="WIDE">
             </div>
             <div class="header-group">
                 <label for="WIDE_UM">寬度單位</label>
@@ -533,7 +533,7 @@
             </div>
             <div class="header-group">
                 <label for="LENGT_">長度(幅長)</label>
-                <input type="text" id="LENGT_" class="LENGT_">
+                <input type="number" id="LENGT_" class="LENGT_">
             </div>
             <div class="header-group">
                 <label for="LENGTH_UM">長度單位</label>
@@ -543,7 +543,7 @@
             <div class="header-group">與數量單位不同另外填列</div>
             <div class="header-group">
                 <label for="ST_QTY">統計數量</label>
-                <input type="text" id="ST_QTY" class="ST_QTY">
+                <input type="number" id="ST_QTY" class="ST_QTY">
             </div>
             <div class="header-group">
                 <label for="ST_UM">統計單位</label>
