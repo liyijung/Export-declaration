@@ -1248,7 +1248,7 @@ function calculateQuantities() {
     // 構建數量總計字符串
     let unitQuantitiesString = '數量單位加總為：';
     for (const [unit, totalQuantity] of Object.entries(unitQuantities)) {
-        unitQuantitiesString += `\n${totalQuantity} ${unit}`;
+        unitQuantitiesString += `\n${parseFloat(totalQuantity.toFixed(6))} ${unit}`;
     }
 
     let stUnitQuantitiesString = '統計用數量單位加總為：';
@@ -1257,7 +1257,7 @@ function calculateQuantities() {
         if (stTotalQuantity > 0) {
             hasStUnitQuantities = true;
         }
-        stUnitQuantitiesString += `\n${stTotalQuantity} ${unit}`;
+        stUnitQuantitiesString += `\n${parseFloat(stTotalQuantity.toFixed(6))} ${unit}`;
     }
 
     // 顯示數量總計
@@ -1324,16 +1324,10 @@ function calculateWeight() {
         }
     });
 
-    const decimalPlacesInput = document.getElementById('decimal-places-weight');
-    let decimalPlaces = parseInt(decimalPlacesInput.value);
-
-    // 確保小數點位數最小為0，並預設為2
-    if (isNaN(decimalPlaces) || decimalPlaces < 0) {
-        decimalPlaces = 2;
-    }
+    // 確保結果最多顯示六位小數
+    totalCalculatedWeight = parseFloat(totalCalculatedWeight.toFixed(6));
 
     // 顯示最終加總的重量
-    totalCalculatedWeight = totalCalculatedWeight.toFixed(decimalPlaces);
     alert(`報單表頭的總淨重為：${totalNetWeight}\n各項次的淨重加總為：${totalCalculatedWeight}`);
 }
 
