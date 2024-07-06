@@ -347,6 +347,12 @@ function openItemModal() {
     // 監聽數量和單價輸入框的變化事件，進行自動計算
     document.getElementById('QTY').addEventListener('input', calculateModalAmount);
     document.getElementById('DOC_UNIT_P').addEventListener('input', calculateModalAmount);
+
+    // 監聽數量和單價輸入框的鍵盤事件，禁止方向鍵調整數字
+    document.getElementById('QTY').addEventListener('keydown', preventArrowKeyAdjustment);
+    document.getElementById('DOC_UNIT_P').addEventListener('keydown', preventArrowKeyAdjustment);
+    document.getElementById('NET_WT').addEventListener('keydown', preventArrowKeyAdjustment);
+    
 }
 
 // 計算彈跳框中的金額
@@ -363,6 +369,13 @@ function calculateModalAmount() {
 
     const amount = qty * unitPrice;
     document.getElementById('DOC_TOT_P').value = (amount === 0) ? '' : (Math.round(amount * Math.pow(10, decimalPlaces)) / Math.pow(10, decimalPlaces)).toFixed(decimalPlaces);
+}
+
+// 函數禁止方向鍵調整數字
+function preventArrowKeyAdjustment(event) {
+    if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+        event.preventDefault();
+    }
 }
 
 // 複製選定的項次內容
@@ -1107,7 +1120,7 @@ function createTextareaField(name, value) {
     const id = `textarea-${name}-${textareaCounter++}`;
     return `
         <div class="form-group declaration-item" style="width: 200%;">
-            <textarea id="${id}" class="${name}" rows="1">${value || ''}</textarea>
+            <textarea id="${id}" class="${name}" rows="1" onkeydown="handleTextareaArrowKeyNavigation(event)">${value || ''}</textarea>
         </div>
     `;
 }
@@ -1123,6 +1136,49 @@ function toggleAllTextareas() {
     document.getElementById('toggle-all-btn').textContent = allExpanded ? '折疊全部品名' : '展開全部品名';
 }
 
+// 函數實現文本域上下導航
+function handleTextareaArrowKeyNavigation(event) {
+    const currentTextarea = event.target;
+    const start = currentTextarea.selectionStart;
+    const value = currentTextarea.value;
+    
+    // 獲取光標位置的行號
+    const lines = value.substr(0, start).split("\n");
+    const currentLine = lines.length;
+    const totalLines = value.split("\n").length;
+    
+    if (event.altKey) {
+        // 當按住 Alt 鍵時，實現文本域上下導航
+        if (event.key === 'ArrowUp') {
+            event.preventDefault();
+            navigateTextarea(currentTextarea, -1);
+        } else if (event.key === 'ArrowDown') {
+            event.preventDefault();
+            navigateTextarea(currentTextarea, 1);
+        }
+    } else {
+        // 當未按住 Alt 鍵時，檢查光標位置以決定是否進行導航
+        if (event.key === 'ArrowUp' && currentLine === 1) {
+            event.preventDefault();
+            navigateTextarea(currentTextarea, -1);
+        } else if (event.key === 'ArrowDown' && currentLine === totalLines) {
+            event.preventDefault();
+            navigateTextarea(currentTextarea, 1);
+        }
+    }
+}
+
+function navigateTextarea(currentTextarea, direction) {
+    const allTextareas = Array.from(document.querySelectorAll(`.${currentTextarea.className.split(' ')[0]}`));
+    const currentIndex = allTextareas.indexOf(currentTextarea);
+
+    if (direction === -1 && currentIndex > 0) {
+        allTextareas[currentIndex - 1].focus();
+    } else if (direction === 1 && currentIndex < allTextareas.length - 1) {
+        allTextareas[currentIndex + 1].focus();
+    }
+}
+
 // 添加文本域的示例函數
 function addTextarea() {
     const container = document.getElementById('textarea-container');
@@ -1134,10 +1190,12 @@ function addTextarea() {
 function createInputField(name, value, isVisible) {
     const visibilityClass = isVisible ? '' : 'hidden';
     const inputType = (name === 'QTY' || name === 'DOC_UNIT_P' || name === 'NET_WT') ? 'number' : 'text';
-    const onInputAttribute = (name === 'QTY' || name === 'DOC_UNIT_P') ? 'oninput="calculateAmount(event)"' : '';
+    const onInputAttribute = (name === 'QTY' || name === 'DOC_UNIT_P') ? 'oninput="calculateAmount(event); validateNumberInput(event)"' : '';
     const minAttribute = (name === 'QTY' || name === 'DOC_UNIT_P' || name === 'DOC_TOT_P' || name === 'NET_WT') ? 'min="0"' : '';
     const readonlyAttribute = (name === 'DOC_TOT_P') ? 'readonly' : '';
     const escapedValue = value ? escapeXml(value.trim()) : ''; // 確保只有在必要時才轉義值
+
+    const inputField = `<input type="${inputType}" class="${name}" value="${escapedValue}" ${onInputAttribute} ${minAttribute} ${readonlyAttribute} style="flex: 1; margin-right: 0;" onkeydown="handleArrowKeyNavigation(event)">`;
 
     if (name === 'NET_WT') {
         return `
@@ -1145,25 +1203,25 @@ function createInputField(name, value, isVisible) {
                 <input type="checkbox" class="ISCALC_WT" style="margin-left: 5px;">
             </div>
             <div class="form-group ${visibilityClass}" style="width: 60%; display: flex; align-items: center;">
-                <input type="number" class="${name}" value="${escapedValue}" ${onInputAttribute} ${minAttribute} ${readonlyAttribute} style="flex: 1; margin-right: 0;">
+                ${inputField}
             </div>
         `;
     } else if (name === 'DOC_UM' || name === 'WIDE_UM' || name === 'LENGTH_UM' || name === 'ST_UM') {
         return `
             <div class="form-group ${visibilityClass}" style="width: 40%;">
-                <input type="${inputType}" class="${name}" value="${escapedValue}" ${onInputAttribute} ${minAttribute} ${readonlyAttribute}>
+                ${inputField}
             </div>
         `;
     } else if (name === 'ST_MTD' || name === 'ORG_COUNTRY' || name === 'ORG_IMP_DCL_NO_ITEM' || name === 'BOND_NOTE' || name === 'CERT_NO_ITEM' || name === 'ORG_DCL_NO_ITEM' || name === 'EXP_SEQ_NO') {
         return `
             <div class="form-group ${visibilityClass}" style="width: 30%;">
-                <input type="${inputType}" class="${name}" value="${escapedValue}" ${onInputAttribute} ${minAttribute} ${readonlyAttribute}>
+                ${inputField}
             </div>
         `;
     } else {
         return `
             <div class="form-group ${visibilityClass}">
-                <input type="${inputType}" class="${name}" value="${escapedValue}" ${onInputAttribute} ${minAttribute} ${readonlyAttribute}>
+                ${inputField}
             </div>
         `;
     }
@@ -1175,6 +1233,22 @@ function validateNumberInput(event) {
     const numberValue = value.replace(/[^0-9.]/g, ''); // 移除非數字字符（允許小數點）
     if (value !== numberValue) {
         input.value = numberValue;
+    }
+}
+
+// 函數禁止方向鍵調整數字並實現上下導航
+function handleArrowKeyNavigation(event) {
+    if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+        event.preventDefault();
+        const currentInput = event.target;
+        const allInputs = Array.from(document.querySelectorAll(`.${currentInput.className.split(' ')[0]}`));
+        const currentIndex = allInputs.indexOf(currentInput);
+
+        if (event.key === 'ArrowUp' && currentIndex > 0) {
+            allInputs[currentIndex - 1].focus();
+        } else if (event.key === 'ArrowDown' && currentIndex < allInputs.length - 1) {
+            allInputs[currentIndex + 1].focus();
+        }
     }
 }
 
@@ -1648,6 +1722,10 @@ document.addEventListener('DOMContentLoaded', function () {
                     value = item.querySelector(`.${className}`).checked ? 'V' : '';
                 } else {
                     value = escapeXml(item.querySelector(`.${className}`).value);
+                    // 如果 DOC_UM 的值是 PCS 則改為 PCE
+                    if (className === 'DOC_UM' && value === 'PCS') {
+                        value = 'PCE';
+                    }
                 }
                 xmlContent += `    <fields>\n      <field_name>${className}</field_name>\n      <field_value>${value}</field_value>\n    </fields>\n`;
             });
