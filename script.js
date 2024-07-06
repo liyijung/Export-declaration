@@ -1133,9 +1133,9 @@ function addTextarea() {
 // 創建輸入域
 function createInputField(name, value, isVisible) {
     const visibilityClass = isVisible ? '' : 'hidden';
-    const inputType = (name === 'QTY' || name === 'DOC_UNIT_P') ? 'number' : 'text';
+    const inputType = (name === 'QTY' || name === 'DOC_UNIT_P' || name === 'NET_WT') ? 'number' : 'text';
     const onInputAttribute = (name === 'QTY' || name === 'DOC_UNIT_P') ? 'oninput="calculateAmount(event)"' : '';
-    const minAttribute = (name === 'QTY' || name === 'DOC_UNIT_P' || name === 'DOC_TOT_P') ? 'min="0"' : '';
+    const minAttribute = (name === 'QTY' || name === 'DOC_UNIT_P' || name === 'DOC_TOT_P' || name === 'NET_WT') ? 'min="0"' : '';
     const readonlyAttribute = (name === 'DOC_TOT_P') ? 'readonly' : '';
     const escapedValue = value ? escapeXml(value.trim()) : ''; // 確保只有在必要時才轉義值
 
@@ -1145,7 +1145,7 @@ function createInputField(name, value, isVisible) {
                 <input type="checkbox" class="ISCALC_WT" style="margin-left: 5px;">
             </div>
             <div class="form-group ${visibilityClass}" style="width: 60%; display: flex; align-items: center;">
-                <input type="${inputType}" class="${name}" value="${escapedValue}" ${onInputAttribute} ${minAttribute} ${readonlyAttribute} style="flex: 1; margin-right: 0;">
+                <input type="number" class="${name}" value="${escapedValue}" ${onInputAttribute} ${minAttribute} ${readonlyAttribute} style="flex: 1; margin-right: 0;">
             </div>
         `;
     } else if (name === 'DOC_UM' || name === 'WIDE_UM' || name === 'LENGTH_UM' || name === 'ST_UM') {
@@ -1166,6 +1166,15 @@ function createInputField(name, value, isVisible) {
                 <input type="${inputType}" class="${name}" value="${escapedValue}" ${onInputAttribute} ${minAttribute} ${readonlyAttribute}>
             </div>
         `;
+    }
+}
+
+function validateNumberInput(event) {
+    const input = event.target;
+    const value = input.value;
+    const numberValue = value.replace(/[^0-9.]/g, ''); // 移除非數字字符（允許小數點）
+    if (value !== numberValue) {
+        input.value = numberValue;
     }
 }
 
