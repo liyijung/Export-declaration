@@ -390,6 +390,21 @@ function handleEscKeyForCancel(event) {
     }
 }
 
+// 新增監聽 Alt+a 鍵，表示開啟新增項次彈跳框
+document.addEventListener('keydown', function(event) {
+    if (event.altKey && (event.key === 'a' || event.key === 'A')) {
+
+        openItemModal();
+    }
+});
+
+// 新增監聽 Alt+s 鍵，表示儲存新增項次
+document.addEventListener('keydown', function(event) {
+    if (event.altKey && (event.key === 's' || event.key === 'S')) {
+        saveItem();
+    }
+});
+
 // 計算彈跳框中的金額
 function calculateModalAmount() {
     const qty = parseFloat(document.getElementById('QTY').value) || 0;
@@ -1218,6 +1233,16 @@ function toggleAllTextareas() {
     // 更新按鈕文本
     document.getElementById('toggle-all-btn').textContent = allExpanded ? '折疊全部品名' : '展開全部品名';
 }
+
+// 處理 Alt+o 鍵的函數
+function handleAltOKey(event) {
+    if (event.altKey && (event.key === 'o' || event.key === 'O')) {
+        toggleAllTextareas();
+    }
+}
+
+// 全域監聽 Alt+o 鍵，表示切換所有文本域顯示和隱藏
+document.addEventListener('keydown', handleAltOKey);
 
 // 函數實現文本域上下導航
 function handleTextareaArrowKeyNavigation(event) {
