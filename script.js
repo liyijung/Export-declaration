@@ -318,36 +318,39 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // 開啟新增項次的彈跳框
 function openItemModal() {
-    // 清空所有輸入框
-    document.getElementById('ITEM_NO').checked = false;
-    document.getElementById('DESCRIPTION').value = '';
-    document.getElementById('QTY').value = '';
-    document.getElementById('DOC_UM').value = '';
-    document.getElementById('DOC_UNIT_P').value = '';
-    document.getElementById('DOC_TOT_P').value = '';
-    document.getElementById('TRADE_MARK').value = '';
-    document.getElementById('CCC_CODE').value = '';
-    document.getElementById('ST_MTD').value = '';
-    document.getElementById('NET_WT').value = '';        
-    document.getElementById('ORG_COUNTRY').value = '';
-    document.getElementById('ORG_IMP_DCL_NO').value = '';
-    document.getElementById('ORG_IMP_DCL_NO_ITEM').value = '';
-    document.getElementById('SELLER_ITEM_CODE').value = '';
-    document.getElementById('BOND_NOTE').value = '';    
-    document.getElementById('GOODS_MODEL').value = '';
-    document.getElementById('GOODS_SPEC').value = '';
-    document.getElementById('CERT_NO').value = '';
-    document.getElementById('CERT_NO_ITEM').value = '';
-    document.getElementById('ORG_DCL_NO').value = '';
-    document.getElementById('ORG_DCL_NO_ITEM').value = '';
-    document.getElementById('EXP_NO').value = '';
-    document.getElementById('EXP_SEQ_NO').value = '';
-    document.getElementById('WIDE').value = '';
-    document.getElementById('WIDE_UM').value = '';
-    document.getElementById('LENGT_').value = '';
-    document.getElementById('LENGTH_UM').value = '';
-    document.getElementById('ST_QTY').value = '';
-    document.getElementById('ST_UM').value = '';
+    // 從 localStorage 讀取記憶的內容
+    const savedItemData = JSON.parse(localStorage.getItem('itemModalData')) || {};
+
+    // 設定輸入框值
+    document.getElementById('ITEM_NO').checked = savedItemData.ITEM_NO || false;
+    document.getElementById('DESCRIPTION').value = savedItemData.DESCRIPTION || '';
+    document.getElementById('QTY').value = savedItemData.QTY || '';
+    document.getElementById('DOC_UM').value = savedItemData.DOC_UM || '';
+    document.getElementById('DOC_UNIT_P').value = savedItemData.DOC_UNIT_P || '';
+    document.getElementById('DOC_TOT_P').value = savedItemData.DOC_TOT_P || '';
+    document.getElementById('TRADE_MARK').value = savedItemData.TRADE_MARK || '';
+    document.getElementById('CCC_CODE').value = savedItemData.CCC_CODE || '';
+    document.getElementById('ST_MTD').value = savedItemData.ST_MTD || '';
+    document.getElementById('NET_WT').value = savedItemData.NET_WT || '';        
+    document.getElementById('ORG_COUNTRY').value = savedItemData.ORG_COUNTRY || '';
+    document.getElementById('ORG_IMP_DCL_NO').value = savedItemData.ORG_IMP_DCL_NO || '';
+    document.getElementById('ORG_IMP_DCL_NO_ITEM').value = savedItemData.ORG_IMP_DCL_NO_ITEM || '';
+    document.getElementById('SELLER_ITEM_CODE').value = savedItemData.SELLER_ITEM_CODE || '';
+    document.getElementById('BOND_NOTE').value = savedItemData.BOND_NOTE || '';    
+    document.getElementById('GOODS_MODEL').value = savedItemData.GOODS_MODEL || '';
+    document.getElementById('GOODS_SPEC').value = savedItemData.GOODS_SPEC || '';
+    document.getElementById('CERT_NO').value = savedItemData.CERT_NO || '';
+    document.getElementById('CERT_NO_ITEM').value = savedItemData.CERT_NO_ITEM || '';
+    document.getElementById('ORG_DCL_NO').value = savedItemData.ORG_DCL_NO || '';
+    document.getElementById('ORG_DCL_NO_ITEM').value = savedItemData.ORG_DCL_NO_ITEM || '';
+    document.getElementById('EXP_NO').value = savedItemData.EXP_NO || '';
+    document.getElementById('EXP_SEQ_NO').value = savedItemData.EXP_SEQ_NO || '';
+    document.getElementById('WIDE').value = savedItemData.WIDE || '';
+    document.getElementById('WIDE_UM').value = savedItemData.WIDE_UM || '';
+    document.getElementById('LENGT_').value = savedItemData.LENGT_ || '';
+    document.getElementById('LENGTH_UM').value = savedItemData.LENGTH_UM || '';
+    document.getElementById('ST_QTY').value = savedItemData.ST_QTY || '';
+    document.getElementById('ST_UM').value = savedItemData.ST_UM || '';
 
     // 填充下拉選單
     const copyItemSelect = document.getElementById('COPY_ITEM');
@@ -399,7 +402,6 @@ function handleEscKeyForCancel(event) {
 // 新增監聽 Alt+a 鍵，表示開啟新增項次彈跳框
 document.addEventListener('keydown', function(event) {
     if (event.altKey && (event.key === 'a' || event.key === 'A')) {
-
         openItemModal();
     }
 });
@@ -472,6 +474,45 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
+// 記憶按鍵的功能
+function rememberItemModalData() {
+    // 儲存當前彈跳框的內容到 localStorage
+    const itemData = {
+        ITEM_NO: document.getElementById('ITEM_NO').checked,
+        DESCRIPTION: document.getElementById('DESCRIPTION').value,
+        QTY: document.getElementById('QTY').value,
+        DOC_UM: document.getElementById('DOC_UM').value,
+        DOC_UNIT_P: document.getElementById('DOC_UNIT_P').value,
+        DOC_TOT_P: document.getElementById('DOC_TOT_P').value,
+        TRADE_MARK: document.getElementById('TRADE_MARK').value,
+        CCC_CODE: document.getElementById('CCC_CODE').value,
+        ST_MTD: document.getElementById('ST_MTD').value,
+        NET_WT: document.getElementById('NET_WT').value,        
+        ORG_COUNTRY: document.getElementById('ORG_COUNTRY').value,
+        ORG_IMP_DCL_NO: document.getElementById('ORG_IMP_DCL_NO').value,
+        ORG_IMP_DCL_NO_ITEM: document.getElementById('ORG_IMP_DCL_NO_ITEM').value,
+        SELLER_ITEM_CODE: document.getElementById('SELLER_ITEM_CODE').value,
+        BOND_NOTE: document.getElementById('BOND_NOTE').value,    
+        GOODS_MODEL: document.getElementById('GOODS_MODEL').value,
+        GOODS_SPEC: document.getElementById('GOODS_SPEC').value,
+        CERT_NO: document.getElementById('CERT_NO').value,
+        CERT_NO_ITEM: document.getElementById('CERT_NO_ITEM').value,
+        ORG_DCL_NO: document.getElementById('ORG_DCL_NO').value,
+        ORG_DCL_NO_ITEM: document.getElementById('ORG_DCL_NO_ITEM').value,
+        EXP_NO: document.getElementById('EXP_NO').value,
+        EXP_SEQ_NO: document.getElementById('EXP_SEQ_NO').value,
+        WIDE: document.getElementById('WIDE').value,
+        WIDE_UM: document.getElementById('WIDE_UM').value,
+        LENGT_: document.getElementById('LENGT_').value,
+        LENGTH_UM: document.getElementById('LENGTH_UM').value,
+        ST_QTY: document.getElementById('ST_QTY').value,
+        ST_UM: document.getElementById('ST_UM').value
+    };
+
+    localStorage.setItem('itemModalData', JSON.stringify(itemData));
+    alert("彈跳框內容已記憶");
+}
+
 // 關閉新增項次的彈跳框
 function closeItemModal() {
     // 隱藏彈跳框
@@ -517,6 +558,7 @@ function saveItem() {
         ST_QTY: document.getElementById('ST_QTY').value,
         ST_UM: document.getElementById('ST_UM').value,
     });
+
     // 判斷輸入域目前是展開全部品名還是折疊全部品名
     const textareas = item.querySelectorAll('.DESCRIPTION');
     textareas.forEach(textarea => {
