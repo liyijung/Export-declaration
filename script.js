@@ -382,6 +382,12 @@ function openItemModal() {
     
     // 監聽 ESC 鍵，表示取消
     document.addEventListener('keydown', handleEscKeyForCancel);
+
+    // 設定光標到特定的輸入欄位
+    const firstInputField = document.getElementById('DESCRIPTION');
+    if (firstInputField) {
+        firstInputField.focus();
+    }
 }
 
 function handleEscKeyForCancel(event) {
