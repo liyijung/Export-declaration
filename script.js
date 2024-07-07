@@ -1313,14 +1313,14 @@ function toggleAllTextareas() {
     document.getElementById('toggle-all-btn').textContent = allExpanded ? '折疊全部品名' : '展開全部品名';
 }
 
-// 處理 Alt+o 鍵的函數
+// 處理 Alt+w 鍵的函數
 function handleAltOKey(event) {
-    if (event.altKey && (event.key === 'o' || event.key === 'O')) {
+    if (event.altKey && (event.key === 'w' || event.key === 'W')) {
         toggleAllTextareas();
     }
 }
 
-// 全域監聽 Alt+o 鍵，表示切換所有文本域顯示和隱藏
+// 全域監聽 Alt+w 鍵，表示切換所有文本域顯示和隱藏
 document.addEventListener('keydown', handleAltOKey);
 
 // 函數實現文本域上下導航
