@@ -1352,15 +1352,9 @@ function createInputField(name, value, isVisible) {
                 ${inputField}
             </div>
         `;
-    } else if (['TRADE_MARK'].includes(name)) {
+    } else if (['DOC_TOT_P', 'TRADE_MARK'].includes(name)) {
         return `
             <div class="form-group ${visibilityClass}" style="width: 80%;">
-                ${inputField}
-            </div>
-        `;
-    } else if (['DOC_TOT_P'].includes(name)) {
-        return `
-            <div class="form-group ${visibilityClass}" style="width: 70%;">
                 ${inputField}
             </div>
         `;
