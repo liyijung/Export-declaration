@@ -435,43 +435,42 @@ function preventArrowKeyAdjustment(event) {
 }
 
 // 複製選定的項次內容
-function copyItem() {
-    const copyItemSelect = document.getElementById('COPY_ITEM');
-    const selectedItemIndex = copyItemSelect.value;
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('COPY_ITEM').addEventListener('change', copyItem);
 
-    if (selectedItemIndex !== "") {
-        const item = document.querySelectorAll('#item-container .item-row')[selectedItemIndex];
-        document.getElementById('ITEM_NO').checked = item.querySelector('.ITEM_NO').checked;
-        document.getElementById('DESCRIPTION').value = item.querySelector('.DESCRIPTION').value;
-        document.getElementById('QTY').value = item.querySelector('.QTY').value;
-        document.getElementById('DOC_UM').value = item.querySelector('.DOC_UM').value;
-        document.getElementById('DOC_UNIT_P').value = item.querySelector('.DOC_UNIT_P').value;
-        document.getElementById('DOC_TOT_P').value = item.querySelector('.DOC_TOT_P').value;
-        document.getElementById('TRADE_MARK').value = item.querySelector('.TRADE_MARK').value;
-        document.getElementById('CCC_CODE').value = item.querySelector('.CCC_CODE').value;
-        document.getElementById('ST_MTD').value = item.querySelector('.ST_MTD').value;
-        document.getElementById('NET_WT').value = item.querySelector('.NET_WT').value;
-        document.getElementById('ORG_COUNTRY').value = item.querySelector('.ORG_COUNTRY').value;
-        document.getElementById('ORG_IMP_DCL_NO').value = item.querySelector('.ORG_IMP_DCL_NO').value;
-        document.getElementById('ORG_IMP_DCL_NO_ITEM').value = item.querySelector('.ORG_IMP_DCL_NO_ITEM').value;
-        document.getElementById('SELLER_ITEM_CODE').value = item.querySelector('.SELLER_ITEM_CODE').value;
-        document.getElementById('BOND_NOTE').value = item.querySelector('.BOND_NOTE').value;        
-        document.getElementById('GOODS_MODEL').value = item.querySelector('.GOODS_MODEL').value;
-        document.getElementById('GOODS_SPEC').value = item.querySelector('.GOODS_SPEC').value;
-        document.getElementById('CERT_NO').value = item.querySelector('.CERT_NO').value;
-        document.getElementById('CERT_NO_ITEM').value = item.querySelector('.CERT_NO_ITEM').value;
-        document.getElementById('ORG_DCL_NO').value = item.querySelector('.ORG_DCL_NO').value;
-        document.getElementById('ORG_DCL_NO_ITEM').value = item.querySelector('.ORG_DCL_NO_ITEM').value;
-        document.getElementById('EXP_NO').value = item.querySelector('.EXP_NO').value;
-        document.getElementById('EXP_SEQ_NO').value = item.querySelector('.EXP_SEQ_NO').value;
-        document.getElementById('WIDE').value = item.querySelector('.WIDE').value;
-        document.getElementById('WIDE_UM').value = item.querySelector('.WIDE_UM').value;
-        document.getElementById('LENGT_').value = item.querySelector('.LENGT_').value;
-        document.getElementById('LENGTH_UM').value = item.querySelector('.LENGTH_UM').value;
-        document.getElementById('ST_QTY').value = item.querySelector('.ST_QTY').value;
-        document.getElementById('ST_UM').value = item.querySelector('.ST_UM').value;
+    function copyItem() {
+        const copyItemSelect = document.getElementById('COPY_ITEM');
+        const selectedItemIndex = copyItemSelect.value;
+
+        const itemFields = [
+            'ITEM_NO', 'DESCRIPTION', 'QTY', 'DOC_UM', 'DOC_UNIT_P', 'DOC_TOT_P', 'TRADE_MARK', 'CCC_CODE', 
+            'ST_MTD', 'NET_WT', 'ORG_COUNTRY', 'ORG_IMP_DCL_NO', 'ORG_IMP_DCL_NO_ITEM', 'SELLER_ITEM_CODE', 
+            'BOND_NOTE', 'GOODS_MODEL', 'GOODS_SPEC', 'CERT_NO', 'CERT_NO_ITEM', 'ORG_DCL_NO', 'ORG_DCL_NO_ITEM', 
+            'EXP_NO', 'EXP_SEQ_NO', 'WIDE', 'WIDE_UM', 'LENGT_', 'LENGTH_UM', 'ST_QTY', 'ST_UM'
+        ];
+
+        if (selectedItemIndex !== "") {
+            const item = document.querySelectorAll('#item-container .item-row')[selectedItemIndex];
+            itemFields.forEach(field => {
+                const fieldElement = document.getElementById(field);
+                if (fieldElement.type === 'checkbox') {
+                    fieldElement.checked = item.querySelector(`.${field}`).checked;
+                } else {
+                    fieldElement.value = item.querySelector(`.${field}`).value;
+                }
+            });
+        } else {
+            itemFields.forEach(field => {
+                const fieldElement = document.getElementById(field);
+                if (fieldElement.type === 'checkbox') {
+                    fieldElement.checked = false;
+                } else {
+                    fieldElement.value = '';
+                }
+            });
+        }
     }
-}
+});
 
 // 關閉新增項次的彈跳框
 function closeItemModal() {
@@ -518,6 +517,15 @@ function saveItem() {
         ST_QTY: document.getElementById('ST_QTY').value,
         ST_UM: document.getElementById('ST_UM').value,
     });
+    // 判斷輸入域目前是展開全部品名還是折疊全部品名
+    const textareas = item.querySelectorAll('.DESCRIPTION');
+    textareas.forEach(textarea => {
+        textarea.rows = allExpanded ? 5 : 1; // 根據 allExpanded 狀態設置行數
+    });
+
+    // 應用顯示的欄位
+    applyToggleFieldsToRow(item);
+
     itemContainer.appendChild(item);
 
     closeItemModal();
@@ -534,6 +542,29 @@ function saveItem() {
     }
 
     calculateAmountsForRow(item, decimalPlaces);
+}
+
+// 函數：應用顯示的欄位到新項次
+function applyToggleFieldsToRow(row) {
+    const selectedOptions = Array.from(document.getElementById('field-select').selectedOptions).map(option => option.value);
+    const allFields = [
+        'ORG_COUNTRY', 'ORG_IMP_DCL_NO', 
+        'ORG_IMP_DCL_NO_ITEM', 'SELLER_ITEM_CODE', 'BOND_NOTE', 'GOODS_MODEL', 'GOODS_SPEC', 
+        'CERT_NO', 'CERT_NO_ITEM', 'ORG_DCL_NO', 'ORG_DCL_NO_ITEM', 'EXP_NO', 'EXP_SEQ_NO', 
+        'WIDE', 'WIDE_UM', 'LENGT_', 'LENGTH_UM', 'ST_QTY', 'ST_UM'
+    ];
+
+    allFields.forEach(field => {
+        const fieldElement = row.querySelector(`.${field}`);
+        const formGroup = fieldElement.closest('.form-group');
+        if (formGroup) {
+            if (selectedOptions.includes(field)) {
+                formGroup.classList.remove('hidden');
+            } else {
+                formGroup.classList.add('hidden');
+            }
+        }
+    });
 }
 
 // 計算單行金額的函數
