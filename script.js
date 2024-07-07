@@ -372,14 +372,31 @@ function openItemModal() {
     document.getElementById('QTY').addEventListener('keydown', preventArrowKeyAdjustment);
     document.getElementById('DOC_UNIT_P').addEventListener('keydown', preventArrowKeyAdjustment);
     document.getElementById('NET_WT').addEventListener('keydown', preventArrowKeyAdjustment);
+    document.getElementById('ORG_IMP_DCL_NO_ITEM').addEventListener('keydown', preventArrowKeyAdjustment);
+    document.getElementById('CERT_NO_ITEM').addEventListener('keydown', preventArrowKeyAdjustment);
+    document.getElementById('ORG_DCL_NO_ITEM').addEventListener('keydown', preventArrowKeyAdjustment);
+    document.getElementById('EXP_SEQ_NO').addEventListener('keydown', preventArrowKeyAdjustment);
+    document.getElementById('WIDE').addEventListener('keydown', preventArrowKeyAdjustment);
+    document.getElementById('LENGT_').addEventListener('keydown', preventArrowKeyAdjustment);
+    document.getElementById('ST_QTY').addEventListener('keydown', preventArrowKeyAdjustment);
     
     // 監聽 ESC 鍵，表示取消
     document.addEventListener('keydown', handleEscKeyForCancel);
+
+    // 監聽 Alt+S 鍵，表示儲存
+    document.addEventListener('keydown', handleAltSForSave);
 }
 
 function handleEscKeyForCancel(event) {
     if (event.key === 'Escape') {
         closeItemModal();
+    }
+}
+
+function handleAltSForSave(event) {
+    if (event.altKey && (event.key === 's' || event.key === 'S')) {
+        event.preventDefault(); // 防止其他預設行為
+        saveItem();
     }
 }
 
@@ -447,7 +464,13 @@ function copyItem() {
 
 // 關閉新增項次的彈跳框
 function closeItemModal() {
-    document.getElementById('item-modal').style.display = 'none';
+    // 隱藏彈跳框
+    const itemModal = document.getElementById('item-modal');
+    itemModal.style.display = 'none';
+
+    // 移除事件監聽器
+    document.removeEventListener('keydown', handleEscKeyForCancel);
+    document.removeEventListener('keydown', handleAltSForSave);
 }
 
 // 儲存新增的項次
