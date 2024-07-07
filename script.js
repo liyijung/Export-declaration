@@ -393,12 +393,26 @@ function handleEscKeyForCancel(event) {
     }
 }
 
+// 監聽 Alt+a 鍵，表示開啟新增項次的彈跳框
+function handleAltAForOpen(event) {
+    if (event.altKey && (event.key === 'a' || event.key === 'A')) {
+        event.preventDefault(); // 防止其他預設行為
+        openItemModal();
+    }
+}
+
+// 監聽 Alt+s 鍵，表示儲存新增項次
 function handleAltSForSave(event) {
     if (event.altKey && (event.key === 's' || event.key === 'S')) {
         event.preventDefault(); // 防止其他預設行為
         saveItem();
     }
 }
+
+// 監聽全局的鍵盤事件
+document.addEventListener('keydown', handleAltAForOpen);
+document.addEventListener('keydown', handleEscKeyForCancel);
+document.addEventListener('keydown', handleAltSForSave);
 
 // 計算彈跳框中的金額
 function calculateModalAmount() {
