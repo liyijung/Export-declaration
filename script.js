@@ -1920,6 +1920,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
                 xmlContent += `    <fields>\n      <field_name>${className}</field_name>\n      <field_value>${value}</field_value>\n    </fields>\n`;
             });
+
+            // 固定設置 PER_ST 的值為 1
+            xmlContent += `    <fields>\n      <field_name>PER_ST</field_name>\n      <field_value>1</field_value>\n    </fields>\n`;
+            
             xmlContent += '  </items>\n';
         });
         xmlContent += '</detail>\n</Root>';
