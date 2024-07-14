@@ -2090,11 +2090,24 @@ async function exportToPDF() {
         const barcodeImgData = barcodeCanvas.toDataURL('image/png');
         doc.addImage(barcodeImgData, 'PNG', 118, 12, 20, 10); // 調整位置和大小
 
+        // 獲取今天的日期
+        var today = new Date();
+        var day = String(today.getDate()).padStart(2, '0');
+        var month = String(today.getMonth() + 1).padStart(2, '0'); // 因為 getMonth() 返回的月份是從 0 開始的
+        var year = today.getFullYear();
+
+        // 報單號碼格式
+        var yearPart = year - 2011;
+        var OrderNumber = 'CX/  /' + yearPart + '/696/';
+
+        // 報關日期為 "YYY/MM/DD"
+        var CustomsDeclarationDate = year - 1911 + '/' + month + '/' + day;
+        
         // 設置表頭欄位與位置
         const headerData = [
             { value: `空運`, x: 75, y: 10 },
-            { value: `CX/  /13/696/`, x: 75, y: 18.5 },
-            { value: `113/07/`, x: 62, y: 35 },
+            { value: OrderNumber, x: 75, y: 18.5 },
+            { value: CustomsDeclarationDate, x: 62, y: 35 }, // 將日期設置為當天日期
             { value: `TWTPE`, x: 30, y: 40.5 },
             { value: `TAOYUAN`, x: 24, y: 44 },
             { value: `AIRPORT`, x: 24, y: 48 },
