@@ -2102,6 +2102,11 @@ async function exportToPDF() {
 
         // 報關日期為 "YYY/MM/DD"
         var CustomsDeclarationDate = year - 1911 + '/' + month + '/' + day;
+
+        // 拆分 TO_DESC 為多行，每行最多寬度40
+        const toDescElement = document.getElementById('TO_DESC');
+        const toDescText = toDescElement.value;
+        const toDescLines = doc.splitTextToSize(toDescText, 40)
         
         // 設置表頭欄位與位置
         const headerData = [
@@ -2130,7 +2135,7 @@ async function exportToPDF() {
             { value: formattedAddAmt !== 'NIL' ? currency : '', x: 171, y: 49 },
             { value: formattedSubtractAmt !== 'NIL' ? currency : '', x: 171, y: 54 },
             { value: document.getElementById('TO_CODE').value, x: 69.5, y: 40.5 },
-            { value: document.getElementById('TO_DESC').value, x: 61, y: 45 },
+            { value: toDescLines.join('\n'), x: 61, y: 44 },
             { value: document.getElementById('SHPR_BAN_ID').value, x: 30, y: 60 },
             { value: document.getElementById('SHPR_BONDED_ID').value, x: 94, y: 60 },
             { value: document.getElementById('SHPR_C_NAME').value, x: 30, y: 66.5 },
