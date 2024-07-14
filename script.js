@@ -2231,7 +2231,7 @@ async function exportToPDF() {
 
         // 添加項次資料到 PDF
         let startY = 130;  // 設置初始的 Y 坐標
-        const maxYHome = 195;  // 首頁的頁面底部的 Y 坐標
+        const maxYHome = 190;  // 首頁的頁面底部的 Y 坐標
         const maxYContinuation = 280;  // 續頁的頁面底部的 Y 坐標
         const lineHeight = 4;  // 每行的高度
         const tradeMarkLineSpacing = 4; // 商標換行時的間距
