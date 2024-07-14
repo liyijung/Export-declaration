@@ -2040,7 +2040,8 @@ async function exportToPDF() {
         // 獲取報單類別的值和文本
         const dclDocTypeElement = document.getElementById('DCL_DOC_TYPE');
         const dclDocTypeValue = dclDocTypeElement.value;
-        const dclDocTypeText = dclDocTypeElement.list.querySelector(`option[value="${dclDocTypeValue}"]`).text;
+        const optionElement = dclDocTypeElement.list.querySelector(`option[value="${dclDocTypeValue}"]`);
+        const dclDocTypeText = optionElement ? optionElement.text : '';
 
         // 獲取並格式化數字值
         const calIpTotItemAmt = formatNumberValue('CAL_IP_TOT_ITEM_AMT');
