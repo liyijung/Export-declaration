@@ -1391,7 +1391,7 @@ function createInputField(name, value, isVisible) {
                 ${inputField}
             </div>
         `;
-    } else if (['QTY', 'DOC_UNIT_P'].includes(name)) {
+    } else if (['QTY', 'DOC_UNIT_P', 'ST_QTY'].includes(name)) {
         return `
             <div class="form-group ${visibilityClass}" style="width: 60%;">
                 ${inputField}
