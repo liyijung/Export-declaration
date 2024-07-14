@@ -82,7 +82,7 @@ function fillForm(record) {
         document.getElementById('SHPR_E_ADDR').value = record['英文營業地址'] || '';
     } else {
         console.log('Record not found');
-        alert('未找到匹配的資料\n（未向貿易署辦理登記出進口廠商者，若輸出貨品之離岸價格（FOB）超過美金2萬元，應向貿易署申請輸出許可證）');
+        alert('未找到匹配的資料\n（未向貿易署辦理登記出進口廠商者，若輸出貨品之離岸價格超過美金2萬元，應向貿易署申請輸出許可證）');
     }
 }
 
