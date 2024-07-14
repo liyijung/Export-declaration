@@ -2054,6 +2054,23 @@ async function exportToPDF() {
             return value ? parseFloat(value).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',') : 'NIL';
         }
 
+        // 獲取匯率數據
+        const exchangeRates = await fetchExchangeRates();
+        if (!exchangeRates) {
+            throw new Error('無法獲取匯率數據');
+        }
+
+        // 獲取 CURRENCY 的值並查找對應的匯率
+        const currency = document.getElementById('CURRENCY').value;
+        const exchangeRateItem = exchangeRates.items.find(item => item.code === currency);
+        const exchangeRate = exchangeRateItem ? exchangeRateItem.buyValue : 'NIL';
+
+        // 檢查數值是否為 NIL
+        const formattedFrtAmt = frtAmt !== 'NIL' ? frtAmt : 'NIL';
+        const formattedInsAmt = insAmt !== 'NIL' ? insAmt : 'NIL';
+        const formattedAddAmt = addAmt !== 'NIL' ? addAmt : 'NIL';
+        const formattedSubtractAmt = subtractAmt !== 'NIL' ? subtractAmt : 'NIL';
+
         // 計算右對齊的 x 位置，考慮到文本內容的寬度
         const calculateRightAlignedX = (value, minWidth, maxWidth) => {
             const textWidth = doc.getTextWidth(value);
@@ -2089,14 +2106,16 @@ async function exportToPDF() {
             { value: `00718`, x: 188, y: 276 },
             { value: `C2051 遠雄第四快遞貨棧`, x: 30, y: 53.5 },
             { value: `${dclDocTypeValue}${dclDocTypeText}`, x: 103, y: 10 },
-            { value: document.getElementById('CURRENCY').value, x: 171, y: 29 },
-            { value: document.getElementById('CURRENCY').value, x: 171, y: 36 },
-            { value: document.getElementById('CURRENCY').value, x: 171, y: 43 },
+            { value: currency, x: 171, y: 29 },
             { value: calIpTotItemAmt, x: calculateRightAlignedX(calIpTotItemAmt, 0, 210), y: 29 },
-            { value: frtAmt, x: calculateRightAlignedX(frtAmt, 0, 210), y: 36 },
-            { value: insAmt, x: calculateRightAlignedX(insAmt, 0, 210), y: 43 },
-            { value: addAmt, x: calculateRightAlignedX(addAmt, 0, 210), y: 49 },
-            { value: subtractAmt, x: calculateRightAlignedX(subtractAmt, 0, 210), y: 54 },
+            { value: formattedFrtAmt, x: calculateRightAlignedX(formattedFrtAmt, 0, 210), y: 36 },
+            { value: formattedInsAmt, x: calculateRightAlignedX(formattedInsAmt, 0, 210), y: 43 },
+            { value: formattedAddAmt, x: calculateRightAlignedX(formattedAddAmt, 0, 210), y: 49 },
+            { value: formattedSubtractAmt, x: calculateRightAlignedX(formattedSubtractAmt, 0, 210), y: 54 },
+            { value: formattedFrtAmt !== 'NIL' ? currency : '', x: 171, y: 36 },
+            { value: formattedInsAmt !== 'NIL' ? currency : '', x: 171, y: 43 },
+            { value: formattedAddAmt !== 'NIL' ? currency : '', x: 171, y: 49 },
+            { value: formattedSubtractAmt !== 'NIL' ? currency : '', x: 171, y: 54 },
             { value: document.getElementById('TO_CODE').value, x: 69.5, y: 40.5 },
             { value: document.getElementById('TO_DESC').value, x: 61, y: 45 },
             { value: document.getElementById('SHPR_BAN_ID').value, x: 30, y: 60 },
@@ -2115,6 +2134,7 @@ async function exportToPDF() {
             { value: document.getElementById('DCL_GW').value, x: 190, y: 201.5 },
             { value: document.getElementById('DOC_MARKS_DESC').value, x: 8, y: 211 },
             { value: document.getElementById('DOC_OTR_DESC').value, x: 7, y: 260 },
+            { value: exchangeRate, x: 192, y: 100.5 } // 添加匯率
         ];
 
         // 設置表頭字體大小並添加文本
@@ -2198,7 +2218,7 @@ async function exportToPDF() {
 
         // 添加項次資料到 PDF
         let startY = 130;  // 設置初始的 Y 坐標
-        const maxYHome = 185;  // 首頁的頁面底部的 Y 坐標
+        const maxYHome = 200;  // 首頁的頁面底部的 Y 坐標
         const maxYContinuation = 280;  // 續頁的頁面底部的 Y 坐標
         const lineHeight = 4;  // 每行的高度
         const tradeMarkLineSpacing = 4; // 商標換行時的間距
@@ -2377,34 +2397,31 @@ async function exportToPDF() {
             lastY = startY; // 更新最後一個項次的位置
         }
 
-        // 添加底部固定欄位
-        const footerData = [
-            { value: document.getElementById('FILE_NO').value, x: 10, y: 290 },
-            { value: document.getElementById('LOT_NO').value, x: 35, y: 290 }
-        ];
-
-        footerData.forEach(row => {
-            doc.text(row.value, row.x, row.y);
-        });
-
-        // 確保最後一頁
-        if (doc.internal.getCurrentPageInfo().pageNumber < totalPages) {
-            doc.addPage();
-            await renderTemplate(doc, templateContinuation, 1); // 渲染最後一頁模板
-            const currentPage = doc.internal.getCurrentPageInfo().pageNumber;
-            addPageNumber(doc, currentPage, totalPages); // 添加頁碼
-        }
-
-        // 在最後一頁的最後一行往下10單位的位置顯示加總，靠右對齊距離右邊38px
+        // 在最後一頁的最後一行位置顯示加總，靠右對齊距離右邊38px
         const pageWidth = doc.internal.pageSize.getWidth();
         const marginRight = 38;
-        let yPosition = lastY + 10;
+        let yPosition = lastY;
+
+        // 檢查加總部分是否會超過首頁的頁面底部的 Y 坐標
+        const currentPage = doc.internal.getCurrentPageInfo().pageNumber;
+        if (currentPage === 1 && yPosition > maxYHome) {
+            doc.addPage();
+            await renderTemplate(doc, templateContinuation, 1);
+            yPosition = 63; // 續頁的起始 Y 坐標
+        } else if (yPosition > maxYContinuation) {
+            doc.addPage();
+            await renderTemplate(doc, templateContinuation, 1);
+            yPosition = 63; // 續頁的起始 Y 坐標
+        }
+
+        // 添加分隔線
+        const separator = '- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -';
+        const separatorWidth = doc.getTextWidth(separator);
+        doc.text(separator, pageWidth - separatorWidth - 6, yPosition);
 
         const totalData = [
             { label: '', value: totalNetWt > 0 ? totalNetWt.toFixed(2) + ' KGM' : '', y: yPosition },
         ];
-
-        yPosition += 5;
 
         Object.entries(totalQtyMap).forEach(([unit, qty], index) => {
             if (qty > 0) {
@@ -2413,7 +2430,7 @@ async function exportToPDF() {
                     value: qty.toFixed(2) + ' ' + unit,
                     y: yPosition
                 });
-                yPosition += 5;
+                yPosition += 4;
             }
         });
 
@@ -2424,7 +2441,7 @@ async function exportToPDF() {
                     value: `(${qty.toFixed(2)} ${unit})`,
                     y: yPosition
                 });
-                yPosition += 5;
+                yPosition += 4;
             }
         });
 
@@ -2434,14 +2451,16 @@ async function exportToPDF() {
                 value: totalAmt.toFixed(2),
                 y: yPosition
             });
-            yPosition += 5;
+            yPosition += 4;
         }
 
+        // 更新 yPosition 為新頁面的起始座標
         totalData.forEach(row => {
             if (row.value) {
                 const text = row.label + row.value;
                 const textWidth = doc.getTextWidth(text);
-                doc.text(text, pageWidth - textWidth - marginRight, row.y);
+                doc.text(text, pageWidth - textWidth - marginRight, yPosition);
+                yPosition += 4;
             }
         });
 
@@ -2450,7 +2469,6 @@ async function exportToPDF() {
         const vvvText = 'VVVVVVVVVVVVVVVVVVVVV';
         const vvvTextWidth = doc.getTextWidth(vvvText);
         doc.text(vvvText, pageWidth - vvvTextWidth - marginRight, vvvY);
-
 
         // 保存 PDF，文件名為 FILE_NO 的值
         const fileName = document.getElementById('FILE_NO').value || 'export';
