@@ -1921,6 +1921,10 @@ document.addEventListener('DOMContentLoaded', function () {
                     if (className === 'CCC_CODE') {
                         value = value.replace(/[.\- ]/g, '');
                     }
+                    // 檢查 CCC_CODE 是否為 11 碼數字並重新分配符號
+                    if (className === 'CCC_CODE' && /^\d{11}$/.test(value)) {
+                        value = `${value.slice(0, 4)}.${value.slice(4, 6)}.${value.slice(6, 8)}.${value.slice(8, 10)}-${value.slice(10)}`;
+                    }
                 }
                 xmlContent += `    <fields>\n      <field_name>${className}</field_name>\n      <field_value>${value}</field_value>\n    </fields>\n`;
             });
