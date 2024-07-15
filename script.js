@@ -1917,6 +1917,10 @@ document.addEventListener('DOMContentLoaded', function () {
                     if (className === 'DOC_UM' && value === 'PCS') {
                         value = 'PCE';
                     }
+                    // 去除 CCC_CODE 的值中的符號 '.' 、 '-' 和空格
+                    if (className === 'CCC_CODE') {
+                        value = value.replace(/[.\- ]/g, '');
+                    }
                 }
                 xmlContent += `    <fields>\n      <field_name>${className}</field_name>\n      <field_value>${value}</field_value>\n    </fields>\n`;
             });
