@@ -1,119 +1,119 @@
 {
-	"start":"20240711",
-	"end":"20240720",
+	"start":"20240721",
+	"end":"20240731",
 	"items":[
 		{
 			"code":"ARS",
-			"buyValue":"0.03547",
-			"sellValue":"0.03558"
+			"buyValue":"0.03535",
+			"sellValue":"0.03546"
 		},{
 			"code":"AUD",
-			"buyValue":"21.76",
-			"sellValue":"21.96"
+			"buyValue":"21.98",
+			"sellValue":"22.18"
 		},{
 			"code":"BRL",
-			"buyValue":"5.83509",
-			"sellValue":"5.85308"
+			"buyValue":"5.98822",
+			"sellValue":"6.00663"
 		},{
 			"code":"CAD",
 			"buyValue":"23.77",
 			"sellValue":"23.97"
 		},{
 			"code":"CHF",
-			"buyValue":"36.02",
-			"sellValue":"36.27"
+			"buyValue":"36.27",
+			"sellValue":"36.52"
 		},{
 			"code":"CLP",
-			"buyValue":"0.03437",
-			"sellValue":"0.03448"
+			"buyValue":"0.03578",
+			"sellValue":"0.03589"
 		},{
 			"code":"CNY",
-			"buyValue":"4.432",
-			"sellValue":"4.482"
+			"buyValue":"4.452",
+			"sellValue":"4.502"
 		},{
 			"code":"DKK",
-			"buyValue":"4.6866",
-			"sellValue":"4.7011"
+			"buyValue":"4.7541",
+			"sellValue":"4.7687"
 		},{
 			"code":"EUR",
-			"buyValue":"34.96",
-			"sellValue":"35.36"
+			"buyValue":"35.3",
+			"sellValue":"35.7"
 		},{
 			"code":"GBP",
-			"buyValue":"41.31",
-			"sellValue":"41.71"
+			"buyValue":"42.11",
+			"sellValue":"42.51"
 		},{
 			"code":"HKD",
-			"buyValue":"4.127",
-			"sellValue":"4.187"
+			"buyValue":"4.142",
+			"sellValue":"4.202"
 		},{
 			"code":"IDR",
-			"buyValue":"0.00198",
-			"sellValue":"0.00199"
+			"buyValue":"0.00202",
+			"sellValue":"0.00202"
 		},{
 			"code":"ILS",
-			"buyValue":"8.61016",
-			"sellValue":"8.63671"
+			"buyValue":"9.00346",
+			"sellValue":"9.03114"
 		},{
 			"code":"INR",
-			"buyValue":"0.38827",
-			"sellValue":"0.38947"
+			"buyValue":"0.38946",
+			"sellValue":"0.39065"
 		},{
 			"code":"JPY",
-			"buyValue":"0.2001",
-			"sellValue":"0.2041"
+			"buyValue":"0.2043",
+			"sellValue":"0.2083"
 		},{
 			"code":"KRW",
-			"buyValue":"0.02336",
-			"sellValue":"0.02343"
+			"buyValue":"0.02363",
+			"sellValue":"0.0237"
 		},{
 			"code":"MYR",
-			"buyValue":"6.8799",
-			"sellValue":"6.9011"
+			"buyValue":"6.932",
+			"sellValue":"6.9533"
 		},{
 			"code":"NOK",
-			"buyValue":"3.0691",
-			"sellValue":"3.0786"
+			"buyValue":"3.0336",
+			"sellValue":"3.0429"
 		},{
 			"code":"NZD",
-			"buyValue":"19.77",
-			"sellValue":"19.97"
+			"buyValue":"19.75",
+			"sellValue":"19.95"
 		},{
 			"code":"PEN",
-			"buyValue":"8.49267",
-			"sellValue":"8.51886"
+			"buyValue":"8.65257",
+			"sellValue":"8.67917"
 		},{
 			"code":"PHP",
-			"buyValue":"0.5529",
-			"sellValue":"0.5546"
+			"buyValue":"0.557",
+			"sellValue":"0.5587"
 		},{
 			"code":"PLN",
-			"buyValue":"8.12657",
-			"sellValue":"8.15163"
+			"buyValue":"8.33974",
+			"sellValue":"8.36538"
 		},{
 			"code":"SEK",
-			"buyValue":"3.05",
-			"sellValue":"3.15"
+			"buyValue":"3.04",
+			"sellValue":"3.14"
 		},{
 			"code":"SGD",
-			"buyValue":"23.97",
-			"sellValue":"24.15"
+			"buyValue":"24.18",
+			"sellValue":"24.36"
 		},{
 			"code":"THB",
-			"buyValue":"0.873",
-			"sellValue":"0.913"
+			"buyValue":"0.8834",
+			"sellValue":"0.9234"
 		},{
 			"code":"TWD",
 			"buyValue":"1",
 			"sellValue":"1"
 		},{
 			"code":"USD",
-			"buyValue":"32.425",
-			"sellValue":"32.525"
+			"buyValue":"32.525",
+			"sellValue":"32.625"
 		},{
 			"code":"ZAR",
-			"buyValue":"1.745",
-			"sellValue":"1.825"
+			"buyValue":"1.761",
+			"sellValue":"1.841"
 		}
 	]
 }
