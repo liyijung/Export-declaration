@@ -395,7 +395,7 @@
         <p style="margin-top: 10px;"></p>        
         <div id="item-container"></div>
     </div>
-    
+
     <!-- 新增項次彈跳框 -->
     <div id="item-modal" class="modal">
         <div class="modal-content">
@@ -442,13 +442,6 @@
                 <label for="CCC_CODE">稅則</label>
                 <input type="text" id="CCC_CODE" class="CCC_CODE" 
                     placeholder="範例：8542.31.00.00-2 或 85423100002(共11碼)">
-            </div>
-            <!-- 稅則查詢彈跳框 -->
-            <div id="taxmodal" class="taxmodal">
-                <div class="taxmodal-content">
-                    <span class="close">&times;</span>
-                    <div id="modal-results"></div>
-                </div>
             </div>
             <div class="header-group">
                 <label for="ST_MTD">統計方式</label>
@@ -561,6 +554,14 @@
                 <button onclick="saveItem()">儲存</button>
                 <button onclick="closeItemModal()">取消</button>
             </div>
+        </div>
+    </div>
+
+    <!-- 稅則查詢彈跳框 -->
+    <div id="taxmodal" class="taxmodal">
+        <div class="taxmodal-content">
+            <span class="close">&times;</span>
+            <div id="modal-results"></div>
         </div>
     </div>
 
