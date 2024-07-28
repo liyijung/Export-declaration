@@ -2540,16 +2540,15 @@ function searchTariff(inputElement, isModal = false) {
     const results = window.taxData.filter(item => {
         const cleanedItemCode = item['貨品分類號列'].toString().toLowerCase().replace(/[.\-]/g, '');
         return cleanedItemCode.startsWith(keyword) ||
-            (item['中文貨名'] && item['中文貨名'].toLowerCase().startsWith(keyword)) ||
-            (item['英文貨名'] && item['英文貨名'].toLowerCase().startsWith(keyword)) ||
-            (item['統計數量單位'] && item['統計數量單位'].toLowerCase().startsWith(keyword)) ||
-            (item['稽徵規定'] && item['稽徵規定'].toLowerCase().startsWith(keyword)) ||
-            (item['輸入規定'] && item['輸入規定'].toLowerCase().startsWith(keyword)) ||
-            (item['輸出規定'] && item['輸出規定'].toLowerCase().startsWith(keyword));
+            (item['中文貨名'] && item['中文貨名'].toLowerCase().includes(keyword)) ||
+            (item['英文貨名'] && item['英文貨名'].toLowerCase().includes(keyword)) ||
+            (item['統計數量單位'] && item['統計數量單位'].toLowerCase().includes(keyword)) ||
+            (item['稽徵規定'] && item['稽徵規定'].toLowerCase().includes(keyword)) ||
+            (item['輸入規定'] && item['輸入規定'].toLowerCase().includes(keyword)) ||
+            (item['輸出規定'] && item['輸出規定'].toLowerCase().includes(keyword));
     });
 
     if (results.length > 0) {
-
         const table = document.createElement('table');
         const thead = document.createElement('thead');
         const tbody = document.createElement('tbody');
@@ -2633,13 +2632,13 @@ window.addEventListener('click', function(event) {
 
 function initializeCCCCodeInputs() {
     const inputs = document.querySelectorAll('.CCC_CODE, .tax-code-input');
-    inputs.forEach(input => {
-        input.addEventListener('keydown', function(event) {
-            if (event.key === 'Enter') {
-                event.preventDefault(); // 防止表單提交等默認行為
-                openTaxModal(input);
-                searchTariff(input, true);
-            }
+    const buttons = document.querySelectorAll('.search-button');
+    
+    buttons.forEach(button => {
+        button.addEventListener('click', function() {
+            const input = button.previousElementSibling;
+            openTaxModal(input);
+            searchTariff(input, true);
         });
     });
 }
