@@ -1,11 +1,13 @@
 // 讀取稅則數據
-fetch('./tax_data.json')
-    .then(response => response.json())
-    .then(data => {
-        console.log("Tax data loaded successfully:", data); // 調試代碼
-        window.taxData = data;
-    })
-    .catch(error => console.error('Error loading tax data:', error));
+function loadTaxData() {
+    fetch('./tax_data.json')
+        .then(response => response.json())
+        .then(data => {
+            console.log("Tax data loaded successfully:", data); // 調試代碼
+            window.taxData = data;
+        })
+        .catch(error => console.error('Error loading tax data:', error));
+}
 
 function searchTariff(inputElement, isModal = false) {
     let keyword = inputElement.value.toLowerCase();
