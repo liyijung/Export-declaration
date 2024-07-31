@@ -171,13 +171,13 @@
             <div class="header-group">
                 <label for="FRT_AMT">運費</label>
                 <input type="number" id="FRT_AMT" name="FRT_AMT"
-                placeholder="(CFR、CIF 需填列運費)" onkeydown="preventArrowKeyAdjustment(event)">
+                placeholder="(CFR、CIF 需填列運費，EXW 不得填列運費)" onkeydown="preventArrowKeyAdjustment(event)">
                 <button id="calculate-freight-button">計算運費</button>
             </div>   
             <div class="header-group">
                 <label for="INS_AMT">保險費</label>
                 <input type="number" id="INS_AMT" name="INS_AMT"
-                placeholder="(C&I、CIF 需填列保險費)" onkeydown="preventArrowKeyAdjustment(event)">
+                placeholder="(C&I、CIF 需填列保險費，EXW 不得填列保險費)" onkeydown="preventArrowKeyAdjustment(event)">
                 <button id="calculate-insurance-button">計算保險費</button>
             </div>
             <div class="header-group">
@@ -188,7 +188,8 @@
             </div>
             <div class="header-group">
                 <label for="SUBTRACT_AMT">應減費用</label>
-                <input type="number" id="SUBTRACT_AMT" name="SUBTRACT_AMT" onkeydown="preventArrowKeyAdjustment(event)">
+                <input type="number" id="SUBTRACT_AMT" name="SUBTRACT_AMT" 
+                placeholder="(EXW 不得填列應減費用)" onkeydown="preventArrowKeyAdjustment(event)">
             </div>
         </div>
         <hr>
