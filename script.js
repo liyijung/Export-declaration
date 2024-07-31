@@ -1372,10 +1372,10 @@ function createInputField(name, value, isVisible) {
     const onInputAttribute = numberFields.includes(name) ? 'oninput="calculateAmount(event); validateNumberInput(event)"' : '';
     const minAttribute = numberFields.includes(name) ? 'min="0"' : '';
     const readonlyAttribute = (name === 'DOC_TOT_P') ? 'readonly' : '';
-    const onKeyDownAttribute = (name === 'CCC_CODE') ? 'onkeydown="handleCCCCodeEnter(event, this)"' : 'onkeydown="handleArrowKeyNavigation(event)"';
+    const onKeyDownAttribute = 'onkeydown="handleInputKeyDown(event, this)"';
     const escapedValue = value ? escapeXml(value) : ''; // 確保只有在必要時才轉義值
 
-    const inputField = `<input type="${inputType}" class="${name}" value="${escapedValue}" ${onInputAttribute} ${minAttribute} ${readonlyAttribute} ${onKeyDownAttribute} style="flex: 1; margin-right: 0;">`;
+    const inputField = `<input type="${inputType}" class="${name} ${name === 'CCC_CODE' ? 'CCC_CODE' : 'tax-code-input'}" value="${escapedValue}" ${onInputAttribute} ${minAttribute} ${readonlyAttribute} ${onKeyDownAttribute} style="flex: 1; margin-right: 0;">`;
 
     if (name === 'NET_WT') {
         return `
@@ -1425,6 +1425,16 @@ function validateNumberInput(event) {
     const numberValue = value.replace(/[^0-9.]/g, ''); // 移除非數字字符（允許小數點）
     if (value !== numberValue) {
         input.value = numberValue;
+    }
+}
+
+// 處理所有輸入框的鍵盤事件
+function handleInputKeyDown(event, inputElement) {
+    if (event.key === 'Enter' && inputElement.classList.contains('CCC_CODE')) {
+        handleCCCCodeEnter(event, inputElement);
+    }
+    if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+        handleArrowKeyNavigation(event);
     }
 }
 
@@ -2640,14 +2650,11 @@ window.addEventListener('click', function(event) {
     }
 });
 
+// 初始化 CCC_CODE 輸入框
 function initializeCCCCodeInputs() {
     const inputs = document.querySelectorAll('.CCC_CODE, .tax-code-input');
     inputs.forEach(input => {
-        input.addEventListener('keydown', function(event) {
-            if (event.key === 'Enter') {
-                handleCCCCodeEnter(event, input);
-            }
-        });
+        input.addEventListener('keydown', handleInputKeyDown);
     });
 }
 
