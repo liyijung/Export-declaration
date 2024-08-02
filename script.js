@@ -1410,6 +1410,12 @@ function createInputField(name, value, isVisible) {
                 ${inputField}
             </div>
         `;
+    } else if (['CCC_CODE'].includes(name)) {
+        return `
+            <div class="form-group ${visibilityClass}" style="width: 120%;">
+                ${inputField}
+            </div>
+        `;
     } else {
         return `
             <div class="form-group ${visibilityClass}">
