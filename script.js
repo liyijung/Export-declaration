@@ -1288,7 +1288,7 @@ function createTextareaField(name, value) {
     const id = `textarea-${name}-${textareaCounter++}`;
     return `
         <div class="form-group declaration-item" style="width: 200%;">
-            <textarea id="${id}" class="${name}" rows="1" onkeydown="handleTextareaArrowKeyNavigation(event)">${value || ''}</textarea>
+            <textarea id="${id}" class="${name}" rows="1" onkeydown="handleTextareaArrowKeyNavigation(event)" onfocus="highlightRow(this)" onblur="removeHighlight(this)">${value || ''}</textarea>
         </div>
     `;
 }
@@ -1372,10 +1372,12 @@ function createInputField(name, value, isVisible) {
     const onInputAttribute = numberFields.includes(name) ? 'oninput="calculateAmount(event); validateNumberInput(event)"' : '';
     const minAttribute = numberFields.includes(name) ? 'min="0"' : '';
     const readonlyAttribute = (name === 'DOC_TOT_P') ? 'readonly' : '';
+    const onFocusAttribute = 'onfocus="highlightRow(this)"';
+    const onBlurAttribute = 'onblur="removeHighlight(this)"';
     const onKeyDownAttribute = 'onkeydown="handleInputKeyDown(event, this)"';
     const escapedValue = value ? escapeXml(value) : ''; // 確保只有在必要時才轉義值
 
-    const inputField = `<input type="${inputType}" class="${name} ${name === 'CCC_CODE' ? 'CCC_CODE' : 'tax-code-input'}" value="${escapedValue}" ${onInputAttribute} ${minAttribute} ${readonlyAttribute} ${onKeyDownAttribute} style="flex: 1; margin-right: 0;">`;
+    const inputField = `<input type="${inputType}" class="${name} ${name === 'CCC_CODE' ? 'CCC_CODE' : 'tax-code-input'}" value="${escapedValue}" ${onInputAttribute} ${minAttribute} ${readonlyAttribute} ${onFocusAttribute} ${onBlurAttribute} ${onKeyDownAttribute} style="flex: 1; margin-right: 0;">`;
 
     if (name === 'NET_WT') {
         return `
@@ -1422,6 +1424,20 @@ function createInputField(name, value, isVisible) {
                 ${inputField}
             </div>
         `;
+    }
+}
+
+function highlightRow(element) {
+    const row = element.closest('.item-row');
+    if (row) {
+        row.classList.add('highlight-row');
+    }
+}
+
+function removeHighlight(element) {
+    const row = element.closest('.item-row');
+    if (row) {
+        row.classList.remove('highlight-row');
     }
 }
 
