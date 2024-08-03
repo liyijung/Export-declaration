@@ -483,7 +483,8 @@ th, td {
     background-color: #dde9fc; /* 淡藍色 */
 }
 
-.fixed-width {
+/* 只應用於出口報單項次的標籤頁內容 */
+#items.fixed-width {
     width: 1700px; /* 固定頁面的寬度 */
     margin: 0 auto;
 }
