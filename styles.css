@@ -511,5 +511,5 @@ th, td {
 
 /* 選中狀態的項次左側編號變色 */
 .item-no.selected {
-    background-color: #ffeb3b; /* 例如，設置為黃色 */
+    background-color: #ffeb3b; /* 設置為黃色 */
 }
