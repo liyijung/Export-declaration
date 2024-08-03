@@ -88,6 +88,11 @@ function toggleFixTop() {
     }
 }
 
+// 切換選中狀態-項次左側編號
+function toggleSelect(element) {
+    element.classList.toggle('selected');
+}
+
 // 輸入統一編號以查找資料
 let csvFiles = [
     'companyData1.csv',
@@ -1260,7 +1265,7 @@ function createItemRow(data) {
     row.className = 'item-row';
     const isChecked = data.ITEM_NO === '*'; // 根據 ITEM_NO 判斷是否勾選
     row.innerHTML = `
-        <div class="form-group fix">
+         <div class="form-group fix item-no" onclick="toggleSelect(this)">
             <label>${itemCount + 1}</label>
         </div>
         <div class="form-group fix">
