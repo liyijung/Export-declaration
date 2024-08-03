@@ -307,6 +307,9 @@ textarea {
 
 .flex-group input[type="checkbox"] {
     margin-right: 5px;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
 }
 
 .flex-group label {
@@ -397,6 +400,9 @@ textarea:focus {
 
 .net-wt-container input[type="checkbox"] {
     margin-left: 5px; /* 可調整間距 */
+    justify-content: center;
+    align-items: center;
+    text-align: center;
 }
 
 .actions {
