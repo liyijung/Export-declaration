@@ -484,7 +484,7 @@ th, td {
 }
 
 .fixed-width {
-    width: 2000px; /* 固定頁面的寬度 */
+    width: 1700px; /* 固定頁面的寬度 */
     margin: 0 auto;
 }
 
