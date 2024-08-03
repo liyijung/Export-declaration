@@ -482,3 +482,8 @@ th, td {
 .highlight-row {
     background-color: #dde9fc; /* 淡藍色 */
 }
+
+.fixed-width {
+    width: 2000px; /* 固定頁面的寬度 */
+    margin: 0 auto;
+}
