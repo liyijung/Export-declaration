@@ -492,7 +492,7 @@ th, td {
     position: sticky;
     top: 0;
     background-color: white; /* 確保背景色一致 */
-    z-index: 1000; /* 固定項次標題 */
+    z-index: 1000; /* 固定欄位標題 */
     box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* 可選，增加固定區塊的陰影 */
 }
 
