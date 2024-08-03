@@ -87,6 +87,26 @@ function toggleFixTop() {
     }
 }
 
+// 切換所有項次編號的反色
+document.addEventListener('DOMContentLoaded', function() {
+    // 切換所有項次編號的反色
+    const header = document.querySelector('.item-no-header');
+    header.addEventListener('click', toggleAllItems);
+
+    function toggleAllItems() {
+        const itemNos = document.querySelectorAll('.item-no');
+        const isAnySelected = Array.from(itemNos).some(item => item.classList.contains('selected'));
+
+        if (isAnySelected) {
+            // 如果有任何項次被選中，則取消所有選中狀態
+            itemNos.forEach(item => item.classList.remove('selected'));
+        } else {
+            // 如果沒有任何項次被選中，則選中所有項次
+            itemNos.forEach(item => item.classList.add('selected'));
+        }
+    }
+});
+
 // 切換選中狀態-項次左側編號
 function toggleSelect(element) {
     element.classList.toggle('selected');
