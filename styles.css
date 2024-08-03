@@ -495,3 +495,18 @@ th, td {
     z-index: 1000; /* 固定項次標題 */
     box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* 可選，增加固定區塊的陰影 */
 }
+
+/* 固定左側項次編號及標題 */
+.item-no,
+.item-no-header {
+    position: sticky;
+    left: 0;
+    background-color: white; /* 確保背景色一致 */
+    border-radius: 0 10px 10px 0; /* 右側圓角 */
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2); /* 右側陰影 */
+}
+
+/* 選中狀態的項次左側編號變色 */
+.item-no.selected {
+    background-color: #ffeb3b; /* 例如，設置為黃色 */
+}
