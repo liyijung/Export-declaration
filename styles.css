@@ -78,7 +78,6 @@ body {
 }
 
 .add-buttons button {
-    margin-top: 30px;
     margin-bottom: 20px;
     margin-left: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
@@ -489,12 +488,15 @@ th, td {
     margin: 0 auto;
 }
 
+#items {
+    padding-top: 50px; /* 空出上方的空間 */
+}
+
 .fixed-top {
     position: sticky;
     top: 0;
     background-color: white; /* 確保背景色一致 */
     z-index: 1000; /* 固定欄位標題 */
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* 可選，增加固定區塊的陰影 */
 }
 
 /* 固定左側項次編號及標題 */
