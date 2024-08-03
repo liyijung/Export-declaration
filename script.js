@@ -68,12 +68,11 @@ function dragElement(element, header) {
 
 // 切換固定頁面寬度
 function toggleWidth() {
-    var body = document.body;
-    var checkbox = document.getElementById('toggle-width');
-    if (checkbox.checked) {
-        body.classList.add('fixed-width');
+    var itemsTab = document.getElementById("items");
+    if (document.getElementById("toggle-width").checked) {
+        itemsTab.classList.add("fixed-width");
     } else {
-        body.classList.remove('fixed-width');
+        itemsTab.classList.remove("fixed-width");
     }
 }
 
