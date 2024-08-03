@@ -293,13 +293,6 @@ body {
     align-items: center; /* 垂直置中 */
 }
 
-/* 在平板和更小的設備上 */
-@media (max-width: 768px) {
-    .form-group.fix {
-        width: 100%; /* 確保在小屏幕上寬度足夠 */
-    }
-}
-
 .item-row label,
 .item-row input,
 .item-row textarea {
