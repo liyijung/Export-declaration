@@ -66,7 +66,7 @@ function dragElement(element, header) {
     }
 }
 
-// 切換頁面的寬度
+// 切換固定頁面寬度
 function toggleWidth() {
     var body = document.body;
     var checkbox = document.getElementById('toggle-width');
@@ -74,6 +74,17 @@ function toggleWidth() {
         body.classList.add('fixed-width');
     } else {
         body.classList.remove('fixed-width');
+    }
+}
+
+// 切換固定項次標題
+function toggleFixTop() {
+    var headerContainer = document.getElementById('header-container');
+    var checkbox = document.getElementById('toggle-fix-top');
+    if (checkbox.checked) {
+        headerContainer.classList.add('fixed-top');
+    } else {
+        headerContainer.classList.remove('fixed-top');
     }
 }
 
