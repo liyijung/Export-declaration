@@ -487,3 +487,11 @@ th, td {
     width: 2000px; /* 固定頁面的寬度 */
     margin: 0 auto;
 }
+
+.fixed-top {
+    position: sticky;
+    top: 0;
+    background-color: white; /* 確保背景色一致 */
+    z-index: 1000; /* 固定項次標題 */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* 可選，增加固定區塊的陰影 */
+}
