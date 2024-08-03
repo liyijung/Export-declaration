@@ -287,6 +287,11 @@ body {
     width: 50px;
 }
 
+.form-group.fix {
+    display: flex;
+    justify-content: center;
+}
+
 .item-row label,
 .item-row input,
 .item-row textarea {
