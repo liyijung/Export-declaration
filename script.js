@@ -66,6 +66,17 @@ function dragElement(element, header) {
     }
 }
 
+// 切換頁面的寬度
+function toggleWidth() {
+    var body = document.body;
+    var checkbox = document.getElementById('toggle-width');
+    if (checkbox.checked) {
+        body.classList.add('fixed-width');
+    } else {
+        body.classList.remove('fixed-width');
+    }
+}
+
 // 輸入統一編號以查找資料
 let csvFiles = [
     'companyData1.csv',
@@ -1414,7 +1425,7 @@ function createInputField(name, value, isVisible) {
         `;
     } else if (['CCC_CODE'].includes(name)) {
         return `
-            <div class="form-group ${visibilityClass}" style="width: 110%;">
+            <div class="form-group ${visibilityClass}" style="width: 100%;">
                 ${inputField}
             </div>
         `;
