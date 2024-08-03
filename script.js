@@ -1287,7 +1287,7 @@ function createItemRow(data) {
          <div class="form-group fix item-no" onclick="toggleSelect(this)">
             <label>${itemCount + 1}</label>
         </div>
-        <div class="form-group fix">
+        <div class="form-group fix" style="justify-content: center;">
             <input type="checkbox" class="ITEM_NO" ${isChecked ? 'checked' : ''}>
         </div>
         ${createTextareaField('DESCRIPTION', data.DESCRIPTION)}
