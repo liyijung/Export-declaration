@@ -503,7 +503,7 @@ th, td {
     left: 0;
     background-color: white; /* 確保背景色一致 */
     border-radius: 0 10px 10px 0; /* 右側圓角 */
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2); /* 右側陰影 */
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3); /* 右側陰影 */
 }
 
 /* 選中狀態的項次左側編號變色 */
