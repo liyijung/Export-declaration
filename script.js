@@ -2056,7 +2056,7 @@ Papa.parse(csvUrl, {
 });
 
 function replaceValue(className, value) {
-    if (className === 'DOC_UM' || className === 'CCC_CODE') {
+    if (className === 'DOC_UM' || className === 'CCC_CODE' || className === 'WIDE_UM' || className === 'LENGTH_UM' || className === 'ST_UM') {
         if (replacements[value]) {
             value = replacements[value];
         }
