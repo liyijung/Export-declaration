@@ -486,6 +486,8 @@ th, td {
 
 .highlight-row {
     background-color: #aecefdb8; /* 淡藍色 */
+    border-radius: 5px;
+    border: 1px solid #97b3eb;
 }
 
 /* 只應用於出口報單項次的標籤頁內容 */
