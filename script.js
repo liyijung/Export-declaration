@@ -1992,10 +1992,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     value = item.querySelector(`.${className}`).checked ? 'V' : '';
                 } else {
                     value = escapeXml(item.querySelector(`.${className}`).value);
-                    // 如果 DOC_UM 的值是 PCS 則改為 PCE
-                    if (className === 'DOC_UM' && value === 'PCS') {
-                        value = 'PCE';
-                    }
+                    // 替換單位及稅則
+                    value = replaceValue(className, value);
+
                     // 去除 CCC_CODE 的值中的符號 '.' 、 '-' 和空格
                     if (className === 'CCC_CODE') {
                         value = value.replace(/[.\- ]/g, '');
@@ -2041,6 +2040,29 @@ document.addEventListener('DOMContentLoaded', function () {
     // 為輸出XML按鈕添加事件監聽器
     document.getElementById('export-to-xml').addEventListener('click', exportToXML);
 });
+
+// 讀取替換檔
+const csvUrl = 'replacements.csv';
+let replacements = {};
+Papa.parse(csvUrl, {
+    download: true,
+    header: true,
+    complete: function(results) {
+        results.data.forEach(row => {
+            replacements[row.key] = row.value;
+        });
+        console.log('Replacements loaded:', replacements);
+    }
+});
+
+function replaceValue(className, value) {
+    if (className === 'DOC_UM' || className === 'CCC_CODE') {
+        if (replacements[value]) {
+            value = replacements[value];
+        }
+    }
+    return value;
+}
 
 // 轉義 XML 保留字符的函數
 function escapeXml(unsafe) {
