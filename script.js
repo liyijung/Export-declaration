@@ -823,6 +823,7 @@ function openSpecifyFieldModal() {
 
     // 允許點擊背後的頁面欄位
     specifyFieldModal.style.pointerEvents = 'none';
+    specifyFieldModal.children[0].style.pointerEvents = 'auto';
     
     // 監聽 ESC 鍵，表示取消
     document.addEventListener('keydown', handleEscKeyForSpecifyFieldCancel);
