@@ -820,11 +820,11 @@ function openSpecifyFieldModal() {
     // 顯示彈跳框
     const specifyFieldModal = document.getElementById('specify-field-modal');
     specifyFieldModal.style.display = 'flex';
-
+    
     // 允許點擊背後的頁面欄位
     specifyFieldModal.style.pointerEvents = 'none';
-    specifyFieldModal.children[0].style.pointerEvents = 'auto';
-    
+    specifyFieldModal.children[0].style.pointerEvents = 'auto'; // 只允許彈跳框內部的第一個子元素接收點擊
+
     // 監聽 ESC 鍵，表示取消
     document.addEventListener('keydown', handleEscKeyForSpecifyFieldCancel);
 }
@@ -966,8 +966,6 @@ function applyFieldData() {
             });
         }
     }
-
-    closeSpecifyFieldModal();
 }
 
 // 匯入Excel文件的功能
