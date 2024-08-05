@@ -1992,7 +1992,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     value = item.querySelector(`.${className}`).checked ? 'V' : '';
                 } else {
                     value = escapeXml(item.querySelector(`.${className}`).value);
-                    // 替換單位及稅則
+                    // 替換單位
                     value = replaceValue(className, value);
 
                     // 去除 CCC_CODE 的值中的符號 '.' 、 '-' 和空格
@@ -2056,7 +2056,7 @@ Papa.parse(csvUrl, {
 });
 
 function replaceValue(className, value) {
-    if (className === 'DOC_UM' || className === 'CCC_CODE' || className === 'WIDE_UM' || className === 'LENGTH_UM' || className === 'ST_UM') {
+    if (className === 'DOC_UM' || className === 'WIDE_UM' || className === 'LENGTH_UM' || className === 'ST_UM') {
         // 將值轉為大寫
         value = value.toUpperCase();
         
