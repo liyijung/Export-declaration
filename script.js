@@ -1295,7 +1295,7 @@ function createItemRow(data) {
         </div>
         ${createTextareaField('DESCRIPTION', data.DESCRIPTION)}
         ${createInputField('QTY', data.QTY, true)}
-        ${createInputField('DOC_UM', data.DOC_UM, true)}
+        ${createInputField('DOC_UM', replaceValue('DOC_UM', data.DOC_UM), true)}
         ${createInputField('DOC_UNIT_P', data.DOC_UNIT_P, true)}
         ${createInputField('DOC_TOT_P', data.DOC_TOT_P, true)}
         ${createInputField('TRADE_MARK', data.TRADE_MARK, true)}
@@ -1316,11 +1316,11 @@ function createItemRow(data) {
         ${createInputField('EXP_NO', data.EXP_NO, false)}
         ${createInputField('EXP_SEQ_NO', data.EXP_SEQ_NO, false)}
         ${createInputField('WIDE', data.WIDE, false)}
-        ${createInputField('WIDE_UM', data.WIDE_UM, false)}
+        ${createInputField('WIDE_UM', replaceValue('WIDE_UM', data.WIDE_UM), false)}
         ${createInputField('LENGT_', data.LENGT_, false)}
-        ${createInputField('LENGTH_UM', data.LENGTH_UM, false)}
+        ${createInputField('LENGTH_UM', replaceValue('LENGTH_UM', data.LENGTH_UM), false)}
         ${createInputField('ST_QTY', data.ST_QTY, false)}
-        ${createInputField('ST_UM', data.ST_UM, false)}
+        ${createInputField('ST_UM', replaceValue('ST_UM', data.ST_UM), false)}
         <div class="form-group fix">
             <button class="delete-button" onclick="removeItem(this)">Ｘ</button>
         </div>
