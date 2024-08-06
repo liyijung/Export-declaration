@@ -189,7 +189,7 @@ body {
     background-color: #efefef;
     padding: 20px;
     border-radius: 5px;
-    min-height: 45%;
+    min-height: 30%;
     max-height: 100%;
     overflow-y: auto;
     box-sizing: border-box;
@@ -197,7 +197,6 @@ body {
     width: 500px;
     resize: both;
     overflow: auto;
-    min-width: 500px; /* 設定最小寬度 */
 }
 
 #item-modal .modal-content {
