@@ -966,6 +966,7 @@ function applyFieldData() {
             });
         }
     }
+    closeSpecifyFieldModal();
 }
 
 // 匯入Excel文件的功能
