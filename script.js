@@ -2061,9 +2061,14 @@ Papa.parse(csvUrl, {
 
 function replaceValue(className, value) {
     if (className === 'DOC_UM' || className === 'WIDE_UM' || className === 'LENGTH_UM' || className === 'ST_UM') {
+        // 確保值是字串
+        if (typeof value !== 'string') {
+            value = String(value);
+        }
+
         // 將值轉為大寫
         value = value.toUpperCase();
-        
+
         if (replacements[value]) {
             value = replacements[value];
         }
