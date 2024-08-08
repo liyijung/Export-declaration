@@ -1976,6 +1976,10 @@ document.addEventListener('DOMContentLoaded', function () {
             let element = document.getElementById(id);
             if (element) {
                 let value = escapeXml(element.value);
+
+                // 過濾非可見字符
+                value = value.replace(/[\u0000-\u001F\u007F-\u009F\u200B-\u200F\u2028-\u202F\u2060-\u206F\uFEFF\uFFF9-\uFFFB]/g, '');
+                
                 xmlContent += `  <fields>\n    <field_name>${id}</field_name>\n    <field_value>${value}</field_value>\n  </fields>\n`;
             }
         });
