@@ -1978,7 +1978,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 let value = escapeXml(element.value);
 
                 // 如果是 CNEE_E_ADDR 或 CNEE_E_NAME 欄位，過濾非可見字符
-                if (id === 'CNEE_E_NAME' || id === 'CNEE_E_ADDR') {
+                if (id === 'CNEE_E_NAME' || id === 'CNEE_E_ADDR' || id === 'BUYER_E_NAME' || id === 'BUYER_E_ADDR') {
                     value = value.replace(/[\u0000-\u001F\u007F-\u009F\u200B-\u200F\u2028-\u202F\u2060-\u206F\uFEFF\uFFF9-\uFFFB]/g, '');
                 }
                 
