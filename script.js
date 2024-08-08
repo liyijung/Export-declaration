@@ -1426,7 +1426,9 @@ function createInputField(name, value, isVisible) {
     const onKeyDownAttribute = 'onkeydown="handleInputKeyDown(event, this)"';
     const escapedValue = value ? escapeXml(value) : ''; // 確保只有在必要時才轉義值
 
-    const inputField = `<input type="${inputType}" class="${name} ${name === 'CCC_CODE' ? 'CCC_CODE' : 'tax-code-input'}" value="${escapedValue}" ${onInputAttribute} ${minAttribute} ${readonlyAttribute} ${onFocusAttribute} ${onBlurAttribute} ${onKeyDownAttribute} style="flex: 1; margin-right: 0;">`;
+    // 處理最大四捨五入至小數6位，並移除後面的多餘零
+    const roundedValue = (['QTY', 'DOC_UNIT_P', 'NET_WT', 'WIDE', 'LENGT_', 'ST_QTY'].includes(name) && value) ? parseFloat(value).toFixed(6).replace(/\.?0+$/, '') : escapedValue;
+    const inputField = `<input type="${inputType}" class="${name} ${name === 'CCC_CODE' ? 'CCC_CODE' : 'tax-code-input'}" value="${roundedValue}" ${onInputAttribute} ${minAttribute} ${readonlyAttribute} ${onFocusAttribute} ${onBlurAttribute} ${onKeyDownAttribute} style="flex: 1; margin-right: 0;">`;
 
     if (name === 'NET_WT') {
         return `
