@@ -1979,7 +1979,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 // 如果是 CNEE_E_ADDR 或 CNEE_E_NAME 欄位，過濾非可見字符
                 if (id === 'CNEE_E_NAME' || id === 'CNEE_E_ADDR' || id === 'BUYER_E_NAME' || id === 'BUYER_E_ADDR') {
-                    value = value.replace(/[\u0000-\u001F\u007F-\u009F\u200B-\u200F\u2028-\u202F\u2060-\u206F\uFEFF\uFFF9-\uFFFB]/g, '');
+                    value = value.replace(/[\u0000-\u0009\u000B-\u001F\u007F-\u009F\u200B-\u200F\u2028-\u202F\u2060-\u206F\uFEFF\uFFF9-\uFFFB]/g, '');
                 }
                 
                 xmlContent += `  <fields>\n    <field_name>${id}</field_name>\n    <field_value>${value}</field_value>\n  </fields>\n`;
