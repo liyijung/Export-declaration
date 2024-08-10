@@ -1299,7 +1299,7 @@ function createItemRow(data) {
         ${createInputField('DOC_UNIT_P', data.DOC_UNIT_P, true)}
         ${createInputField('DOC_TOT_P', data.DOC_TOT_P, true)}
         ${createInputField('TRADE_MARK', data.TRADE_MARK, true)}
-        ${createInputField('CCC_CODE', data.CCC_CODE, true)}
+        ${createInputField('CCC_CODE', replaceValue('CCC_CODE', data.CCC_CODE), true)}
         ${createInputField('ST_MTD', data.ST_MTD, true)}
         ${createInputField('NET_WT', data.NET_WT, true)}
         ${createInputField('ORG_COUNTRY', data.ORG_COUNTRY, false)}
