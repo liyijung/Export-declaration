@@ -2072,11 +2072,18 @@ function replaceValue(className, value) {
             value = value.replace(/[.\- ]/g, '');
         }
 
-        // 替換
-        if (replacements[value]) {
-            value = replacements[value];
+        // 取前6碼查找替換，不改變原來的值，如果找到才替換
+        if (className === 'CCC_CODE') {
+            let key = value.substring(0, 6);
+            if (replacements[key]) {
+                value = replacements[key];
+            }
+        } else { 
+            if (replacements[value]) {
+                value = replacements[value];
+            }
         }
-                
+
         // 檢查 CCC_CODE 是否為 11 碼數字並重新分配符號
         if (className === 'CCC_CODE' && /^\d{11}$/.test(value)) {
             value = `${value.slice(0, 4)}.${value.slice(4, 6)}.${value.slice(6, 8)}.${value.slice(8, 10)}-${value.slice(10)}`;
