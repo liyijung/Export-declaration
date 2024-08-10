@@ -2072,15 +2072,24 @@ function replaceValue(className, value) {
             value = value.replace(/[.\- ]/g, '');
         }
 
-        // 取前6碼及8碼查找替換，不改變原來的值，如果找到才替換
+        // 取前6碼至10碼查找替換，不改變原來的值，如果找到才替換
         if (className === 'CCC_CODE') {
             let key6 = value.substring(0, 6);
+            let key7 = value.substring(0, 7);
             let key8 = value.substring(0, 8);
+            let key9 = value.substring(0, 9);
+            let key10 = value.substring(0, 10);
             
             if (replacements[key6]) {
                 value = replacements[key6];
+            } else if (replacements[key7]) {
+                value = replacements[key7];
             } else if (replacements[key8]) {
                 value = replacements[key8];
+            } else if (replacements[key9]) {
+                value = replacements[key9];
+            } else if (replacements[key10]) {
+                value = replacements[key10];
             }
         } else { 
             if (replacements[value]) {
