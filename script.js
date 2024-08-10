@@ -2004,15 +2004,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     
                     // 替換單位及稅則
                     value = replaceValue(className, value);
-
-                    // 去除 CCC_CODE 的值中的符號 '.' 、 '-' 和空格
-                    if (className === 'CCC_CODE') {
-                        value = value.replace(/[.\- ]/g, '');
-                    }
-                    // 檢查 CCC_CODE 是否為 11 碼數字並重新分配符號
-                    if (className === 'CCC_CODE' && /^\d{11}$/.test(value)) {
-                        value = `${value.slice(0, 4)}.${value.slice(4, 6)}.${value.slice(6, 8)}.${value.slice(8, 10)}-${value.slice(10)}`;
-                    }
                 }
                 xmlContent += `    <fields>\n      <field_name>${className}</field_name>\n      <field_value>${value}</field_value>\n    </fields>\n`;
             });
@@ -2067,7 +2058,7 @@ Papa.parse(csvUrl, {
 });
 
 function replaceValue(className, value) {
-    if (className === 'CCC_CODE' || className === 'DOC_UM' || className === 'WIDE_UM' || className === 'LENGTH_UM' || className === 'ST_UM') {
+    if (className === 'DOC_UM' || className === 'WIDE_UM' || className === 'LENGTH_UM' || className === 'ST_UM' || className === 'CCC_CODE') {
         // 確保值是字串
         if (typeof value !== 'string') {
             value = String(value);
@@ -2076,8 +2067,19 @@ function replaceValue(className, value) {
         // 將值轉為大寫
         value = value.toUpperCase();
 
+        // 去除 CCC_CODE 的值中的符號 '.' 、 '-' 和空格
+        if (className === 'CCC_CODE') {
+            value = value.replace(/[.\- ]/g, '');
+        }
+
+        // 替換
         if (replacements[value]) {
             value = replacements[value];
+        }
+                
+        // 檢查 CCC_CODE 是否為 11 碼數字並重新分配符號
+        if (className === 'CCC_CODE' && /^\d{11}$/.test(value)) {
+            value = `${value.slice(0, 4)}.${value.slice(4, 6)}.${value.slice(6, 8)}.${value.slice(8, 10)}-${value.slice(10)}`;
         }
     }
     return value;
