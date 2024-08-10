@@ -2001,7 +2001,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     value = item.querySelector(`.${className}`).checked ? 'V' : '';
                 } else {
                     value = escapeXml(item.querySelector(`.${className}`).value);
-                    // 替換單位
+                    
+                    // 替換單位及稅則
                     value = replaceValue(className, value);
 
                     // 去除 CCC_CODE 的值中的符號 '.' 、 '-' 和空格
