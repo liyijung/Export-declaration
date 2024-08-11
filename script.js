@@ -66,6 +66,13 @@ function dragElement(element, header) {
     }
 }
 
+// 【影片說明】
+function updateVideoLink() {
+    var selector = document.getElementById("videoSelector");
+    var videoLink = document.getElementById("videoLink");
+    videoLink.href = selector.value;
+}
+
 // 切換固定頁面寬度
 function toggleWidth() {
     var itemsTab = document.getElementById("items");
