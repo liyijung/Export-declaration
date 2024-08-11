@@ -17,7 +17,12 @@
             <div class="tab-links" onclick="openTab('bonded')">保稅相關信息</div>
             <!-- 新增影片鏈接部分 -->
             <div class="video-link" style="margin-top: 10px;">
-                <a href="Interface_Operation.mp4" target="_blank">【影片說明】</a>
+                <select id="videoSelector" onchange="updateVideoLink()">
+                    <option value="Interface_Operation.mp4">介面操作</option>
+                    <option value="LEE_BOU_CNDGG.mp4">利保東莞</option>
+                    <option value="LEE_BOU_VNLAN.mp4">利保隆安</option>
+                </select>
+                <a id="videoLink" href="Interface_Operation.mp4" target="_blank">【影片說明】</a>
             </div>
         </div>
     </div>
