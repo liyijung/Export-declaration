@@ -2527,8 +2527,8 @@ async function exportToPDF() {
             // 顯示前置描述和品名
             const descriptionText = [];
             if (item.sellerItemCode) descriptionText.push(`S/N: ${item.sellerItemCode}`);
-            if (item.goodsModel) descriptionText.push(`型號: ${item.goodsModel}`);
-            if (item.goodsSpec) descriptionText.push(`規格: ${item.goodsSpec}`);
+            if (item.goodsModel) descriptionText.push(`MODEL: ${item.goodsModel}`);
+            if (item.goodsSpec) descriptionText.push(`SPEC: ${item.goodsSpec}`);
             descriptionText.push(item.description); // 添加品名描述
 
             if (item.index === '*') {
