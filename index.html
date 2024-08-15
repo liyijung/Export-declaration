@@ -404,8 +404,12 @@
             </div>
             <div class="header-group">
                 <label for="TRADE_MARK">商標</label>
-                <input type="text" id="TRADE_MARK" class="TRADE_MARK" 
+                <input type="text" id="TRADE_MARK" class="TRADE_MARK" name="TRADE_MARK" list="trademark-list"
                     placeholder="範例：NO BRAND(無商標)、FIG(圖樣)、文字(字樣)">
+                <datalist id="trademark-list">
+                    <option value="NO BRAND">(無商標)</option>
+                    <option value="FIG">(圖樣)</option>
+                </datalist>
             </div>
             <div class="header-group">
                 <label for="CCC_CODE">稅則</label>
@@ -414,8 +418,8 @@
             </div>
             <div class="header-group">
                 <label for="ST_MTD">統計方式</label>
-                <input type="text" id="ST_MTD" class="ST_MTD" name="ST_MTD" list="method">
-                <datalist id="method">
+                <input type="text" id="ST_MTD" class="ST_MTD" name="ST_MTD" list="method-list">
+                <datalist id="method-list">
                     <option value="02">國貨銷售</option>
                     <option value="04">國貨樣品/贈送</option>
                     <option value="81">洋貨銷售</option>
