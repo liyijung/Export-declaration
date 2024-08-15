@@ -2091,6 +2091,9 @@ function replaceValue(className, value) {
                 value = replacements[value.substring(0, 7)];
             } else if (value.length >= 6 && replacements[value.substring(0, 6)]) {
                 value = replacements[value.substring(0, 6)];
+            } else if (value.length >= 10) {
+                // 如果都沒有找到，直接取前10碼
+                value = value.substring(0, 10);
             }
         } else { 
             if (replacements[value]) {
