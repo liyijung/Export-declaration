@@ -2,7 +2,7 @@ import pandas as pd
 import json
 
 # 讀取 Excel 檔案
-file_path = 'C:/Users/Admin/Desktop/海關進口稅則資料2024.xls'
+file_path = r"C:\Users\Admin\Desktop\海關進口稅則資料2024.xls"
 tax_data = pd.read_excel(file_path)
 
 # 顯示全部資料
