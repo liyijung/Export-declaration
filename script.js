@@ -1180,11 +1180,11 @@ function exportToExcel() {
             item.querySelector('.ITEM_NO').checked ? '*' : '',
             item.querySelector('.DESCRIPTION').value || '',
             item.querySelector('.QTY').value || '',
-            item.querySelector('.DOC_UM').value || '',
+            replaceValue('DOC_UM', item.querySelector('.DOC_UM').value || ''),
             item.querySelector('.DOC_UNIT_P').value || '',
             item.querySelector('.DOC_TOT_P').value || '',
             item.querySelector('.TRADE_MARK').value || '',
-            item.querySelector('.CCC_CODE').value || '',
+            replaceValue('CCC_CODE', item.querySelector('.CCC_CODE').value || ''),
             item.querySelector('.ST_MTD').value || '',
             item.querySelector('.NET_WT').value || '',
             item.querySelector('.ORG_COUNTRY').value || '',
@@ -1201,11 +1201,11 @@ function exportToExcel() {
             item.querySelector('.EXP_NO').value || '',
             item.querySelector('.EXP_SEQ_NO').value || '',
             item.querySelector('.WIDE').value || '',
-            item.querySelector('.WIDE_UM').value || '',
+            replaceValue('WIDE_UM', item.querySelector('.WIDE_UM').value || ''),
             item.querySelector('.LENGT_').value || '',
-            item.querySelector('.LENGTH_UM').value || '',
+            replaceValue('LENGTH_UM', item.querySelector('.LENGTH_UM').value || ''),
             item.querySelector('.ST_QTY').value || '',
-            item.querySelector('.ST_UM').value || '',
+            replaceValue('ST_UM', item.querySelector('.ST_UM').value || ''),
         ]);
     });
 
