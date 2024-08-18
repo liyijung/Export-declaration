@@ -73,6 +73,22 @@ function updateVideoLink() {
     videoLink.href = selector.value;
 }
 
+// 滾動到頂部
+function scrollToTop() {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+}
+
+// 滾動到底部
+function scrollToBottom() {
+    window.scrollTo({
+        top: document.body.scrollHeight,
+        behavior: 'smooth'
+    });
+}
+
 // 切換固定頁面寬度
 function toggleWidth() {
     var itemsTab = document.getElementById("items");
