@@ -1345,22 +1345,6 @@ function checkFieldValues(data) {
     updateFieldVisibility();
 }
 
-// 初始化欄位可見性
-function initializeFieldVisibility() {
-    document.querySelectorAll('#item-container .item-row').forEach(item => {
-        for (let field in fieldsToShow) {
-            const value = item.querySelector(`.${field}`).value;
-            if (value) {
-                fieldsToShow[field] = true;
-            }
-        }
-    });
-    updateModalFieldVisibility();
-}
-
-// 在頁面初始化時調用
-initializeFieldVisibility();
-
 // 檢查所有項次中的欄位，並根據有值的情況同步顯示
 function updateModalFieldVisibility() {
     for (let field in fieldsToShow) {
@@ -1420,10 +1404,45 @@ function createItemRow(data) {
     `;
     itemCount++;
 
-    // 在創建項次後再次檢查所有項次是否有值
+    // 檢查
     initializeFieldVisibility();
     
     return row;
+}
+
+function initializeFieldVisibility() {
+    const selectedOptions = Array.from(document.getElementById('field-select').selectedOptions).map(option => option.value);
+    
+    const allFields = [
+        'ORG_COUNTRY', 'ORG_IMP_DCL_NO', 
+        'ORG_IMP_DCL_NO_ITEM', 'SELLER_ITEM_CODE', 'BOND_NOTE', 'GOODS_MODEL', 'GOODS_SPEC', 
+        'CERT_NO', 'CERT_NO_ITEM', 'ORG_DCL_NO', 'ORG_DCL_NO_ITEM', 'EXP_NO', 'EXP_SEQ_NO', 
+        'WIDE', 'WIDE_UM', 'LENGT_', 'LENGTH_UM', 'ST_QTY', 'ST_UM'
+    ];
+
+    allFields.forEach(field => {
+        const fieldElements = document.querySelectorAll(`.item-header .${field}, #item-container .${field}`);
+        
+        // 判斷該欄位在所有項次中是否有值
+        let hasValue = false;
+        document.querySelectorAll(`#item-container .${field}`).forEach(itemField => {
+            if (itemField.value && itemField.value.trim() !== '') {
+                hasValue = true;
+            }
+        });
+
+        fieldElements.forEach(fieldElement => {
+            const formGroup = fieldElement.closest('.form-group');
+            if (formGroup) {
+                if (selectedOptions.includes(field) || hasValue) {
+                    // 如果選中該欄位或者該欄位在某個項次中有值，就顯示
+                    formGroup.classList.remove('hidden');
+                } else {
+                    formGroup.classList.add('hidden');
+                }
+            }
+        });
+    });
 }
 
 // 當頁面初始化或更新時，調用 updateFieldVisibility 以確保同步顯示
