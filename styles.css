@@ -541,7 +541,8 @@ th, td {
     border: none;
     border-radius: 50%;
     cursor: pointer;
-    font-size: 25px;
+    font-size: 20px; /* 可以根據需要調整字體大小 */
+    line-height: 30px; /* 與按鈕高度相同 */
     display: flex;
     justify-content: center;
     align-items: center;
