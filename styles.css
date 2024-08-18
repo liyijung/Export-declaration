@@ -520,3 +520,36 @@ th, td {
 .item-no.selected {
     background-color: #ffeb3b; /* 設置為黃色 */
 }
+
+/* 浮動按鈕容器 */
+.scroll-container {
+    position: fixed;
+    top: 5px;
+    right: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    z-index: 2000;
+}
+
+/* 淡藍色背景的浮動按鈕樣式 */
+.scroll-btn {
+    width: 30px;
+    height: 30px;
+    background-color: #87CEEB;
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0.7;
+    transition: opacity 0.3s, background-color 0.3s;
+}
+
+.scroll-btn:hover {
+    opacity: 1;
+    background-color: #00BFFF;
+}
