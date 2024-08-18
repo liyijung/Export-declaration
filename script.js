@@ -1411,8 +1411,9 @@ function createItemRow(data) {
 }
 
 function initializeFieldVisibility() {
+    // 獲取目前選中的欄位
     const selectedOptions = Array.from(document.getElementById('field-select').selectedOptions).map(option => option.value);
-    
+
     const allFields = [
         'ORG_COUNTRY', 'ORG_IMP_DCL_NO', 
         'ORG_IMP_DCL_NO_ITEM', 'SELLER_ITEM_CODE', 'BOND_NOTE', 'GOODS_MODEL', 'GOODS_SPEC', 
@@ -1434,8 +1435,8 @@ function initializeFieldVisibility() {
         fieldElements.forEach(fieldElement => {
             const formGroup = fieldElement.closest('.form-group');
             if (formGroup) {
+                // 根據選擇的欄位和是否有值的條件決定是否顯示
                 if (selectedOptions.includes(field) || hasValue) {
-                    // 如果選中該欄位或者該欄位在某個項次中有值，就顯示
                     formGroup.classList.remove('hidden');
                 } else {
                     formGroup.classList.add('hidden');
