@@ -571,7 +571,7 @@ function closeItemModal() {
 // 儲存新增的項次
 function saveItem() {
     const itemContainer = document.getElementById('item-container');
-    const item = createItemRow({
+    const newItemData = {
         ITEM_NO: document.getElementById('ITEM_NO').checked ? '*' : '', // 根據勾選狀態設置 ITEM_NO
         DESCRIPTION: document.getElementById('DESCRIPTION').value,
         QTY: document.getElementById('QTY').value,
@@ -601,7 +601,12 @@ function saveItem() {
         LENGTH_UM: document.getElementById('LENGTH_UM').value,
         ST_QTY: document.getElementById('ST_QTY').value,
         ST_UM: document.getElementById('ST_UM').value,
-    });
+    };
+
+    // 在儲存前檢查並更新 fieldsToShow 的狀態
+    checkFieldValues(newItemData);
+
+    const item = createItemRow(newItemData);
 
     // 判斷輸入域目前是展開全部品名還是折疊全部品名
     const textareas = item.querySelectorAll('.DESCRIPTION');
@@ -628,11 +633,17 @@ function saveItem() {
     }
 
     calculateAmountsForRow(item, decimalPlaces);
+
+    // 確保在新增項次後即時更新顯示狀態
+    initializeFieldVisibility(); // 這行應該保證在所有操作結束後執行
 }
 
 // 函數：應用顯示的欄位到新項次
 function applyToggleFieldsToRow(row) {
+    // 從使用者選擇的欄位中取得目前顯示的欄位選項
     const selectedOptions = Array.from(document.getElementById('field-select').selectedOptions).map(option => option.value);
+
+    // 所有可能的欄位
     const allFields = [
         'ORG_COUNTRY', 'ORG_IMP_DCL_NO', 
         'ORG_IMP_DCL_NO_ITEM', 'SELLER_ITEM_CODE', 'BOND_NOTE', 'GOODS_MODEL', 'GOODS_SPEC', 
@@ -644,7 +655,8 @@ function applyToggleFieldsToRow(row) {
         const fieldElement = row.querySelector(`.${field}`);
         const formGroup = fieldElement.closest('.form-group');
         if (formGroup) {
-            if (selectedOptions.includes(field)) {
+            // 如果該欄位在 fieldsToShow 中已經被標記為 true，則始終顯示它
+            if (fieldsToShow[field] || selectedOptions.includes(field)) {
                 formGroup.classList.remove('hidden');
             } else {
                 formGroup.classList.add('hidden');
@@ -1288,13 +1300,71 @@ function importXML(event) {
     }
 }
 
+// 全域變數，追蹤哪些欄位需要顯示
+const fieldsToShow = {
+    ORG_COUNTRY: false,
+    ORG_IMP_DCL_NO: false,
+    ORG_IMP_DCL_NO_ITEM: false,
+    SELLER_ITEM_CODE: false,
+    BOND_NOTE: false,
+    GOODS_MODEL: false,
+    GOODS_SPEC: false,
+    CERT_NO: false,
+    CERT_NO_ITEM: false,
+    ORG_DCL_NO: false,
+    ORG_DCL_NO_ITEM: false,
+    EXP_NO: false,
+    EXP_SEQ_NO: false,
+    WIDE: false,
+    WIDE_UM: false,
+    LENGT_: false,
+    LENGTH_UM: false,
+    ST_QTY: false,
+    ST_UM: false
+};
+
+// 檢查所有項次中的欄位，並根據有值的情況同步顯示
+function updateModalFieldVisibility() {
+    for (let field in fieldsToShow) {
+        if (fieldsToShow[field]) {
+            document.getElementById(field).parentElement.classList.remove('hidden');
+        }
+    }
+}
+
+// 檢查所有項次中的欄位，並根據有值的情況同步顯示
+function updateFieldVisibility() {
+    for (let field in fieldsToShow) {
+        if (fieldsToShow[field]) {
+            document.querySelectorAll(`.form-group.${field}`).forEach(element => {
+                element.classList.remove('hidden');
+            });
+        }
+    }
+}
+
+// 當新增或更新項次時，判斷欄位是否有值並同步更新
+function checkFieldValues(data) {
+    for (let field in fieldsToShow) {
+        if (data[field]) {
+            fieldsToShow[field] = true;
+        }
+    }
+    // 立即更新欄位顯示
+    updateFieldVisibility();
+}
+
 // 創建項次的HTML結構
 function createItemRow(data) {
     const row = document.createElement('div');
     row.className = 'item-row';
     const isChecked = data.ITEM_NO === '*'; // 根據 ITEM_NO 判斷是否勾選
+
+    // 檢查並更新需要顯示的欄位
+    checkFieldValues(data);
+
     row.innerHTML = `
-         <div class="form-group fix item-no" onclick="toggleSelect(this)">
+        <div class="form-group fix item-no item-no-header" onclick="toggleAllItems()">
             <label>${itemCount + 1}</label>
         </div>
         <div class="form-group fix">
@@ -1309,32 +1379,77 @@ function createItemRow(data) {
         ${createInputField('CCC_CODE', replaceValue('CCC_CODE', data.CCC_CODE), true)}
         ${createInputField('ST_MTD', data.ST_MTD, true)}
         ${createInputField('NET_WT', data.NET_WT, true)}
-        ${createInputField('ORG_COUNTRY', data.ORG_COUNTRY, false)}
-        ${createInputField('ORG_IMP_DCL_NO', data.ORG_IMP_DCL_NO, false)}
-        ${createInputField('ORG_IMP_DCL_NO_ITEM', data.ORG_IMP_DCL_NO_ITEM, false)}
-        ${createInputField('SELLER_ITEM_CODE', data.SELLER_ITEM_CODE, false)}
-        ${createInputField('BOND_NOTE', data.BOND_NOTE, false)}        
-        ${createInputField('GOODS_MODEL', data.GOODS_MODEL, false)}
-        ${createInputField('GOODS_SPEC', data.GOODS_SPEC, false)}
-        ${createInputField('CERT_NO', data.CERT_NO, false)}
-        ${createInputField('CERT_NO_ITEM', data.CERT_NO_ITEM, false)}
-        ${createInputField('ORG_DCL_NO', data.ORG_DCL_NO, false)}
-        ${createInputField('ORG_DCL_NO_ITEM', data.ORG_DCL_NO_ITEM, false)}
-        ${createInputField('EXP_NO', data.EXP_NO, false)}
-        ${createInputField('EXP_SEQ_NO', data.EXP_SEQ_NO, false)}
-        ${createInputField('WIDE', data.WIDE, false)}
-        ${createInputField('WIDE_UM', replaceValue('WIDE_UM', data.WIDE_UM), false)}
-        ${createInputField('LENGT_', data.LENGT_, false)}
-        ${createInputField('LENGTH_UM', replaceValue('LENGTH_UM', data.LENGTH_UM), false)}
-        ${createInputField('ST_QTY', data.ST_QTY, false)}
-        ${createInputField('ST_UM', replaceValue('ST_UM', data.ST_UM), false)}
+        ${createInputField('ORG_COUNTRY', data.ORG_COUNTRY, fieldsToShow.ORG_COUNTRY)}
+        ${createInputField('ORG_IMP_DCL_NO', data.ORG_IMP_DCL_NO, fieldsToShow.ORG_IMP_DCL_NO)}
+        ${createInputField('ORG_IMP_DCL_NO_ITEM', data.ORG_IMP_DCL_NO_ITEM, fieldsToShow.ORG_IMP_DCL_NO_ITEM)}
+        ${createInputField('SELLER_ITEM_CODE', data.SELLER_ITEM_CODE, fieldsToShow.SELLER_ITEM_CODE)}
+        ${createInputField('BOND_NOTE', data.BOND_NOTE, fieldsToShow.BOND_NOTE)}        
+        ${createInputField('GOODS_MODEL', data.GOODS_MODEL, fieldsToShow.GOODS_MODEL)}
+        ${createInputField('GOODS_SPEC', data.GOODS_SPEC, fieldsToShow.GOODS_SPEC)}
+        ${createInputField('CERT_NO', data.CERT_NO, fieldsToShow.CERT_NO)}
+        ${createInputField('CERT_NO_ITEM', data.CERT_NO_ITEM, fieldsToShow.CERT_NO_ITEM)}
+        ${createInputField('ORG_DCL_NO', data.ORG_DCL_NO, fieldsToShow.ORG_DCL_NO)}
+        ${createInputField('ORG_DCL_NO_ITEM', data.ORG_DCL_NO_ITEM, fieldsToShow.ORG_DCL_NO_ITEM)}
+        ${createInputField('EXP_NO', data.EXP_NO, fieldsToShow.EXP_NO)}
+        ${createInputField('EXP_SEQ_NO', data.EXP_SEQ_NO, fieldsToShow.EXP_SEQ_NO)}
+        ${createInputField('WIDE', data.WIDE, fieldsToShow.WIDE)}
+        ${createInputField('WIDE_UM', replaceValue('WIDE_UM', data.WIDE_UM), fieldsToShow.WIDE_UM)}
+        ${createInputField('LENGT_', data.LENGT_, fieldsToShow.LENGT_)}
+        ${createInputField('LENGTH_UM', replaceValue('LENGTH_UM', data.LENGTH_UM), fieldsToShow.LENGTH_UM)}
+        ${createInputField('ST_QTY', data.ST_QTY, fieldsToShow.ST_QTY)}
+        ${createInputField('ST_UM', replaceValue('ST_UM', data.ST_UM), fieldsToShow.ST_UM)}
         <div class="form-group fix">
             <button class="delete-button" onclick="removeItem(this)">Ｘ</button>
         </div>
     `;
     itemCount++;
+
+    // 檢查
+    initializeFieldVisibility();
+    
     return row;
 }
+
+function initializeFieldVisibility() {
+    // 獲取目前選中的欄位
+    const selectedOptions = Array.from(document.getElementById('field-select').selectedOptions).map(option => option.value);
+
+    const allFields = [
+        'ORG_COUNTRY', 'ORG_IMP_DCL_NO', 
+        'ORG_IMP_DCL_NO_ITEM', 'SELLER_ITEM_CODE', 'BOND_NOTE', 'GOODS_MODEL', 'GOODS_SPEC', 
+        'CERT_NO', 'CERT_NO_ITEM', 'ORG_DCL_NO', 'ORG_DCL_NO_ITEM', 'EXP_NO', 'EXP_SEQ_NO', 
+        'WIDE', 'WIDE_UM', 'LENGT_', 'LENGTH_UM', 'ST_QTY', 'ST_UM'
+    ];
+
+    allFields.forEach(field => {
+        const fieldElements = document.querySelectorAll(`.item-header .${field}, #item-container .${field}`);
+        
+        // 判斷該欄位在所有項次中是否有值
+        let hasValue = fieldsToShow[field] || false;
+        document.querySelectorAll(`#item-container .${field}`).forEach(itemField => {
+            if (itemField.value && itemField.value.trim() !== '') {
+                hasValue = true;
+            }
+        });
+
+        fieldElements.forEach(fieldElement => {
+            const formGroup = fieldElement.closest('.form-group');
+            if (formGroup) {
+                // 根據選擇的欄位和是否有值的條件決定是否顯示
+                if (selectedOptions.includes(field) || hasValue) {
+                    formGroup.classList.remove('hidden');
+                } else {
+                    formGroup.classList.add('hidden');
+                }
+            }
+        });
+    });
+}
+
+// 當頁面初始化或更新時，調用 updateFieldVisibility 以確保同步顯示
+document.addEventListener('DOMContentLoaded', () => {
+    updateFieldVisibility();
+});
 
 let textareaCounter = 0;
 let allExpanded = false; // 用於跟蹤所有文本域的展開/折疊狀態
