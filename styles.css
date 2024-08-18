@@ -525,7 +525,7 @@ th, td {
 .scroll-container {
     position: fixed;
     top: 5px;
-    right: 20px;
+    right: 30px;
     display: flex;
     flex-direction: column;
     gap: 5px;
