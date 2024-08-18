@@ -1419,6 +1419,10 @@ function createItemRow(data) {
         </div>
     `;
     itemCount++;
+
+    // 在創建項次後再次檢查所有項次是否有值
+    initializeFieldVisibility();
+    
     return row;
 }
 
