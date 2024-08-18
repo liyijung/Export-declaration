@@ -1380,7 +1380,7 @@ function createItemRow(data) {
     checkFieldValues(data);
 
     row.innerHTML = `
-        <div class="form-group fix item-no item-no-header" onclick="toggleAllItems()">
+        <div class="form-group fix item-no item-no-header" onclick="toggleSelect(this)">
             <label>${itemCount + 1}</label>
         </div>
         <div class="form-group fix">
