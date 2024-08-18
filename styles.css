@@ -534,8 +534,8 @@ th, td {
 
 /* 淡藍色背景的浮動按鈕樣式 */
 .scroll-btn {
-    width: 30px;
-    height: 30px;
+    width: 25px;
+    height: 25px;
     background-color: #87CEEB;
     color: #fff;
     border: none;
