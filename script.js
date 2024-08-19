@@ -2077,7 +2077,8 @@ document.addEventListener('DOMContentLoaded', function () {
             const stMtdValue = item.querySelector('.ST_MTD')?.value.toUpperCase() || '';
             const expNoValue = item.querySelector('.EXP_NO')?.value || '';
     
-            if (['1A', '8A', '8D'].includes(stMtdValue) || expNoValue) {
+            // 判斷 ST_MTD 是否為 '1A', '8A', '8D'，或 EXP_NO 是否為 14 碼
+            if (['1A', '8A', '8D'].includes(stMtdValue) || expNoValue.length === 14) {
                 shouldSetExamType = true;
             }
         });
