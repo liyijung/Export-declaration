@@ -2071,6 +2071,21 @@ document.addEventListener('DOMContentLoaded', function () {
             copyQty.value = '0';
         }
 
+        // 檢查 itemFields 條件，決定是否更新 EXAM_TYPE 為 '8'
+        let shouldSetExamType = false;
+        document.querySelectorAll("#item-container .item-row").forEach((item) => {
+            const stMtdValue = item.querySelector('.ST_MTD')?.value.toUpperCase() || '';
+            const expNoValue = item.querySelector('.EXP_NO')?.value || '';
+    
+            if (['1A', '8A', '8D'].includes(stMtdValue) || expNoValue) {
+                shouldSetExamType = true;
+            }
+        });
+    
+        if (shouldSetExamType) {
+            examType.value = '8';
+        }
+        
         // 用於顯示變數值的控制台日誌
         console.log("APP_DUTY_REFUND: " + appDutyRefund.value);
         console.log("MARK_TOT_LINES: " + markTotLines.value);
