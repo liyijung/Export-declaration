@@ -2839,6 +2839,13 @@ function searchTariff(inputElement, isModal = false) {
     const resultsDiv = isModal ? document.getElementById('modal-results') : document.getElementById('results');
     resultsDiv.innerHTML = '';
 
+    // 加入提示訊息
+    const hint = document.createElement('p');
+    hint.textContent = '【可使用上下鍵移動並按Enter選取或點選稅則】';
+    hint.style.fontWeight = 'bold';
+    hint.style.color = '#0000b7'; // 自定義提示訊息顏色
+    resultsDiv.appendChild(hint);
+
     const results = window.taxData.filter(item => {
         const cleanedItemCode = item['貨品分類號列'].toString().toLowerCase().replace(/[.\-]/g, '');
         return cleanedItemCode.startsWith(keyword) ||
@@ -2893,6 +2900,9 @@ function searchTariff(inputElement, isModal = false) {
         table.appendChild(tbody);
         resultsDiv.appendChild(table);
 
+        // 滾動到彈跳框內的最上方
+        resultsDiv.scrollTop = 0;
+
         // 預設選中第一個結果項
         let selectedIndex = 0;
         updateSelection(tbody, selectedIndex);
@@ -2906,10 +2916,12 @@ function searchTariff(inputElement, isModal = false) {
             if (event.key === 'ArrowDown') {
                 selectedIndex = (selectedIndex + 1) % rows.length;
                 updateSelection(tbody, selectedIndex);
+                rows[selectedIndex].scrollIntoView({ block: 'nearest', behavior: 'smooth' }); // 滾動到選中項目
                 event.preventDefault();
             } else if (event.key === 'ArrowUp') {
                 selectedIndex = (selectedIndex - 1 + rows.length) % rows.length;
                 updateSelection(tbody, selectedIndex);
+                rows[selectedIndex].scrollIntoView({ block: 'nearest', behavior: 'smooth' }); // 滾動到選中項目
                 event.preventDefault();
             } else if (event.key === 'Enter') {
                 rows[selectedIndex].querySelector('.clickable').click();
