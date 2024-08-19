@@ -2870,7 +2870,7 @@ function searchTariff(inputElement, isModal = false) {
         table.appendChild(thead);
 
         // 填充表格數據
-        results.forEach(item => {
+        results.forEach((item, index) => {
             const row = document.createElement('tr');
             headers.forEach(header => {
                 const td = document.createElement('td');
@@ -2881,17 +2881,54 @@ function searchTariff(inputElement, isModal = false) {
                         const formattedCode = formatCode(item['貨品分類號列'].toString());
                         inputElement.value = formattedCode; // 填入關鍵字欄位
                         closeTaxModal();
+                        inputElement.focus(); // 選中項目後焦點返回輸入框
                         searchTariff(inputElement);
                     });
                 }
                 row.appendChild(td);
             });
+            row.dataset.index = index;
             tbody.appendChild(row);
         });
         table.appendChild(tbody);
         resultsDiv.appendChild(table);
+
+        // 預設選中第一個結果項
+        let selectedIndex = 0;
+        updateSelection(tbody, selectedIndex);
+
+        // 讓稅則列表獲得焦點並監聽鍵盤事件
+        tbody.setAttribute('tabindex', '0'); // 使 tbody 可被聚焦
+        tbody.focus(); // 自動聚焦到稅則列表
+
+        tbody.addEventListener('keydown', function(event) {
+            const rows = tbody.querySelectorAll('tr');
+            if (event.key === 'ArrowDown') {
+                selectedIndex = (selectedIndex + 1) % rows.length;
+                updateSelection(tbody, selectedIndex);
+                event.preventDefault();
+            } else if (event.key === 'ArrowUp') {
+                selectedIndex = (selectedIndex - 1 + rows.length) % rows.length;
+                updateSelection(tbody, selectedIndex);
+                event.preventDefault();
+            } else if (event.key === 'Enter') {
+                rows[selectedIndex].querySelector('.clickable').click();
+                event.preventDefault();
+                closeTaxModal();
+                inputElement.focus(); // 當按下 Enter 後焦點返回輸入框
+            }
+        });
+
     } else {
         resultsDiv.innerHTML = '<br><p>未找到相關稅則。</p>'; // 添加空行
+    }
+}
+
+function updateSelection(tbody, index) {
+    const rows = tbody.querySelectorAll('tr');
+    rows.forEach(row => row.classList.remove('selected')); // 移除所有高亮
+    if (rows[index]) {
+        rows[index].classList.add('selected'); // 高亮當前選中的行
     }
 }
 
@@ -2905,8 +2942,26 @@ function openTaxModal(inputElement) {
     modal.style.display = 'block';
 
     // 監聽 ESC 鍵來關閉彈跳框
+    const handleEscKey = function(event) {
+        if (event.key === 'Escape') {
+            closeTaxModal();
+            inputElement.focus(); // 在關閉彈跳框後將焦點返回輸入框
+        }
+    };
+
     document.addEventListener('keydown', handleEscKey);
+
+    // 保存 handleEscKey 引用，以便稍後移除事件監聽器
+    modal.handleEscKey = handleEscKey;
+
+    // 保存當前的輸入框元素
     modal.currentInputElement = inputElement;
+
+    // 自動聚焦到搜尋結果列表
+    setTimeout(() => {
+        const tbody = document.querySelector('#modal-results table tbody');
+        if (tbody) tbody.focus();
+    }, 100); // 延遲一小段時間確保結果列表生成後再聚焦
 }
 
 function closeTaxModal() {
@@ -2914,7 +2969,15 @@ function closeTaxModal() {
     modal.style.display = 'none';
 
     // 移除 ESC 鍵的監聽
-    document.removeEventListener('keydown', handleEscKey);
+    if (modal.handleEscKey) {
+        document.removeEventListener('keydown', modal.handleEscKey);
+        delete modal.handleEscKey;
+    }
+
+    // 在關閉彈跳框後，將焦點返回到原輸入框
+    if (modal.currentInputElement) {
+        modal.currentInputElement.focus();
+    }
 }
 
 function handleEscKey(event) {
@@ -2936,7 +2999,7 @@ window.addEventListener('click', function(event) {
 function initializeCCCCodeInputs() {
     const inputs = document.querySelectorAll('.CCC_CODE, .tax-code-input');
     inputs.forEach(input => {
-        input.addEventListener('keydown', handleInputKeyDown);
+        input.addEventListener('keydown', (event) => handleCCCCodeEnter(event, input));
     });
 }
 
