@@ -2841,7 +2841,7 @@ function searchTariff(inputElement, isModal = false) {
 
     // 加入提示訊息
     const hint = document.createElement('p');
-    hint.textContent = '【可使用上下鍵移動並按Enter選取或點選稅則】';
+    hint.textContent = '【可使用上下鍵移動並按Enter選取或點選稅則，按Ese取消';
     hint.style.fontWeight = 'bold';
     hint.style.color = '#0000b7'; // 自定義提示訊息顏色
     resultsDiv.appendChild(hint);
@@ -2862,15 +2862,26 @@ function searchTariff(inputElement, isModal = false) {
         const thead = document.createElement('thead');
         const tbody = document.createElement('tbody');
 
+        // 設置表格樣式
+        table.style.width = '100%';
+        table.style.tableLayout = 'fixed'; // 固定表格布局，讓列寬平均分配
+        
         // 建立表頭
         const headerRow = document.createElement('tr');
         const headers = [
             '貨品分類號列', '中文貨名', '英文貨名',
             '統計數量單位', '稽徵規定', '輸入規定', '輸出規定'
         ];
-        headers.forEach(header => {
+        headers.forEach((header, index) => {
             const th = document.createElement('th');
             th.textContent = header;
+            if (header === '貨品分類號列') {
+                th.style.width = '30%';
+            } else if (header === '中文貨名' || header === '英文貨名') {
+                th.style.width = '50%'; // 平均分配 "中文貨名" 和 "英文貨名" 的寬度
+            } else if (header === '統計數量單位' || header === '稽徵規定' || header === '輸入規定' || header === '輸出規定') {
+                th.style.width = '10%'; // 將這些列設置為較小的寬度
+            }
             headerRow.appendChild(th);
         });
         thead.appendChild(headerRow);
