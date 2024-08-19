@@ -521,6 +521,11 @@ th, td {
     background-color: #ffeb3b; /* 設置為黃色 */
 }
 
+/* 稅則彈跳框反色效果 */
+tr.selected {
+    background-color: #aecefda7; /* 淡藍色 */
+}
+
 /* 浮動按鈕容器 */
 .scroll-container {
     position: fixed;
