@@ -2071,7 +2071,7 @@ document.addEventListener('DOMContentLoaded', function () {
             copyQty.value = '0';
         }
 
-        // 檢查 itemFields 條件，決定是否更新 EXAM_TYPE 為 '8'
+        // 檢查統計方式及輸出許可號碼欄位，決定是否更新 EXAM_TYPE 為 '8'
         let shouldSetExamType = false;
         document.querySelectorAll("#item-container .item-row").forEach((item) => {
             const stMtdValue = item.querySelector('.ST_MTD')?.value.toUpperCase() || '';
