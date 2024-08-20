@@ -2443,7 +2443,7 @@ async function exportToPDF() {
             { value: document.getElementById('SHPR_C_NAME').value, x: 30, y: 66.5 },
             { value: document.getElementById('SHPR_E_NAME').value, x: 30, y: 71.5 },
             { value: document.getElementById('SHPR_C_ADDR').value, x: 30, y: 76.5 },
-            { value: document.getElementById('CNEE_E_NAME').value, x: 30, y: 88 },
+            { value: document.getElementById('CNEE_E_NAME').value, x: 30, y: 87 },
             { value: document.getElementById('CNEE_COUNTRY_CODE').value, x: 30, y: 100.5 },
             { value: document.getElementById('CNEE_BAN_ID').value, x: 63, y: 100.5 },
             { value: document.getElementById('TERMS_SALES').value, x: 165, y: 100.5 },
