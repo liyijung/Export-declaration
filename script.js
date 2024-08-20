@@ -2921,7 +2921,7 @@ function searchTariff(inputElement, isModal = false) {
             if (header === '貨品分類號列') {
                 th.style.width = '30%';
             } else if (header === '中文貨名' || header === '英文貨名') {
-                th.style.width = '40%'; // 平均分配 "中文貨名" 和 "英文貨名" 的寬度
+                th.style.width = '50%'; // 平均分配 "中文貨名" 和 "英文貨名" 的寬度
             } else if (header === '統計數量單位' || header === '稽徵規定' || header === '輸入規定' || header === '輸出規定') {
                 th.style.width = '10%'; // 將這些列設置為較小的寬度
             }
