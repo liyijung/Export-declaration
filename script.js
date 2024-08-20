@@ -2939,6 +2939,7 @@ function searchTariff(inputElement, isModal = false) {
                 td.style.whiteSpace = 'normal'; // 允許換行
                 td.style.wordWrap = 'break-word'; // 在單詞內部換行
                 td.style.wordBreak = 'break-all'; // 強制換行
+                td.style.fontSize = '15px'; // 設置字體大小
 
                 if (header === '貨品分類號列') {
                     td.classList.add('clickable'); // 添加可點擊的 class
