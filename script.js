@@ -2491,9 +2491,28 @@ async function exportToPDF() {
             doc.text('N', 106, 44);
         }
 
-        // 在 PDF 上指定位置顯示 "8"，根據 copy_3 copy_4 copy_5 checkbox 狀態
+        // 檢查統計方式及輸出許可號碼欄位，決定是否更新 EXAM_TYPE 為 '8'
+        let shouldSetExamType = false;
+        document.querySelectorAll("#item-container .item-row").forEach((item) => {
+            const stMtdValue = item.querySelector('.ST_MTD')?.value.toUpperCase() || '';
+            const expNoValue = item.querySelector('.EXP_NO')?.value || '';
+            const expSeqNoValue = item.querySelector('.EXP_SEQ_NO')?.value || '';
+
+            // 判斷 ST_MTD 是否為 '1A', '8A', '8D'，或 EXP_NO 是否為 14 碼，或 EXP_NO 與 EXP_SEQ_NO 皆有值
+            if (['1A', '8A', '8D'].includes(stMtdValue) || expNoValue.length === 14 || (expNoValue && expSeqNoValue)) {
+                shouldSetExamType = true;
+            }
+        });
+
+        // 檢查 copy_3, copy_4, copy_5 的 checkbox 狀態，決定是否更新 EXAM_TYPE 為 '8'
         if (document.getElementById('copy_3').checked || document.getElementById('copy_4').checked || document.getElementById('copy_5').checked) {
-            doc.text('8', 199, 248);
+            shouldSetExamType = true;
+        }
+
+        // 如果需要顯示 "8"，顯示在指定位置
+        if (shouldSetExamType) {
+            document.getElementById('EXAM_TYPE').value = '8';
+            doc.text('8', 199, 248); // 這裡設置顯示 "8" 的 X 和 Y 坐標
         }
 
         // 添加項次資料
