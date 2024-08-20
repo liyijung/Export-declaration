@@ -2465,7 +2465,7 @@ async function exportToPDF() {
         const cneeEAddrLines = doc.splitTextToSize(cneeEAddrText, maxWidth);
 
         // 使用現有的 startY 和 lineHeight 變數
-        let cneeAddressY = 93; // 使用不同名稱的變數來避免衝突
+        let cneeAddressY = 91; // 使用不同名稱的變數來避免衝突
         const cneeLineHeight = 4; // 使用不同名稱的變數來避免衝突
 
         // 確保字體大小與前面一致
