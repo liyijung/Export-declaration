@@ -2444,7 +2444,6 @@ async function exportToPDF() {
             { value: document.getElementById('SHPR_E_NAME').value, x: 30, y: 71.5 },
             { value: document.getElementById('SHPR_C_ADDR').value, x: 30, y: 76.5 },
             { value: document.getElementById('CNEE_E_NAME').value, x: 30, y: 88 },
-            { value: document.getElementById('CNEE_E_ADDR').value, x: 30, y: 94 },
             { value: document.getElementById('CNEE_COUNTRY_CODE').value, x: 30, y: 100.5 },
             { value: document.getElementById('CNEE_BAN_ID').value, x: 63, y: 100.5 },
             { value: document.getElementById('TERMS_SALES').value, x: 165, y: 100.5 },
@@ -2457,6 +2456,27 @@ async function exportToPDF() {
             { value: exchangeRate, x: 192, y: 100.5 } // 添加匯率
         ];
 
+        // 自動換行的收件人地址處理
+        const cneeEAddrElement = document.getElementById('CNEE_E_ADDR');
+        const cneeEAddrText = cneeEAddrElement.value;
+
+        // 將地址限制在特定寬度內並自動換行
+        const maxWidth = 280; // 最大寬度
+        const cneeEAddrLines = doc.splitTextToSize(cneeEAddrText, maxWidth);
+
+        // 使用現有的 startY 和 lineHeight 變數
+        let cneeAddressY = 93; // 使用不同名稱的變數來避免衝突
+        const cneeLineHeight = 4; // 使用不同名稱的變數來避免衝突
+
+        // 確保字體大小與前面一致
+        doc.setFontSize(10); // 設置與其他部分相同的字體大小
+
+        // 繪製地址，每行一段
+        cneeEAddrLines.forEach(line => {
+            doc.text(line, 30, cneeAddressY);
+            cneeAddressY += cneeLineHeight;
+        });
+        
         // 設置表頭字體大小並添加文本
         doc.setFontSize(10);
         headerData.forEach(row => {
