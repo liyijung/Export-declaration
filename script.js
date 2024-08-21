@@ -2221,10 +2221,8 @@ function replaceValue(className, value) {
         // 將值轉為大寫
         value = value.toUpperCase();
 
-        // 去除 CCC_CODE 的值中的符號 '.' 、 '-' 和空格
-        if (className === 'CCC_CODE') {
-            value = value.replace(/[.\- ]/g, '');
-        }
+        // 去除值中的符號 '.' 、 '-' 和空格
+        value = value.replace(/[.\- ]/g, '');
 
         // 取稅則前10碼至6碼查找替換，不改變原來的值，如果找到才替換
         if (className === 'CCC_CODE') {
