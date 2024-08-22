@@ -1562,7 +1562,7 @@ function createInputField(name, value, isVisible) {
     const onFocusAttribute = 'onfocus="highlightRow(this)"';
     const onBlurAttribute = 'onblur="removeHighlight(this)"';
     const onKeyDownAttribute = 'onkeydown="handleInputKeyDown(event, this)"';
-    const escapedValue = value ? escapeXml(value) : ''; // 確保只有在必要時才轉義值
+    const escapedValue = value ? escapeXml(value).trim() : ''; // 確保只有在必要時才轉義值並去除前後空格
 
     // 處理最大四捨五入至小數6位，並移除後面的多餘零
     const roundedValue = (['QTY', 'DOC_UNIT_P', 'NET_WT', 'WIDE', 'LENGT_', 'ST_QTY'].includes(name) && value) ? parseFloat(value).toFixed(6).replace(/\.?0+$/, '') : escapedValue;
