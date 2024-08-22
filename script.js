@@ -282,6 +282,30 @@ function fetchExchangeRates() {
         });
 }
 
+function setupUpperCaseConversion(id) {
+    document.getElementById(id).addEventListener("input", function() {
+        this.value = this.value.toUpperCase();
+    });
+}
+
+// 需要轉換大寫的所有欄位 ID
+const fieldIds = ["LOT_NO", "SHPR_BONDED_ID", "CNEE_COUNTRY_CODE", "TO_CODE", "DOC_CTN_UM", "DCL_DOC_TYPE", "TERMS_SALES", "CURRENCY", "DOC_UM", "ST_MTD", "ORG_COUNTRY", "BOND_NOTE", "EXP_NO", "WIDE_UM", "LENGTH_UM", "ST_UM"];
+
+// 對每個欄位設置自動轉換為大寫的功能
+fieldIds.forEach(setupUpperCaseConversion);
+
+document.getElementById("CURRENCY").addEventListener("blur", function() {
+    const validCurrencies = ["ARS", "AUD", "BRL", "CAD", "CHF", "CLP", "CNY", "DKK", "EUR", "GBP", "HKD", "IDR", "ILS", "INR", "JPY", "KRW", "MYR", "NOK", "NZD", "PEN", "PHP", "PLN", "SEK", "SGD", "THB", "TWD", "USD", "ZAR"];
+    const input = this.value.toUpperCase();
+    const errorElement = document.getElementById("currency-error");
+
+    if (!validCurrencies.includes(input)) {
+        errorElement.style.display = "inline";
+    } else {
+        errorElement.style.display = "none";
+    }
+});
+
 // 計算運費並顯示結果
 function calculateFreight() {
     // 獲取使用者輸入的幣別和總毛重
