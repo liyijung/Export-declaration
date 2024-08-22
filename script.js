@@ -2212,19 +2212,6 @@ Papa.parse(csvUrl, {
 });
 
 function replaceValue(className, value) {
-    if (className === 'ST_MTD' || className === 'ORG_COUNTRY') {
-        // 確保值是字串
-        if (typeof value !== 'string') {
-            value = String(value);
-        }
-
-        // 將值轉為大寫
-        value = value.toUpperCase();
-
-        // 去除值中的符號 '.' 、 '-' 和空格
-        value = value.replace(/[.\- ]/g, '');
-    }
-    
     if (className === 'DOC_UM' || className === 'WIDE_UM' || className === 'LENGTH_UM' || className === 'ST_UM' || className === 'CCC_CODE') {
         // 確保值是字串
         if (typeof value !== 'string') {
