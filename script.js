@@ -1562,6 +1562,16 @@ function createInputField(name, value, isVisible) {
     const onFocusAttribute = 'onfocus="highlightRow(this)"';
     const onBlurAttribute = 'onblur="removeHighlight(this)"';
     const onKeyDownAttribute = 'onkeydown="handleInputKeyDown(event, this)"';
+
+    // 格式化 ORG_IMP_DCL_NO 和 ORG_DCL_NO 的值
+    if (['ORG_IMP_DCL_NO', 'ORG_DCL_NO'].includes(name) && value) {
+        const trimmedValue = value.replace(/\s+/g, ''); // 移除所有空格
+        if (trimmedValue.length === 12) {
+            // 在第3碼之後插入兩個空格
+            value = `${trimmedValue.slice(0, 2)}  ${trimmedValue.slice(2)}`;
+        }
+    }
+    
     const escapedValue = value ? escapeXml(value).trim() : ''; // 確保只有在必要時才轉義值並去除前後空格
 
     // 處理最大四捨五入至小數6位，並移除後面的多餘零
