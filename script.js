@@ -283,28 +283,46 @@ function fetchExchangeRates() {
 }
 
 function setupUpperCaseConversion(id) {
-    document.getElementById(id).addEventListener("input", function() {
-        this.value = this.value.toUpperCase();
-    });
+    const element = document.getElementById(id);
+    if (element) {
+        element.addEventListener("input", function () {
+            this.value = this.value.toUpperCase();
+        });
+    }
 }
 
 // 需要轉換大寫的所有欄位 ID
-const fieldIds = ["LOT_NO", "SHPR_BONDED_ID", "CNEE_COUNTRY_CODE", "TO_CODE", "DOC_CTN_UM", "DCL_DOC_TYPE", "TERMS_SALES", "CURRENCY", "DOC_UM", "ST_MTD", "ORG_COUNTRY", "ORG_IMP_DCL_NO", "BOND_NOTE", "CERT_NO", "ORG_DCL_NO", "EXP_NO", "WIDE_UM", "LENGTH_UM", "ST_UM"];
+const fieldIds = [
+    "LOT_NO", "SHPR_BONDED_ID", "CNEE_COUNTRY_CODE", "TO_CODE", "DOC_CTN_UM",
+    "DCL_DOC_TYPE", "TERMS_SALES", "CURRENCY", "DOC_UM", "ST_MTD", "ORG_COUNTRY",
+    "ORG_IMP_DCL_NO", "BOND_NOTE", "CERT_NO", "ORG_DCL_NO", "EXP_NO", 
+    "WIDE_UM", "LENGTH_UM", "ST_UM"
+];
 
 // 對每個欄位設置自動轉換為大寫的功能
 fieldIds.forEach(setupUpperCaseConversion);
 
-document.getElementById("CURRENCY").addEventListener("blur", function() {
-    const validCurrencies = ["ARS", "AUD", "BRL", "CAD", "CHF", "CLP", "CNY", "DKK", "EUR", "GBP", "HKD", "IDR", "ILS", "INR", "JPY", "KRW", "MYR", "NOK", "NZD", "PEN", "PHP", "PLN", "SEK", "SGD", "THB", "TWD", "USD", "ZAR"];
-    const input = this.value.toUpperCase();
-    const errorElement = document.getElementById("currency-error");
+// 貨幣代碼驗證邏輯
+const currencyField = document.getElementById("CURRENCY");
+if (currencyField) {
+    currencyField.addEventListener("blur", function () {
+        const validCurrencies = [
+            "ARS", "AUD", "BRL", "CAD", "CHF", "CLP", "CNY", "DKK", "EUR", "GBP", 
+            "HKD", "IDR", "ILS", "INR", "JPY", "KRW", "MYR", "NOK", "NZD", "PEN", 
+            "PHP", "PLN", "SEK", "SGD", "THB", "TWD", "USD", "ZAR"
+        ];
+        const input = this.value.toUpperCase();
+        const errorElement = document.getElementById("currency-error");
 
-    if (!validCurrencies.includes(input)) {
-        errorElement.style.display = "inline";
-    } else {
-        errorElement.style.display = "none";
-    }
-});
+        if (errorElement) {
+            if (!validCurrencies.includes(input)) {
+                errorElement.style.display = "inline";
+            } else {
+                errorElement.style.display = "none";
+            }
+        }
+    });
+}
 
 // 計算運費並顯示結果
 function calculateFreight() {
