@@ -1247,8 +1247,8 @@ function exportToExcel() {
     XLSX.utils.book_append_sheet(workbook, itemsWorksheet, '報單項次');
 
     // 文件名
-    const fileName = document.getElementById('FILE_NO').value || '';
-    const exporterName = document.getElementById('SHPR_C_NAME').value || '';
+    const fileName = document.getElementById('FILE_NO').value.trim() || '';
+    const exporterName = document.getElementById('SHPR_C_NAME').value.trim() || '';
 
     // 下載 Excel 文件
     let exportFileName = '';
@@ -2183,8 +2183,8 @@ document.addEventListener('DOMContentLoaded', function () {
         });
         xmlContent += '</detail>\n</Root>';
 
-        const fileName = document.getElementById('FILE_NO').value || '';
-        const exporterName = document.getElementById('SHPR_C_NAME').value || '';
+        const fileName = document.getElementById('FILE_NO').value.trim() || '';
+        const exporterName = document.getElementById('SHPR_C_NAME').value.trim() || '';
 
         let fullFileName = '';
         if (fileName && exporterName) {
