@@ -1608,6 +1608,19 @@ function createInputField(name, value, isVisible) {
     const visibilityClass = isVisible ? '' : 'hidden';
     const numberFields = ['QTY', 'DOC_UNIT_P', 'NET_WT', 'ORG_IMP_DCL_NO_ITEM', 'CERT_NO_ITEM', 'ORG_DCL_NO_ITEM', 'EXP_SEQ_NO', 'WIDE', 'LENGT_', 'ST_QTY'];
     const upperCaseFields = ['LOT_NO', 'SHPR_BONDED_ID', 'CNEE_COUNTRY_CODE', 'TO_CODE', 'DOC_CTN_UM', 'DCL_DOC_TYPE', 'TERMS_SALES', 'CURRENCY', 'DOC_UM', 'ST_MTD', 'ORG_COUNTRY', 'ORG_IMP_DCL_NO', 'BOND_NOTE', 'CERT_NO', 'ORG_DCL_NO', 'EXP_NO', 'WIDE_UM', 'LENGTH_UM', 'ST_UM'];
+    const maxLengthConfig = {
+        'DOC_UM': 3,
+        'ST_MTD': 2,
+        'ORG_COUNTRY': 2,
+        'ORG_IMP_DCL_NO': 14,
+        'BOND_NOTE': 2,
+        'CERT_NO': 11,
+        'ORG_DCL_NO': 14,
+        'EXP_NO': 14,
+        'WIDE_UM': 3,
+        'LENGTH_UM': 3,
+        'ST_UM': 3,
+    };
     const inputType = numberFields.includes(name) ? 'number' : 'text';
     const onInputAttribute = numberFields.includes(name) ? 'oninput="calculateAmount(event); validateNumberInput(event)"' : '';
     const minAttribute = numberFields.includes(name) ? 'min="0"' : '';
@@ -1616,7 +1629,7 @@ function createInputField(name, value, isVisible) {
     const onBlurAttribute = 'onblur="removeHighlight(this)"';
     const onKeyDownAttribute = 'onkeydown="handleInputKeyDown(event, this)"';
     const onInputUpperCaseAttribute = upperCaseFields.includes(name) ? 'oninput="this.value = this.value.toUpperCase()"' : '';
-
+    const maxLengthAttribute = maxLengthConfig[name] ? `maxlength="${maxLengthConfig[name]}"` : '';
 
     // 格式化 ORG_IMP_DCL_NO 和 ORG_DCL_NO 的值
     if (['ORG_IMP_DCL_NO', 'ORG_DCL_NO'].includes(name) && value) {
@@ -1634,7 +1647,7 @@ function createInputField(name, value, isVisible) {
 
     // 處理最大四捨五入至小數6位，並移除後面的多餘零
     const roundedValue = (['QTY', 'DOC_UNIT_P', 'NET_WT', 'WIDE', 'LENGT_', 'ST_QTY'].includes(name) && value) ? parseFloat(value).toFixed(6).replace(/\.?0+$/, '') : escapedValue;
-    const inputField = `<input type="${inputType}" class="${name} ${name === 'CCC_CODE' ? 'CCC_CODE' : 'tax-code-input'}" value="${roundedValue}" ${onInputAttribute} ${minAttribute} ${readonlyAttribute} ${onFocusAttribute} ${onBlurAttribute} ${onKeyDownAttribute} ${onInputUpperCaseAttribute} style="flex: 1; margin-right: 0;">`;
+    const inputField = `<input type="${inputType}" class="${name} ${name === 'CCC_CODE' ? 'CCC_CODE' : 'tax-code-input'}" value="${roundedValue}" ${onInputAttribute} ${minAttribute} ${readonlyAttribute} ${onFocusAttribute} ${onBlurAttribute} ${onKeyDownAttribute} ${onInputUpperCaseAttribute} ${maxLengthAttribute} style="flex: 1; margin-right: 0;">`;
 
     if (name === 'NET_WT') {
         return `
