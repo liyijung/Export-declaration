@@ -1569,6 +1569,9 @@ function createInputField(name, value, isVisible) {
         if (trimmedValue.length === 12) {
             // 在第3碼之後插入兩個空格
             value = `${trimmedValue.slice(0, 2)}  ${trimmedValue.slice(2)}`;
+        } else if (trimmedValue.length === 14) {
+            // 直接使用去除空格後的值
+            value = trimmedValue;
         }
     }
     
