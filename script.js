@@ -2158,6 +2158,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 // 過濾非可見字符
                 value = value.replace(/[\u0000-\u0009\u000B-\u001F\u007F-\u009F\u200B-\u200F\u2028-\u202F\u2060-\u206F\uFEFF\uFFF9-\uFFFB]/g, '').trim();
+
+                // 對 CURRENCY 欄位進行特殊處理
+                if (id === 'CURRENCY') {
+                    value = value.toUpperCase(); // 將值轉為大寫
+                    if (value === 'NTD') {
+                        value = 'TWD'; // 如果是 NTD，則改為 TWD
+                    }
+                }
                 
                 xmlContent += `  <fields>\n    <field_name>${id}</field_name>\n    <field_value>${value}</field_value>\n  </fields>\n`;
             }
