@@ -289,7 +289,7 @@ function setupUpperCaseConversion(id) {
 }
 
 // 需要轉換大寫的所有欄位 ID
-const fieldIds = ["LOT_NO", "SHPR_BONDED_ID", "CNEE_COUNTRY_CODE", "TO_CODE", "DOC_CTN_UM", "DCL_DOC_TYPE", "TERMS_SALES", "CURRENCY", "DOC_UM", "ST_MTD", "ORG_COUNTRY", "BOND_NOTE", "EXP_NO", "WIDE_UM", "LENGTH_UM", "ST_UM"];
+const fieldIds = ["LOT_NO", "SHPR_BONDED_ID", "CNEE_COUNTRY_CODE", "TO_CODE", "DOC_CTN_UM", "DCL_DOC_TYPE", "TERMS_SALES", "CURRENCY", "DOC_UM", "ST_MTD", "ORG_COUNTRY", "ORG_IMP_DCL_NO", "BOND_NOTE", "CERT_NO", "ORG_DCL_NO", "EXP_NO", "WIDE_UM", "LENGTH_UM", "ST_UM"];
 
 // 對每個欄位設置自動轉換為大寫的功能
 fieldIds.forEach(setupUpperCaseConversion);
