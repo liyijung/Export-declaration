@@ -1031,7 +1031,8 @@ function handleFile(event) {
         headerFields.forEach((id, index) => {
             const element = document.getElementById(id);
             if (element) {
-                element.value = headerData[index] ? headerData[index][1] || '' : '';
+                const value = headerData[index] ? (headerData[index][1] || '').trim() : '';
+                element.value = value;
             }
         });
 
