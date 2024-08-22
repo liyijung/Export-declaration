@@ -1608,6 +1608,9 @@ function createInputField(name, value, isVisible) {
             value = trimmedValue;
         }
     }
+    if (["LOT_NO", "SHPR_BONDED_ID", "CNEE_COUNTRY_CODE", "TO_CODE", "DOC_CTN_UM", "DCL_DOC_TYPE", "TERMS_SALES", "CURRENCY", "DOC_UM", "ST_MTD", "ORG_COUNTRY", "BOND_NOTE", "EXP_NO", "WIDE_UM", "LENGTH_UM", "ST_UM"].includes(name) && value) {
+        value = value.toUpperCase();
+    }
     
     const escapedValue = value ? escapeXml(value).trim() : ''; // 確保只有在必要時才轉義值並去除前後空格
 
