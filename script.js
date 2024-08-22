@@ -1031,7 +1031,16 @@ function handleFile(event) {
         headerFields.forEach((id, index) => {
             const element = document.getElementById(id);
             if (element) {
-                const value = headerData[index] ? (headerData[index][1] || '').trim() : '';
+                let value = headerData[index] ? (headerData[index][1] || '').trim() : '';
+                
+                // 判斷是否為 CURRENCY 欄位
+                if (id === 'CURRENCY') {
+                    value = value.toUpperCase(); // 將值轉為大寫
+                    if (value === 'NTD') {
+                        value = 'TWD'; // 如果是 NTD，則改為 TWD
+                    }
+                }
+        
                 element.value = value;
             }
         });
