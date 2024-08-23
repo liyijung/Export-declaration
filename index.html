@@ -40,22 +40,22 @@
         <div class="header-section">
             <div class="header-group">
                 <label for="FILE_NO">文件編號</label>
-                <input type="text" id="FILE_NO" name="FILE_NO" maxlength="11">
+                <input type="text" id="FILE_NO" name="FILE_NO">
             </div>
             <div class="header-group">
                 <label for="LOT_NO">運單號</label>
-                <input type="text" id="LOT_NO" name="LOT_NO" maxlength="15">
+                <input type="text" id="LOT_NO" name="LOT_NO">
             </div>
             <hr>
             <div class="header-group">
                 <label for="SHPR_BAN_ID">出口人統一編號</label>
-                <input type="text" id="SHPR_BAN_ID" name="SHPR_BAN_ID" maxlength="10"
+                <input type="text" id="SHPR_BAN_ID" name="SHPR_BAN_ID"
                 placeholder="輸入統一編號以查找資料" onkeydown="preventArrowKeyAdjustment(event)">
                 <button type="button" onclick="searchData()">搜尋</button>
             </div>
             <div class="header-group">
                 <label for="SHPR_BONDED_ID">海關監管編號</label>
-                <input type="text" id="SHPR_BONDED_ID" name="SHPR_BONDED_ID" maxlength="5"
+                <input type="text" id="SHPR_BONDED_ID" name="SHPR_BONDED_ID"
                 placeholder="(非保稅此欄免填)">
             </div>
             <div class="header-group">
@@ -85,12 +85,12 @@
             </div>
             <div class="header-group">
                 <label for="CNEE_COUNTRY_CODE">買方國家代碼</label>
-                <input type="text" id="CNEE_COUNTRY_CODE" name="CNEE_COUNTRY_CODE" maxlength="2"
+                <input type="text" id="CNEE_COUNTRY_CODE" name="CNEE_COUNTRY_CODE"
                 placeholder="範例：HK、CN、KR、SG(英文代碼)">
             </div>
             <div class="header-group">
                 <label for="CNEE_BAN_ID">買方統一編號</label>
-                <input type="text" id="CNEE_BAN_ID" name="CNEE_BAN_ID" maxlength="8"
+                <input type="text" id="CNEE_BAN_ID" name="CNEE_BAN_ID"
                 placeholder="(非台灣營業公司此欄免填)" onkeydown="preventArrowKeyAdjustment(event)">
             </div>            
             <hr>
@@ -106,7 +106,7 @@
             </div>
             <div class="header-group">
                 <label for="TO_CODE">目的地(代碼)</label>
-                <input type="text" id="TO_CODE" name="TO_CODE" maxlength="5"
+                <input type="text" id="TO_CODE" name="TO_CODE"
                 placeholder="範例：HKHKG、CNSZX、KRICN、SGSIN(英文代碼)">
             </div>
             <div class="header-group">
@@ -124,7 +124,7 @@
             </div>
             <div class="header-group">
                 <label for="DOC_CTN_UM">總件數單位</label>
-                <input type="text" id="DOC_CTN_UM" name="DOC_CTN_UM" maxlength="3"
+                <input type="text" id="DOC_CTN_UM" name="DOC_CTN_UM"
                 placeholder="範例：CTN、PKG、BOX、PLT(英文代碼)">
             </div>
             <div class="header-group">
@@ -146,7 +146,7 @@
         <div class="header-section">
             <div class="header-group">
                 <label for="DCL_DOC_TYPE">報單類別</label>
-                <input type="text" id="DCL_DOC_TYPE" name="DCL_DOC_TYPE" list="member" maxlength="2"
+                <input type="text" id="DCL_DOC_TYPE" name="DCL_DOC_TYPE" list="member"
                 placeholder="(下拉式選單)">
                 <datalist id="member">
                     <option value="G5">國貨出口</option>
@@ -159,7 +159,7 @@
             </div>
             <div class="header-group">
                 <label for="TERMS_SALES">貿易條件</label>
-                <input type="text" id="TERMS_SALES" name="TERMS_SALES" list="terms" maxlength="3"
+                <input type="text" id="TERMS_SALES" name="TERMS_SALES" list="terms"
                 placeholder="(下拉式選單)">
                 <datalist id="terms">
                     <option value="EXW">需填列應加費用，不得填列運保費</option>
@@ -171,7 +171,7 @@
             </div>
             <div class="header-group">
                 <label for="CURRENCY">幣別</label>
-                <input type="text" id="CURRENCY" name="CURRENCY" maxlength="3"
+                <input type="text" id="CURRENCY" name="CURRENCY"
                 placeholder="範例：TWD、USD、CNY、JPY、EUR(英文代碼)">
                 <span id="currency-error" style="color: red; display: none; margin-left: 4px; margin-top: 4px;">幣別錯誤，請重新輸入</span>
             </div>
@@ -399,7 +399,7 @@
             </div>
             <div class="header-group">
                 <label for="DOC_UM">單位</label>
-                <input type="text" id="DOC_UM" class="DOC_UM" maxlength="3"
+                <input type="text" id="DOC_UM" class="DOC_UM"
                     placeholder="範例：EAC、PCE、SET、YRD、MTR(英文代碼)">
             </div>
             <div class="header-group">
@@ -426,7 +426,7 @@
             </div>
             <div class="header-group">
                 <label for="ST_MTD">統計方式</label>
-                <input type="text" id="ST_MTD" class="ST_MTD" name="ST_MTD" list="method-list" maxlength="2">
+                <input type="text" id="ST_MTD" class="ST_MTD" name="ST_MTD" list="method-list">
                 <datalist id="method-list">
                     <option value="02">國貨銷售</option>
                     <option value="04">國貨樣品/贈送</option>
@@ -442,12 +442,12 @@
             <div class="header-group">洋貨復出口核銷欄位</div>
             <div class="header-group">
                 <label for="ORG_COUNTRY">生產國別</label>
-                <input type="text" id="ORG_COUNTRY" class="ORG_COUNTRY" maxlength="2"
+                <input type="text" id="ORG_COUNTRY" class="ORG_COUNTRY"
                 placeholder="範例：US、CN、JP、GB(英文代碼)">
             </div>
             <div class="header-group">
                 <label for="ORG_IMP_DCL_NO">原進口報單號碼</label>
-                <input type="text" id="ORG_IMP_DCL_NO" class="ORG_IMP_DCL_NO" maxlength="14"
+                <input type="text" id="ORG_IMP_DCL_NO" class="ORG_IMP_DCL_NO"
                 placeholder="範例：CX  13709IPORT(中間為兩位空格) 或 CXDA13709IPORT(共14碼)">
             </div>
             <div class="header-group">
@@ -462,7 +462,7 @@
             </div>
             <div class="header-group">
                 <label for="BOND_NOTE">保稅貨物註記</label>
-                <input type="text" id="BOND_NOTE" class="BOND_NOTE" maxlength="2"
+                <input type="text" id="BOND_NOTE" class="BOND_NOTE"
                 placeholder="範例：YB(保品)、NB(非保品)">
             </div>            
             <hr>
@@ -477,7 +477,7 @@
             </div>
             <div class="header-group">
                 <label for="CERT_NO">產證號碼</label>
-                <input type="text" id="CERT_NO" class="CERT_NO" maxlength="11"
+                <input type="text" id="CERT_NO" class="CERT_NO"
                     placeholder="範例：DN24CE00072(共11碼)">
             </div>
             <div class="header-group">
@@ -488,7 +488,7 @@
             <div class="header-group">D5保稅倉核銷欄位</div>
             <div class="header-group">
                 <label for="ORG_DCL_NO">原進倉報單號碼</label>
-                <input type="text" id="ORG_DCL_NO" class="ORG_DCL_NO" maxlength="14">
+                <input type="text" id="ORG_DCL_NO" class="ORG_DCL_NO">
             </div>
             <div class="header-group">
                 <label for="ORG_DCL_NO_ITEM">原進倉報單項次</label>
@@ -498,7 +498,7 @@
             <div class="header-group">管制品欄位</div>
             <div class="header-group">
                 <label for="EXP_NO">輸出許可號碼</label>
-                <input type="text" id="EXP_NO" class="EXP_NO" maxlength="14"
+                <input type="text" id="EXP_NO" class="EXP_NO"
                     placeholder="範例：FTSI11W0000079(共14碼)">
             </div>
             <div class="header-group">
@@ -513,7 +513,7 @@
             </div>
             <div class="header-group">
                 <label for="WIDE_UM">寬度單位</label>
-                <input type="text" id="WIDE_UM" class="WIDE_UM" maxlength="3">
+                <input type="text" id="WIDE_UM" class="WIDE_UM">
             </div>
             <div class="header-group">
                 <label for="LENGT_">長度(幅長)</label>
@@ -521,7 +521,7 @@
             </div>
             <div class="header-group">
                 <label for="LENGTH_UM">長度單位</label>
-                <input type="text" id="LENGTH_UM" class="LENGTH_UM" maxlength="3">
+                <input type="text" id="LENGTH_UM" class="LENGTH_UM">
             </div> 
             <hr>
             <div class="header-group">與數量單位不同另外填列</div>
@@ -531,7 +531,7 @@
             </div>
             <div class="header-group">
                 <label for="ST_UM">統計單位</label>
-                <input type="text" id="ST_UM" class="ST_UM" maxlength="3">
+                <input type="text" id="ST_UM" class="ST_UM">
             </div>           
             <div class="floating-buttons">
                 <button id="rememberButton" onclick="rememberItemModalData()">記憶</button>
@@ -784,11 +784,11 @@
         <div class="header-section">
             <div class="header-group">
                 <label for="FAC_BAN_ID_EX">保稅廠統一編號</label>
-                <input type="text" id="FAC_BAN_ID_EX" name="FAC_BAN_ID_EX" maxlength="8">
+                <input type="text" id="FAC_BAN_ID_EX" name="FAC_BAN_ID_EX">
             </div>
             <div class="header-group">
                 <label for="FAC_BONDED_ID_EX">保稅廠監管編號</label>
-                <input type="text" id="FAC_BONDED_ID_EX" name="FAC_BONDED_ID_EX" maxlength="5">
+                <input type="text" id="FAC_BONDED_ID_EX" name="FAC_BONDED_ID_EX">
             </div>
             <div class="header-group">
                 <label for="RESERVED_STR_1">用料清表文號</label>
@@ -801,19 +801,19 @@
             <hr>
             <div class="header-group">
                 <label for="FAC_BAN_ID">出倉保稅倉庫統一編號</label>
-                <input type="text" id="FAC_BAN_ID" name="FAC_BAN_ID" maxlength="8">
+                <input type="text" id="FAC_BAN_ID" name="FAC_BAN_ID">
             </div>
             <div class="header-group">
                 <label for="FAC_BONDED_ID">出倉保稅倉庫代碼</label>
-                <input type="text" id="FAC_BONDED_ID" name="FAC_BONDED_ID" maxlength="5">
+                <input type="text" id="FAC_BONDED_ID" name="FAC_BONDED_ID">
             </div>
             <div class="header-group">
                 <label for="IN_BONDED_BAN">進倉保稅倉庫統一編號</label>
-                <input type="text" id="IN_BONDED_BAN" name="IN_BONDED_BAN" maxlength="8">
+                <input type="text" id="IN_BONDED_BAN" name="IN_BONDED_BAN">
             </div>
             <div class="header-group">
                 <label for="IN_BONDED_CODE">進倉保稅倉庫代碼</label>
-                <input type="text" id="IN_BONDED_CODE" name="IN_BONDED_CODE" maxlength="5">
+                <input type="text" id="IN_BONDED_CODE" name="IN_BONDED_CODE">
             </div>
         </div>
     </div>
