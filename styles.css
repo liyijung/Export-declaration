@@ -559,3 +559,8 @@ tr.selected {
     opacity: 1;
     background-color: #00BFFF;
 }
+
+/* 設定所有input元素的placeholder字體顏色 */
+input::placeholder {
+    color: #0c14ffa4;; /* 你想要的顏色 */
+}
