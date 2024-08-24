@@ -2273,13 +2273,23 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     
         let itemContainer = document.querySelectorAll("#item-container .item-row");
+        let itemNoCheckedCount = 0; // 用來計算連續勾選大品名註記的次數
+        
         for (let item of itemContainer) {
             let itemNoChecked = item.querySelector('.ITEM_NO').checked;
             
             if (itemNoChecked) { // 若 ITEM_NO 已勾選
-                let invalidFields = [];
+                itemNoCheckedCount++; // 計算連續勾選次數
 
+                // 檢查 DESCRIPTION 是否有值
+                let descriptionElement = item.querySelector('.DESCRIPTION');
+                if (!descriptionElement || !descriptionElement.value.trim()) {
+                    alert('已勾選大品名註記，品名必須有值');
+                    return; // 中止匯出過程
+                }
+                
                 // 檢查除了 DESCRIPTION 外，其他欄位是否有值
+                let invalidFields = [];
                 itemRequiredFields.forEach(field => {
                     if (field.className !== 'DESCRIPTION') {
                         let element = item.querySelector(`.${field.className}`);
@@ -2290,10 +2300,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
 
                 if (invalidFields.length > 0) {
-                    alert(`已勾選大品名註記，以下欄位不應有值：\n${invalidFields.join('、')}`);
+                    alert(`已勾選大品名註記，以下欄位不應有值：\n${invalidFields.join(', ')}`);
                     return; // 中止匯出過程
                 }
+
             } else { // 若 ITEM_NO 未勾選，進行其他檢查
+
+                // 若未勾選大品名註記，將計數重置
+                itemNoCheckedCount = 0;
+
                 let itemMissingFields = [];
 
                 itemRequiredFields.forEach(field => {
@@ -2351,9 +2366,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
 
                 if (itemMissingFields.length > 0) {
-                    alert(`以下欄位不可為空：\n${itemMissingFields.join('、')}`);
+                    alert(`以下欄位不可為空：\n${itemMissingFields.join(', ')}`);
                     return; // 中止匯出過程
                 }
+            }
+
+            // 檢查是否有連續兩個以上的「大品名註記」勾選
+            if (itemNoCheckedCount > 1) {
+                alert('大品名註記不可連續勾選');
+                return; // 中止匯出過程
             }
         }
         
