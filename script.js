@@ -1859,11 +1859,67 @@ function calculateAmounts() {
         return sum + (isNaN(amount) ? 0 : amount);
     }, 0);
 
+    const termsSales = document.getElementById('TERMS_SALES').value;
     const totalDocumentAmount = parseFloat(document.getElementById('CAL_IP_TOT_ITEM_AMT').value) || 0;
     const currency = document.getElementById('CURRENCY').value || '';
 
-    // 顯示金額
-    alert(`報單表頭的總金額為：${currency} ${totalDocumentAmount.toFixed(2)}\n各項次金額的加總為：${currency} ${totalItemsAmount.toFixed(2)}`);
+    // 獲取額外費用
+    const freight = parseFloat(document.getElementById('FRT_AMT').value) || 0; // 運費
+    const insurance = parseFloat(document.getElementById('INS_AMT').value) || 0; // 保險費
+    const additionalCost = parseFloat(document.getElementById('ADD_AMT').value) || 0; // 應加費用
+    const deductibleCost = parseFloat(document.getElementById('SUBTRACT_AMT').value) || 0; // 應減費用
+
+    // 根據貿易條件計算總金額
+    let calculatedTotalAmount = totalItemsAmount;
+    let calculationFormula = '';
+    let explanation = '';
+    let isEXWValid = true;
+
+    switch (termsSales) {
+        case 'EXW':
+            calculationFormula = `${totalItemsAmount.toFixed(decimalPlaces)}`;
+            explanation = '項次金額加總' ;
+            
+            // 檢查 EXW 條件下運費、保險費、應減費用是否為零，且 ADD_AMT 需大於 0
+            if (freight !== 0 || insurance !== 0 || deductibleCost !== 0 || additionalCost <= 0) {
+                isEXWValid = false;
+            }
+            break;
+        case 'FOB':
+            calculatedTotalAmount += freight + insurance + additionalCost - deductibleCost;
+            calculationFormula = `${totalItemsAmount.toFixed(decimalPlaces)} + ${freight.toFixed(decimalPlaces)} (運費) + ${insurance.toFixed(decimalPlaces)} (保險費) + ${additionalCost.toFixed(decimalPlaces)} (應加費用) - ${deductibleCost.toFixed(decimalPlaces)} (應減費用)`;
+            explanation = '項次金額加總+運費+保險費+應加費用-應減費用';
+            break;
+        case 'CFR':
+            calculatedTotalAmount += insurance + additionalCost - deductibleCost;
+            calculationFormula = `${totalItemsAmount.toFixed(decimalPlaces)} + ${insurance.toFixed(decimalPlaces)} (保險費) + ${additionalCost.toFixed(decimalPlaces)} (應加費用) - ${deductibleCost.toFixed(decimalPlaces)} (應減費用)`;
+            explanation = '項次金額加總+保險費+應加費用-應減費用';
+            break;
+        case 'C&I':
+            calculatedTotalAmount += freight + additionalCost - deductibleCost;
+            calculationFormula = `${totalItemsAmount.toFixed(decimalPlaces)} + ${freight.toFixed(decimalPlaces)} (運費) + ${additionalCost.toFixed(decimalPlaces)} (應加費用) - ${deductibleCost.toFixed(decimalPlaces)} (應減費用)`;
+            explanation = '項次金額加總+運費+應加費用-應減費用';
+            break;
+        case 'CIF':
+            calculatedTotalAmount += additionalCost - deductibleCost;
+            calculationFormula = `${totalItemsAmount.toFixed(decimalPlaces)} + ${additionalCost.toFixed(decimalPlaces)} (應加費用) - ${deductibleCost.toFixed(decimalPlaces)} (應減費用)`;
+            explanation = '項次金額加總+應加費用-應減費用';
+            break;
+        default:
+            alert('無效的貿易條件，請檢查輸入。');
+            return;
+    }
+
+    // 檢查計算結果是否與表頭金額相同
+    if (calculatedTotalAmount.toFixed(2) === totalDocumentAmount.toFixed(2)) {
+        if (termsSales === 'EXW' && !isEXWValid) {
+            alert(`【${termsSales} 計算公式：${explanation}】\n系統計算的總金額為：${currency} ${calculatedTotalAmount.toFixed(decimalPlaces)}\n-------------------------------------------------------------------\n報單表頭的總金額為：${currency} ${totalDocumentAmount.toFixed(decimalPlaces)}\n【錯誤！運費、保險費或應減費用不應有值，應加費用需有值】\n各項次金額的加總為：${currency} ${totalItemsAmount.toFixed(decimalPlaces)}`);
+        } else {
+            alert(`【${termsSales} 計算公式：${explanation}】\n系統計算的總金額為：${currency} ${calculatedTotalAmount.toFixed(decimalPlaces)}\n-------------------------------------------------------------------\n報單表頭的總金額為：${currency} ${totalDocumentAmount.toFixed(decimalPlaces)}【正確】\n各項次金額的加總為：${currency} ${totalItemsAmount.toFixed(decimalPlaces)}`);
+        }
+    } else {
+        alert(`【${termsSales} 計算公式：${explanation}】\n系統計算的總金額為：${currency} ${calculatedTotalAmount.toFixed(decimalPlaces)}\n-------------------------------------------------------------------\n報單表頭的總金額為：${currency} ${totalDocumentAmount.toFixed(decimalPlaces)}【錯誤！】\n各項次金額的加總為：${currency} ${totalItemsAmount.toFixed(decimalPlaces)}`);
+    }
 }
 
 // 重量核算
