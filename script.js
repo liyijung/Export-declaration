@@ -2251,6 +2251,63 @@ document.addEventListener('DOMContentLoaded', function () {
             alert(`以下欄位為空，請填寫後再匯出：\n${missingFields.join('、')}`);
             return; // 中止匯出過程
         }
+
+        // 檢查貿易條件
+        let termsSalesValue = document.getElementById('TERMS_SALES')?.value.trim().toUpperCase();
+
+        if (termsSalesValue === 'EXW') {
+            // EXW: FRT_AMT, INS_AMT, SUBTRACT_AMT 不得填列，ADD_AMT 不可為空
+            let invalidFields = [];
+            ['FRT_AMT', 'INS_AMT', 'SUBTRACT_AMT'].forEach(className => {
+                let element = document.getElementById(className);
+                if (element && element.value.trim()) {
+                    invalidFields.push(className === 'FRT_AMT' ? '運費' : className === 'INS_AMT' ? '保險費' : '應減費用');
+                }
+            });
+            if (invalidFields.length > 0) {
+                alert(`當貿易條件為 EXW 時，下列欄位不得填列：\n${invalidFields.join('、')}`);
+                return; // 中止匯出過程
+            }
+
+            let addAmtElement = document.getElementById('ADD_AMT');
+            if (!addAmtElement || !addAmtElement.value.trim()) {
+                alert('當貿易條件為 EXW 時，應加費用 不可為空');
+                return; // 中止匯出過程
+            }
+        }
+
+        if (termsSalesValue === 'CFR') {
+            // CFR: FRT_AMT 不可為空
+            let frtAmtElement = document.getElementById('FRT_AMT');
+            if (!frtAmtElement || !frtAmtElement.value.trim()) {
+                alert('當貿易條件為 CFR 時，運費 不可為空');
+                return; // 中止匯出過程
+            }
+        }
+
+        if (termsSalesValue === 'C&I') {
+            // C&I: INS_AMT 不可為空
+            let insAmtElement = document.getElementById('INS_AMT');
+            if (!insAmtElement || !insAmtElement.value.trim()) {
+                alert('當貿易條件為 C&I 時，保險費 不可為空');
+                return; // 中止匯出過程
+            }
+        }
+
+        if (termsSalesValue === 'CIF') {
+            // CIF: FRT_AMT, INS_AMT 不可為空
+            let missingFields = [];
+            ['FRT_AMT', 'INS_AMT'].forEach(className => {
+                let element = document.getElementById(className);
+                if (!element || !element.value.trim()) {
+                    missingFields.push(className === 'FRT_AMT' ? '運費' : '保險費');
+                }
+            });
+            if (missingFields.length > 0) {
+                alert(`當貿易條件為 CIF 時，下列欄位不可為空：\n${missingFields.join('、')}`);
+                return; // 中止匯出過程
+            }
+        }
     
         const dclDocType = document.getElementById('DCL_DOC_TYPE').value.trim().toUpperCase();
         const itemRequiredFields = [
@@ -2268,8 +2325,15 @@ document.addEventListener('DOMContentLoaded', function () {
         if (['B8', 'B9', 'D5', 'F5'].includes(dclDocType)) {
             itemRequiredFields.push(
                 { className: 'SELLER_ITEM_CODE', name: '賣方料號' },
-                { className: 'BOND_NOTE', name: '保稅貨物註記' }
+                { className: 'BOND_NOTE', name: '保稅貨物註記' },
             );
+        } else {
+            // 如果 DCL_DOC_TYPE 不是 B8、B9、D5 或 F5，則 SHPR_BONDED_ID 不得填列
+            let shprBondedIdElement = document.getElementById('SHPR_BONDED_ID');
+            if (shprBondedIdElement && shprBondedIdElement.value.trim()) {
+                alert('當報單類別不是 B8、B9、D5 或 F5 時，海關監管編號 不得填列');
+                return; // 中止匯出過程
+            }
         }
     
         let itemContainer = document.querySelectorAll("#item-container .item-row");
