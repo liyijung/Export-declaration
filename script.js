@@ -2351,7 +2351,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
 
                 if (itemMissingFields.length > 0) {
-                    alert(`以下欄位不可為空：\n${itemMissingFields.join(', ')}`);
+                    alert(`以下欄位不可為空：\n${itemMissingFields.join('、')}`);
                     return; // 中止匯出過程
                 }
             }
