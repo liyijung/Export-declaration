@@ -2364,7 +2364,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
 
                 if (invalidFields.length > 0) {
-                    alert(`已勾選大品名註記，以下欄位不應有值：\n${invalidFields.join(', ')}`);
+                    alert(`已勾選大品名註記，以下欄位不應有值：\n${invalidFields.join('、')}`);
                     return; // 中止匯出過程
                 }
 
@@ -2430,7 +2430,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
 
                 if (itemMissingFields.length > 0) {
-                    alert(`以下欄位不可為空：\n${itemMissingFields.join(', ')}`);
+                    alert(`以下欄位不可為空：\n${itemMissingFields.join('、')}`);
                     return; // 中止匯出過程
                 }
             }
