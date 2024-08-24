@@ -2222,6 +2222,141 @@ document.addEventListener('DOMContentLoaded', function () {
     function exportToXML() {
         updateVariables(); // 在匯出XML之前更新變數
 
+        const requiredFields = [
+            { id: 'FILE_NO', name: '文件編號' },
+            { id: 'SHPR_BAN_ID', name: '出口人統一編號' },
+            { id: 'SHPR_C_NAME', name: '出口人中文名稱' },
+            { id: 'CNEE_E_NAME', name: '買方中/英名稱' },
+            { id: 'CNEE_COUNTRY_CODE', name: '買方國家代碼' },
+            { id: 'TOT_CTN', name: '總件數' },
+            { id: 'DOC_CTN_UM', name: '總件數單位' },
+            { id: 'DCL_GW', name: '總毛重' },
+            { id: 'DCL_NW', name: '總淨重' },
+            { id: 'DCL_DOC_TYPE', name: '報單類別' },
+            { id: 'TERMS_SALES', name: '貿易條件' },
+            { id: 'CURRENCY', name: '幣別' },
+            { id: 'CAL_IP_TOT_ITEM_AMT', name: '總金額' }
+        ];
+    
+        // 檢查是否有未填寫的必要欄位
+        let missingFields = [];
+        requiredFields.forEach(field => {
+            let element = document.getElementById(field.id);
+            if (element && !element.value.trim()) {
+                missingFields.push(field.name);
+            }
+        });
+    
+        if (missingFields.length > 0) {
+            alert(`以下欄位為空，請填寫後再匯出：\n${missingFields.join(', ')}`);
+            return; // 中止匯出過程
+        }
+    
+        const dclDocType = document.getElementById('DCL_DOC_TYPE').value.trim().toUpperCase();
+        const itemRequiredFields = [
+            { className: 'DESCRIPTION', name: '品名' },
+            { className: 'QTY', name: '數量' },
+            { className: 'DOC_UM', name: '單位' },
+            { className: 'DOC_UNIT_P', name: '單價' },
+            { className: 'DOC_TOT_P', name: '金額' },
+            { className: 'TRADE_MARK', name: '商標' },
+            { className: 'ST_MTD', name: '統計方法' },
+            { className: 'NET_WT', name: '淨重' }
+        ];
+    
+        // 如果 DCL_DOC_TYPE 是 B8、B9、D5 或 F5，還需要檢查 SELLER_ITEM_CODE 和 BOND_NOTE
+        if (['B8', 'B9', 'D5', 'F5'].includes(dclDocType)) {
+            itemRequiredFields.push(
+                { className: 'SELLER_ITEM_CODE', name: '賣方料號' },
+                { className: 'BOND_NOTE', name: '保稅貨物註記' }
+            );
+        }
+    
+        let itemContainer = document.querySelectorAll("#item-container .item-row");
+        for (let item of itemContainer) {
+            let itemNoChecked = item.querySelector('.ITEM_NO').checked;
+            
+            if (itemNoChecked) { // 若 ITEM_NO 已勾選
+                let invalidFields = [];
+
+                // 檢查除了 DESCRIPTION 外，其他欄位是否有值
+                itemRequiredFields.forEach(field => {
+                    if (field.className !== 'DESCRIPTION') {
+                        let element = item.querySelector(`.${field.className}`);
+                        if (element && element.value.trim()) {
+                            invalidFields.push(field.name);
+                        }
+                    }
+                });
+
+                if (invalidFields.length > 0) {
+                    alert(`已勾選大品名註記，以下欄位不應有值：\n${invalidFields.join(', ')}`);
+                    return; // 中止匯出過程
+                }
+            } else { // 若 ITEM_NO 未勾選，進行其他檢查
+                let itemMissingFields = [];
+
+                itemRequiredFields.forEach(field => {
+                    let element = item.querySelector(`.${field.className}`);
+                    if (element && !element.value.trim()) {
+                        itemMissingFields.push(field.name);
+                    }
+                });
+
+                // 成對欄位檢查
+                let expNoAlreadyChecked = false;
+                const pairedFields = [
+                    { fields: ['ORG_IMP_DCL_NO', 'ORG_IMP_DCL_NO_ITEM'], names: ['原進口報單號碼', '原進口報單項次'] },
+                    { fields: ['CERT_NO', 'CERT_NO_ITEM'], names: ['產證號碼', '產證項次'] },
+                    { fields: ['ORG_DCL_NO', 'ORG_DCL_NO_ITEM'], names: ['原進倉報單號碼', '原進倉報單項次'] },
+                    { fields: ['WIDE', 'WIDE_UM'], names: ['寬度(幅寬)', '寬度單位'] },
+                    { fields: ['LENGT_', 'LENGTH_UM'], names: ['長度(幅長)', '長度單位'] },
+                    { fields: ['ST_QTY', 'ST_UM'], names: ['統計數量', '統計單位'] },
+                    { fields: ['EXP_NO', 'EXP_SEQ_NO'], names: ['輸出許可號碼', '輸出許可項次'] }
+                ];
+
+                // 檢查成對欄位是否同時有值
+                pairedFields.forEach(pair => {
+                    let firstElement = item.querySelector(`.${pair.fields[0]}`);
+                    let secondElement = item.querySelector(`.${pair.fields[1]}`);
+                    if ((firstElement && firstElement.value.trim() && !secondElement.value.trim()) || 
+                        (secondElement && secondElement.value.trim() && !firstElement.value.trim())) {
+                        itemMissingFields.push(`${pair.names[0]} 和 ${pair.names[1]} 必須同時有值`);
+
+                        // 如果是 'EXP_NO' 和 'EXP_SEQ_NO'，設置旗標變數
+                        if (pair.fields.includes('EXP_NO') && pair.fields.includes('EXP_SEQ_NO')) {
+                            expNoAlreadyChecked = true;
+                        }
+                    }
+                });
+
+                // 檢查當 'CERT_NO' 和 'CERT_NO_ITEM' 有值時，'GOODS_MODEL' 和 'GOODS_SPEC' 也需要有值
+                let certNo = item.querySelector('.CERT_NO');
+                let certNoItem = item.querySelector('.CERT_NO_ITEM');
+                if (certNo && certNo.value.trim() && certNoItem && certNoItem.value.trim()) {
+                    let goodsModel = item.querySelector('.GOODS_MODEL');
+                    let goodsSpec = item.querySelector('.GOODS_SPEC');
+                    if (!goodsModel || !goodsModel.value.trim() || !goodsSpec || !goodsSpec.value.trim()) {
+                        itemMissingFields.push(`產證號碼 和 產證項次 有值時，型號 及 規格 也必須有值`);
+                    }
+                }
+
+                // 如果 ST_MTD 包含 1A, 8A 或 8D，EXP_NO 和 EXP_SEQ_NO 不可為空
+                if (!expNoAlreadyChecked) { // 只有在成對欄位檢查中未提示過的情況下才進行此檢查
+                    const stMtdValue = item.querySelector('.ST_MTD')?.value.trim();
+                    if (['1A', '8A', '8D'].includes(stMtdValue) && 
+                        (!item.querySelector('.EXP_NO')?.value.trim() || !item.querySelector('.EXP_SEQ_NO')?.value.trim())) {
+                        itemMissingFields.push('統計方式包含 1A、8A、8D，輸出許可號碼 和 輸出許可項次 不可為空');
+                    }
+                }
+
+                if (itemMissingFields.length > 0) {
+                    alert(`以下欄位不可為空：\n${itemMissingFields.join(', ')}`);
+                    return; // 中止匯出過程
+                }
+            }
+        }
+        
         const headerFields = [
             'LOT_NO', 'SHPR_BAN_ID', 'SHPR_BONDED_ID', 
             'SHPR_C_NAME', 'SHPR_E_NAME', 'SHPR_C_ADDR', 'SHPR_E_ADDR', 
