@@ -2248,7 +2248,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     
         if (missingFields.length > 0) {
-            alert(`以下欄位為空，請填寫後再匯出：\n${missingFields.join(', ')}`);
+            alert(`以下欄位為空，請填寫後再匯出：\n${missingFields.join('、')}`);
             return; // 中止匯出過程
         }
     
@@ -2290,7 +2290,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
 
                 if (invalidFields.length > 0) {
-                    alert(`已勾選大品名註記，以下欄位不應有值：\n${invalidFields.join(', ')}`);
+                    alert(`已勾選大品名註記，以下欄位不應有值：\n${invalidFields.join('、')}`);
                     return; // 中止匯出過程
                 }
             } else { // 若 ITEM_NO 未勾選，進行其他檢查
