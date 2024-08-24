@@ -2452,14 +2452,57 @@ async function exportToPDF() {
         const calculateRightAlignedX = (value, minWidth, maxWidth) => {
             const textWidth = doc.getTextWidth(value);
             const calculatedWidth = Math.max(textWidth, minWidth);
-            if (value === 'NIL') {
-                return maxWidth - calculatedWidth - 2; // 如果是NIL，返回 maxWidh - calculatedWidth - 2
-            } else if (value === calIpTotItemAmt) {
-                return maxWidth - calculatedWidth + 3; // 如果是 calIpTotItemAmt，返回 maxWidh - calculatedWidth + 3
-            } else {
-                return maxWidth - calculatedWidth;
-            }
+            return maxWidth - calculatedWidth;
         };
+
+        // 去除數值中的逗號並轉換為浮點數
+        function parseNumber(value) {
+            return value !== 'NIL' ? parseFloat(value.replace(/,/g, '')) : 0;
+        }
+
+        // 計算 totalFobPrice
+        let totalFobPrice = parseNumber(calIpTotItemAmt) 
+                            - parseNumber(frtAmt) 
+                            - parseNumber(insAmt);
+
+        const termsSales = document.getElementById('TERMS_SALES').value.toUpperCase();
+
+        // 根據 TERMS_SALES 的值進行不同的處理
+        if (termsSales === 'EXW') {
+            totalFobPrice += parseNumber(addAmt); // EXW 情況下加上 addAmt
+        } else if (['FOB', 'CFR', 'C&I', 'CIF'].includes(termsSales)) {
+            totalFobPrice -= parseNumber(addAmt); // FOB、CFR、C&I、CIF 情況下減去 addAmt
+        }
+
+        // 最後加上 subtractAmt
+        totalFobPrice += parseNumber(subtractAmt);
+
+        // 計算 totalFobPriceTw，使用匯率乘以 totalFobPrice
+        let totalFobPriceTw = totalFobPrice * (exchangeRate ? exchangeRate : 1);
+
+        // 取整數後保留兩位小數並加入千分位逗號
+        let formattedTotalFobPrice = totalFobPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        let formattedTotalFobPriceTw = Math.round(totalFobPriceTw).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+        // 設定字體大小
+        doc.setFontSize(10); // 這裡設為 10，可以根據需求調整
+
+        // 計算文字寬度以達到靠右對齊
+        let totalFobPriceX = 205 - doc.getTextWidth(formattedTotalFobPrice);
+        let totalFobPriceTwX = 205 - doc.getTextWidth(formattedTotalFobPriceTw);
+        
+        let totalFobPriceY = 58; // 設定 y 值顯示 totalFobPrice
+        let totalFobPriceTwY = 61.5; // 設定 y 值顯示 totalFobPriceTw
+
+        // 顯示 totalFobPrice 和 totalFobPriceTw 在首頁，只顯示數值
+        doc.text(formattedTotalFobPrice, totalFobPriceX, totalFobPriceY);
+        if (exchangeRate) {
+            doc.text(formattedTotalFobPriceTw, totalFobPriceTwX, totalFobPriceTwY);
+            // 在 x: 171, y: totalFobPriceY 顯示 currency
+            doc.text(currency, 171, totalFobPriceY);
+            // 在 x: 171, y: totalFobPriceTwY 顯示 "TWD"
+            doc.text("TWD", 171, totalFobPriceTwY);
+        }
 
         // 添加二維條碼
         const barcodeCanvas = document.createElement('canvas');
@@ -2502,11 +2545,11 @@ async function exportToPDF() {
             { value: `C2051 遠雄第四快遞貨棧`, x: 30, y: 53.5 },
             { value: `${dclDocTypeValue}${dclDocTypeText}`, x: 103, y: 10 },
             { value: currency, x: 171, y: 29 },
-            { value: calIpTotItemAmt, x: calculateRightAlignedX(calIpTotItemAmt, 0, 210), y: 29 },
-            { value: formattedFrtAmt, x: calculateRightAlignedX(formattedFrtAmt, 0, 210), y: 36 },
-            { value: formattedInsAmt, x: calculateRightAlignedX(formattedInsAmt, 0, 210), y: 43 },
-            { value: formattedAddAmt, x: calculateRightAlignedX(formattedAddAmt, 0, 210), y: 49 },
-            { value: formattedSubtractAmt, x: calculateRightAlignedX(formattedSubtractAmt, 0, 210), y: 54 },
+            { value: calIpTotItemAmt, x: calculateRightAlignedX(calIpTotItemAmt, 0, 205), y: 29 },
+            { value: formattedFrtAmt, x: calculateRightAlignedX(formattedFrtAmt, 0, 205), y: 36 },
+            { value: formattedInsAmt, x: calculateRightAlignedX(formattedInsAmt, 0, 205), y: 43 },
+            { value: formattedAddAmt, x: calculateRightAlignedX(formattedAddAmt, 0, 205), y: 49 },
+            { value: formattedSubtractAmt, x: calculateRightAlignedX(formattedSubtractAmt, 0, 205), y: 54 },
             { value: formattedFrtAmt !== 'NIL' ? currency : '', x: 171, y: 36 },
             { value: formattedInsAmt !== 'NIL' ? currency : '', x: 171, y: 43 },
             { value: formattedAddAmt !== 'NIL' ? currency : '', x: 171, y: 49 },
