@@ -2958,7 +2958,7 @@ async function exportToPDF() {
         const cneeEAddrText = cneeEAddrElement.value;
 
         // 將地址限制在特定寬度內並自動換行
-        const maxWidth = 280; // 最大寬度
+        const maxWidth = 270; // 最大寬度
         const cneeEAddrLines = doc.splitTextToSize(cneeEAddrText, maxWidth);
 
         // 使用現有的 startY 和 lineHeight 變數
