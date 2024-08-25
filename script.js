@@ -2462,6 +2462,70 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
         
+        // 欄位碼數檢查設定
+        const fieldLengthChecks = [
+            { id: 'FILE_NO', name: '文件編號', validLengths: [10, 11] },
+            { id: 'SHPR_BONDED_ID', name: '海關監管編號', validLengths: [5] },
+            { id: 'CNEE_COUNTRY_CODE', name: '買方國家代碼', validLengths: [2] },
+            { id: 'TO_CODE', name: '目的地(代碼)', validLengths: [5] },
+            { id: 'DOC_CTN_UM', name: '總件數單位', validLengths: [3] },
+            { id: 'DCL_DOC_TYPE', name: '報單類別', validLengths: [2] },
+            { id: 'TERMS_SALES', name: '貿易條件', validLengths: [3] },
+            { id: 'CURRENCY', name: '幣別', validLengths: [3] },
+        ];
+
+        // 執行碼數檢查
+        let invalidLengthFields = [];
+
+        fieldLengthChecks.forEach(field => {
+            let element = document.getElementById(field.id);
+            if (element && element.value.trim()) { // 如果欄位有值則進行檢查
+                let length = element.value.trim().length;
+                if (!field.validLengths.includes(length)) {
+                    invalidLengthFields.push(`${field.name} (應為 ${field.validLengths.join(' 或 ')} 碼)`);
+                }
+            }
+        });
+
+        if (invalidLengthFields.length > 0) {
+            alert(`以下欄位的碼數不正確：\n${invalidLengthFields.join('、')}`);
+            return; // 中止匯出過程
+        }
+
+        // 欄位碼數檢查設定 (每個項次都需檢查的欄位)
+        const itemFieldLengthChecks = [
+            { className: 'DOC_UM', name: '單位', validLengths: [3] },
+            { className: 'ST_MTD', name: '統計方式', validLengths: [2] },
+            { className: 'BOND_NOTE', name: '保稅貨物註記', validLengths: [2] },
+            { className: 'ORG_IMP_DCL_NO', name: '原進口報單號碼', validLengths: [14] },
+            { className: 'CERT_NO', name: '產證號碼', validLengths: [11] },
+            { className: 'ORG_DCL_NO', name: '原進倉報單號碼', validLengths: [14] },
+            { className: 'EXP_NO', name: '輸出許可號碼', validLengths: [14] },
+            { className: 'WIDE_UM', name: '寬度單位', validLengths: [3] },
+            { className: 'LENGTH_UM', name: '長度單位', validLengths: [3] },
+            { className: 'ST_UM', name: '統計單位', validLengths: [3] }
+        ];
+
+        // 檢查每個項次的欄位碼數
+        for (let item of document.querySelectorAll("#item-container .item-row")) {
+            let invalidItemFields = [];
+
+            for (let field of itemFieldLengthChecks) {
+                let element = item.querySelector(`.${field.className}`);
+                if (element && element.value.trim()) { // 如果欄位有值則進行檢查
+                    let length = element.value.trim().length;
+                    if (!field.validLengths.includes(length)) {
+                        invalidItemFields.push(`${field.name} (應為 ${field.validLengths.join(' 或 ')} 碼)`);
+                    }
+                }
+            }
+
+            if (invalidItemFields.length > 0) {
+                alert(`以下項次的欄位碼數不正確：\n${invalidItemFields.join('、')}`);
+                return; // 中止匯出過程
+            }
+        }
+        
         const headerFields = [
             'LOT_NO', 'SHPR_BAN_ID', 'SHPR_BONDED_ID', 
             'SHPR_C_NAME', 'SHPR_E_NAME', 'SHPR_C_ADDR', 'SHPR_E_ADDR', 
