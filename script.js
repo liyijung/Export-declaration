@@ -3047,7 +3047,6 @@ async function exportToPDF() {
             });
         });
 
-
         // 計算加總值，根據單位分組
         const totalNetWt = itemsData.reduce((sum, item) => sum + item.netWt, 0);
         const totalAmt = itemsData.reduce((sum, item) => sum + item.itemAmt, 0);
@@ -3116,6 +3115,20 @@ async function exportToPDF() {
             }
         }
 
+        // 取得 FILE_NO 的值
+        const fileNo = document.getElementById('FILE_NO').value || '';
+
+        // 添加 FILE_NO 到左下角的函數
+        function addFileNoToBottomLeft(doc, fileNo) {
+            const pageHeight = doc.internal.pageSize.height;
+            const leftX = 7; // 靠左邊的 X 坐標
+            const bottomY = pageHeight - 8; // 靠近底部的 Y 坐標
+            doc.text(fileNo, leftX, bottomY);
+        }
+
+        // 首頁顯示文件編號
+        addFileNoToBottomLeft(doc, fileNo);
+        
         for (const item of itemsData) {
             const itemDescriptionLines = doc.splitTextToSize(item.description, 150).length;
             const itemLinesNeeded = item.index === '*' ? itemDescriptionLines + 2 : itemDescriptionLines + 1;
@@ -3129,6 +3142,9 @@ async function exportToPDF() {
                 // 在新頁面右上角添加頁碼
                 const currentPage = doc.internal.getCurrentPageInfo().pageNumber;
                 addPageNumber(doc, currentPage, totalPages);
+
+                // 每頁顯示文件編號
+                addFileNoToBottomLeft(doc, fileNo);
             }
 
             // 在首頁右上角添加頁碼
