@@ -1833,6 +1833,42 @@ function calculateQuantities() {
     }
 }
 
+// 即時更新金額
+document.getElementById('decimal-places').addEventListener('input', () => {
+    updateItemAmounts();
+});
+
+function updateItemAmounts() {
+    const decimalPlacesInput = document.getElementById('decimal-places');
+    let decimalPlaces = parseInt(decimalPlacesInput.value);
+
+    // 確保小數點位數最小為0，並預設為2
+    if (isNaN(decimalPlaces) || decimalPlaces < 0) {
+        decimalPlaces = 2;
+    }
+
+    const items = document.querySelectorAll('#item-container .item-row');
+    items.forEach((item) => {
+        // 取得數量與單價
+        const quantityInput = item.querySelector('.QTY');
+        const unitPriceInput = item.querySelector('.DOC_UNIT_P');
+        const amountInput = item.querySelector('.DOC_TOT_P');
+
+        const quantity = parseFloat(quantityInput.value);
+        const unitPrice = parseFloat(unitPriceInput.value);
+
+        // 判斷數量或單價是否為無效數字
+        if (isNaN(quantity) || isNaN(unitPrice)) {
+            // 若數量或單價無效，則將金額設為空白
+            amountInput.value = '';
+        } else {
+            // 根據數量與單價計算金額並設為指定的小數位數
+            const amount = quantity * unitPrice;
+            amountInput.value = amount.toFixed(decimalPlaces);
+        }
+    });
+}
+
 // 計算所有行的金額
 function calculateAmounts() {
     const decimalPlacesInput = document.getElementById('decimal-places');
