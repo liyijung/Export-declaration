@@ -151,7 +151,14 @@ function fillForm(record) {
         document.getElementById('SHPR_E_ADDR').value = record['英文營業地址'] || '';
     } else {
         console.log('Record not found');
-        alert('未找到匹配的資料\n（未向貿易署辦理登記出進口廠商者，若輸出貨品之離岸價格超過美金2萬元，應向貿易署申請輸出許可證）');
+        iziToast.warning({
+            title: '警告',
+            message: '未找到匹配的資料<br>（未向貿易署辦理登記出進口廠商者，<br>若輸出貨品之離岸價格超過美金2萬元，<br>應向貿易署申請輸出許可證）',
+            position: 'center',
+            timeout: 8000, // 顯示 8 秒，根據需要調整
+            progressBar: false, // 隱藏下方的時間條
+            overlay: false // 防止自動加上過多透明背景
+        });
     }
 }
 
@@ -612,7 +619,14 @@ function rememberItemModalData() {
     };
 
     localStorage.setItem('itemModalData', JSON.stringify(itemData));
-    alert("彈跳框內容已記憶");
+    iziToast.success({
+        title: '成功',
+        message: '彈跳框內容已記憶',
+        position: 'topCenter',
+        timeout: 3000, // 顯示 3 秒，根據需要調整
+        progressBar: false, // 隱藏下方的時間條
+        overlay: false // 防止自動加上過多透明背景
+    });
 }
 
 // 關閉新增項次的彈跳框
@@ -1775,7 +1789,14 @@ function calculateAmount(event) {
 function calculateQuantities() {
     const items = document.querySelectorAll('#item-container .item-row');
     if (items.length === 0) {
-        alert('請先新增至少一個項次');
+        iziToast.warning({
+            title: '提醒',
+            message: '請先新增至少一個項次',
+            position: 'center',
+            timeout: 3000, // 顯示 3 秒，根據需要調整
+            progressBar: false, // 隱藏下方的時間條
+            overlay: false // 防止自動加上過多透明背景
+        });
         return;
     }
 
@@ -1881,7 +1902,14 @@ function calculateAmounts() {
 
     const items = document.querySelectorAll('#item-container .item-row');
     if (items.length === 0) {
-        alert('請先新增至少一個項次');
+        iziToast.warning({
+            title: '提醒',
+            message: '請先新增至少一個項次',
+            position: 'center',
+            timeout: 3000, // 顯示 3 秒，根據需要調整
+            progressBar: false, // 隱藏下方的時間條
+            overlay: false // 防止自動加上過多透明背景
+        });
         return;
     }
 
@@ -1980,13 +2008,27 @@ function calculateAmounts() {
 function calculateWeight() {
     const totalNetWeight = parseFloat(document.getElementById('DCL_NW').value);
     if (isNaN(totalNetWeight) || totalNetWeight <= 0) {
-        alert('請先填寫有效的總淨重');
+        iziToast.warning({
+            title: '提醒',
+            message: '請先填寫有效的總淨重',
+            position: 'center',
+            timeout: 3000, // 顯示 3 秒，根據需要調整
+            progressBar: false, // 隱藏下方的時間條
+            overlay: false // 防止自動加上過多透明背景
+        });
         return;
     }
 
     const items = document.querySelectorAll('#item-container .item-row');
     if (items.length === 0) {
-        alert('請先新增至少一個項次');
+        iziToast.warning({
+            title: '提醒',
+            message: '請先新增至少一個項次',
+            position: 'center',
+            timeout: 3000, // 顯示 3 秒，根據需要調整
+            progressBar: false, // 隱藏下方的時間條
+            overlay: false // 防止自動加上過多透明背景
+        });
         return;
     }
 
@@ -2010,13 +2052,27 @@ function calculateWeight() {
 function spreadWeight() {
     const totalNetWeight = parseFloat(document.getElementById('DCL_NW').value);
     if (isNaN(totalNetWeight) || totalNetWeight <= 0) {
-        alert('請先填寫有效的總淨重');
+        iziToast.warning({
+            title: '提醒',
+            message: '請先填寫有效的總淨重',
+            position: 'center',
+            timeout: 3000, // 顯示 3 秒，根據需要調整
+            progressBar: false, // 隱藏下方的時間條
+            overlay: false // 防止自動加上過多透明背景
+        });
         return;
     }
 
     const items = document.querySelectorAll('#item-container .item-row');
     if (items.length === 0) {
-        alert('請先新增至少一個項次');
+        iziToast.warning({
+            title: '提醒',
+            message: '請先新增至少一個項次',
+            position: 'center',
+            timeout: 3000, // 顯示 3 秒，根據需要調整
+            progressBar: false, // 隱藏下方的時間條
+            overlay: false // 防止自動加上過多透明背景
+        });
         return;
     }
 
