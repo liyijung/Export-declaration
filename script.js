@@ -2883,7 +2883,7 @@ async function exportToPDF() {
         // 報關日期為 "YYY/MM/DD"
         var CustomsDeclarationDate = year - 1911 + '/' + month + '/' + day;
 
-        // 拆分 TO_DESC 為多行，每行最多寬度40
+        // 拆分 TO_DESC 為多行，每行最多寬度30
         const toDescElement = document.getElementById('TO_DESC');
         const toDescText = toDescElement.value;
         const toDescLines = doc.splitTextToSize(toDescText, 30)
