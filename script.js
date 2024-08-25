@@ -2437,7 +2437,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // 檢查是否有連續兩個以上的「大品名註記」勾選
             if (itemNoCheckedCount > 1) {
-                alert('大品名註記不可連續勾選');
+                alert('大品名註記不可連續勾選兩個以上');
                 return; // 中止匯出過程
             }
         }
