@@ -2886,7 +2886,7 @@ async function exportToPDF() {
         // 拆分 TO_DESC 為多行，每行最多寬度40
         const toDescElement = document.getElementById('TO_DESC');
         const toDescText = toDescElement.value;
-        const toDescLines = doc.splitTextToSize(toDescText, 40)
+        const toDescLines = doc.splitTextToSize(toDescText, 30)
         
         // 設置表頭欄位與位置
         const headerData = [
