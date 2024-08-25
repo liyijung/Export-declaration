@@ -2200,8 +2200,9 @@ document.addEventListener('DOMContentLoaded', function () {
         let shouldSetExamType = false;
         document.querySelectorAll("#item-container .item-row").forEach((item) => {
             const stMtdValue = item.querySelector('.ST_MTD')?.value.toUpperCase() || '';
-            const expNoValue = item.querySelector('.EXP_NO')?.value || '';
-    
+            const expNoValue = item.querySelector('.EXP_NO')?.value.trim() || '';
+            const expSeqNoValue = item.querySelector('.EXP_SEQ_NO')?.value.trim() || ''; // 確保這裡正確初始化 expSeqNoValue
+        
             // 判斷 ST_MTD 是否為 '1A', '8A', '8D'，或 EXP_NO 是否為 14 碼，或 EXP_NO 與 EXP_SEQ_NO 皆有值
             if (['1A', '8A', '8D'].includes(stMtdValue) || expNoValue.length === 14 || (expNoValue && expSeqNoValue)) {
                 shouldSetExamType = true;
