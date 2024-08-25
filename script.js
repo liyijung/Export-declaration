@@ -2902,10 +2902,10 @@ async function exportToPDF() {
         // 報關日期為 "YYY/MM/DD"
         var CustomsDeclarationDate = year - 1911 + '/' + month + '/' + day;
 
-        // 拆分 TO_DESC 為多行，每行最多寬度30
+        // 拆分 TO_DESC 為多行，每行最多寬度25
         const toDescElement = document.getElementById('TO_DESC');
         const toDescText = toDescElement.value;
-        const toDescLines = doc.splitTextToSize(toDescText, 30)
+        const toDescLines = doc.splitTextToSize(toDescText, 25)
         
         // 設置表頭欄位與位置
         const headerData = [
@@ -2958,7 +2958,7 @@ async function exportToPDF() {
         const cneeEAddrText = cneeEAddrElement.value;
 
         // 將地址限制在特定寬度內並自動換行
-        const maxWidth = 170; // 最大寬度
+        const maxWidth = 175; // 最大寬度
         const cneeEAddrLines = doc.splitTextToSize(cneeEAddrText, maxWidth);
 
         // 使用現有的 startY 和 lineHeight 變數
