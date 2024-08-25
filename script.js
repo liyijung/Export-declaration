@@ -2326,13 +2326,30 @@ document.addEventListener('DOMContentLoaded', function () {
         if (['B8', 'B9', 'D5', 'F5'].includes(dclDocType)) {
             itemRequiredFields.push(
                 { className: 'SELLER_ITEM_CODE', name: '賣方料號' },
-                { className: 'BOND_NOTE', name: '保稅貨物註記' },
+                { className: 'BOND_NOTE', name: '保稅貨物註記' }
             );
         } else {
-            // 如果 DCL_DOC_TYPE 不是 B8、B9、D5 或 F5，則 SHPR_BONDED_ID 不得填列
+            // 如果 DCL_DOC_TYPE 不是 B8、B9、D5 或 F5，則 SHPR_BONDED_ID、SELLER_ITEM_CODE 和 BOND_NOTE 不得填列
+            let invalidFields = [];
+
+            // 檢查 SHPR_BONDED_ID 是否有值
             let shprBondedIdElement = document.getElementById('SHPR_BONDED_ID');
             if (shprBondedIdElement && shprBondedIdElement.value.trim()) {
-                alert('當報單類別不是 B8、B9、D5 或 F5 時，海關監管編號 不得填列');
+                invalidFields.push('海關監管編號');
+            }
+
+            // 遍歷每個項次，檢查 SELLER_ITEM_CODE 和 BOND_NOTE 是否有值
+            document.querySelectorAll('.item-row').forEach(item => {
+                ['SELLER_ITEM_CODE', 'BOND_NOTE'].forEach(className => {
+                    let element = item.querySelector(`.${className}`);
+                    if (element && element.value && element.value.trim()) { // 確保 element 存在且 value 有值
+                        invalidFields.push(className === 'SELLER_ITEM_CODE' ? '賣方料號' : '保稅貨物註記');
+                    }
+                });
+            });
+
+            if (invalidFields.length > 0) {
+                alert(`報單類別不是 B8、B9、D5、F5 ，下列欄位不得填列：\n${invalidFields.join('、')}`);
                 return; // 中止匯出過程
             }
         }
@@ -2399,10 +2416,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 pairedFields.forEach(pair => {
                     let firstElement = item.querySelector(`.${pair.fields[0]}`);
                     let secondElement = item.querySelector(`.${pair.fields[1]}`);
+                
+                    // 檢查成對欄位是否同時有值或同時為空
                     if ((firstElement && firstElement.value.trim() && !secondElement.value.trim()) || 
                         (secondElement && secondElement.value.trim() && !firstElement.value.trim())) {
                         itemMissingFields.push(`${pair.names[0]} 和 ${pair.names[1]} 必須同時有值`);
-
+                        
                         // 如果是 'EXP_NO' 和 'EXP_SEQ_NO'，設置旗標變數
                         if (pair.fields.includes('EXP_NO') && pair.fields.includes('EXP_SEQ_NO')) {
                             expNoAlreadyChecked = true;
