@@ -2514,8 +2514,9 @@ document.addEventListener('DOMContentLoaded', function () {
         const itemFieldLengthChecks = [
             { className: 'DOC_UM', name: '單位', validLengths: [3] },
             { className: 'ST_MTD', name: '統計方式', validLengths: [2] },
-            { className: 'BOND_NOTE', name: '保稅貨物註記', validLengths: [2] },
+            { className: 'ORG_COUNTRY', name: '生產國別', validLengths: [2] },
             { className: 'ORG_IMP_DCL_NO', name: '原進口報單號碼', validLengths: [14] },
+            { className: 'BOND_NOTE', name: '保稅貨物註記', validLengths: [2] },
             { className: 'CERT_NO', name: '產證號碼', validLengths: [11] },
             { className: 'ORG_DCL_NO', name: '原進倉報單號碼', validLengths: [14] },
             { className: 'EXP_NO', name: '輸出許可號碼', validLengths: [14] },
