@@ -1849,25 +1849,6 @@ function calculateAmounts() {
         return;
     }
 
-    // 檢查 DESCRIPTION 欄位是否包含指定的關鍵字
-    const keywords = ["COST", "FEE", "CHARGE", "FREIGHT", "INSURANCE", "DISCOUNT"];
-    let keywordAlerts = [];
-
-    items.forEach((row, index) => {
-        const description = row.querySelector('.DESCRIPTION').value.toUpperCase(); // 將描述轉為大寫
-        keywords.forEach(keyword => {
-            if (description.includes(keyword)) {
-                keywordAlerts.push(`項次 ${index + 1} 內含關鍵字 "${keyword}"，請確認是否為其他費用。`);
-            }
-        });
-        calculateAmountsForRow(row, decimalPlaces);
-    });
-
-    // 若找到關鍵字，顯示提示
-    if (keywordAlerts.length > 0) {
-        alert(keywordAlerts.join('\n'));
-    }
-
     // 計算各項次金額的加總
     let totalItemsAmount = Array.from(items).reduce((sum, item) => {
         const amount = parseFloat(item.querySelector('.DOC_TOT_P').value);
@@ -1925,15 +1906,37 @@ function calculateAmounts() {
             return;
     }
 
+    // 檢查 DESCRIPTION 欄位是否包含指定的關鍵字
+    const keywords = ["COST", "FEE", "CHARGE", "FREIGHT", "INSURANCE", "DISCOUNT"];
+    let keywordAlerts = [];
+    let calculationAlerts = "";
+
     // 檢查計算結果是否與表頭金額相同
     if (calculatedTotalAmount.toFixed(2) === totalDocumentAmount.toFixed(2)) {
         if (termsSales === 'EXW' && !isEXWValid) {
-            alert(`【${termsSales} 計算公式：${explanation}】\n系統計算的總金額為：${currency} ${calculatedTotalAmount.toFixed(decimalPlaces)}\n----------------------------------------------------\n報單表頭的總金額為：${currency} ${totalDocumentAmount.toFixed(decimalPlaces)}\n【錯誤！運費、保險費或應減費用不應有值，應加費用需有值】\n各項次金額的加總為：${currency} ${totalItemsAmount.toFixed(decimalPlaces)}`);
+            calculationAlerts = `【${termsSales} 計算公式：${explanation}】\n系統計算的總金額為：${currency} ${calculatedTotalAmount.toFixed(decimalPlaces)}\n----------------------------------------------------\n報單表頭的總金額為：${currency} ${totalDocumentAmount.toFixed(decimalPlaces)}\n【錯誤！運費、保險費或應減費用不應有值，應加費用需有值】\n各項次金額的加總為：${currency} ${totalItemsAmount.toFixed(decimalPlaces)}`;
         } else {
-            alert(`【${termsSales} 計算公式：${explanation}】\n系統計算的總金額為：${currency} ${calculatedTotalAmount.toFixed(decimalPlaces)}\n----------------------------------------------------\n報單表頭的總金額為：${currency} ${totalDocumentAmount.toFixed(decimalPlaces)}【正確】\n各項次金額的加總為：${currency} ${totalItemsAmount.toFixed(decimalPlaces)}`);
+            calculationAlerts = `【${termsSales} 計算公式：${explanation}】\n系統計算的總金額為：${currency} ${calculatedTotalAmount.toFixed(decimalPlaces)}\n----------------------------------------------------\n報單表頭的總金額為：${currency} ${totalDocumentAmount.toFixed(decimalPlaces)}【正確】\n各項次金額的加總為：${currency} ${totalItemsAmount.toFixed(decimalPlaces)}`;
         }
     } else {
-        alert(`【${termsSales} 計算公式：${explanation}】\n系統計算的總金額為：${currency} ${calculatedTotalAmount.toFixed(decimalPlaces)}\n----------------------------------------------------\n報單表頭的總金額為：${currency} ${totalDocumentAmount.toFixed(decimalPlaces)}【錯誤！】\n各項次金額的加總為：${currency} ${totalItemsAmount.toFixed(decimalPlaces)}`);
+        calculationAlerts = `【${termsSales} 計算公式：${explanation}】\n系統計算的總金額為：${currency} ${calculatedTotalAmount.toFixed(decimalPlaces)}\n----------------------------------------------------\n報單表頭的總金額為：${currency} ${totalDocumentAmount.toFixed(decimalPlaces)}【錯誤！】\n各項次金額的加總為：${currency} ${totalItemsAmount.toFixed(decimalPlaces)}`;
+    }
+
+    // 檢查項次內的描述欄位是否包含指定的關鍵字
+    items.forEach((row, index) => {
+        const description = row.querySelector('.DESCRIPTION').value.toUpperCase(); // 將描述轉為大寫
+        keywords.forEach(keyword => {
+            if (description.includes(keyword)) {
+                keywordAlerts.push(`➤ 項次 ${index + 1} 內含關鍵字 "${keyword}"，請確認是否為其他費用。`);
+            }
+        });
+        calculateAmountsForRow(row, decimalPlaces);
+    });
+
+    // 合併顯示計算結果提示與關鍵字提示
+    const combinedAlerts = [calculationAlerts, ...keywordAlerts].join('\n');
+    if (combinedAlerts) {
+        alert(combinedAlerts);
     }
 }
 
