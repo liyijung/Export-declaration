@@ -1849,9 +1849,24 @@ function calculateAmounts() {
         return;
     }
 
-    items.forEach(row => {
+    // 檢查 DESCRIPTION 欄位是否包含指定的關鍵字
+    const keywords = ["COST", "FEE", "CHARGE", "FREIGHT", "INSURANCE", "DISCOUNT"];
+    let keywordAlerts = [];
+
+    items.forEach((row, index) => {
+        const description = row.querySelector('.DESCRIPTION').value.toUpperCase(); // 將描述轉為大寫
+        keywords.forEach(keyword => {
+            if (description.includes(keyword)) {
+                keywordAlerts.push(`項次 ${index + 1} 內含關鍵字 "${keyword}"，請確認是否為其他費用。`);
+            }
+        });
         calculateAmountsForRow(row, decimalPlaces);
     });
+
+    // 若找到關鍵字，顯示提示
+    if (keywordAlerts.length > 0) {
+        alert(keywordAlerts.join('\n'));
+    }
 
     // 計算各項次金額的加總
     let totalItemsAmount = Array.from(items).reduce((sum, item) => {
@@ -1878,7 +1893,7 @@ function calculateAmounts() {
     switch (termsSales) {
         case 'EXW':
             calculationFormula = `${totalItemsAmount.toFixed(decimalPlaces)}`;
-            explanation = '項次金額加總' ;
+            explanation = '項次金額加總';
             
             // 檢查 EXW 條件下運費、保險費、應減費用是否為零，且 ADD_AMT 需大於 0
             if (freight !== 0 || insurance !== 0 || deductibleCost !== 0 || additionalCost <= 0) {
