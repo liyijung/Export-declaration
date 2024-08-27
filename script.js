@@ -1260,10 +1260,19 @@ function exportToExcel() {
     '原進倉報單號碼', '原進倉報單項次', '輸出許可號碼', '輸出許可項次', 
     '寬度(幅寬)', '寬度單位', '長度(幅長)', '長度單位' ,'統計數量' ,'統計單位']
     ];
+
+    let itemNoCounter = 0; // 計算有效的 ITEM_NO
     document.querySelectorAll("#item-container .item-row").forEach((item, index) => {
+        const isChecked = item.querySelector('.ITEM_NO').checked;
+
+        // 根據條件決定是否增加計數器
+        if (!isChecked) {
+            itemNoCounter++;
+        }
+
         itemsData.push([
             index + 1,
-            item.querySelector('.ITEM_NO').checked ? '*' : index,
+            isChecked ? '*' : itemNoCounter, // 只有當未勾選時才顯示計數器的值
             item.querySelector('.DESCRIPTION').value || '',
             item.querySelector('.QTY').value || '',
             replaceValue('DOC_UM', item.querySelector('.DOC_UM').value || ''),
