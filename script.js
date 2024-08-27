@@ -2634,7 +2634,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             if (invalidItemFields.length > 0) {
-                alert(`以下項次的欄位碼數不正確：\n${invalidItemFields.join('、')}`);
+                alert(`以下欄位的碼數不正確：\n${invalidItemFields.join('、')}`);
                 return; // 中止匯出過程
             }
         }
