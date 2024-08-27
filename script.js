@@ -468,7 +468,7 @@ function openItemModal() {
     copyItemSelect.innerHTML = '<option value="">選擇項次</option>';
     document.querySelectorAll('#item-container .item-row').forEach((item, index) => {
         const description = item.querySelector('.DESCRIPTION').value;
-        copyItemSelect.innerHTML += `<option value="${index}">項次 ${index + 1} - ${description}</option>`;
+        copyItemSelect.innerHTML += `<option value="${index}">NO ${index + 1} - ${description}</option>`;
     });
 
     // 顯示彈跳框
@@ -677,8 +677,13 @@ function saveItem() {
 
     itemContainer.appendChild(item);
 
-    closeItemModal();
+    // 新增項次後重新初始化監聽器
+    initializeListeners();
+    
+    // 重新編號所有項次
     renumberItems();
+
+    closeItemModal();
     applyToggleFields();
 
     // 自動計算新項次的金額
@@ -741,7 +746,7 @@ function calculateAmountsForRow(row, decimalPlaces) {
 function removeItem(element) {
     const item = element.parentElement.parentElement;
     item.parentElement.removeChild(item);
-    renumberItems();
+    renumberItems(); // 重新計算項次編號
 }
 
 // 開啟顯示隱藏欄位彈跳框
@@ -808,7 +813,7 @@ function openAdjustOrderModal() {
         const orderItem = document.createElement('div');
         orderItem.className = 'order-item';
         orderItem.innerHTML = `
-            <span>項次 ${index + 1} - 品名: ${description}</span>
+            <span>NO ${index + 1} - 品名: ${description}</span>
             <input type="hidden" class="original-order" value="${index}">
         `;
         orderList.appendChild(orderItem);
@@ -925,7 +930,7 @@ function populateSourceItemDropdown() {
     sourceItemSelect.innerHTML = '<option value="">選擇項次</option>';
     document.querySelectorAll('#item-container .item-row').forEach((item, index) => {
         const description = item.querySelector('.DESCRIPTION').value;
-        sourceItemSelect.innerHTML += `<option value="${index + 1}">項次 ${index + 1} - ${description}</option>`;
+        sourceItemSelect.innerHTML += `<option value="${index + 1}">NO ${index + 1} - ${description}</option>`;
     });
 }
 
@@ -1177,6 +1182,7 @@ function handleFile(event) {
             currentItem.querySelector('.DESCRIPTION').value = currentDescription.trim();
             itemContainer.appendChild(currentItem);
         }
+        initializeListeners();
         renumberItems();
     };
     reader.readAsArrayBuffer(file);
@@ -1361,6 +1367,7 @@ function importXML(event) {
                 itemContainer.appendChild(itemRow);
             });
 
+            initializeListeners();
             renumberItems(); // 重新編號所有項次
             updateRemark1FromImport(); // 更新REMARK1欄位並勾選對應的checkbox
         };
@@ -1431,12 +1438,21 @@ function createItemRow(data) {
     // 檢查並更新需要顯示的欄位
     checkFieldValues(data);
 
+    // 計算 ITEM 編號，只為未勾選的項目進行編號
+    let itemNumber = '*';
+    if (!isChecked) {
+        itemNumber = getNextItemNumber(); // 獲取當前的編號
+    }
+
     row.innerHTML = `
         <div class="form-group fix item-no item-no-header" onclick="toggleSelect(this)">
             <label>${itemCount + 1}</label>
         </div>
         <div class="form-group fix">
             <input type="checkbox" class="ITEM_NO" ${isChecked ? 'checked' : ''}>
+        </div>
+        <div class="form-group fix item-number" style="width: 2%;">
+            <label>${itemNumber}</label>
         </div>
         ${createTextareaField('DESCRIPTION', data.DESCRIPTION)}
         ${createInputField('QTY', data.QTY, true)}
@@ -1476,6 +1492,13 @@ function createItemRow(data) {
     initializeFieldVisibility();
     
     return row;
+}
+
+// 用於獲取下一個 ITEM 編號的函數
+let currentItemNumber = 1;
+
+function getNextItemNumber() {
+    return currentItemNumber++;
 }
 
 function initializeFieldVisibility() {
@@ -1734,14 +1757,40 @@ function handleArrowKeyNavigation(event) {
     }
 }
 
-// 重新編號所有項次
-function renumberItems() {
-    itemCount = 0;
-    document.querySelectorAll("#item-container .item-row").forEach((item, index) => {
-        itemCount++;
-        item.querySelector('label').textContent = `${itemCount}`; // 項次
+function initializeListeners() {
+    // 監聽所有「大品名註記」checkbox 的變化事件
+    document.querySelectorAll('.ITEM_NO').forEach((checkbox) => {
+        checkbox.addEventListener('change', () => {
+            renumberItems(); // 在變化時即時重新編號
+        });
     });
 }
+
+// 重新編號所有項次
+function renumberItems() {
+    let itemCount = 0; // 用於 NO 編號
+    let currentItemNumber = 1; // 用於 ITEM 編號
+
+    // 確保遍歷的是包含在 .item-row 中的所有項次
+    document.querySelectorAll("#item-container .item-row").forEach((item) => {
+        itemCount++;
+        
+        // 更新 NO 編號
+        item.querySelector('.item-no label').textContent = `${itemCount}`;
+
+        // 更新 ITEM 編號，只為未勾選的項目分配編號
+        const checkbox = item.querySelector('.ITEM_NO');
+        const itemNumberLabel = item.querySelector('.item-number label');
+        if (!checkbox.checked) {
+            itemNumberLabel.textContent = `${currentItemNumber++}`;
+        } else {
+            itemNumberLabel.textContent = '*'; // 已勾選的項目顯示 '*'
+        }
+    });
+}
+
+// 在頁面載入或項次更新後初始化監聽器
+initializeListeners();
 
 // 監聽數量和單價輸入框的變化事件，進行自動計算
 document.querySelectorAll('.QTY, .DOC_UNIT_P').forEach(input => {
@@ -1963,7 +2012,7 @@ function calculateAmounts() {
         const description = row.querySelector('.DESCRIPTION').value.toUpperCase(); // 將描述轉為大寫
         keywords.forEach(keyword => {
             if (description.includes(keyword)) {
-                keywordAlerts.push(`➤ 項次 ${index + 1} 內含關鍵字 "${keyword}"，請確認是否為其他費用。`);
+                keywordAlerts.push(`➤ NO ${index + 1} 內含關鍵字 "${keyword}"，請確認是否為其他費用。`);
             }
         });
         calculateAmountsForRow(row, decimalPlaces);
@@ -3295,7 +3344,7 @@ async function exportToPDF() {
 
             fieldsToShow.forEach(field => {
                 if (field.value) {
-                    const fieldText = field.itemValue ? `${field.name}: ${field.value} 項次 ${field.itemValue}` : `${field.name}${field.value}`;
+                    const fieldText = field.itemValue ? `${field.name}: ${field.value} NO ${field.itemValue}` : `${field.name}${field.value}`;
                     doc.text(fieldText, 14, startY);
                     startY += lineHeight;
                 }
