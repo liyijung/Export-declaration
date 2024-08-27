@@ -2001,7 +2001,7 @@ function calculateAmounts() {
     }
 
     // 檢查 DESCRIPTION 欄位是否包含指定的關鍵字
-    const keywords = ["COST", "FEE", "CHARGE", "FREIGHT", "INSURANCE", "DISCOUNT"];
+    const keywords = ["COST", "FEE", "CHARGE", "FREIGHT", "INSURANCE", "DISCOUNT", "SHIPPING", "POSTAGE"];
     let keywordAlerts = [];
     let calculationAlerts = "";
 
