@@ -2561,8 +2561,14 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                 }
 
+                // 檢查淨重是否為零
+                let netWtElement = item.querySelector('.NET_WT');
+                if (netWtElement && parseFloat(netWtElement.value.trim()) === 0) {
+                    itemMissingFields.push('淨重不得為零');
+                }
+
                 if (itemMissingFields.length > 0) {
-                    alert(`以下欄位不可為空：\n${itemMissingFields.join('、')}`);
+                    alert(`以下欄位不可為空或有誤：\n${itemMissingFields.join('、')}`);
                     return; // 中止匯出過程
                 }
             }
