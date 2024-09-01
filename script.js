@@ -137,10 +137,16 @@ function toggleSelect(element) {
 
 // 輸入統一編號以查找資料
 let csvFiles = [
-    'companyData1.csv',
-    'companyData2.csv',
-    'companyData3.csv'
+    { range: ['000', '291'], file: 'companyData1.csv' },
+    { range: ['292', '802'], file: 'companyData2.csv' },
+    { range: ['803', '999'], file: 'companyData3.csv' }
 ];
+
+function getMatchingFile(searchCode) {
+    const prefix = searchCode.substring(0, 3);
+    const matchingFile = csvFiles.find(item => prefix >= item.range[0] && prefix <= item.range[1]);
+    return matchingFile ? matchingFile.file : null;
+}
 
 function fillForm(record) {
     if (record) {
@@ -169,26 +175,13 @@ function searchInFile(file, searchCode, callback) {
 function searchData() {
     const searchCode = document.getElementById('SHPR_BAN_ID').value.trim(); // 確保去除前後空格
     console.log('Searching for:', searchCode);
-    let found = false;
 
-    function searchNextFile(index) {
-        if (index >= csvFiles.length) {
-            if (!found) {
-                fillForm(null);
-            }
-            return;
-        }
-        searchInFile(csvFiles[index], searchCode, record => {
-            if (record) {
-                found = true;
-                fillForm(record);
-            } else {
-                searchNextFile(index + 1);
-            }
-        });
+    const fileToSearch = getMatchingFile(searchCode);
+    if (fileToSearch) {
+        searchInFile(fileToSearch, searchCode, fillForm);
+    } else {
+        fillForm(null);
     }
-
-    searchNextFile(0);
 }
 
 // 儲存目的地數據
