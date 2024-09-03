@@ -1066,7 +1066,7 @@ function handleFile(event) {
             'DCL_DOC_TYPE', 'TERMS_SALES', 'CURRENCY', 'CAL_IP_TOT_ITEM_AMT', 
             'FRT_AMT', 'INS_AMT', 'ADD_AMT', 'SUBTRACT_AMT', 
             'DOC_MARKS_DESC', 'DOC_OTR_DESC', 'REMARK1', 
-            'FAC_BAN_ID_EX', 'FAC_BONDED_ID_EX', 'RESERVED_STR_1', 'RESERVED_STR_2',
+            'FAC_BAN_ID_EX', 'FAC_BONDED_ID_EX',
             'FAC_BAN_ID', 'FAC_BONDED_ID', 'IN_BONDED_BAN', 'IN_BONDED_CODE'];
         headerFields.forEach((id, index) => {
             const element = document.getElementById(id);
@@ -1237,8 +1237,6 @@ function exportToExcel() {
         ['REMARKS', document.getElementById('REMARK1').value],
         ['保稅廠統一編號', document.getElementById('FAC_BAN_ID_EX').value],
         ['保稅廠監管編號', document.getElementById('FAC_BONDED_ID_EX').value],
-        ['用料清表文號', document.getElementById('RESERVED_STR_1').value],
-        ['保出字號', document.getElementById('RESERVED_STR_2').value],
         ['出倉保稅倉庫統一編號', document.getElementById('FAC_BAN_ID').value],
         ['出倉保稅倉庫代碼', document.getElementById('FAC_BONDED_ID').value],
         ['進倉保稅倉庫統一編號', document.getElementById('IN_BONDED_BAN').value],
@@ -2230,23 +2228,6 @@ function updateRemark1FromImport() {
     updateRemark1(); // 確保REMARK1欄位值與checkbox狀態同步
 }
 
-// REMARK1欄位值與RESERVED_STR_1及RESERVED_STR_2同步
-document.addEventListener('DOMContentLoaded', function() {
-    var reservedStr1 = document.getElementById('RESERVED_STR_1');
-    var reservedStr2 = document.getElementById('RESERVED_STR_2');
-    var remarks = document.getElementById('REMARK1');
-
-    function updateRemarks() {
-        // 保存原有內容
-        var originalContent = remarks.value.split(/用料清表文號: .*\n保出字號: .*/)[0].trim();
-        var newContent = originalContent + (originalContent ? '\n' : '') + '用料清表文號: ' + reservedStr1.value + '\n保出字號: ' + reservedStr2.value;
-        remarks.value = newContent;
-    }
-
-    reservedStr1.addEventListener('input', updateRemarks);
-    reservedStr2.addEventListener('input', updateRemarks);
-});
-
 // 添加事件監聽器
 document.addEventListener('DOMContentLoaded', function () {
     // 為 QTY 和 DOC_UNIT_P 輸入框添加事件監聽器
@@ -2648,7 +2629,7 @@ document.addEventListener('DOMContentLoaded', function () {
             'DCL_DOC_TYPE', 'TERMS_SALES', 'CURRENCY', 'CAL_IP_TOT_ITEM_AMT', 
             'FRT_AMT', 'INS_AMT', 'ADD_AMT', 'SUBTRACT_AMT', 
             'DOC_MARKS_DESC', 'DOC_OTR_DESC', 'REMARK1', 
-            'FAC_BAN_ID_EX', 'FAC_BONDED_ID_EX', 'RESERVED_STR_1', 'RESERVED_STR_2',
+            'FAC_BAN_ID_EX', 'FAC_BONDED_ID_EX',
             'FAC_BAN_ID', 'FAC_BONDED_ID', 'IN_BONDED_BAN', 'IN_BONDED_CODE',
             'APP_DUTY_REFUND', 'MARK_TOT_LINES', 'EXAM_TYPE', 'COPY_QTY',
         ];
