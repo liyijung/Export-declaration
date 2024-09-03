@@ -32,6 +32,42 @@ function openTab(tabName) {
     document.querySelector(`.tab-links[onclick="openTab('${tabName}')"]`).classList.add("active");
 }
 
+function adjustMargin() {
+    var tabsHeight = document.querySelector('.tabs-wrapper').offsetHeight;
+    document.querySelector('p').style.marginTop = tabsHeight + 'px';
+}
+
+// 初次加載時執行
+adjustMargin();
+
+// 如果窗口大小改變，重新計算高度
+window.onresize = function() {
+    adjustMargin();
+};
+
+// 【影片說明】
+function updateVideoLink() {
+    var selector = document.getElementById("videoSelector");
+    var videoLink = document.getElementById("videoLink");
+    videoLink.href = selector.value;
+}
+
+// 滾動到頂部
+function scrollToTop() {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+}
+
+// 滾動到底部
+function scrollToBottom() {
+    window.scrollTo({
+        top: document.body.scrollHeight,
+        behavior: 'smooth'
+    });
+}
+
 function dragElement(element, header) {
     var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
     if (header) {
@@ -64,29 +100,6 @@ function dragElement(element, header) {
         document.onmouseup = null;
         document.onmousemove = null;
     }
-}
-
-// 【影片說明】
-function updateVideoLink() {
-    var selector = document.getElementById("videoSelector");
-    var videoLink = document.getElementById("videoLink");
-    videoLink.href = selector.value;
-}
-
-// 滾動到頂部
-function scrollToTop() {
-    window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-    });
-}
-
-// 滾動到底部
-function scrollToBottom() {
-    window.scrollTo({
-        top: document.body.scrollHeight,
-        behavior: 'smooth'
-    });
 }
 
 // 切換固定頁面寬度
