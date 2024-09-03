@@ -496,7 +496,7 @@ th, td {
 }
 
 #items {
-    padding-top: 50px; /* 空出上方的空間 */
+    padding-top: 20px; /* 空出上方的空間 */
 }
 
 .fixed-top {
