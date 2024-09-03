@@ -173,7 +173,7 @@
                 <label for="CURRENCY">幣別</label>
                 <input type="text" id="CURRENCY" name="CURRENCY"
                 placeholder="範例：TWD、USD、CNY、JPY、EUR(英文代碼)">
-                <span id="currency-error" style="color: red; display: none; margin-left: 4px; margin-top: 4px;">幣別錯誤，請重新輸入</span>
+                <span id="currency-error" style="color: rgba(255, 0, 0, 0.634); display: none; margin-left: 4px; margin-top: 4px;">幣別錯誤，請重新輸入</span>
             </div>
             <div class="header-group">
                 <label for="CAL_IP_TOT_ITEM_AMT">總金額</label>
@@ -771,6 +771,10 @@
         <input type="hidden" id="MARK_TOT_LINES" value="">
         <input type="hidden" id="EXAM_TYPE" value="">
         <input type="hidden" id="COPY_QTY" value="">
+        <h4 style="color: rgba(255, 0, 0, 0.634);">【提醒！】如果需申請報單副本，請務必記得勾選，<br>
+            系統會將其它需要填列的欄位自動進行設定，自動設定的欄位有：<br>
+            申請審驗方式、報單副本份數、申請沖退原料稅、檢附外銷品使用原料及其供應商資料表。
+        </h4>
     </div>
     
     <!-- 用於顯示變數值 -->
@@ -793,14 +797,6 @@
                 <label for="FAC_BONDED_ID_EX">保稅廠監管編號</label>
                 <input type="text" id="FAC_BONDED_ID_EX" name="FAC_BONDED_ID_EX">
             </div>
-            <div class="header-group">
-                <label for="RESERVED_STR_1">用料清表文號</label>
-                <input type="text" id="RESERVED_STR_1" name="RESERVED_STR_1">
-            </div>
-            <div class="header-group">
-                <label for="RESERVED_STR_2">保出字號</label>
-                <input type="text" id="RESERVED_STR_2" name="RESERVED_STR_2">
-            </div>
             <hr>
             <div class="header-group">
                 <label for="FAC_BAN_ID">出倉保稅倉庫統一編號</label>
@@ -810,6 +806,7 @@
                 <label for="FAC_BONDED_ID">出倉保稅倉庫代碼</label>
                 <input type="text" id="FAC_BONDED_ID" name="FAC_BONDED_ID">
             </div>
+            <hr>
             <div class="header-group">
                 <label for="IN_BONDED_BAN">進倉保稅倉庫統一編號</label>
                 <input type="text" id="IN_BONDED_BAN" name="IN_BONDED_BAN">
@@ -819,6 +816,11 @@
                 <input type="text" id="IN_BONDED_CODE" name="IN_BONDED_CODE">
             </div>
         </div>
+        <h4 style="color: #005feec5;">【註】此頁適用於以下出貨型態：<br>
+            1. 出口人本身不是保稅廠，但由另外合作的供應商（保稅廠）負責出貨<br>
+            2. 報單類別為 D5 保稅倉貨物出口<br>
+            3. 報單類別為 F5 自由港區貨物出口
+        </h4>
     </div>
 
     <div class="import-export-buttons">
