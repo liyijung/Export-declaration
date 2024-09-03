@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <p style="margin-top: 50px;"></p>
     <!--固定在頁面頂部-->
     <div class="tabs-wrapper">
         <div class="tabs">
@@ -27,6 +26,8 @@
         </div>
     </div>
 
+    <p id="dynamicMargin" style="margin-top: 0;"></p>
+
     <div class="scroll-container">
         <!-- 回到頂部按鈕 -->
         <button class="scroll-btn" onclick="scrollToTop()" title="回到頂部">▲</button>
@@ -36,7 +37,6 @@
     
     <!--報單表頭-->    
     <div id="header" class="tab active">
-        <p style="margin-top: 30px;"></p>
         <div class="header-section">
             <div class="header-group">
                 <label for="FILE_NO">文件編號</label>
@@ -752,7 +752,6 @@
     
     <!--報單副本-->
     <div id="copy" class="tab">
-        <p style="margin-top: 30px;"></p>
         <div class="header-section">
             <div class="flex-group">
                 <input type="checkbox" id="copy_3_e" name="copy_option">申請沖退原料稅(E化退稅)<br>
@@ -787,7 +786,6 @@
 
     <!--保稅貨物-->
     <div id="bonded" class="tab">
-        <p style="margin-top: 30px;"></p>        
         <div class="header-section">
             <div class="header-group">
                 <label for="FAC_BAN_ID_EX">保稅廠統一編號</label>
