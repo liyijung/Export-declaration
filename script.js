@@ -150,9 +150,19 @@ function toggleSelect(element) {
 
 // 輸入統一編號以查找資料
 let csvFiles = [
-    { range: ['000', '291'], file: 'companyData1.csv' },
-    { range: ['292', '802'], file: 'companyData2.csv' },
-    { range: ['803', '999'], file: 'companyData3.csv' }
+    { range: ['000', '099'], file: 'companyData0.csv' },
+    { range: ['100', '199'], file: 'companyData1.csv' },
+    { range: ['200', '249'], file: 'companyData2_part1.csv' },
+    { range: ['250', '299'], file: 'companyData2_part2.csv' },
+    { range: ['300', '399'], file: 'companyData3.csv' },
+    { range: ['400', '499'], file: 'companyData4.csv' },
+    { range: ['500', '539'], file: 'companyData5_part1.csv' },
+    { range: ['540', '599'], file: 'companyData5_part2.csv' },
+    { range: ['600', '699'], file: 'companyData6.csv' },
+    { range: ['700', '799'], file: 'companyData7.csv' },
+    { range: ['800', '849'], file: 'companyData8_part1.csv' },
+    { range: ['850', '899'], file: 'companyData8_part2.csv' },
+    { range: ['900', '999'], file: 'companyData9.csv' },
 ];
 
 function getMatchingFile(searchCode) {
