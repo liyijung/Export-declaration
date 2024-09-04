@@ -150,23 +150,23 @@ function toggleSelect(element) {
 
 // 輸入統一編號以查找資料
 let csvFiles = [
-    { range: ['000', '099'], file: 'companyData0.csv' },
-    { range: ['100', '199'], file: 'companyData1.csv' },
-    { range: ['200', '249'], file: 'companyData2_part1.csv' },
-    { range: ['250', '299'], file: 'companyData2_part2.csv' },
-    { range: ['300', '399'], file: 'companyData3.csv' },
-    { range: ['400', '499'], file: 'companyData4.csv' },
-    { range: ['500', '539'], file: 'companyData5_part1.csv' },
-    { range: ['540', '599'], file: 'companyData5_part2.csv' },
-    { range: ['600', '699'], file: 'companyData6.csv' },
-    { range: ['700', '799'], file: 'companyData7.csv' },
-    { range: ['800', '849'], file: 'companyData8_part1.csv' },
-    { range: ['850', '899'], file: 'companyData8_part2.csv' },
-    { range: ['900', '999'], file: 'companyData9.csv' },
+    { range: ['00', '09'], file: 'companyData0.csv' },
+    { range: ['10', '19'], file: 'companyData1.csv' },
+    { range: ['20', '24'], file: 'companyData2_part1.csv' },
+    { range: ['25', '29'], file: 'companyData2_part2.csv' },
+    { range: ['30', '39'], file: 'companyData3.csv' },
+    { range: ['40', '49'], file: 'companyData4.csv' },
+    { range: ['50', '53'], file: 'companyData5_part1.csv' },
+    { range: ['54', '59'], file: 'companyData5_part2.csv' },
+    { range: ['60', '69'], file: 'companyData6.csv' },
+    { range: ['70', '79'], file: 'companyData7.csv' },
+    { range: ['80', '84'], file: 'companyData8_part1.csv' },
+    { range: ['85', '89'], file: 'companyData8_part2.csv' },
+    { range: ['90', '99'], file: 'companyData9.csv' },
 ];
 
 function getMatchingFile(searchCode) {
-    const prefix = searchCode.substring(0, 3);
+    const prefix = searchCode.substring(0, 2);
     const matchingFile = csvFiles.find(item => prefix >= item.range[0] && prefix <= item.range[1]);
     return matchingFile ? matchingFile.file : null;
 }
