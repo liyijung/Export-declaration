@@ -2688,6 +2688,11 @@ document.addEventListener('DOMContentLoaded', function () {
                         value = 'TWD'; // 如果是 NTD，則改為 TWD
                     }
                 }
+
+                // 對 LOT_NO 欄位進行處理
+                if (id === 'LOT_NO') {
+                    value = value.replace(/\s+/g, ''); // 移除所有空格
+                }
                 
                 xmlContent += `  <fields>\n    <field_name>${id}</field_name>\n    <field_value>${value}</field_value>\n  </fields>\n`;
             }
