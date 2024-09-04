@@ -150,24 +150,35 @@ function toggleSelect(element) {
 
 // 輸入統一編號以查找資料
 let csvFiles = [
-    { range: ['00', '09'], file: 'companyData0.csv' },
-    { range: ['10', '19'], file: 'companyData1.csv' },
-    { range: ['20', '24'], file: 'companyData2_part1.csv' },
-    { range: ['25', '29'], file: 'companyData2_part2.csv' },
-    { range: ['30', '39'], file: 'companyData3.csv' },
-    { range: ['40', '49'], file: 'companyData4.csv' },
-    { range: ['50', '53'], file: 'companyData5_part1.csv' },
-    { range: ['54', '59'], file: 'companyData5_part2.csv' },
-    { range: ['60', '69'], file: 'companyData6.csv' },
-    { range: ['70', '79'], file: 'companyData7.csv' },
-    { range: ['80', '84'], file: 'companyData8_part1.csv' },
-    { range: ['85', '89'], file: 'companyData8_part2.csv' },
-    { range: ['90', '99'], file: 'companyData9.csv' },
+    { range: ['0'], file: 'companyData0.csv' },
+    { range: ['1'], file: 'companyData1.csv' },
+    { range: ['20', '24'], file: 'companyData2_part1.csv' }, // 針對 2 開頭，使用 2 碼範圍
+    { range: ['25', '29'], file: 'companyData2_part2.csv' }, // 針對 2 開頭，使用 2 碼範圍
+    { range: ['3'], file: 'companyData3.csv' },
+    { range: ['4'], file: 'companyData4.csv' },
+    { range: ['50', '53'], file: 'companyData5_part1.csv' }, // 針對 5 開頭，使用 2 碼範圍
+    { range: ['54', '59'], file: 'companyData5_part2.csv' }, // 針對 5 開頭，使用 2 碼範圍
+    { range: ['6'], file: 'companyData6.csv' },
+    { range: ['7'], file: 'companyData7.csv' },
+    { range: ['80', '84'], file: 'companyData8_part1.csv' }, // 針對 8 開頭，使用 2 碼範圍
+    { range: ['85', '89'], file: 'companyData8_part2.csv' }, // 針對 8 開頭，使用 2 碼範圍
+    { range: ['9'], file: 'companyData9.csv' },
 ];
 
 function getMatchingFile(searchCode) {
-    const prefix = searchCode.substring(0, 2);
-    const matchingFile = csvFiles.find(item => prefix >= item.range[0] && prefix <= item.range[1]);
+    const prefix1 = searchCode.substring(0, 1); // 取統一編號的第 1 碼
+    const prefix2 = searchCode.substring(0, 2); // 取統一編號的前 2 碼
+
+    let matchingFile = csvFiles.find(item => {
+        if (['2', '5', '8'].includes(prefix1)) {
+            // 如果第一碼是 2、5 或 8，使用前 2 碼進行匹配
+            return prefix2 >= item.range[0] && prefix2 <= item.range[1];
+        } else {
+            // 否則，使用前 1 碼進行匹配
+            return prefix1 === item.range[0];
+        }
+    });
+
     return matchingFile ? matchingFile.file : null;
 }
 
