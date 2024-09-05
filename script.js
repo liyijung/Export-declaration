@@ -2652,6 +2652,34 @@ document.addEventListener('DOMContentLoaded', function () {
                 return; // 中止匯出過程
             }
         }
+
+        // 用於驗證是否為整數
+        function isInteger(value) {
+            return /^\d+$/.test(value);
+        }
+
+        // 檢查 ORG_IMP_DCL_NO_ITEM、CERT_NO_ITEM、ORG_DCL_NO_ITEM、EXP_SEQ_NO 是否為整數
+        for (let item of document.querySelectorAll("#item-container .item-row")) {
+            let invalidItemFields = [];
+
+            // 檢查這四個欄位並顯示對應的中文名稱
+            [
+                { className: 'ORG_IMP_DCL_NO_ITEM', name: '原進口報單項次' },
+                { className: 'CERT_NO_ITEM', name: '產證項次' },
+                { className: 'ORG_DCL_NO_ITEM', name: '原進倉報單項次' },
+                { className: 'EXP_SEQ_NO', name: '輸出許可項次' }
+            ].forEach(field => {
+                let element = item.querySelector(`.${field.className}`);
+                if (element && element.value.trim() && !isInteger(element.value.trim())) {
+                    invalidItemFields.push(`${field.name} (僅限輸入整數)`);
+                }
+            });
+
+            if (invalidItemFields.length > 0) {
+                alert(`以下欄位的格式錯誤：\n${invalidItemFields.join('、')}`);
+                return; // 中止匯出過程
+            }
+        }
         
         const headerFields = [
             'LOT_NO', 'SHPR_BAN_ID', 'SHPR_BONDED_ID', 
