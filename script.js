@@ -267,6 +267,11 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
     // 添加事件監聽器到報單副本選項
     document.querySelectorAll('input[type="checkbox"][name="copy_option"]').forEach(checkbox => {
+        checkbox.addEventListener('change', updateDocOtrDesc);
+    });
+
+    // 添加事件監聽器到報單副本選項
+    document.querySelectorAll('input[type="checkbox"][name="copy_option"]').forEach(checkbox => {
         checkbox.addEventListener('change', updateRemark1);
     });
 
@@ -278,6 +283,9 @@ document.addEventListener('DOMContentLoaded', (event) => {
     // 添加鍵盤事件監聽器
     document.addEventListener('keydown', handleKeyNavigation);
     
+    // 初始化時更新DOC_OTR_DESC的值
+    updateDocOtrDesc();
+
     // 初始化時更新REMARK1的值
     updateRemark1();
 
@@ -2226,6 +2234,42 @@ function spreadWeight() {
         return sum + (isNaN(netWeight) ? 0 : netWeight);
     }, 0).toFixed(decimalPlaces);
     alert(`報單表頭的總淨重為：${totalNetWeight}\n各項次的淨重加總為：${adjustedTotalWeight}`);
+}
+
+// 更新DOC_OTR_DESC的值，勾選時加入描述，取消勾選時移除描述
+function updateDocOtrDesc() {
+    let copyDescMap = {
+        'copy_3_e': '申請沖退原料稅（E化退稅）',
+        'copy_3': '申請報單副本第三聯（沖退原料稅用聯）\n附外銷品使用原料及其供應商資料清表',
+        'copy_4': '申請報單副本第四聯（退內地稅用聯）\n稅照號碼：',
+        'copy_5': '申請報單副本第五聯（出口證明用聯）'
+    };
+
+    const docOtrDescElement = document.getElementById('DOC_OTR_DESC');
+    let currentDesc = docOtrDescElement.value;
+
+    // 先移除所有與申請相關的描述
+    for (let key in copyDescMap) {
+        const regex = new RegExp(copyDescMap[key].replace(/\n/g, '\\n'), 'g'); // 用正則表達式匹配換行符號
+        currentDesc = currentDesc.replace(regex, '').trim();  // 移除相關的描述並修整空白
+    }
+
+    let copyDesc = '';  // 儲存新的描述
+
+    // 檢查每個選項是否被勾選，如果勾選，加入新的描述
+    for (let key in copyDescMap) {
+        if (document.getElementById(key).checked) {
+            copyDesc += (copyDesc ? '\n' : '') + copyDescMap[key];
+        }
+    }
+
+    // 如果現有內容存在，則在最後加上換行符號
+    if (currentDesc) {
+        currentDesc += '\n';
+    }
+
+    // 更新文本框的值，將現有描述和新的描述結合
+    docOtrDescElement.value = currentDesc + copyDesc;
 }
 
 // 更新REMARK1的值
