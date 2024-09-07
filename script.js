@@ -15,6 +15,7 @@ document.addEventListener('keydown', function(event) {
             newIndex = (currentIndex < tabLinks.length - 1) ? currentIndex + 1 : 0;
         }
 
+        // 從 onclick 中取得新的 tab 名稱
         const newTabName = tabLinks[newIndex].getAttribute('onclick').match(/'([^']+)'/)[1];
         openTab(newTabName);
         tabLinks[newIndex].focus(); // 將焦點移至新選中的 tab
@@ -25,13 +26,16 @@ function openTab(tabName) {
     const tabs = document.querySelectorAll(".tab");
     const tabLinks = document.querySelectorAll(".tab-links");
 
+    // 移除所有 active 狀態
     tabs.forEach(tab => tab.classList.remove("active"));
     tabLinks.forEach(link => link.classList.remove("active"));
 
+    // 顯示選中的 tab，並設定為 active
     document.getElementById(tabName).classList.add("active");
     document.querySelector(`.tab-links[onclick="openTab('${tabName}')"]`).classList.add("active");
 }
 
+// 調整 margin 以確保標籤正確對齊
 function adjustMargin() {
     var tabsHeight = document.querySelector('.tabs-wrapper').offsetHeight;
     document.querySelector('p').style.marginTop = tabsHeight + 'px';
