@@ -374,10 +374,11 @@ async function exportToPDF() {
             }
         }
 
-        // 取得 FILE_NO 的值
+        // 取得 FILE_NO 及 LOT_NO 的值
         const fileNo = document.getElementById('FILE_NO').value || '';
+        const lotno = document.getElementById('LOT_NO').value || '';
 
-        // 添加 FILE_NO 到左下角的函數
+        // 添加 FILE_NO 到左下角
         function addFileNoToBottomLeft(doc, fileNo) {
             const pageHeight = doc.internal.pageSize.height;
             const leftX = 7; // 靠左邊的 X 坐標
@@ -385,8 +386,17 @@ async function exportToPDF() {
             doc.text(fileNo, leftX, bottomY);
         }
 
-        // 首頁顯示文件編號
+        // 添加 LOT_NO 到左下角
+        function addlotnoToBottomLeft(doc, lotno) {
+            const pageHeight = doc.internal.pageSize.height;
+            const leftX = 30; // 靠左邊的 X 坐標
+            const bottomY = pageHeight - 8; // 靠近底部的 Y 坐標
+            doc.text(lotno, leftX, bottomY);
+        }
+
+        // 首頁顯示文件編號及運單號
         addFileNoToBottomLeft(doc, fileNo);
+        addlotnoToBottomLeft(doc, lotno);
         
         for (const item of itemsData) {
             const itemDescriptionLines = doc.splitTextToSize(item.description, 150).length;
@@ -402,8 +412,9 @@ async function exportToPDF() {
                 const currentPage = doc.internal.getCurrentPageInfo().pageNumber;
                 addPageNumber(doc, currentPage, totalPages);
 
-                // 每頁顯示文件編號
+                // 每頁顯示文件編號及運單號
                 addFileNoToBottomLeft(doc, fileNo);
+                addlotnoToBottomLeft(doc, lotno);
             }
 
             // 在首頁右上角添加頁碼
