@@ -564,3 +564,13 @@ tr.selected {
 input::placeholder {
     color: #005feec5; /* 你想要的顏色 */
 }
+
+.convert-file {
+    font-weight: bold;
+    padding: 5px 10px;
+    background: linear-gradient(to bottom, #f0f0f0, #cee1fd);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
+    border: 0;
+    cursor: pointer;
+}
