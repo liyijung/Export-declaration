@@ -14,7 +14,7 @@
             <div class="tab-links" onclick="openTab('items')">出口報單項次</div>
             <div class="tab-links" onclick="openTab('copy')">申請報單副本</div>
             <div class="tab-links" onclick="openTab('bonded')">保稅相關信息</div>
-            <!-- <div class="tab-links" onclick="openTab('customer-transfer')">客戶轉檔專區</div> -->
+            <div class="tab-links" onclick="openTab('customer-transfer')">轉檔客戶專區</div>
             <!-- 影片鏈接部分 -->
             <div class="video-link" style="margin-top: 10px;">
                 <select id="videoSelector" onchange="updateVideoLink()">
@@ -224,6 +224,9 @@
                 <option value="此為貨樣出口，後續將依規定限期內返台">【統計方式53】此為貨樣出口，後續將依規定限期內返台</option>
                 <option value="本批貨物為國貨修理後復出口">【統計方式91】本批貨物為國貨修理後復出口</option>
                 <option value="洋貨復出口，復出口原因：退回修理，修理完畢後會再復運進口">【統計方式9M】洋貨復出口，復出口原因：退回修理，修理完畢後會再復運進口</option>
+                <option value="戰略性高科技貨品
+輸出許可證號碼 Export Permit No.：
+出口管制貨品號碼 Export Control Commodity NO.：">【統計方式1A/8A/8D】戰略性高科技貨品</option>
                 <option class="separator" disabled>─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─</option>
                 <option value="洋貨轉售，附原進口報單">洋貨轉售，附原進口報單</option>
                 <option value="洋貨轉售
@@ -823,12 +826,31 @@
         </h4>
     </div>
 
-    <!--客戶轉檔專區
-    <div id="customer-transfer" class="tab active">
-        <input type="file" id="import-xml" accept=".xml" style="display:none;">
-        <button class="xml-btn" onclick="document.getElementById('import-xml').click();">22099408 台灣光罩股份有限公司</button>
-    </div>-->
+    <!--轉檔客戶專區-->
+    <div id="customer-transfer" class="tab" style="text-align: center;">
+        <table border="1" style="margin: 0 auto;">
+            <thead>
+                <tr>
+                    <th style="text-align: center;">客戶名稱</th>
+                    <th style="text-align: center;">檔案類型</th>
+                    <th style="text-align: center;">注意事項</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <div class="tab-links" onclick="document.getElementById('CustomerXMLInput').click()">22099408 台灣光罩股份有限公司</div>
+                        <input type="file" id="CustomerXMLInput" accept=".xml" style="display:none" onchange="importCustomerXML(event)">
+                    </td>
+                    <td style="text-align: center;">XML</td>
+                    <td style="text-align: center;">戰略性高科技貨品</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
     
+    <p style="margin-bottom: 20px;"></p>
+
     <!--各標籤頁下方-->
     <div class="import-export-buttons">
         <input type="file" id="import-excel" accept=".xlsx, .xls" style="display:none;">
