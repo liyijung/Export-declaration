@@ -546,7 +546,7 @@ tr.selected {
     border: none;
     border-radius: 50%;
     cursor: pointer;
-    font-size: 20px; /* 可以根據需要調整字體大小 */
+    font-size: 20px; /* 根據需要調整字體大小 */
     line-height: 30px; /* 與按鈕高度相同 */
     display: flex;
     justify-content: center;
@@ -562,7 +562,7 @@ tr.selected {
 
 /* 設定所有input元素的placeholder字體顏色 */
 input::placeholder {
-    color: #005feec5; /* 你想要的顏色 */
+    color: #005feec5;
 }
 
 .convert-file {
@@ -573,4 +573,11 @@ input::placeholder {
     border-radius: 5px;
     border: 0;
     cursor: pointer;
+    color: #414141;
+    transition: color 0.3s ease, background-color 0.3s ease; /* 添加過渡效果 */
+}
+
+.convert-file:hover {
+    color: #005feec5;
+    background: linear-gradient(to bottom, #cee1fd, #f0f0f0);
 }
