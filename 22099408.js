@@ -1,5 +1,5 @@
 // 轉檔客戶 - 22099408 台灣光罩股份有限公司
-function importCustomerXML(event) {
+function importCustomer22099408(event) {
     const file = event.target.files[0];
     if (file) {
         const reader = new FileReader();
