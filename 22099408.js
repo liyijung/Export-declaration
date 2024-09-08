@@ -172,13 +172,13 @@ function importCustomerXML(event) {
                 Array.from(newItems).forEach((item, index) => {
                     const itemData = {};
 
-                     // 獲取 ItemNo 項次
+                    // 獲取 ItemNo 項次
                     const itemNo = item.getElementsByTagName("ItemNo")[0]?.textContent || (index + 1); // 如果沒有 ItemNo，則使用迭代索引作為項次
 
                     // 獲取 ItemCCCCode 欄位的值
                     let cccCode = item.getElementsByTagName("ItemCCCCode")[0]?.textContent || '';
                 
-                     // 去除 cccCode 中的 . 和 - 符號
+                    // 去除 cccCode 中的 . 和 - 符號
                     cccCode = cccCode.replace(/[.-]/g, '');
 
                     // 合併 MainGoodsDesc077, ItemSoNo, ItemName 到 DESCRIPTION 並換行
