@@ -251,6 +251,6 @@ function importCustomer22099408(event) {
             renumberItems(); // 重新編號所有項次
             updateFieldVisibility(); // 更新欄位顯示
         };
-        reader.readAsText(file);
+        reader.readAsText(file, "UTF-8");
     }
 }
