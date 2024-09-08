@@ -1417,7 +1417,7 @@ function importXML(event) {
             renumberItems(); // 重新編號所有項次
             updateRemark1FromImport(); // 更新REMARK1欄位並勾選對應的checkbox
         };
-        reader.readAsText(file);
+        reader.readAsText(file, "UTF-8");
     }
 }
 
