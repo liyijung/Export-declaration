@@ -839,12 +839,20 @@
             </thead>
             <tbody>
                 <tr>
-                    <td style="width: 40%;">
-                        <div class="convert-file" onclick="document.getElementById('CustomerXMLInput').click()">22099408 台灣光罩股份有限公司</div>
-                        <input type="file" id="CustomerXMLInput" accept=".xml" style="display:none" onchange="importCustomer22099408(event)">
+                    <td>
+                        <div class="convert-file" onclick="document.getElementById('CustomerXMLInput22099408').click()">22099408 台灣光罩股份有限公司</div>
+                        <input type="file" id="CustomerXMLInput22099408" accept=".xml" style="display:none" onchange="importCustomer22099408(event)">
                     </td>
-                    <td style="text-align: center; width: 15%;">XML</td>
-                    <td style="text-align: left; width: 50%;">【戰略性高科技貨品】<br>品名（含出口管制貨品號碼）、稅則、輸出許可號碼、輸出許可項次，<br>需與輸出許可證內容相符。</td>
+                    <td style="text-align: center;">XML</td>
+                    <td style="text-align: left;">【戰略性高科技貨品】品名（含出口管制貨品號碼）、稅則、輸出許可號碼、輸出許可項次，需與輸出許可證內容相符。</td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="convert-file" onclick="document.getElementById('CustomerXMLInput27951609').click()">27951609 群聯電子股份有限公司竹南分公司</div>
+                        <input type="file" id="CustomerXMLInput27951609" accept=".xml" style="display:none" onchange="importCustomer27951609(event)">
+                    </td>
+                    <td style="text-align: center;">XML</td>
+                    <td style="text-align: left;"></td>
                 </tr>
             </tbody>
         </table>
@@ -881,7 +889,8 @@
     <script src="script.js"></script>
     <script src="CCC_CODE.js"></script>
     <script src="exportToPDF.js"></script>
-    <script src="22099408.js"></script>
+    <script src="customer-transfer/22099408.js"></script>
+    <script src="customer-transfer/27951609.js"></script>
     
 </body>
 </html>
