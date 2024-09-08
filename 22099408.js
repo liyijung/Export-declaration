@@ -198,7 +198,6 @@ function importCustomerXML(event) {
                         // 如果找不到對應的 ExportPermitNo，顯示彈跳框提示
                         alert(`【請留意！】\nNO ${itemNo} - 品名（含出口管制貨品號碼）、稅則、輸出許可號碼、輸出許可項次，請依輸出許可證 ${exportPermitNo} 內容繕打。`);
                         itemData['DESCRIPTION'] = description;  // 保持原來的 description
-                        
                     
                     } else if (exportPermitMappings[exportPermitNo] && exportPermitMappings[exportPermitNo][exPermitNoItem]) {
                         
