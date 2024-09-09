@@ -50,6 +50,7 @@ function importCustomer22099408(event) {
                     ConsigneeAddr1: 'CNEE_E_ADDR',
                     FobFor: 'CAL_IP_TOT_ITEM_AMT',
                     TotalNW076: 'DCL_NW',
+                    DOC_CTN_UM: 'DOC_CTN_UM', // 默認設為 'CTN'
                 };
 
                 // 解析表頭資料
@@ -66,6 +67,11 @@ function importCustomer22099408(event) {
                     // 將 FlightFee, InsuranceFee, AddFee, SubFee 為 0 時設為空
                     if (['FlightFee', 'InsuranceFee', 'AddFee', 'SubFee'].includes(xmlField) && value === '0') {
                         value = '';
+                    }
+
+                    // DOC_CTN_UM，默認設為 'CTN'
+                    if (formField === 'DOC_CTN_UM' && !value) {
+                        value = 'CTN';
                     }
 
                     // 在處理項次時，收集唯一的 ExportPermitNo077 和對應的出口管制貨品號碼
@@ -167,6 +173,7 @@ function importCustomer22099408(event) {
                     WIDE_UM: 'WIDE_UM',
                     LENGTH_UM: 'LENGTH_UM',
                     ST_UM: 'ST_UM',
+                    TRADE_MARK: 'TRADE_MARK', // 默認設為 'NO BRAND'
                 };
 
                 Array.from(newItems).forEach((item, index) => {
@@ -239,6 +246,11 @@ function importCustomer22099408(event) {
                         // 如果 AppType 是 'G5' 或 'G3'，則將 BOND_NOTE 強制設為空
                         if ((appType === 'G5' || appType === 'G3') && formField === 'BOND_NOTE') {
                             itemData[formField] = '';  // 將 BOND_NOTE 設為空
+                        }
+
+                        // TRADE_MARK，默認設為 'NO BRAND'
+                        if (formField === 'TRADE_MARK' && !itemData[formField]) {
+                            itemData[formField] = 'NO BRAND';
                         }
                     });
                 
