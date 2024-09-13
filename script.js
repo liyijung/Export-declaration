@@ -1754,6 +1754,18 @@ function createInputField(name, value, isVisible) {
     }
 }
 
+// 監聽鎖定全選/取消全選的功能
+document.getElementById('selectAllWT').addEventListener('change', function() {
+    const isChecked = this.checked;
+    // 找到所有的 ISC_WT 多選框
+    const checkboxes = document.querySelectorAll('.ISCALC_WT');
+    
+    // 將每個 ISC_WT 的狀態設定為與全選/取消全選多選框一致
+    checkboxes.forEach(checkbox => {
+        checkbox.checked = isChecked;
+    });
+});
+
 function highlightRow(element) {
     const row = element.closest('.item-row');
     if (row) {
