@@ -61,6 +61,7 @@ function importCustomer23570158(event) {
         var e9 = sheetData[8] ? sheetData[8][4] || '' : '';
         var e10 = sheetData[9] ? sheetData[9][4] || '' : '';
         var e17 = sheetData[16] ? sheetData[16][4] || '' : '';
+        var g17 = sheetData[16] ? sheetData[16][6] || '' : '';
         var g18 = sheetData[17] ? sheetData[17][6] || '' : '';
         var h20 = sheetData[19] ? sheetData[19][7] || '' : '';
 
@@ -76,7 +77,11 @@ function importCustomer23570158(event) {
 
         // 如果 e17 為空，取 g18 的值
         if (!e17) {
-            e17 = g18;
+            if (!g18) {
+                e17 = g17;
+            } else {
+                e17 = g18;
+            }
         }
 
         // 設置 CNEE_COUNTRY_CODE 根據 CNEE_E_NAME 的內容
