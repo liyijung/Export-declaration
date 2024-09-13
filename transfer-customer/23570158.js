@@ -318,6 +318,8 @@ function importCustomer23570158(event) {
             // 如果 CERT_NO 是 "申請ECFA" 或 "做ECFA"，CERT_NO_ITEM 從 1 開始依序編號
             var certNoItem = '';
             if (certNo === '申請ECFA' || certNo === '做ECFA') {
+                goodsModel = 'NIL';
+                goodsSpec = 'NIL';
                 certNoItem = certNoItemCount++;
             }
 
@@ -441,6 +443,8 @@ function importCustomer23570158(event) {
                 DOC_UM: sheetData[i][5] || '',
                 DOC_UNIT_P: sheetData[i][6] || '',
                 DOC_TOT_P: sheetData[i][7] || '',
+                GOODS_MODEL: goodsModel,
+                GOODS_SPEC: goodsSpec,
                 CERT_NO: certNo,
                 CERT_NO_ITEM: certNoItem,
                 TRADE_MARK: tradeMark,
