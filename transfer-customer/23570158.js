@@ -83,12 +83,10 @@ function importCustomer23570158(event) {
         var cneeCountryCode = '';
         var toCode = '';
         var toDesc = '';
-        if (e9.includes('VIETNAM')) {
+        if (e9.includes('VIETNAM') || e9.includes('BINH DUONG')) {
             cneeCountryCode = 'VN';
-            if (e10.includes('Long An')) {
-                toCode = 'VNLAN';
-                toDesc = 'Long An-Ben Luc';
-            }
+            toCode = 'VNLBT';
+            toDesc = 'LONG BINH TAN';
         } else if (e9.includes('東莞')) {
             cneeCountryCode = 'CN';
             toCode = 'CNDGG';
