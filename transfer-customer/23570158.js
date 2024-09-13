@@ -282,6 +282,8 @@ function importCustomer23570158(event) {
             // 如果 C 列是符號，使用上一個項次的數據
             var description = '';
             var cccCode = '';
+            var goodsModel = '';
+            var goodsSpec = '';
 
             if (cValue === '"') {
                 description = lastDescription + '\n' + dValue;
