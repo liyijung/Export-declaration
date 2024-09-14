@@ -78,13 +78,16 @@ function importCustomer22099408(event) {
                     const consigneeNameElement = declarationForm.getElementsByTagName('ConsigneeName')[0];
                     if (consigneeNameElement) {
                         const consigneeName = consigneeNameElement.textContent || '';
-                        console.log('ConsigneeName:', consigneeName);  // 加入 debug 訊息
                 
                         // 判斷 ConsigneeName 是否包含 'Wuxi'
                         if (consigneeName.includes('Wuxi')) {
                             headerMapping['TO_CODE'] = 'CNWUX';
                             headerMapping['TO_DESC'] = 'Wuxi';
-                            console.log('TO_CODE 和 TO_DESC 已設置為 CNWUX 和 Wuxi');
+                
+                            // 更新網頁上的輸入欄位
+                            document.getElementById('TO_CODE').value = headerMapping['TO_CODE'];
+                            document.getElementById('TO_DESC').value = headerMapping['TO_DESC'];
+                            console.log('TO_CODE 和 TO_DESC 已成功載入');
                         } else {
                             console.log('ConsigneeName 不包含 Wuxi');
                         }
