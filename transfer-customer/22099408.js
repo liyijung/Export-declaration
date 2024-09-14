@@ -51,6 +51,8 @@ function importCustomer22099408(event) {
                     FobFor: 'CAL_IP_TOT_ITEM_AMT',
                     TotalNW076: 'DCL_NW',
                     DOC_CTN_UM: 'DOC_CTN_UM', // 默認設為 'CTN'
+                    TO_CODE: 'TO_CODE',
+                    TO_DESC: 'TO_DESC',
                 };
 
                 // 解析表頭資料
@@ -74,6 +76,12 @@ function importCustomer22099408(event) {
                         value = 'CTN';
                     }
 
+                    // DOC_CTN_UM，默認設為 'CTN'
+                    if (ConsigneeName.includes('Wuxi') ) {
+                        TO_CODE = 'CNWUX',
+                        TO_DESC = 'Wuxi',
+                    }
+                    
                     // 在處理項次時，收集唯一的 ExportPermitNo077 和對應的出口管制貨品號碼
                     const newItems = declarationForm.getElementsByTagName("Item");
                     Array.from(newItems).forEach(item => {
