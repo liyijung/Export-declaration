@@ -407,7 +407,7 @@ function importCustomer23570158(event) {
                 var jValue = sheetData[i][8] || ''; // 獲取 I 欄的值
                 var jValue = sheetData[i][9] || ''; // 獲取 J 欄的值
 
-                if (iValue.includes('幅寬')) {
+                if (iValue && iValue.includes('幅寬')) {
                     // 檢查 I 欄是否包含 '幅寬' 字段
                     // 使用正則表達式匹配類似 "142cm" 的部分來提取寬度
                     var wideMatch = iValue.match(/(\d+)\s*cm/);
