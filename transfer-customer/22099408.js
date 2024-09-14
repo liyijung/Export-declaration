@@ -75,12 +75,21 @@ function importCustomer22099408(event) {
                     }
 
                     // 獲取 ConsigneeName 值
-                    const consigneeName = declarationForm.getElementsByTagName('ConsigneeName')[0]?.textContent || '';
+                    const consigneeNameElement = declarationForm.getElementsByTagName('ConsigneeName')[0];
+                    if (consigneeNameElement) {
+                        const consigneeName = consigneeNameElement.textContent || '';
+                        console.log('ConsigneeName:', consigneeName);  // 加入 debug 訊息
                 
-                    // 判斷 ConsigneeName 是否包含 'Wuxi'
-                    if (consigneeName.includes('Wuxi')) {
-                        headerMapping['TO_CODE'] = 'CNWUX';
-                        headerMapping['TO_DESC'] = 'Wuxi';
+                        // 判斷 ConsigneeName 是否包含 'Wuxi'
+                        if (consigneeName.includes('Wuxi')) {
+                            headerMapping['TO_CODE'] = 'CNWUX';
+                            headerMapping['TO_DESC'] = 'Wuxi';
+                            console.log('TO_CODE 和 TO_DESC 已設置為 CNWUX 和 Wuxi');
+                        } else {
+                            console.log('ConsigneeName 不包含 Wuxi');
+                        }
+                    } else {
+                        console.log('ConsigneeName 標籤未找到');
                     }
                     
                     // 在處理項次時，收集唯一的 ExportPermitNo077 和對應的出口管制貨品號碼
