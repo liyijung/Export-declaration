@@ -78,8 +78,8 @@ function importCustomer22099408(event) {
 
                     // DOC_CTN_UM，默認設為 'CTN'
                     if (ConsigneeName.includes('Wuxi') ) {
-                        TO_CODE = 'CNWUX',
-                        TO_DESC = 'Wuxi',
+                        TO_CODE = 'CNWUX';
+                        TO_DESC = 'Wuxi';
                     }
                     
                     // 在處理項次時，收集唯一的 ExportPermitNo077 和對應的出口管制貨品號碼
