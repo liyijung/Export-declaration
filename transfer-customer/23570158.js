@@ -405,18 +405,9 @@ function importCustomer23570158(event) {
             var lengthUmValue = ''; // 預設長度單位為空
 
             if (fValue === 'Y' || fValue === 'M') {
-                var iValue = sheetData[21][8] || ''; // 獲取 I22 欄的值
                 var jValue = sheetData[i][9] || ''; // 獲取 J 欄的值
 
-                if (iValue && iValue.includes('幅寬')) {
-                    // 檢查 I 欄是否包含 '幅寬' 字段
-                    // 使用正則表達式匹配類似 "142cm" 的部分來提取寬度
-                    var wideMatch = iValue.match(/(\d+)\s*cm/);
-                    if (wideMatch) {
-                        wideValue = (parseFloat(wideMatch[1]) / 100).toFixed(2); // 提取數字部分，並除以100轉換成米
-                        wideUm = 'MTR'; // 如果提取到寬度，設置單位為 MTR
-                    }
-                } else if (jValue) {
+                if (jValue) {
                     // 如果 J 欄有值，直接從 J 欄提取寬度
                     // 使用正則表達式匹配類似 "142cm" 的部分來提取寬度
                     var wideMatch = jValue.match(/(\d+)\s*cm/);
