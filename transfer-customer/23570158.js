@@ -279,6 +279,7 @@ function importCustomer23570158(event) {
             var cValue = sheetData[i][2] || ''; // C列數據
             var dValue = sheetData[i][3] || ''; // D列數據
             var eValue = sheetData[i][4] || ''; // E列數據
+            var iValue = sheetData[i][8] || ''; // I列數據
             var jValue = sheetData[i][9] || ''; // J列數據
 
             // 如果C列和D列同時為空，則跳過該項次
@@ -404,7 +405,7 @@ function importCustomer23570158(event) {
             var lengthUmValue = ''; // 預設長度單位為空
 
             if (fValue === 'Y' || fValue === 'M') {
-                var jValue = sheetData[i][8] || ''; // 獲取 I 欄的值
+                var iValue = sheetData[i][8] || ''; // 獲取 I 欄的值
                 var jValue = sheetData[i][9] || ''; // 獲取 J 欄的值
 
                 if (iValue && iValue.includes('幅寬')) {
