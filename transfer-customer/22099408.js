@@ -75,7 +75,7 @@ function importCustomer22099408(event) {
                     }
 
                     // 判斷目的地
-                    if (ConsigneeName && ConsigneeName.includes('Wuxi')) {
+                    if (CNEE_E_NAME && CNEE_E_NAME.includes('Wuxi')) {
                         TO_CODE = 'CNWUX';
                         TO_DESC = 'Wuxi';
                     }
