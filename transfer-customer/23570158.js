@@ -405,7 +405,7 @@ function importCustomer23570158(event) {
             var lengthUmValue = ''; // 預設長度單位為空
 
             if (fValue === 'Y' || fValue === 'M') {
-                var iValue = sheetData[i][8] || ''; // 獲取 I 欄的值
+                var iValue = sheetData[21][8] || ''; // 獲取 I22 欄的值
                 var jValue = sheetData[i][9] || ''; // 獲取 J 欄的值
 
                 if (iValue && iValue.includes('幅寬')) {
