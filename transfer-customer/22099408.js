@@ -74,10 +74,13 @@ function importCustomer22099408(event) {
                         value = 'CTN';
                     }
 
-                    // 判斷目的地
-                    if (CNEE_E_NAME && CNEE_E_NAME.includes('Wuxi')) {
-                        TO_CODE = 'CNWUX';
-                        TO_DESC = 'Wuxi';
+                    // 獲取 ConsigneeName 值
+                    const consigneeName = declarationForm.getElementsByTagName('ConsigneeName')[0]?.textContent || '';
+                
+                    // 判斷 ConsigneeName 是否包含 'Wuxi'
+                    if (consigneeName.includes('Wuxi')) {
+                        headerMapping['TO_CODE'] = 'CNWUX';
+                        headerMapping['TO_DESC'] = 'Wuxi';
                     }
                     
                     // 在處理項次時，收集唯一的 ExportPermitNo077 和對應的出口管制貨品號碼
