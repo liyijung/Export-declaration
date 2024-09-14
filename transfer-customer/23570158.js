@@ -404,9 +404,18 @@ function importCustomer23570158(event) {
             var lengthUmValue = ''; // 預設長度單位為空
 
             if (fValue === 'Y' || fValue === 'M') {
+                var jValue = sheetData[i][8] || ''; // 獲取 I 欄的值
                 var jValue = sheetData[i][9] || ''; // 獲取 J 欄的值
 
-                if (jValue) {
+                if (iValue.includes('幅寬')) {
+                    // 檢查 I 欄是否包含 '幅寬' 字段
+                    // 使用正則表達式匹配類似 "142cm" 的部分來提取寬度
+                    var wideMatch = iValue.match(/(\d+)\s*cm/);
+                    if (wideMatch) {
+                        wideValue = (parseFloat(wideMatch[1]) / 100).toFixed(2); // 提取數字部分，並除以100轉換成米
+                        wideUm = 'MTR'; // 如果提取到寬度，設置單位為 MTR
+                    }
+                } else if (jValue) {
                     // 如果 J 欄有值，直接從 J 欄提取寬度
                     // 使用正則表達式匹配類似 "142cm" 的部分來提取寬度
                     var wideMatch = jValue.match(/(\d+)\s*cm/);
@@ -415,7 +424,7 @@ function importCustomer23570158(event) {
                         wideUm = 'MTR'; // 如果提取到寬度，設置單位為 MTR
                     }
                 } else {
-                    // 如果 J 欄沒有值，從第二工作表查找
+                    // 如果 I / J 欄沒有值，從第二工作表查找
                     var descriptionS = sheetData[i][2] || ''; // 獲取當前行的品名
 
                     // 在第二工作表中查找對應品名
