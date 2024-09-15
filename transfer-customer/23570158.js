@@ -303,10 +303,11 @@ function importCustomer23570158(event) {
                 // 取C列的前8碼做為 CCC_CODE
                 cccCode = (sheetData[i][2] || '').toString().substring(0, 8); // 確保為字串後再取前8碼
 
-                // 檢查C列前8碼是否為數字，如果不是，使用M列
+                // 檢查C列前8碼是否為數字，如果不是，使用 M 列 或 L 列
                 var isNumeric = /^\d{8}$/.test(cccCode); // 正則檢查是否為8位數字
                 if (!isNumeric) {
-                    cccCode = (sheetData[i][12] || '').toString().substring(0, 8); // 使用M列 (第13列)
+                    // 使用 M 列 (第 13 列)，如果 M 列沒有值則使用 L 列 (第 12 列)
+                    cccCode = (sheetData[i][12] || sheetData[i][11] || '').toString().substring(0, 8); 
                 }
 
                 // 檢查是否需要替換 CCC_CODE
@@ -320,7 +321,7 @@ function importCustomer23570158(event) {
             }
 
             // 處理 CERT_NO，如果內含 "不申請ECFA" 或 "不做ECFA"，則設置為空
-            var certNo = sheetData[i][8] || '';
+            var certNo = iValue || '';
             if (certNo.includes('不申請ECFA') || certNo.includes('不做ECFA') || certNo.includes('*')) {
                 certNo = '';
             }
@@ -405,12 +406,20 @@ function importCustomer23570158(event) {
             var lengthUmValue = ''; // 預設長度單位為空
 
             if (fValue === 'Y' || fValue === 'M') {
-                var jValue = sheetData[i][9] || ''; // 獲取 J 欄的值
+                var i22Value = sheetData[21][8];
 
                 if (jValue) {
                     // 如果 J 欄有值，直接從 J 欄提取寬度
                     // 使用正則表達式匹配類似 "142cm" 的部分來提取寬度
                     var wideMatch = jValue.match(/(\d+)\s*cm/);
+                    if (wideMatch) {
+                        wideValue = (parseFloat(wideMatch[1]) / 100).toFixed(2); // 提取數字部分，並除以100轉換成米
+                        wideUm = 'MTR'; // 如果提取到寬度，設置單位為 MTR
+                    }
+                } else if ((i22Value && i22Value.includes("幅寬"))) {
+                    // 如果 I22 包含 "幅寬"，從 I 欄提取寬度
+                    // 使用正則表達式匹配類似 "142cm" 的部分來提取寬度
+                    var wideMatch = iValue.match(/(\d+)\s*cm/);
                     if (wideMatch) {
                         wideValue = (parseFloat(wideMatch[1]) / 100).toFixed(2); // 提取數字部分，並除以100轉換成米
                         wideUm = 'MTR'; // 如果提取到寬度，設置單位為 MTR
