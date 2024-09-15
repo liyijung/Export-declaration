@@ -321,7 +321,7 @@ function importCustomer23570158(event) {
 
             // 處理 CERT_NO，如果內含 "不申請ECFA" 或 "不做ECFA"，則設置為空
             var certNo = sheetData[i][8] || '';
-            if (certNo.includes('不申請ECFA') || certNo.includes('不做ECFA')) {
+            if (certNo.includes('不申請ECFA') || certNo.includes('不做ECFA') || certNo.includes('*')) {
                 certNo = '';
             }
 
