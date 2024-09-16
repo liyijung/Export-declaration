@@ -208,6 +208,11 @@ function importCustomer23570158(event) {
                 var totalCtnValue = match[1]; // 提取數字部分
                 var totalCtnUnit = match[2];  // 提取單位部分
 
+                // 如果單位是 ROLL，改成 ROL
+                if (totalCtnUnit === 'ROLL') {
+                    totalCtnUnit = 'ROL';
+                }
+                
                 // 設置數字部分到 TOT_CTN
                 var totCtnElement = document.getElementById('TOT_CTN');
                 if (totCtnElement) {
