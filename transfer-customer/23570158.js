@@ -122,18 +122,15 @@ function importCustomer23570158(event) {
 
         // 初始化 DOC_OTR_DESC 的變數
         var docOtrDesc = a7 || ""; // 確保初始值來自 a7，如果 a7 沒有值則為空字符串
-        var i22Value = sheetData[21][8];
-        
-        if (!(i22Value && i22Value.includes("幅寬"))) {
-            // 遍歷每一行，查找第一個工作頁的 I 列是否包含 "申請ECFA" 或 "做ECFA"
-            for (var i = 0; i < sheetData.length; i++) {
-                var iValue = sheetData[i][8]; // I列的數據位於索引 8
-    
-                if (iValue && iValue === "申請ECFA" || iValue && iValue === "做ECFA") {
-                    // 如果 I 列包含 "申請ECFA" 或 "做ECFA"，則在 DOC_OTR_DESC 中加入 "產證編號："
-                    docOtrDesc += "\n申請ECFA，產證編號: ";
-                    break; // 只需要添加一次，找到後退出循環
-                }
+
+        // 遍歷每一行，查找第一個工作頁的 I 列是否包含 "申請ECFA" 或 "做ECFA"
+        for (var i = 0; i < sheetData.length; i++) {
+            var iValue = sheetData[i][8]; // I列的數據位於索引 8
+
+            if (iValue && iValue === "申請ECFA" || iValue && iValue === "做ECFA") {
+                // 如果 I 列包含 "申請ECFA" 或 "做ECFA"，則在 DOC_OTR_DESC 中加入 "產證編號："
+                docOtrDesc += "\n申請ECFA，產證編號: ";
+                break; // 只需要添加一次，找到後退出循環
             }
         }
 
@@ -345,7 +342,7 @@ function importCustomer23570158(event) {
 
             // 處理 CERT_NO，如果內含 "不申請ECFA" 或 "不做ECFA"，則設置為空
             var certNo = iValue || '';
-            if (certNo.includes('不申請ECFA') || certNo.includes('不做ECFA') || certNo.includes('*')) {
+            if (certNo.includes('不申請ECFA') || certNo.includes('不做ECFA') || certNo.includes('*') || certNo.includes('以下')) {
                 certNo = '';
             }
 
@@ -429,8 +426,11 @@ function importCustomer23570158(event) {
             var lengthUmValue = ''; // 預設長度單位為空
 
             if (fValue === 'Y' || fValue === 'M') {
-                if (jValue) {
-                    // 如果 J 欄有值，直接從 J 欄提取寬度
+                var j22Value = sheetData[21][9];
+                var i22Value = sheetData[21][8];
+
+                if ((j22Value && j22Value.includes("幅寬"))) {
+                    // 如果 J22 包含 "幅寬"，從 J 欄提取寬度
                     // 使用正則表達式匹配類似 "142cm" 的部分來提取寬度
                     var wideMatch = jValue.match(/(\d+)\s*cm/);
                     if (wideMatch) {
