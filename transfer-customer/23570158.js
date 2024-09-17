@@ -374,7 +374,7 @@ function importCustomer23570158(event) {
                 var secondSheetCValueStr = secondSheetCValue ? secondSheetCValue.toString() : '';
 
                 // 檢查是否包含 (@數字*數字) 格式，並同時忽略字母單位
-                var matchC = secondSheetCValueStr.match(/\(@(\d+(\.\d+)?)[A-Za-z]*\*?(\d+(\.\d+)?)?\)/);
+                var matchC = secondSheetCValueStr.match(/\(@(\d+(\.\d+)?)[A-Za-z]*\*?(\d+(\.\d+)?)?\)[A-Za-z]*/);
                 if (matchC) {
                     // 提取有效數字並進行計算，如果第二個數字不存在，默認為 1
                     var firstNumC = parseFloat(matchC[1]);
@@ -389,7 +389,7 @@ function importCustomer23570158(event) {
                 var secondSheetDValueStr = secondSheetDValue ? secondSheetDValue.toString() : '';
 
                 // 檢查是否包含 (@數字*數字) 格式，並同時忽略字母單位
-                var matchD = secondSheetDValueStr.match(/\(@(\d+(\.\d+)?)[A-Za-z]*\*?(\d+(\.\d+)?)?\)/);
+                var matchD = secondSheetDValueStr.match(/\(@(\d+(\.\d+)?)[A-Za-z]*\*?(\d+(\.\d+)?)?\)[A-Za-z]*/);
                 if (matchD) {
                     // 提取數字並進行計算，如果第二個數字不存在，默認為 1
                     var firstNumD = parseFloat(matchD[1]);
