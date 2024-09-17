@@ -310,14 +310,20 @@ function importCustomer23570158(event) {
 
                 // 檢查C列前8碼是否為數字，如果不是，使用 M 列 或 L 列
                 var isNumeric = /^\d{8}$/.test(cccCode); // 正則檢查是否為8位數字
+                var hsCodePattern = /HS\s*CODE/; // 正則檢查是否包含 HS CODE
+
+                // M 列 (第 13 列) 和 L 列 (第 12 列) 的值
                 var m22Value = sheetData[21][12];
                 var l22Value = sheetData[21][11];
+
                 if (!isNumeric) {
-                    // 使用 M 列 (第 13 列)，如果 M 列沒有 HS CODE 則使用 L 列 (第 12 列)
-                    if ((m22Value && m22Value.includes("HS CODE"))) {
-                        cccCode = (sheetData[i][12] || '').toString(); 
-                    } else if ((l22Value && l22Value.includes("HS CODE"))) {
-                        cccCode = (sheetData[i][11] || '').toString(); 
+                    // 使用 M 列，如果 M 列符合 HS CODE，則使用 M 列的值
+                    if (hsCodePattern.test(m22Value)) {
+                        cccCode = (sheetData[i][12] || '').toString();
+                    }
+                    // 否則檢查 L 列是否符合 HS CODE，使用 L 列的值
+                    else if (hsCodePattern.test(l22Value)) {
+                        cccCode = (sheetData[i][11] || '').toString();
                     }
                 }
 
