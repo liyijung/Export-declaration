@@ -397,13 +397,12 @@ function importCustomer23570158(event) {
                     var calculatedValueD = firstNumD * secondNumD;
 
                     // 將計算結果替換到原始值中
-                    secondSheetDValueStr = calculatedValueD.toFixed(2); // 限制為兩位小數
+                    secondSheetDValueStr = calculatedValueD.toString();
                 }
 
-                // 確保 D 列和 E 列是字串，並移除非數字字符
-                var cleanedDValue = dValue ? dValue.toString().replace(/[^\d.]/g, '') : ''; // 移除非數字字符
+                var cleanedDValue = dValue ? dValue.toString() : '';
                 var cleanedEValue = eValue ? eValue.toString().replace(/[^\d.]/g, '') : ''; // 移除非數字字符
-                var cleanedSecondSheetBValue = secondSheetBValue.toString().replace(/[^\d.]/g, ''); // 移除非數字字符
+                var cleanedSecondSheetBValue = secondSheetBValue.toString();
                 var cleanedSecondSheetCValueStr = secondSheetCValueStr.replace(/[^\d.]/g, ''); // 移除非數字字符
 
                 // 檢查 D 列和 E 列是否與第二個工作表的 B 列和 C 列匹配
