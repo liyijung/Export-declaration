@@ -1,5 +1,9 @@
 // 轉檔客戶 - 27951609 群聯電子股份有限公司竹南分公司
 function importCustomer27951609(event) {
+
+    // 先清空現有數據
+    clearExistingData();
+    
     const file = event.target.files[0];
     if (file) {
         const reader = new FileReader();
