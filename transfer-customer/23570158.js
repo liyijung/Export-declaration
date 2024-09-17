@@ -354,8 +354,8 @@ function importCustomer23570158(event) {
                 certNoItem = certNoItemCount++;
             }
 
-            // 檢查 J 列是否為 "以下有LOGO"
-            if (jValue.includes('以下有LOGO')) {
+            // 檢查 I 列 或 J 列是否為 "以下有LOGO"
+            if (iValue.includes('以下有LOGO') || jValue.includes('以下有LOGO')) {
                 useFigForTrademark = true; // 後續的項次 TRADE_MARK 設為 "FIG"
             }
 
