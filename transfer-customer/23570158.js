@@ -126,7 +126,7 @@ function importCustomer23570158(event) {
 
             if (iValue && iValue === "申請ECFA" || iValue && iValue === "做ECFA") {
                 // 如果 I 列包含 "申請ECFA" 或 "做ECFA"，則在 DOC_OTR_DESC 中加入 "產證編號："
-                docOtrDesc += "\n產證編號: ";
+                docOtrDesc += "\n申請ECFA，產證編號: ";
                 break; // 只需要添加一次，找到後退出循環
             }
         }
