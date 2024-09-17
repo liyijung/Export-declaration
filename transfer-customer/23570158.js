@@ -310,9 +310,15 @@ function importCustomer23570158(event) {
 
                 // 檢查C列前8碼是否為數字，如果不是，使用 M 列 或 L 列
                 var isNumeric = /^\d{8}$/.test(cccCode); // 正則檢查是否為8位數字
+                var m22Value = sheetData[21][12];
+                var l22Value = sheetData[21][11];
                 if (!isNumeric) {
-                    // 使用 M 列 (第 13 列)，如果 M 列沒有值則使用 L 列 (第 12 列)
-                    cccCode = (sheetData[i][12] || sheetData[i][11] || '').toString().substring(0, 8); 
+                    // 使用 M 列 (第 13 列)，如果 M 列沒有 HS CODE 則使用 L 列 (第 12 列)
+                    if ((m22Value && m22Value.includes("HS CODE"))) {
+                        cccCode = (sheetData[i][12] || '').toString(); 
+                    } else if ((l22Value && l22Value.includes("HS CODE"))) {
+                        cccCode = (sheetData[i][11] || '').toString(); 
+                    }
                 }
 
                 // 檢查是否需要替換 CCC_CODE
