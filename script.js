@@ -2939,3 +2939,59 @@ function unescapeXml(escaped) {
         }
     });
 }
+
+// 清空現有數據的函數
+function clearExistingData() {
+
+    // 清空出口報單表頭欄位
+    document.getElementById('FILE_NO').value = '';
+    document.getElementById('LOT_NO').value = '';
+    document.getElementById('SHPR_BAN_ID').value = '';
+    document.getElementById('SHPR_BONDED_ID').value = '';
+    document.getElementById('SHPR_C_NAME').value = '';
+    document.getElementById('SHPR_E_NAME').value = '';
+    document.getElementById('SHPR_C_ADDR').value = '';
+    document.getElementById('SHPR_E_ADDR').value = '';
+    document.getElementById('CNEE_E_NAME').value = '';
+    document.getElementById('CNEE_E_ADDR').value = '';
+    document.getElementById('CNEE_COUNTRY_CODE').value = '';
+    document.getElementById('CNEE_BAN_ID').value = '';
+    document.getElementById('BUYER_E_NAME').value = '';
+    document.getElementById('BUYER_E_ADDR').value = '';
+    document.getElementById('TO_CODE').value = '';
+    document.getElementById('TO_DESC').value = '';
+    document.getElementById('TOT_CTN').value = '';
+    document.getElementById('DOC_CTN_UM').value = '';
+    document.getElementById('CTN_DESC').value = '';
+    document.getElementById('DCL_GW').value = '';
+    document.getElementById('DCL_NW').value = '';
+    document.getElementById('DCL_DOC_TYPE').value = '';
+    document.getElementById('TERMS_SALES').value = '';
+    document.getElementById('CURRENCY').value = '';
+    document.getElementById('CAL_IP_TOT_ITEM_AMT').value = '';
+    document.getElementById('FRT_AMT').value = '';
+    document.getElementById('INS_AMT').value = '';
+    document.getElementById('ADD_AMT').value = '';
+    document.getElementById('SUBTRACT_AMT').value = '';
+    document.getElementById('DOC_MARKS_DESC').value = '';
+    document.getElementById('DOC_OTR_DESC').value = '';
+    document.getElementById('REMARK1').value = '';
+    document.getElementById('FAC_BAN_ID_EX').value = '';
+    document.getElementById('FAC_BONDED_ID_EX').value = '';
+    document.getElementById('FAC_BAN_ID').value = '';
+    document.getElementById('FAC_BONDED_ID').value = '';
+    document.getElementById('IN_BONDED_BAN').value = '';
+    document.getElementById('IN_BONDED_CODE').value = '';
+
+    // 清空出口報單項次欄位
+    var itemContainer = document.getElementById('item-container');
+    if (itemContainer) {
+        itemContainer.innerHTML = ''; // 清空項次
+    }
+
+    // 清空申請報單副本欄位
+    document.getElementById('copy_3_e').checked = false;
+    document.getElementById('copy_3').checked = false;
+    document.getElementById('copy_4').checked = false;
+    document.getElementById('copy_5').checked = false;
+}
