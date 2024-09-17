@@ -514,39 +514,3 @@ function importCustomer23570158(event) {
 
     reader.readAsArrayBuffer(file);
 }
-
-// 清空現有數據的函數
-function clearExistingData() {
-
-    // 清空出口報單表頭欄位
-    document.getElementById('LOT_NO').value = '';
-    document.getElementById('SHPR_BAN_ID').value = '';
-    document.getElementById('SHPR_C_NAME').value = '';
-    document.getElementById('SHPR_E_NAME').value = '';
-    document.getElementById('SHPR_C_ADDR').value = '';
-    document.getElementById('SHPR_E_ADDR').value = '';
-    document.getElementById('CNEE_E_NAME').value = '';
-    document.getElementById('CNEE_E_ADDR').value = '';
-    document.getElementById('CNEE_COUNTRY_CODE').value = '';
-    document.getElementById('TO_CODE').value = '';
-    document.getElementById('TO_DESC').value = '';
-    document.getElementById('TOT_CTN').value = '';
-    document.getElementById('DOC_CTN_UM').value = '';
-    document.getElementById('CTN_DESC').value = '';
-    document.getElementById('DCL_GW').value = '';
-    document.getElementById('DCL_NW').value = '';
-    document.getElementById('DCL_DOC_TYPE').value = '';
-    document.getElementById('TERMS_SALES').value = '';
-    document.getElementById('CURRENCY').value = '';
-    document.getElementById('CAL_IP_TOT_ITEM_AMT').value = '';
-    document.getElementById('FRT_AMT').value = '';
-    document.getElementById('INS_AMT').value = '';
-    document.getElementById('DOC_MARKS_DESC').value = '';
-    document.getElementById('DOC_OTR_DESC').value = '';
-
-    // 清空出口報單項次欄位
-    var itemContainer = document.getElementById('item-container');
-    if (itemContainer) {
-        itemContainer.innerHTML = ''; // 清空項次
-    }
-}
