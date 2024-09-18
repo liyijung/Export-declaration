@@ -421,8 +421,7 @@ function importCustomer23570158(event) {
             }
 
             // F 列的值
-            var fValue = sheetData[i][5] || '';
-            var fValue = fValue.toUpperCase(); // 將值轉為大寫
+            var fValue = (sheetData[i][5] || '').toUpperCase(); // 將值轉為大寫
 
             // 只有當 F 列的值是 Y 或 M 時，才執行寬度的提取
             var wideValue = ''; // 預設寬度為空
