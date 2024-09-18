@@ -2809,7 +2809,7 @@ document.addEventListener('DOMContentLoaded', function () {
             itemFields.forEach(className => {
                 let value;
                 if (className === 'ISCALC_WT') {
-                    value = item.querySelector(`.${className}`).checked ? 'V' : '';
+                    value = item.querySelector(`.${className}`).checked ? 'Y' : '';
                 } else {
                     value = escapeXml(item.querySelector(`.${className}`).value);
                     
