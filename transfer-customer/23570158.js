@@ -215,6 +215,11 @@ function importCustomer23570158(event) {
                 if (totalCtnUnit === 'ROLL') {
                     totalCtnUnit = 'ROL';
                 }
+
+                // 如果單位是 CARTON，改成 CTN
+                if (totalCtnUnit === 'CARTON') {
+                    totalCtnUnit = 'CTN';
+                }
                 
                 // 設置數字部分到 TOT_CTN
                 var totCtnElement = document.getElementById('TOT_CTN');
