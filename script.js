@@ -1508,7 +1508,7 @@ function createItemRow(data) {
         ${createInputField('TRADE_MARK', data.TRADE_MARK, true)}
         ${createInputField('CCC_CODE', replaceValue('CCC_CODE', data.CCC_CODE), true)}
         ${createInputField('ST_MTD', data.ST_MTD, true)}
-        ${createInputField('NET_WT', data.NET_WT, true)}
+        ${createInputField('NET_WT', data.NET_WT, fieldsToShow.NET_WT, data.ISCALC_WT)}
         ${createInputField('ORG_COUNTRY', data.ORG_COUNTRY, fieldsToShow.ORG_COUNTRY)}
         ${createInputField('ORG_IMP_DCL_NO', data.ORG_IMP_DCL_NO, fieldsToShow.ORG_IMP_DCL_NO)}
         ${createInputField('ORG_IMP_DCL_NO_ITEM', data.ORG_IMP_DCL_NO_ITEM, fieldsToShow.ORG_IMP_DCL_NO_ITEM)}
@@ -1673,7 +1673,7 @@ function addTextarea() {
 }
 
 // 創建輸入域
-function createInputField(name, value, isVisible) {
+function createInputField(name, value, isVisible, iscalcWtValue) {
     const visibilityClass = isVisible ? '' : 'hidden';
     const numberFields = ['QTY', 'DOC_UNIT_P', 'NET_WT', 'ORG_IMP_DCL_NO_ITEM', 'CERT_NO_ITEM', 'ORG_DCL_NO_ITEM', 'EXP_SEQ_NO', 'WIDE', 'LENGT_', 'ST_QTY'];
     const upperCaseFields = ['LOT_NO', 'SHPR_BONDED_ID', 'CNEE_COUNTRY_CODE', 'TO_CODE', 'DOC_CTN_UM', 'DCL_DOC_TYPE', 'TERMS_SALES', 'CURRENCY', 'DOC_UM', 'ST_MTD', 'ORG_COUNTRY', 'ORG_IMP_DCL_NO', 'BOND_NOTE', 'CERT_NO', 'ORG_DCL_NO', 'EXP_NO', 'WIDE_UM', 'LENGTH_UM', 'ST_UM'];
@@ -1707,9 +1707,10 @@ function createInputField(name, value, isVisible) {
     const inputField = `<input type="${inputType}" class="${name} ${name === 'CCC_CODE' ? 'CCC_CODE' : 'tax-code-input'}" value="${roundedValue}" ${onInputAttribute} ${minAttribute} ${readonlyAttribute} ${onFocusAttribute} ${onBlurAttribute} ${onKeyDownAttribute} ${onInputUpperCaseAttribute} style="flex: 1; margin-right: 0;">`;
 
     if (name === 'NET_WT') {
+        const isCalcChecked = iscalcWtValue === 'Y' ? 'checked' : ''; // 根據 ISCALC_WT 判斷是否勾選
         return `
             <div class="form-group ${visibilityClass}" style="width: 20%; display: flex; align-items: center;">
-                <input type="checkbox" class="ISCALC_WT" style="margin-left: 5px;">
+                <input type="checkbox" class="ISCALC_WT" style="margin-left: 5px;" ${isCalcChecked}>
             </div>
             <div class="form-group ${visibilityClass}" style="width: 60%; display: flex; align-items: center;">
                 ${inputField}
