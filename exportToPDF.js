@@ -529,7 +529,7 @@ async function exportToPDF() {
 
             fieldsToShow.forEach(field => {
                 if (field.value) {
-                    const fieldText = field.itemValue ? `${field.name}: ${field.value} NO ${field.itemValue}` : `${field.name}${field.value}`;
+                    const fieldText = field.itemValue ? `${field.name}: ${field.value} 項次${field.itemValue}` : `${field.name}${field.value}`;
                     doc.text(fieldText, 14, startY);
                     startY += lineHeight;
                 }
