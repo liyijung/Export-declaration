@@ -121,26 +121,6 @@ function importCustomer23570158(event) {
             }
         }
 
-        // 初始化 DOC_OTR_DESC 的變數
-        var docOtrDesc = a7 || ""; // 確保初始值來自 a7，如果 a7 沒有值則為空字符串
-
-        // 遍歷每一行，查找第一個工作頁的 I 列是否包含 "申請ECFA" 或 "做ECFA"
-        for (var i = 0; i < sheetData.length; i++) {
-            var iValue = sheetData[i][8]; // I列的數據位於索引 8
-
-            if (iValue && iValue === "申請ECFA" || iValue && iValue === "做ECFA") {
-                // 如果 I 列包含 "申請ECFA" 或 "做ECFA"，則在 DOC_OTR_DESC 中加入 "產證編號："
-                docOtrDesc += "\n申請ECFA，產證編號: ";
-                break; // 只需要添加一次，找到後退出循環
-            }
-        }
-
-        // 設置 DOC_OTR_DESC 到相應的欄位
-        var docOtrDescElement = document.getElementById('DOC_OTR_DESC');
-        if (docOtrDescElement) {
-            docOtrDescElement.value = docOtrDesc;
-        }
-
         // 獲取第二個工作表
         var secondSheet = workbook.Sheets[workbook.SheetNames[1]];
         var sheetDataSecond = XLSX.utils.sheet_to_json(secondSheet, { header: 1 });
@@ -506,6 +486,26 @@ function importCustomer23570158(event) {
             // 使用 createItemRow 函數生成項次並加入 itemContainer
             const itemRow = createItemRow(itemData);
             itemContainer.appendChild(itemRow);
+        }
+
+        // 初始化 DOC_OTR_DESC 的變數
+        var docOtrDesc = a7 || ""; // 確保初始值來自 a7，如果 a7 沒有值則為空字符串
+
+        // 遍歷每一行，查找第一個工作頁的 I 列是否包含 "申請ECFA" 或 "做ECFA"
+        for (var i = 0; i < sheetData.length; i++) {
+            var iValue = sheetData[i][8]; // I列的數據位於索引 8
+
+            if (iValue && iValue === "申請ECFA" || iValue && iValue === "做ECFA") {
+                // 如果 I 列包含 "申請ECFA" 或 "做ECFA"，則在 DOC_OTR_DESC 中加入 "產證編號："
+                docOtrDesc += `\nITEM 1-${certNoItemCount-1} 申請ECFA`;
+                break; // 只需要添加一次，找到後退出循環
+            }
+        }
+
+        // 設置 DOC_OTR_DESC 到相應的欄位
+        var docOtrDescElement = document.getElementById('DOC_OTR_DESC');
+        if (docOtrDescElement) {
+            docOtrDescElement.value = docOtrDesc;
         }
 
         // 初始化功能
