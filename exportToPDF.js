@@ -148,18 +148,18 @@ async function exportToPDF() {
         const barcodeImgData = barcodeCanvas.toDataURL('image/png');
         doc.addImage(barcodeImgData, 'PNG', 118, 12, 20, 10); // 調整位置和大小
 
-        // 獲取今天的日期
-        var today = new Date();
-        var day = String(today.getDate()).padStart(2, '0');
-        var month = String(today.getMonth() + 1).padStart(2, '0'); // 因為 getMonth() 返回的月份是從 0 開始的
-        var year = today.getFullYear();
+        // 從 FILE_NO 中獲取年份、月份、日期
+        var yyymmdd = document.getElementById('FILE_NO').value;
+        var year = yyymmdd.substring(0, 3);  // 第 1 位和第 3 位為年份
+        var month = yyymmdd.substring(3, 5); // 第 4 位和第 5 位為月份
+        var day = yyymmdd.substring(5, 7);   // 第 6 位和第 7 位為日期
 
         // 報單號碼格式
-        var yearPart = year - 2011;
+        var yearPart = yyymmdd.substring(1, 3);
         var OrderNumber = 'CX/  /' + yearPart + '/696/';
 
         // 報關日期為 "YYY/MM/DD"
-        var CustomsDeclarationDate = year - 1911 + '/' + month + '/' + day;
+        var CustomsDeclarationDate = year + '/' + month + '/' + day;
 
         // 拆分 TO_DESC 為多行，每行最多寬度25
         const toDescElement = document.getElementById('TO_DESC');
@@ -170,7 +170,7 @@ async function exportToPDF() {
         const headerData = [
             { value: `空運`, x: 75, y: 10 },
             { value: OrderNumber, x: 75, y: 18.5 },
-            { value: CustomsDeclarationDate, x: 62, y: 35 }, // 將日期設置為當天日期
+            { value: CustomsDeclarationDate, x: 62, y: 35 },
             { value: `TWTPE`, x: 30, y: 40.5 },
             { value: `TAOYUAN`, x: 24, y: 44 },
             { value: `AIRPORT`, x: 24, y: 48 },
