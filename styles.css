@@ -581,18 +581,3 @@ input::placeholder {
     color: #005feec5;
     background: linear-gradient(to bottom, #cee1fd, #f0f0f0);
 }
-
-@media only screen and (max-width: 600px) {
-    .add-buttons input {
-        font-size: 12px; /* 調整輸入框文字大小 */
-    }
-
-    h4 {
-        font-size: 14px; /* 針對手機調整 h4 字體大小 */
-    }
-
-    h4[style*="color: rgba(255, 0, 0, 0.634)"],
-    h4[style*="color: #005feec5"] {
-        font-size: 14px; /* 視需要調整字體大小 */
-    }
-}
