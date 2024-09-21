@@ -51,6 +51,27 @@ async function exportToPDF() {
         // 渲染第一頁模板
         await renderTemplate(doc, templateHome, 1);
 
+        // 獲取今天的日期
+        var today = new Date();
+        var Tyear = today.getFullYear();
+        var Tmonth = String(today.getMonth() + 1).padStart(2, '0'); // 因為 getMonth() 返回的月份是從 0 開始的
+        var Tday = String(today.getDate()).padStart(2, '0');
+        Tymd = Tyear-1911 + Tmonth + Tday
+
+        // 從 FILE_NO 中獲取年份、月份、日期
+        var yyymmdd = document.getElementById('FILE_NO').value;
+        var year = yyymmdd.substring(0, 3);  // 第 1 位和第 3 位為年份
+        var month = yyymmdd.substring(3, 5); // 第 4 位和第 5 位為月份
+        var day = yyymmdd.substring(5, 7);   // 第 6 位和第 7 位為日期
+        Fymd = year + month + day
+
+        // 報單號碼格式
+        var yearPart = yyymmdd.substring(1, 3);
+        var OrderNumber = 'CX/  /' + yearPart + '/696/';
+
+        // 報關日期為 "YYY/MM/DD"
+        var CustomsDeclarationDate = year + '/' + month + '/' + day;
+        
         // 獲取報單類別的值和文本
         const dclDocTypeElement = document.getElementById('DCL_DOC_TYPE');
         const dclDocTypeValue = dclDocTypeElement.value;
@@ -79,7 +100,7 @@ async function exportToPDF() {
         const currency = document.getElementById('CURRENCY').value;
         const exchangeRateItem = exchangeRates.items.find(item => item.code === currency);
         const exchangeRate = exchangeRateItem ? exchangeRateItem.buyValue : 'NIL';
-
+        
         // 檢查數值是否為 NIL
         const formattedFrtAmt = frtAmt !== 'NIL' ? frtAmt : 'NIL';
         const formattedInsAmt = insAmt !== 'NIL' ? insAmt : 'NIL';
@@ -132,14 +153,17 @@ async function exportToPDF() {
         let totalFobPriceY = 58; // 設定 y 值顯示 totalFobPrice
         let totalFobPriceTwY = 61.5; // 設定 y 值顯示 totalFobPriceTw
 
-        // 顯示 totalFobPrice 和 totalFobPriceTw 在首頁，只顯示數值
+        // 在 x: 171, y: totalFobPriceY 顯示 currency
+        doc.text(currency, 171, totalFobPriceY);
         doc.text(formattedTotalFobPrice, totalFobPriceX, totalFobPriceY);
-        if (exchangeRate) {
-            doc.text(formattedTotalFobPriceTw, totalFobPriceTwX, totalFobPriceTwY);
-            // 在 x: 171, y: totalFobPriceY 顯示 currency
-            doc.text(currency, 171, totalFobPriceY);
+
+        if (exchangeRate && Tymd === Fymd) {
             // 在 x: 171, y: totalFobPriceTwY 顯示 "TWD"
             doc.text("TWD", 171, totalFobPriceTwY);
+            doc.text(formattedTotalFobPriceTw, totalFobPriceTwX, totalFobPriceTwY);
+            
+            // 添加匯率，顯示在 x: 192, y: 100.5
+            doc.text(exchangeRate.toString(), 192, 100.5);
         }
 
         // 添加二維條碼
@@ -147,19 +171,6 @@ async function exportToPDF() {
         JsBarcode(barcodeCanvas, 'CX  13696', { format: 'CODE128' });
         const barcodeImgData = barcodeCanvas.toDataURL('image/png');
         doc.addImage(barcodeImgData, 'PNG', 118, 12, 20, 10); // 調整位置和大小
-
-        // 從 FILE_NO 中獲取年份、月份、日期
-        var yyymmdd = document.getElementById('FILE_NO').value;
-        var year = yyymmdd.substring(0, 3);  // 第 1 位和第 3 位為年份
-        var month = yyymmdd.substring(3, 5); // 第 4 位和第 5 位為月份
-        var day = yyymmdd.substring(5, 7);   // 第 6 位和第 7 位為日期
-
-        // 報單號碼格式
-        var yearPart = yyymmdd.substring(1, 3);
-        var OrderNumber = 'CX/  /' + yearPart + '/696/';
-
-        // 報關日期為 "YYY/MM/DD"
-        var CustomsDeclarationDate = year + '/' + month + '/' + day;
 
         // 拆分 TO_DESC 為多行，每行最多寬度25
         const toDescElement = document.getElementById('TO_DESC');
@@ -209,7 +220,6 @@ async function exportToPDF() {
             { value: document.getElementById('DCL_GW').value, x: 190, y: 201.5 },
             { value: document.getElementById('DOC_MARKS_DESC').value, x: 8, y: 211 },
             { value: document.getElementById('DOC_OTR_DESC').value, x: 7, y: 260 },
-            { value: exchangeRate, x: 192, y: 100.5 } // 添加匯率
         ];
 
         // 自動換行的收件人地址處理
