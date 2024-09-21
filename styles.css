@@ -582,13 +582,17 @@ input::placeholder {
     background: linear-gradient(to bottom, #cee1fd, #f0f0f0);
 }
 
-@media (max-width: 768px) {
-    h4 {
-        font-size: 16px; /* 設定手機上合適的字體大小 */
+@media only screen and (max-width: 600px) {
+    .add-buttons input {
+        font-size: 12px; /* 調整輸入框文字大小 */
     }
 
-    /* 如果其他部分也需要調整，可以針對不同元素進行設定 */
-    .add-buttons {
-        font-size: 14px;
+    h4 {
+        font-size: 14px; /* 針對手機調整 h4 字體大小 */
+    }
+
+    h4[style*="color: rgba(255, 0, 0, 0.634)"],
+    h4[style*="color: #005feec5"] {
+        font-size: 14px; /* 視需要調整字體大小 */
     }
 }
