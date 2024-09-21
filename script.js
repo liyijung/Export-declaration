@@ -152,75 +152,108 @@ function toggleSelect(element) {
     element.classList.toggle('selected');
 }
 
-// 輸入統一編號以查找資料
+// 依據統一編號的不同範圍對應相應的CSV檔案
 let csvFiles = [
     { range: ['0'], file: 'companyData0.csv' },
     { range: ['1'], file: 'companyData1.csv' },
-    { range: ['20', '24'], file: 'companyData2_part1.csv' }, // 針對 2 開頭，使用 2 碼範圍
-    { range: ['25', '29'], file: 'companyData2_part2.csv' }, // 針對 2 開頭，使用 2 碼範圍
+    { range: ['2'], file: 'companyData2.csv' },
     { range: ['3'], file: 'companyData3.csv' },
     { range: ['4'], file: 'companyData4.csv' },
-    { range: ['50', '53'], file: 'companyData5_part1.csv' }, // 針對 5 開頭，使用 2 碼範圍
-    { range: ['54', '59'], file: 'companyData5_part2.csv' }, // 針對 5 開頭，使用 2 碼範圍
+    { range: ['5'], file: 'companyData5.csv' },
     { range: ['6'], file: 'companyData6.csv' },
     { range: ['7'], file: 'companyData7.csv' },
-    { range: ['80', '84'], file: 'companyData8_part1.csv' }, // 針對 8 開頭，使用 2 碼範圍
-    { range: ['85', '89'], file: 'companyData8_part2.csv' }, // 針對 8 開頭，使用 2 碼範圍
+    { range: ['8'], file: 'companyData8.csv' },
     { range: ['9'], file: 'companyData9.csv' },
 ];
 
+// 根據統一編號匹配應該加載的CSV檔案
 function getMatchingFile(searchCode) {
     const prefix1 = searchCode.substring(0, 1); // 取統一編號的第 1 碼
-    const prefix2 = searchCode.substring(0, 2); // 取統一編號的前 2 碼
 
     let matchingFile = csvFiles.find(item => {
-        if (['2', '5', '8'].includes(prefix1)) {
-            // 如果第一碼是 2、5 或 8，使用前 2 碼進行匹配
-            return prefix2 >= item.range[0] && prefix2 <= item.range[1];
-        } else {
-            // 否則，使用前 1 碼進行匹配
-            return prefix1 === item.range[0];
-        }
+        // 使用前 1 碼進行匹配
+        return prefix1 === item.range[0];
     });
 
     return matchingFile ? matchingFile.file : null;
 }
 
-function fillForm(record) {
-    if (record) {
-        document.getElementById('SHPR_BAN_ID').value = record['統一編號'] || '';
-        document.getElementById('SHPR_C_NAME').value = record['廠商中文名稱'] || '';
-        document.getElementById('SHPR_E_NAME').value = record['廠商英文名稱'] || '';
-        document.getElementById('SHPR_C_ADDR').value = record['中文營業地址'] || '';
-        document.getElementById('SHPR_E_ADDR').value = record['英文營業地址'] || '';
-    } else {
-        console.log('Record not found');
-        alert('未找到匹配的資料\n（未向貿易署辦理登記出進口廠商者，若輸出貨品之離岸價格超過美金2萬元，應向貿易署申請輸出許可證）');
+const noDataMessage = document.getElementById('noDataMessage'); // 錯誤訊息元素
+
+// 即時帶入資料
+document.getElementById('SHPR_BAN_ID').addEventListener('input', function() {
+    let searchCode = this.value.trim();
+    
+    // 如果輸入為空，清空資料和錯誤訊息
+    if (!searchCode) {
+        document.getElementById('SHPR_C_NAME').value = '';
+        document.getElementById('SHPR_E_NAME').value = '';
+        document.getElementById('SHPR_C_ADDR').value = '';
+        document.getElementById('SHPR_E_ADDR').value = '';
+        noDataMessage.style.display = 'none'; // 隱藏錯誤訊息
+        return;
     }
-}
-
-function searchInFile(file, searchCode, callback) {
-    Papa.parse(file, {
-        download: true,
-        header: true,
-        complete: function(results) {
-            const record = results.data.find(row => row['統一編號'] === searchCode);
-            callback(record);
-        }
-    });
-}
-
-function searchData() {
-    const searchCode = document.getElementById('SHPR_BAN_ID').value.trim(); // 確保去除前後空格
-    console.log('Searching for:', searchCode);
 
     const fileToSearch = getMatchingFile(searchCode);
+
     if (fileToSearch) {
-        searchInFile(fileToSearch, searchCode, fillForm);
-    } else {
-        fillForm(null);
+        Papa.parse(fileToSearch, {
+            download: true,
+            header: true,
+            complete: function(results) {
+                const record = results.data.find(row => row['統一編號'] === searchCode);
+
+                if (record) {
+                    // 即時填入資料並隱藏錯誤訊息
+                    document.getElementById('SHPR_C_NAME').value = record['廠商中文名稱'] || '';
+                    document.getElementById('SHPR_E_NAME').value = record['廠商英文名稱'] || '';
+                    document.getElementById('SHPR_C_ADDR').value = record['中文營業地址'] || '';
+                    document.getElementById('SHPR_E_ADDR').value = record['英文營業地址'] || '';
+                    noDataMessage.style.display = 'none'; // 隱藏"查無資料"訊息
+                } else {
+                    // 如果沒有找到資料，保持欄位不變
+                    document.getElementById('SHPR_C_NAME').value = '';
+                    document.getElementById('SHPR_E_NAME').value = '';
+                    document.getElementById('SHPR_C_ADDR').value = '';
+                    document.getElementById('SHPR_E_ADDR').value = '';
+                }
+            }
+        });
     }
-}
+});
+
+// 當用戶離開統一編號欄位時顯示錯誤訊息
+document.getElementById('SHPR_BAN_ID').addEventListener('blur', function() {
+    let searchCode = this.value.trim();
+
+    // 如果輸入為空，不顯示錯誤訊息
+    if (!searchCode) {
+        noDataMessage.style.display = 'none';
+        return;
+    }
+
+    const fileToSearch = getMatchingFile(searchCode);
+
+    if (fileToSearch) {
+        Papa.parse(fileToSearch, {
+            download: true,
+            header: true,
+            complete: function(results) {
+                const record = results.data.find(row => row['統一編號'] === searchCode);
+
+                if (!record) {
+                    // 如果沒有找到資料，顯示錯誤訊息
+                    noDataMessage.style.display = 'inline';
+                } else {
+                    noDataMessage.style.display = 'none'; // 隱藏"查無資料"訊息
+                }
+            }
+        });
+    } else {
+        // 如果找不到匹配的檔案，顯示錯誤訊息
+        noDataMessage.style.display = 'inline';
+    }
+});
 
 // 儲存目的地數據
 let destinations = {};
