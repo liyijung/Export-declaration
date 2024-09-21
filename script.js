@@ -180,11 +180,11 @@ function getMatchingFile(searchCode) {
 
 const noDataMessage = document.getElementById('noDataMessage'); // 錯誤訊息元素
 
-// 即時帶入資料
-document.getElementById('SHPR_BAN_ID').addEventListener('input', function() {
-    let searchCode = this.value.trim();
-    
-    // 如果輸入為空，清空資料和錯誤訊息
+// 查找資料並自動帶入表單
+function searchData(showErrorMessage = false) {
+    let searchCode = document.getElementById('SHPR_BAN_ID').value.trim();
+
+    // 如果輸入為空，清空資料並隱藏錯誤訊息
     if (!searchCode) {
         document.getElementById('SHPR_C_NAME').value = '';
         document.getElementById('SHPR_E_NAME').value = '';
@@ -204,55 +204,47 @@ document.getElementById('SHPR_BAN_ID').addEventListener('input', function() {
                 const record = results.data.find(row => row['統一編號'] === searchCode);
 
                 if (record) {
-                    // 即時填入資料並隱藏錯誤訊息
+                    // 填入資料並隱藏錯誤訊息
                     document.getElementById('SHPR_C_NAME').value = record['廠商中文名稱'] || '';
                     document.getElementById('SHPR_E_NAME').value = record['廠商英文名稱'] || '';
                     document.getElementById('SHPR_C_ADDR').value = record['中文營業地址'] || '';
                     document.getElementById('SHPR_E_ADDR').value = record['英文營業地址'] || '';
                     noDataMessage.style.display = 'none'; // 隱藏"查無資料"訊息
                 } else {
-                    // 如果沒有找到資料，保持欄位不變
+                    // 清空欄位
                     document.getElementById('SHPR_C_NAME').value = '';
                     document.getElementById('SHPR_E_NAME').value = '';
                     document.getElementById('SHPR_C_ADDR').value = '';
                     document.getElementById('SHPR_E_ADDR').value = '';
-                }
-            }
-        });
-    }
-});
 
-// 當用戶離開統一編號欄位時顯示錯誤訊息
-document.getElementById('SHPR_BAN_ID').addEventListener('blur', function() {
-    let searchCode = this.value.trim();
-
-    // 如果輸入為空，不顯示錯誤訊息
-    if (!searchCode) {
-        noDataMessage.style.display = 'none';
-        return;
-    }
-
-    const fileToSearch = getMatchingFile(searchCode);
-
-    if (fileToSearch) {
-        Papa.parse(fileToSearch, {
-            download: true,
-            header: true,
-            complete: function(results) {
-                const record = results.data.find(row => row['統一編號'] === searchCode);
-
-                if (!record) {
-                    // 如果沒有找到資料，顯示錯誤訊息
-                    noDataMessage.style.display = 'inline';
-                } else {
-                    noDataMessage.style.display = 'none'; // 隱藏"查無資料"訊息
+                    // 只有在離開輸入框時顯示錯誤訊息
+                    if (showErrorMessage) {
+                        noDataMessage.style.display = 'inline'; // 顯示"查無資料"訊息
+                    }
                 }
             }
         });
     } else {
-        // 如果找不到匹配的檔案，顯示錯誤訊息
-        noDataMessage.style.display = 'inline';
+        // 清空欄位並顯示錯誤訊息（如果需要）
+        document.getElementById('SHPR_C_NAME').value = '';
+        document.getElementById('SHPR_E_NAME').value = '';
+        document.getElementById('SHPR_C_ADDR').value = '';
+        document.getElementById('SHPR_E_ADDR').value = '';
+
+        if (showErrorMessage) {
+            noDataMessage.style.display = 'inline'; // 顯示"查無資料"訊息
+        }
     }
+}
+
+// 即時帶入資料，不顯示錯誤訊息
+document.getElementById('SHPR_BAN_ID').addEventListener('input', function() {
+    searchData(false); // 不顯示錯誤訊息，只帶入資料
+});
+
+// 當用戶離開統一編號欄位時顯示錯誤訊息
+document.getElementById('SHPR_BAN_ID').addEventListener('blur', function() {
+    searchData(true); // 離開時才顯示錯誤訊息
 });
 
 // 儲存目的地數據
