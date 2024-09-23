@@ -2817,7 +2817,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 // 對 LOT_NO 欄位進行處理
                 if (id === 'LOT_NO') {
+                    value = value.replace(/[\uff01-\uff5e]/g, function(ch) { 
+                        return String.fromCharCode(ch.charCodeAt(0) - 0xFEE0); 
+                    }); // 全形轉半形
                     value = value.replace(/\s+/g, ''); // 移除所有空格
+                    value = value.replace(/-/g, ''); // 移除所有 '-'
                 }
                 
                 xmlContent += `  <fields>\n    <field_name>${id}</field_name>\n    <field_value>${value}</field_value>\n  </fields>\n`;
