@@ -185,8 +185,8 @@ const noDataMessage = document.getElementById('noDataMessage'); // 錯誤訊息�
 function searchData(showErrorMessage = false) {
     let searchCode = document.getElementById('SHPR_BAN_ID').value.trim();
 
-    // 如果輸入為空，清空資料並隱藏錯誤訊息
-    if (!searchCode) {
+    // 如果輸入不滿 8 碼，清空資料並隱藏錯誤訊息，不進行匹配操作
+    if (searchCode.length !== 8) {
         document.getElementById('SHPR_C_NAME').value = '';
         document.getElementById('SHPR_E_NAME').value = '';
         document.getElementById('SHPR_C_ADDR').value = '';
@@ -217,35 +217,16 @@ function searchData(showErrorMessage = false) {
                     document.getElementById('SHPR_E_NAME').value = '';
                     document.getElementById('SHPR_C_ADDR').value = '';
                     document.getElementById('SHPR_E_ADDR').value = '';
-
-                    // 只有在離開輸入框時顯示錯誤訊息
-                    if (showErrorMessage) {
-                        noDataMessage.style.display = 'inline'; // 顯示"查無資料"訊息
-                    }
+                    noDataMessage.style.display = 'inline'; // 顯示"查無資料"訊息
                 }
             }
         });
-    } else {
-        // 清空欄位並顯示錯誤訊息（如果需要）
-        document.getElementById('SHPR_C_NAME').value = '';
-        document.getElementById('SHPR_E_NAME').value = '';
-        document.getElementById('SHPR_C_ADDR').value = '';
-        document.getElementById('SHPR_E_ADDR').value = '';
-
-        if (showErrorMessage) {
-            noDataMessage.style.display = 'inline'; // 顯示"查無資料"訊息
-        }
     }
 }
 
 // 即時帶入資料，不顯示錯誤訊息
 document.getElementById('SHPR_BAN_ID').addEventListener('input', function() {
     searchData(false); // 不顯示錯誤訊息，只帶入資料
-});
-
-// 當用戶離開統一編號欄位時顯示錯誤訊息
-document.getElementById('SHPR_BAN_ID').addEventListener('blur', function() {
-    searchData(true); // 離開時才顯示錯誤訊息
 });
 
 // 儲存目的地數據
