@@ -186,7 +186,7 @@ function searchData(showErrorMessage = false) {
     let searchCode = document.getElementById('SHPR_BAN_ID').value.trim();
 
     // 如果輸入不滿 8 碼，清空資料並隱藏錯誤訊息，不進行匹配操作
-    if (searchCode.length !== 8) {
+    if (searchCode.length < 8) {
         document.getElementById('SHPR_C_NAME').value = '';
         document.getElementById('SHPR_E_NAME').value = '';
         document.getElementById('SHPR_C_ADDR').value = '';
