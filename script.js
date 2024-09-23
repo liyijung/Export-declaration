@@ -175,7 +175,8 @@ function getMatchingFile(searchCode) {
         return prefix1 === item.range[0];
     });
 
-    return matchingFile ? matchingFile.file : null;
+    // 檢查是否找到相應檔案，並回傳包含路徑的檔名
+    return matchingFile ? `companyData/${matchingFile.file}` : null;
 }
 
 const noDataMessage = document.getElementById('noDataMessage'); // 錯誤訊息元素
