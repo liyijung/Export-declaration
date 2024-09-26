@@ -2441,6 +2441,15 @@ document.addEventListener('DOMContentLoaded', function () {
             return; // 中止匯出過程
         }
 
+        // 檢查總毛重是否大於總淨重
+        let dclGw = parseFloat(document.getElementById('DCL_GW')?.value.trim());
+        let dclNw = parseFloat(document.getElementById('DCL_NW')?.value.trim());
+
+        if (!isNaN(dclGw) && !isNaN(dclNw) && dclGw <= dclNw) {
+            alert('總毛重必須大於總淨重，請確認後再匯出');
+            return; // 中止匯出過程
+        }
+
         // 檢查貿易條件
         let termsSalesValue = document.getElementById('TERMS_SALES')?.value.trim().toUpperCase();
 
