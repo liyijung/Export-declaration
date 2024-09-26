@@ -12,7 +12,6 @@
         <div class="tabs">
             <div class="tab-links active" onclick="openTab('header')">出口報單表頭</div>
             <div class="tab-links" onclick="openTab('items')">出口報單項次</div>
-            <div class="tab-links" onclick="openTab('copy')">申請報單副本</div>
             <div class="tab-links" onclick="openTab('bonded')">保稅相關信息</div>
             <div class="tab-links" onclick="openTab('transfer-customer')">轉檔客戶專區</div>
             <!-- 影片鏈接部分 -->
@@ -246,6 +245,45 @@
                 <textarea id="REMARK1" name="REMARK1" rows="5"></textarea>
             </div>
         </div>
+        <hr>
+
+        <!--申請報單副本-->
+        <div class="header-section">
+            <div class="flex-group">
+                <input type="checkbox" id="copy_3_e" name="copy_option">申請沖退原料稅(E化退稅)<br>
+            </div>
+            <div class="flex-group">
+                <input type="checkbox" id="copy_3" name="copy_option">申請報單副本第三聯(沖退原料稅用聯)<br>
+            </div>
+            <div class="flex-group">
+                <input type="checkbox" id="copy_4" name="copy_option">申請報單副本第四聯(退內地稅用聯)<br>
+            </div>
+            <div class="flex-group">
+                <input type="checkbox" id="copy_5" name="copy_option">申請報單副本第五聯(出口證明用聯)<br>
+            </div>  
+        </div>
+        <input type="hidden" id="APP_DUTY_REFUND" value="">
+        <input type="hidden" id="MARK_TOT_LINES" value="">
+        <input type="hidden" id="EXAM_TYPE" value="">
+        <input type="hidden" id="COPY_QTY" value="">
+        <h4 style="color: rgba(255, 0, 0, 0.634);">【提醒！】<br>
+            如果需申請沖退原料稅或報單副本，請務必記得勾選，<br>
+            系統會將其它需要填列的欄位自動進行設定，自動設定的欄位有：<br>
+            1. 申請審驗方式<br>
+            2. 報單副本份數<br>
+            3. 申請沖退原料稅<br>
+            4. 檢附外銷品使用原料及其供應商資料表<br>
+            5. 其它申報事項
+        </h4>
+
+        <!-- 用於顯示變數值 -->
+        <div id="variables" style="display:none;">
+            <input type="hidden" id="APP_DUTY_REFUND" value="N">
+            <input type="hidden" id="MARK_TOT_LINES" value="N">
+            <input type="hidden" id="EXAM_TYPE" value="">
+            <input type="hidden" id="COPY_QTY" value="0">
+        </div>     
+
         <p style="margin-bottom: 20px;"></p>
     </div>
 
@@ -755,45 +793,6 @@
         </div>
     </div>
     
-    <!--申請報單副本-->
-    <div id="copy" class="tab">
-        <div class="header-section">
-            <div class="flex-group">
-                <input type="checkbox" id="copy_3_e" name="copy_option">申請沖退原料稅(E化退稅)<br>
-            </div>
-            <div class="flex-group">
-                <input type="checkbox" id="copy_3" name="copy_option">申請報單副本第三聯(沖退原料稅用聯)<br>
-            </div>
-            <div class="flex-group">
-                <input type="checkbox" id="copy_4" name="copy_option">申請報單副本第四聯(退內地稅用聯)<br>
-            </div>
-            <div class="flex-group">
-                <input type="checkbox" id="copy_5" name="copy_option">申請報單副本第五聯(出口證明用聯)<br>
-            </div>  
-        </div>
-        <input type="hidden" id="APP_DUTY_REFUND" value="">
-        <input type="hidden" id="MARK_TOT_LINES" value="">
-        <input type="hidden" id="EXAM_TYPE" value="">
-        <input type="hidden" id="COPY_QTY" value="">
-        <h4 style="color: rgba(255, 0, 0, 0.634);">【提醒！】<br>
-            如果需申請沖退原料稅或報單副本，請務必記得勾選，<br>
-            系統會將其它需要填列的欄位自動進行設定，自動設定的欄位有：<br>
-            1. 申請審驗方式<br>
-            2. 報單副本份數<br>
-            3. 申請沖退原料稅<br>
-            4. 檢附外銷品使用原料及其供應商資料表<br>
-            5. 其它申報事項
-        </h4>
-    </div>
-    
-    <!-- 用於顯示變數值 -->
-    <div id="variables" style="display:none;">
-        <input type="hidden" id="APP_DUTY_REFUND" value="N">
-        <input type="hidden" id="MARK_TOT_LINES" value="N">
-        <input type="hidden" id="EXAM_TYPE" value="">
-        <input type="hidden" id="COPY_QTY" value="0">
-    </div>
-
     <!--保稅相關信息-->
     <div id="bonded" class="tab">
         <div class="header-section">
