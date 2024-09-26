@@ -2441,6 +2441,19 @@ document.addEventListener('DOMContentLoaded', function () {
             return; // 中止匯出過程
         }
 
+        // 檢查CNEE_COUNTRY_CODE是否為TW，並確認CNEE_BAN_ID, BUYER_E_NAME, BUYER_E_ADDR是否有值
+        let cneeCountryCode = document.getElementById('CNEE_COUNTRY_CODE')?.value.trim().toUpperCase();
+        if (cneeCountryCode === 'TW') {
+            let cneeBanId = document.getElementById('CNEE_BAN_ID')?.value.trim();
+            let buyerEName = document.getElementById('BUYER_E_NAME')?.value.trim();
+            let buyerEAddr = document.getElementById('BUYER_E_ADDR')?.value.trim();
+
+            if (!cneeBanId || !buyerEName || !buyerEAddr) {
+                alert('買方為台灣營業公司需填列：買方統一編號、收方名稱、收方地址');
+                return; // 中止匯出過程
+            }
+        }
+        
         // 檢查總毛重是否大於總淨重
         let dclGw = parseFloat(document.getElementById('DCL_GW')?.value.trim());
         let dclNw = parseFloat(document.getElementById('DCL_NW')?.value.trim());
