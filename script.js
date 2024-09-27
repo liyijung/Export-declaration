@@ -1107,9 +1107,9 @@ function handleFile(event) {
 
         // 讀取報單表頭工作表
         const headerSheet = workbook.Sheets[workbook.SheetNames[0]];
-        const headerData = XLSX.utils.sheet_to_json(headerSheet, { header: 1 });
+        const headerData = XLSX.utils.sheet_to_json(headerSheet, { header: 1, raw: false });
 
-        // 將報單表頭數據填充到表單中
+        // 將報單表頭數據填充到表單中，確保為文字格式
         const headerFields = ['FILE_NO', 'LOT_NO', 'SHPR_BAN_ID', 'SHPR_BONDED_ID',
             'SHPR_C_NAME', 'SHPR_E_NAME', 'SHPR_C_ADDR', 'SHPR_E_ADDR', 
             'CNEE_E_NAME', 'CNEE_E_ADDR', 
@@ -1124,7 +1124,7 @@ function handleFile(event) {
         headerFields.forEach((id, index) => {
             const element = document.getElementById(id);
             if (element) {
-                let value = headerData[index] ? (headerData[index][1] || '').trim() : '';
+                let value = headerData[index] ? String(headerData[index][1] || '').trim() : ''; // 將值轉為字串並去除空白
                 
                 // 判斷是否為 CURRENCY 欄位
                 if (id === 'CURRENCY') {
@@ -1133,7 +1133,7 @@ function handleFile(event) {
                         value = 'TWD'; // 如果是 NTD，則改為 TWD
                     }
                 }
-        
+
                 element.value = value;
             }
         });
@@ -1143,13 +1143,13 @@ function handleFile(event) {
             const remarksIndex = row.indexOf('REMARKS');
             if (remarksIndex !== -1) {
                 const remarks = row[remarksIndex + 1];
-                checkRemarkOptions(remarks);
+                checkRemarkOptions(String(remarks)); // 將值轉為字串
             }
         });
 
         // 讀取報單項次工作表
         const itemsSheet = workbook.Sheets[workbook.SheetNames[1]];
-        const itemsData = XLSX.utils.sheet_to_json(itemsSheet, { header: 1 });
+        const itemsData = XLSX.utils.sheet_to_json(itemsSheet, { header: 1, raw: false });
 
         // 讀取標題行，並動態定義品名欄位的索引
         const headers = itemsData[0];
@@ -1176,38 +1176,38 @@ function handleFile(event) {
                     currentItem.querySelector('.DESCRIPTION').value = currentDescription.trim();
                     itemContainer.appendChild(currentItem);
                 }
-                const description = descriptionIndices.map(i => row[i]).filter(Boolean).join('\n');
+                const description = descriptionIndices.map(i => String(row[i] || '')).filter(Boolean).join('\n');
                 currentDescription = description;
                 currentItem = createItemRow({
-                    ITEM_NO: row[0] || '',
+                    ITEM_NO: String(row[0] || ''), // 將數據轉為字串
                     DESCRIPTION: currentDescription || '',
-                    QTY: row[descriptionIndices[descriptionIndices.length - 1] + 1] || '',
-                    DOC_UM: row[descriptionIndices[descriptionIndices.length - 1] + 2] || '',
-                    DOC_UNIT_P: row[descriptionIndices[descriptionIndices.length - 1] + 3] || '',
-                    DOC_TOT_P: row[descriptionIndices[descriptionIndices.length - 1] + 4] || '',
-                    TRADE_MARK: row[descriptionIndices[descriptionIndices.length - 1] + 5] || '',
-                    CCC_CODE: row[descriptionIndices[descriptionIndices.length - 1] + 6] || '',
-                    ST_MTD: row[descriptionIndices[descriptionIndices.length - 1] + 7] || '',
-                    NET_WT: row[descriptionIndices[descriptionIndices.length - 1] + 8] || '',
-                    ORG_COUNTRY: row[descriptionIndices[descriptionIndices.length - 1] + 9] || '',
-                    ORG_IMP_DCL_NO: row[descriptionIndices[descriptionIndices.length - 1] + 10] || '',
-                    ORG_IMP_DCL_NO_ITEM: row[descriptionIndices[descriptionIndices.length - 1] + 11] || '',
-                    SELLER_ITEM_CODE: row[descriptionIndices[descriptionIndices.length - 1] + 12] || '',
-                    BOND_NOTE: row[descriptionIndices[descriptionIndices.length - 1] + 13] || '',                
-                    GOODS_MODEL: row[descriptionIndices[descriptionIndices.length - 1] + 14] || '',
-                    GOODS_SPEC: row[descriptionIndices[descriptionIndices.length - 1] + 15] || '',
-                    CERT_NO: row[descriptionIndices[descriptionIndices.length - 1] + 16] || '',
-                    CERT_NO_ITEM: row[descriptionIndices[descriptionIndices.length - 1] + 17] || '',
-                    ORG_DCL_NO: row[descriptionIndices[descriptionIndices.length - 1] + 18] || '',
-                    ORG_DCL_NO_ITEM: row[descriptionIndices[descriptionIndices.length - 1] + 19] || '',
-                    EXP_NO: row[descriptionIndices[descriptionIndices.length - 1] + 20] || '',
-                    EXP_SEQ_NO: row[descriptionIndices[descriptionIndices.length - 1] + 21] || '',
-                    WIDE: row[descriptionIndices[descriptionIndices.length - 1] + 22] || '',
-                    WIDE_UM: row[descriptionIndices[descriptionIndices.length - 1] + 23] || '',
-                    LENGT_: row[descriptionIndices[descriptionIndices.length - 1] + 24] || '',
-                    LENGTH_UM: row[descriptionIndices[descriptionIndices.length - 1] + 25] || '',
-                    ST_QTY: row[descriptionIndices[descriptionIndices.length - 1] + 26] || '',
-                    ST_UM: row[descriptionIndices[descriptionIndices.length - 1] + 27] || '',
+                    QTY: String(row[descriptionIndices[descriptionIndices.length - 1] + 1] || ''),
+                    DOC_UM: String(row[descriptionIndices[descriptionIndices.length - 1] + 2] || ''),
+                    DOC_UNIT_P: String(row[descriptionIndices[descriptionIndices.length - 1] + 3] || ''),
+                    DOC_TOT_P: String(row[descriptionIndices[descriptionIndices.length - 1] + 4] || ''),
+                    TRADE_MARK: String(row[descriptionIndices[descriptionIndices.length - 1] + 5] || ''),
+                    CCC_CODE: String(row[descriptionIndices[descriptionIndices.length - 1] + 6] || ''),
+                    ST_MTD: String(row[descriptionIndices[descriptionIndices.length - 1] + 7] || ''),
+                    NET_WT: String(row[descriptionIndices[descriptionIndices.length - 1] + 8] || ''),
+                    ORG_COUNTRY: String(row[descriptionIndices[descriptionIndices.length - 1] + 9] || ''),
+                    ORG_IMP_DCL_NO: String(row[descriptionIndices[descriptionIndices.length - 1] + 10] || ''),
+                    ORG_IMP_DCL_NO_ITEM: String(row[descriptionIndices[descriptionIndices.length - 1] + 11] || ''),
+                    SELLER_ITEM_CODE: String(row[descriptionIndices[descriptionIndices.length - 1] + 12] || ''),
+                    BOND_NOTE: String(row[descriptionIndices[descriptionIndices.length - 1] + 13] || ''),
+                    GOODS_MODEL: String(row[descriptionIndices[descriptionIndices.length - 1] + 14] || ''),
+                    GOODS_SPEC: String(row[descriptionIndices[descriptionIndices.length - 1] + 15] || ''),
+                    CERT_NO: String(row[descriptionIndices[descriptionIndices.length - 1] + 16] || ''),
+                    CERT_NO_ITEM: String(row[descriptionIndices[descriptionIndices.length - 1] + 17] || ''),
+                    ORG_DCL_NO: String(row[descriptionIndices[descriptionIndices.length - 1] + 18] || ''),
+                    ORG_DCL_NO_ITEM: String(row[descriptionIndices[descriptionIndices.length - 1] + 19] || ''),
+                    EXP_NO: String(row[descriptionIndices[descriptionIndices.length - 1] + 20] || ''),
+                    EXP_SEQ_NO: String(row[descriptionIndices[descriptionIndices.length - 1] + 21] || ''),
+                    WIDE: String(row[descriptionIndices[descriptionIndices.length - 1] + 22] || ''),
+                    WIDE_UM: String(row[descriptionIndices[descriptionIndices.length - 1] + 23] || ''),
+                    LENGT_: String(row[descriptionIndices[descriptionIndices.length - 1] + 24] || ''),
+                    LENGTH_UM: String(row[descriptionIndices[descriptionIndices.length - 1] + 25] || ''),
+                    ST_QTY: String(row[descriptionIndices[descriptionIndices.length - 1] + 26] || ''),
+                    ST_UM: String(row[descriptionIndices[descriptionIndices.length - 1] + 27] || ''),
                 });
                 if (row[1] === '*') {
                     currentItem.querySelector('.ITEM_NO').checked = true;
@@ -1217,7 +1217,7 @@ function handleFile(event) {
                 if (element) {
                     descriptionIndices.forEach(i => {
                         if (row[i]) {
-                            currentDescription += `\n${row[i]}`;
+                            currentDescription += `\n${String(row[i])}`;
                         }
                     });
                 }
