@@ -1352,6 +1352,14 @@ function exportToExcel() {
     const headerWorksheet = XLSX.utils.aoa_to_sheet(headerData);
     const itemsWorksheet = XLSX.utils.aoa_to_sheet(itemsData);
 
+    // 設置報單表頭工作表 A 欄及 B 欄的欄寬
+    headerWorksheet['!cols'] = [{ wpx: 150 }, { wpx: 400 }];
+    
+    // 設置 itemsWorksheet 每欄的欄寬
+    const colWidth = 10; // 設定字符寬度
+    const itemsCols = new Array(itemsData[0].length).fill({ wch: colWidth });
+    itemsWorksheet['!cols'] = itemsCols;
+    
     // 創建工作簿並添加工作表
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, headerWorksheet, '報單表頭');
