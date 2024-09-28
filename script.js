@@ -973,7 +973,7 @@ function closeSpecifyFieldModal() {
 // 動態生成源項次下拉選單的選項
 function populateSourceItemDropdown() {
     const sourceItemSelect = document.getElementById('source-item-number');
-    sourceItemSelect.innerHTML = '<option value="">選擇項次</option>';
+    sourceItemSelect.innerHTML = '<option value="">選擇項次 No.</option>';
     document.querySelectorAll('#item-container .item-row').forEach((item, index) => {
         const description = item.querySelector('.DESCRIPTION').value;
         sourceItemSelect.innerHTML += `<option value="${index + 1}">${index + 1} - ${description}</option>`;
