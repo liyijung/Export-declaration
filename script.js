@@ -1353,7 +1353,7 @@ function exportToExcel() {
     const itemsWorksheet = XLSX.utils.aoa_to_sheet(itemsData);
 
     // 設置報單表頭工作表 A 欄及 B 欄的欄寬
-    headerWorksheet['!cols'] = [{ wpx: 150 }, { wpx: 400 }];
+    headerWorksheet['!cols'] = [{ wpx: 150 }, { wpx: 250 }];
     
     // 設置 itemsWorksheet 每欄的欄寬
     const colWidth = 10; // 設定字符寬度
