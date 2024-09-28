@@ -511,10 +511,10 @@ function openItemModal() {
 
     // 填充下拉選單
     const copyItemSelect = document.getElementById('COPY_ITEM');
-    copyItemSelect.innerHTML = '<option value="">選擇項次</option>';
+    copyItemSelect.innerHTML = '<option value="">選擇項次 No.</option>';
     document.querySelectorAll('#item-container .item-row').forEach((item, index) => {
         const description = item.querySelector('.DESCRIPTION').value;
-        copyItemSelect.innerHTML += `<option value="${index}">NO ${index + 1} - ${description}</option>`;
+        copyItemSelect.innerHTML += `<option value="${index}">${index + 1} - ${description}</option>`;
     });
 
     // 顯示彈跳框
@@ -859,7 +859,7 @@ function openAdjustOrderModal() {
         const orderItem = document.createElement('div');
         orderItem.className = 'order-item';
         orderItem.innerHTML = `
-            <span>NO ${index + 1} - 品名: ${description}</span>
+            <span>${index + 1} - 品名: ${description}</span>
             <input type="hidden" class="original-order" value="${index}">
         `;
         orderList.appendChild(orderItem);
@@ -976,7 +976,7 @@ function populateSourceItemDropdown() {
     sourceItemSelect.innerHTML = '<option value="">選擇項次</option>';
     document.querySelectorAll('#item-container .item-row').forEach((item, index) => {
         const description = item.querySelector('.DESCRIPTION').value;
-        sourceItemSelect.innerHTML += `<option value="${index + 1}">NO ${index + 1} - ${description}</option>`;
+        sourceItemSelect.innerHTML += `<option value="${index + 1}">${index + 1} - ${description}</option>`;
     });
 }
 
