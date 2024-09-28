@@ -514,7 +514,7 @@ function openItemModal() {
     copyItemSelect.innerHTML = '<option value="">選擇項次 No.</option>';
     document.querySelectorAll('#item-container .item-row').forEach((item, index) => {
         const description = item.querySelector('.DESCRIPTION').value;
-        copyItemSelect.innerHTML += `<option value="${index}">${index + 1} - ${description}</option>`;
+        copyItemSelect.innerHTML += `<option value="${index}">${index + 1} - 品名: ${description}</option>`;
     });
 
     // 顯示彈跳框
@@ -976,7 +976,7 @@ function populateSourceItemDropdown() {
     sourceItemSelect.innerHTML = '<option value="">選擇項次 No.</option>';
     document.querySelectorAll('#item-container .item-row').forEach((item, index) => {
         const description = item.querySelector('.DESCRIPTION').value;
-        sourceItemSelect.innerHTML += `<option value="${index + 1}">${index + 1} - ${description}</option>`;
+        sourceItemSelect.innerHTML += `<option value="${index + 1}">${index + 1} - 品名: ${description}</option>`;
     });
 }
 
