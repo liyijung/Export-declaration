@@ -581,3 +581,15 @@ input::placeholder {
     color: #005feec5;
     background: linear-gradient(to bottom, #cee1fd, #f0f0f0);
 }
+
+/* 右側透明遮罩 */
+.mask {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 30%; /* 覆蓋彈跳框右側 30% */
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0); /* 透明 */
+    z-index: 1000; /* 確保遮罩在彈跳框內容上方 */
+    touch-action: none; /* 禁止觸摸操作 */
+}
