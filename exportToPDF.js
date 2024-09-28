@@ -378,11 +378,11 @@ async function exportToPDF() {
             if (currentPage === 1) {
                 // 首頁頁碼位置
                 doc.text(`${currentPage}`, 186, 10);
-                doc.text(`${totalPages}`, 198, 10);
+                // doc.text(`${totalPages}`, 198, 10);
             } else {
                 // 續頁頁碼位置
                 doc.text(`${currentPage}`, 184, 13);
-                doc.text(`${totalPages}`, 198, 13);
+                // doc.text(`${totalPages}`, 198, 13);
             }
         }
 
