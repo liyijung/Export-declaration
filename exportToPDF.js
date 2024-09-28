@@ -373,14 +373,16 @@ async function exportToPDF() {
         startY = 130;  // 重置初始的 Y 坐標
         currentMaxY = maxYHome;
 
-        function addPageNumber(doc, currentPage, totalPages, isHomePage) {
+        function addPageNumber(doc, currentPage, totalPages) {
             doc.setFontSize(9.5);
-            if (isHomePage) {
-                doc.text(`${currentPage}`, 186, 10); // 首頁頁碼位置
-                doc.text(`${totalPages}`, 198, 10); // 首頁總頁數位置
+            if (currentPage === 1) {
+                // 首頁頁碼位置
+                doc.text(`${currentPage}`, 186, 10);
+                doc.text(`${totalPages}`, 198, 10);
             } else {
-                doc.text(`${currentPage}`, 184, 12); // 續頁頁碼位置
-                doc.text(`${totalPages}`, 198, 12); // 續頁總頁數位置
+                // 續頁頁碼位置
+                doc.text(`${currentPage}`, 184, 13);
+                doc.text(`${totalPages}`, 198, 13);
             }
         }
 
@@ -420,7 +422,7 @@ async function exportToPDF() {
 
                 // 在新頁面右上角添加頁碼
                 const currentPage = doc.internal.getCurrentPageInfo().pageNumber;
-                addPageNumber(doc, currentPage, totalPages);
+                addPageNumber(doc, currentPage, totalPages, false);
 
                 // 每頁顯示文件編號及運單號
                 addFileNoToBottomLeft(doc, fileNo);
@@ -430,7 +432,7 @@ async function exportToPDF() {
             // 在首頁右上角添加頁碼
             if (doc.internal.getCurrentPageInfo().pageNumber === 1) {
                 const currentPage = doc.internal.getCurrentPageInfo().pageNumber;
-                addPageNumber(doc, currentPage, totalPages);
+                addPageNumber(doc, currentPage, totalPages, true);
             }
 
             // 顯示項次編號
