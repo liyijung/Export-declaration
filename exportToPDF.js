@@ -144,7 +144,7 @@ async function exportToPDF() {
         let formattedTotalFobPriceTw = Math.round(totalFobPriceTw).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
         // 設定字體大小
-        doc.setFontSize(10); // 這裡設為 10，可以根據需求調整
+        doc.setFontSize(9.5);
 
         // 計算文字寬度以達到靠右對齊
         let totalFobPriceX = 205 - doc.getTextWidth(formattedTotalFobPrice);
@@ -182,7 +182,7 @@ async function exportToPDF() {
             { value: `空運`, x: 75, y: 10 },
             { value: OrderNumber, x: 75, y: 18.5 },
             { value: CustomsDeclarationDate, x: 62, y: 35 },
-            { value: `TWTPE`, x: 30, y: 40.5 },
+            { value: `TWTPE`, x: 30.5, y: 40.5 },
             { value: `TAOYUAN`, x: 24, y: 44 },
             { value: `AIRPORT`, x: 24, y: 48 },
             { value: `42`, x: 136, y: 44 },
@@ -203,7 +203,7 @@ async function exportToPDF() {
             { value: formattedInsAmt !== 'NIL' ? currency : '', x: 171, y: 43 },
             { value: formattedAddAmt !== 'NIL' ? currency : '', x: 171, y: 49 },
             { value: formattedSubtractAmt !== 'NIL' ? currency : '', x: 171, y: 54 },
-            { value: document.getElementById('TO_CODE').value, x: 69.5, y: 40.5 },
+            { value: document.getElementById('TO_CODE').value, x: 70, y: 40.5 },
             { value: toDescLines.join('\n'), x: 61, y: 44 },
             { value: document.getElementById('SHPR_BAN_ID').value, x: 30, y: 60 },
             { value: document.getElementById('SHPR_BONDED_ID').value, x: 94, y: 60 },
@@ -235,7 +235,7 @@ async function exportToPDF() {
         const cneeLineHeight = 4; // 使用不同名稱的變數來避免衝突
 
         // 確保字體大小與前面一致
-        doc.setFontSize(10); // 設置與其他部分相同的字體大小
+        doc.setFontSize(9.5);
 
         // 繪製地址，每行一段
         cneeEAddrLines.forEach(line => {
@@ -244,7 +244,7 @@ async function exportToPDF() {
         });
         
         // 設置表頭字體大小並添加文本
-        doc.setFontSize(10);
+        doc.setFontSize(9.5);
         headerData.forEach(row => {
             const value = row.value;
             doc.text(value, row.x, row.y);
@@ -374,7 +374,7 @@ async function exportToPDF() {
         currentMaxY = maxYHome;
 
         function addPageNumber(doc, currentPage, totalPages, isHomePage) {
-            doc.setFontSize(10);
+            doc.setFontSize(9.5);
             if (isHomePage) {
                 doc.text(`${currentPage}`, 186, 10); // 首頁頁碼位置
                 doc.text(`${totalPages}`, 198, 10); // 首頁總頁數位置
