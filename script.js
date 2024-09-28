@@ -917,9 +917,12 @@ function saveNewOrder() {
 }
 
 let draggedItem = null;
+let startY = 0;
+const dragLimit = 0.5; // 限制拖曳範圍為左半側，0.5 代表 50%
 
 function handleTouchStart(event) {
     draggedItem = event.target.closest('.order-item');
+    startY = event.touches[0].clientY;
     draggedItem.classList.add('dragging');
     event.preventDefault();
 }
@@ -927,12 +930,36 @@ function handleTouchStart(event) {
 function handleTouchMove(event) {
     event.preventDefault();
     const touch = event.touches[0];
+    const currentY = touch.clientY;
+    const currentX = touch.clientX;
+
+    // 取得彈跳框的寬度與 X 座標
+    const adjustOrderModal = document.getElementById('adjust-order-modal');
+    const modalRect = adjustOrderModal.getBoundingClientRect();
+
+    // 檢查是否超出左半側範圍
+    const maxAllowedX = modalRect.left + (modalRect.width * dragLimit);
+
+    if (currentX > maxAllowedX) {
+        return; // 如果超過左半側，則不進行拖曳操作
+    }
+
+    // 確定拖曳的移動方向
+    const moveDown = currentY > startY;
+    startY = currentY;
+
     const elementUnderTouch = document.elementFromPoint(touch.clientX, touch.clientY);
-    
+
     if (elementUnderTouch && elementUnderTouch.classList.contains('order-item') && elementUnderTouch !== draggedItem) {
-        const target = elementUnderTouch;
-        const parent = target.parentNode;
-        parent.insertBefore(draggedItem, target.nextSibling || target);
+        const parent = elementUnderTouch.parentNode;
+
+        if (moveDown) {
+            // 如果向下移動，插入到目標的下一個
+            parent.insertBefore(draggedItem, elementUnderTouch.nextSibling);
+        } else {
+            // 如果向上移動，插入到目標之前
+            parent.insertBefore(draggedItem, elementUnderTouch);
+        }
     }
 }
 
