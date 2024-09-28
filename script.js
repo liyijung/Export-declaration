@@ -1359,6 +1359,33 @@ function exportToExcel() {
     const colWidth = 10; // 設定字符寬度
     const itemsCols = new Array(itemsData[0].length).fill({ wch: colWidth });
     itemsWorksheet['!cols'] = itemsCols;
+
+    // 設置報單表頭 A 欄至 B 欄為文字格式
+    for (let row = 0; row < headerData.length; row++) {
+        for (let col = 0; col <= 1; col++) { // A 欄 (0) 到 B 欄 (1)
+            const cellRef = XLSX.utils.encode_cell({ r: row, c: col });
+            if (headerWorksheet[cellRef]) {
+                headerWorksheet[cellRef].z = '@'; // 文字格式
+            }
+        }
+    }
+
+    // 設置報單項次 A 欄至 AD 欄為文字格式，並針對 D, F, G, K 欄設置為通用格式
+    const generalCols = [3, 5, 6, 10]; // D(3), F(5), G(6), K(10)
+
+    for (let row = 0; row < itemsData.length; row++) {
+        for (let col = 0; col <= 29; col++) { // A 欄 (0) 到 AD 欄 (29)
+            const cellRef = XLSX.utils.encode_cell({ r: row, c: col });
+            if (itemsWorksheet[cellRef]) {
+                // 如果欄位是 D, F, G, K 則設置為通用格式，否則設置為文字格式
+                if (generalCols.includes(col)) {
+                    itemsWorksheet[cellRef].z = 'General'; // 通用格式
+                } else {
+                    itemsWorksheet[cellRef].z = '@'; // 文字格式
+                }
+            }
+        }
+    }
     
     // 創建工作簿並添加工作表
     const workbook = XLSX.utils.book_new();
