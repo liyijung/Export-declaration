@@ -153,13 +153,40 @@ function toggleSelect(element) {
 }
 
 // 運單號過濾，僅允許 'SF' 和數字，並進行全形轉半形
-function filterInput(input) {
+function filterSFAndNumbers(input) {
     // 全形轉半形
     input.value = input.value.replace(/[\uff01-\uff5e]/g, function(ch) { 
         return String.fromCharCode(ch.charCodeAt(0) - 0xFEE0); 
     });
     // 只保留 S, F 和數字
     input.value = input.value.replace(/[^SF0-9]/gi, '');
+}
+
+function filterNumbers(input) {
+    // 全形轉半形
+    input.value = input.value.replace(/[\uff01-\uff5e]/g, function(ch) { 
+        return String.fromCharCode(ch.charCodeAt(0) - 0xFEE0); 
+    });
+    // 只允許數字 0-9
+    input.value = input.value.replace(/[^0-9]/g, '');
+}
+
+function filterAlphabets(input) {
+    // 全形轉半形
+    input.value = input.value.replace(/[\uff01-\uff5e]/g, function(ch) { 
+        return String.fromCharCode(ch.charCodeAt(0) - 0xFEE0); 
+    });
+    // 只允許字母 A-Z
+    input.value = input.value.replace(/[^A-Z]/gi, '');
+}
+
+function filterAlphanumeric(input) {
+    // 全形轉半形
+    input.value = input.value.replace(/[\uff01-\uff5e]/g, function(ch) { 
+        return String.fromCharCode(ch.charCodeAt(0) - 0xFEE0); 
+    });
+    // 只允許數字 0-9 和字母 A-Z
+    input.value = input.value.replace(/[^0-9A-Z]/gi, '');
 }
 
 // 依據統一編號的不同範圍對應相應的CSV檔案
