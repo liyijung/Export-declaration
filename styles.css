@@ -520,6 +520,10 @@ th, td {
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3); /* 右側陰影 */
 }
 
+.item-no-header label{
+    cursor: pointer
+}
+
 /* 選中狀態的項次左側編號變色 */
 .item-no.selected {
     background-color: #ffeb3b; /* 設置為黃色 */
