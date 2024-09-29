@@ -152,9 +152,14 @@ function toggleSelect(element) {
     element.classList.toggle('selected');
 }
 
-// 運單號過濾輸入的空格和 - 符號
+// 運單號過濾，僅允許 'SF' 和數字，並進行全形轉半形
 function filterInput(input) {
-    input.value = input.value.replace(/\s|-/g, '');
+    // 全形轉半形
+    input.value = input.value.replace(/[\uff01-\uff5e]/g, function(ch) { 
+        return String.fromCharCode(ch.charCodeAt(0) - 0xFEE0); 
+    });
+    // 只保留 S, F 和數字
+    input.value = input.value.replace(/[^SF0-9]/gi, '');
 }
 
 // 依據統一編號的不同範圍對應相應的CSV檔案
@@ -2859,11 +2864,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 // 對 LOT_NO 欄位進行處理
                 if (id === 'LOT_NO') {
+                    // 全形轉半形
                     value = value.replace(/[\uff01-\uff5e]/g, function(ch) { 
                         return String.fromCharCode(ch.charCodeAt(0) - 0xFEE0); 
-                    }); // 全形轉半形
-                    value = value.replace(/\s+/g, ''); // 移除所有空格
-                    value = value.replace(/-/g, ''); // 移除所有 '-'
+                    }); 
+
+                    // 只允許 S, F 和數字
+                    value = value.replace(/[^SF0-9]/gi, '');
                 }
                 
                 xmlContent += `  <fields>\n    <field_name>${id}</field_name>\n    <field_value>${value}</field_value>\n  </fields>\n`;
