@@ -56,22 +56,29 @@ async function exportToPDF() {
         var Tyear = today.getFullYear();
         var Tmonth = String(today.getMonth() + 1).padStart(2, '0'); // 因為 getMonth() 返回的月份是從 0 開始的
         var Tday = String(today.getDate()).padStart(2, '0');
-        Tymd = Tyear-1911 + Tmonth + Tday
+        var Tymd = (Tyear - 1911) + Tmonth + Tday; // 民國年格式
 
         // 從 FILE_NO 中獲取年份、月份、日期
         var yyymmdd = document.getElementById('FILE_NO').value;
-        var year = yyymmdd.substring(0, 3);  // 第 1 位和第 3 位為年份
-        var month = yyymmdd.substring(3, 5); // 第 4 位和第 5 位為月份
-        var day = yyymmdd.substring(5, 7);   // 第 6 位和第 7 位為日期
-        Fymd = year + month + day
+        var Fymd = '', CustomsDeclarationDate = '', yearPart = '';
 
-        // 報單號碼格式
-        var yearPart = yyymmdd.substring(1, 3);
+        // 如果有 FILE_NO，則解析其日期資訊，否則使用當前日期
+        if (yyymmdd) {
+            var year = yyymmdd.substring(0, 3);  // 民國年格式的前 3 位
+            var month = yyymmdd.substring(3, 5); // 第 4-5 位為月份
+            var day = yyymmdd.substring(5, 7);   // 第 6-7 位為日期
+            Fymd = year + month + day;
+            yearPart = yyymmdd.substring(1, 3);  // 第 2-3 位為年份
+            CustomsDeclarationDate = year + '/' + month + '/' + day; // 格式為 YYY/MM/DD
+        } else {
+            Fymd = Tymd;
+            yearPart = Tymd.substring(1, 3);     // 使用當前年份（民國年）的第 2-3 位
+            CustomsDeclarationDate = (Tyear - 1911) + '/' + Tmonth + '/' + Tday; // 當前日期格式
+        }
+
+        // 生成報單號碼
         var OrderNumber = 'CX/  /' + yearPart + '/696/';
 
-        // 報關日期為 "YYY/MM/DD"
-        var CustomsDeclarationDate = year + '/' + month + '/' + day;
-        
         // 獲取報單類別的值和文本
         const dclDocTypeElement = document.getElementById('DCL_DOC_TYPE');
         const dclDocTypeValue = dclDocTypeElement.value;
@@ -157,7 +164,7 @@ async function exportToPDF() {
         doc.text(currency, 171, totalFobPriceY);
         doc.text(formattedTotalFobPrice, totalFobPriceX, totalFobPriceY);
 
-        if (exchangeRate && Tymd === Fymd) {
+        if (exchangeRate && (Tymd === Fymd || !Fymd)) {
             // 在 x: 171, y: totalFobPriceTwY 顯示 "TWD"
             doc.text("TWD", 171, totalFobPriceTwY);
             doc.text(formattedTotalFobPriceTw, totalFobPriceTwX, totalFobPriceTwY);
