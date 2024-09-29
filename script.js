@@ -163,28 +163,16 @@ function filterSFAndNumbers(input) {
 }
 
 function filterNumbers(input) {
-    // 全形轉半形
-    input.value = input.value.replace(/[\uff01-\uff5e]/g, function(ch) { 
-        return String.fromCharCode(ch.charCodeAt(0) - 0xFEE0); 
-    });
     // 只允許數字 0-9
     input.value = input.value.replace(/[^0-9]/g, '');
 }
 
 function filterAlphabets(input) {
-    // 全形轉半形
-    input.value = input.value.replace(/[\uff01-\uff5e]/g, function(ch) { 
-        return String.fromCharCode(ch.charCodeAt(0) - 0xFEE0); 
-    });
     // 只允許字母 A-Z
     input.value = input.value.replace(/[^A-Z]/gi, '');
 }
 
 function filterAlphanumeric(input) {
-    // 全形轉半形
-    input.value = input.value.replace(/[\uff01-\uff5e]/g, function(ch) { 
-        return String.fromCharCode(ch.charCodeAt(0) - 0xFEE0); 
-    });
     // 只允許數字 0-9 和字母 A-Z
     input.value = input.value.replace(/[^0-9A-Z]/gi, '');
 }
