@@ -77,6 +77,13 @@ body {
     font-weight: bold;
 }
 
+.add-buttons button,
+.add-buttons label {
+    font-size: 16px;
+    color: #50648c;
+    font-weight: bold;
+}
+
 .add-buttons button {
     margin-bottom: 10px;
     margin-left: 5px;
@@ -85,20 +92,11 @@ body {
     border: 1px solid #ccc;
     cursor: pointer;
     background: linear-gradient(to bottom, #f0f0f0, #c2d6f8);
-    font-size: 16px;
-    color: #50648c;
-    font-weight: bold;
 }
 
 .add-buttons button:hover {
     background-color: #97b3eb;
     color: #333;
-}
-
-.add-buttons label {
-    font-size: 16px; /* 設置文字大小 */
-    color: #50648c; /* 設置文字顏色 */
-    font-weight: bold; /* 設置文字加粗 */
 }
 
 .item-header {
