@@ -152,6 +152,11 @@ function toggleSelect(element) {
     element.classList.toggle('selected');
 }
 
+// 運單號過濾輸入的空格和 - 符號
+function filterInput(input) {
+    input.value = input.value.replace(/\s|-/g, '');
+}
+
 // 依據統一編號的不同範圍對應相應的CSV檔案
 let csvFiles = [
     { range: ['0'], file: 'companyData0.csv' },
