@@ -266,7 +266,7 @@
         <input type="hidden" id="MARK_TOT_LINES" value="">
         <input type="hidden" id="EXAM_TYPE" value="">
         <input type="hidden" id="COPY_QTY" value="">
-        <h4 style="color: rgba(255, 0, 0, 0.634);">【提醒！】<br>
+        <h4 class="reminder-message-red">【提醒！】<br>
             如果需申請沖退原料稅或報單副本，請務必記得勾選，<br>
             系統會將其它需要填列的欄位自動進行設定，自動設定的欄位有：<br>
             1. 申請審驗方式<br>
@@ -306,8 +306,8 @@
                 <input type="number" id="decimal-places-weight" placeholder="預設2位" min="0" max="6" style="width: 60px;">
             </div>
             <div class="add-buttons">
-                <input type="checkbox" id="toggle-fix-top" onclick="toggleFixTop()"> 固定欄位標題
-                <input type="checkbox" id="toggle-width" onclick="toggleWidth()"> 固定頁面寬度
+                <input type="checkbox" id="toggle-fix-top" onclick="toggleFixTop()"><label>固定欄位標題</label>
+                <input type="checkbox" id="toggle-width" onclick="toggleWidth()"><label>固定頁面寬度</label>
             </div>
             <div class="item-row item-header">
                 <div class="form-group fix item-no item-no-header" onclick="toggleAllItems()">
@@ -823,7 +823,7 @@
                 <input type="text" id="IN_BONDED_CODE" name="IN_BONDED_CODE">
             </div>
         </div>
-        <h4 style="color: #005feec5;">【註】此頁適用於以下出貨型態：<br>
+        <h4 class="reminder-message-blue">【註】此頁適用於以下出貨型態：<br>
             1. 出口人本身不是保稅廠，但由另外合作的供應商（保稅廠）負責出貨<br>
             2. 報單類別為 D5 保稅倉貨物出口<br>
             3. 報單類別為 F5 自由港區貨物出口
