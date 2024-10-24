@@ -10,11 +10,11 @@ async function exportToPDF() {
         const doc = new jsPDF();
 
         // 加載字體
-        const fontBytes = await fetch('NotoSansTC-Regular.ttf').then(res => res.arrayBuffer());
+        const fontBytes = await fetch("NotoSansCJKtc-Regular.ttf").then(res => res.arrayBuffer());
         const fontBase64 = arrayBufferToBase64(fontBytes);
-        doc.addFileToVFS("NotoSansTC-Regular.ttf", fontBase64);
-        doc.addFont("NotoSansTC-Regular.ttf", "NotoSansTC", "normal");
-        doc.setFont("NotoSansTC");
+        doc.addFileToVFS("NotoSansCJKtc-Regular.ttf", fontBase64);
+        doc.addFont("NotoSansCJKtc-Regular.ttf", "NotoSansCJKtc", "normal");
+        doc.setFont("NotoSansCJKtc");
 
         // 設置字體顏色
         doc.setTextColor(0, 0, 0); // 黑色
