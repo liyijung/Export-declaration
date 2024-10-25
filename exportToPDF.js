@@ -500,10 +500,11 @@ async function exportToPDF() {
                 }
 
                 if (exchangeRate && (Tymd === Fymd || !Fymd)) {
-                    // 顯示離岸價格(新台幣)，靠右對齊
+                    // 顯示離岸價格(新台幣)，靠右對齊並加入千分位逗號
                     const fobTwX = 197.5;
-                    const fobTwWidth = doc.getTextWidth(`${item.fobTw}`);
-                    doc.text(`${item.fobTw}`, fobTwX - fobTwWidth, startY);
+                    const formattedFobTw = parseFloat(item.fobTw).toLocaleString('en-US'); // 將 fobTw 格式化為千分位
+                    const fobTwWidth = doc.getTextWidth(formattedFobTw);
+                    doc.text(formattedFobTw, fobTwX - fobTwWidth, startY);
                 }
             }
 
