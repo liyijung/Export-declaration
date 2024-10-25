@@ -288,9 +288,19 @@ async function exportToPDF() {
             doc.text('8', 199, 248); // 這裡設置顯示 "8" 的 X 和 Y 坐標
         }
 
+        // 首先計算所有項次的 docTotP 加總
+        let docTotPTotal = 0;
+        document.querySelectorAll("#item-container .item-row").forEach(item => {
+            const docTotP = parseFloat(item.querySelector('.DOC_TOT_P')?.value) || 0;
+            docTotPTotal += docTotP;
+        });
+
         // 添加項次資料
         const itemsData = [];
         document.querySelectorAll("#item-container .item-row").forEach((item, index) => {
+            const docTotP = parseFloat(item.querySelector('.DOC_TOT_P')?.value) || 0; // 取得 .DOC_TOT_P 值
+            const fobTw = docTotP * exchangeRate * (totalFobPrice / docTotPTotal); // 使用 docTotPTotal 計算 fobTw
+
             itemsData.push({
                 index: item.querySelector('.ITEM_NO')?.checked ? '*' : index + 1,  // 如果選中則顯示'*'，否則顯示編號
                 tradeMark: item.querySelector('.TRADE_MARK')?.value || '', // 商標
@@ -311,6 +321,7 @@ async function exportToPDF() {
                 goodsModel: item.querySelector('.GOODS_MODEL')?.value || '', // 型號
                 goodsSpec: item.querySelector('.GOODS_SPEC')?.value || '', // 規格
                 bondNote: item.querySelector('.BOND_NOTE')?.value || '', // 保稅貨物註記
+                fobTw: fobTw.toFixed(0), // 計算的初始 fobTw 值
                 values: [
                     { value: item.querySelector('.CCC_CODE')?.value || '', x: 89 },
                     { value: item.querySelector('.DOC_UNIT_P')?.value || '', x: 130 },
@@ -472,6 +483,28 @@ async function exportToPDF() {
                 const netWtX = 172.5;
                 const netWtWidth = doc.getTextWidth(`${item.netWt} KGM`);
                 doc.text(`${item.netWt} KGM`, netWtX - netWtWidth, startY);
+
+                // 加總誤差修正邏輯 - 在 itemsData 完成後進行調整
+                let fobTwTotal = itemsData.reduce((sum, item) => sum + parseFloat(item.fobTw), 0);
+                const targetFobTwTotal = parseFloat(formattedTotalFobPriceTw.replace(/,/g, '')); // 去除千分位逗號
+                let fobTwError = Math.round(targetFobTwTotal - fobTwTotal);
+
+                for (let i = itemsData.length - 1; i >= 0 && fobTwError !== 0; i--) {
+                    if (fobTwError > 0) {
+                        itemsData[i].fobTw = (parseFloat(itemsData[i].fobTw) + 1).toFixed(0);
+                        fobTwError -= 1;
+                    } else if (fobTwError < 0) {
+                        itemsData[i].fobTw = (parseFloat(itemsData[i].fobTw) - 1).toFixed(0);
+                        fobTwError += 1;
+                    }
+                }
+
+                if (exchangeRate && (Tymd === Fymd || !Fymd)) {
+                    // 顯示離岸價格(新台幣)，靠右對齊
+                    const fobTwX = 197.5;
+                    const fobTwWidth = doc.getTextWidth(`${item.fobTw}`);
+                    doc.text(`${item.fobTw}`, fobTwX - fobTwWidth, startY);
+                }
             }
 
             startY = tradeMarkY;
