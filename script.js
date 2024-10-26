@@ -2243,9 +2243,8 @@ function spreadWeight() {
 
     // 基礎分配計算
     const baseWeight = parseFloat((remainingNetWeight / totalQuantity).toFixed(decimalPlaces));
-    const remainder = remainingNetWeight - (baseWeight * totalQuantity); // 計算分配後的剩餘誤差
-
     let distributedWeights = [];
+
     items.forEach((item, index) => {
         if (!fixedWeights.some(fixed => fixed.index === index)) {
             const quantity = parseFloat(item.querySelector('.QTY').value);
@@ -2258,33 +2257,20 @@ function spreadWeight() {
         }
     });
 
-    // 分攤誤差到部分項次上
-    const adjustmentUnit = Math.pow(10, -decimalPlaces); // 以最小單位進行調整
-    let adjustmentCount = Math.abs(Math.round(remainder / adjustmentUnit));
+    // 計算初步分配後的總重量
+    let allocatedWeightSum = distributedWeights.reduce((sum, item) => sum + item.weight, 0);
+    allocatedWeightSum += fixedWeightTotal;
+    let finalDiscrepancy = totalNetWeight - allocatedWeightSum;
 
-    if (remainder > 0) {
-        // 若需要增加重量
-        for (let i = 0; i < adjustmentCount; i++) {
-            distributedWeights[i % distributedWeights.length].weight += adjustmentUnit;
-        }
-    } else if (remainder < 0) {
-        // 若需要減少重量
-        for (let i = 0; i < adjustmentCount; i++) {
-            const item = distributedWeights[i % distributedWeights.length];
-            if (item.weight - adjustmentUnit > 0) { // 檢查是否會導致重量小於等於0
-                item.weight -= adjustmentUnit;
-            }
-        }
-    }
-
-    // 最後將剩餘誤差直接分配到項次，不受小數點限制
-    let finalTotalWeight = distributedWeights.reduce((sum, item) => sum + item.weight, 0) + fixedWeightTotal;
-    let finalDiscrepancy = totalNetWeight - finalTotalWeight;
-
+    // 找到具有最大重量的未鎖定項次，如果有多個，則平均分攤誤差
     if (finalDiscrepancy !== 0) {
-        const adjustmentPerItem = finalDiscrepancy / distributedWeights.length;
-        distributedWeights.forEach(item => {
-            item.weight += adjustmentPerItem; // 直接加上誤差調整值，不受小數點位數影響
+        let maxWeightValue = Math.max(...distributedWeights.map(item => item.weight));
+        let maxWeightItems = distributedWeights.filter(item => item.weight === maxWeightValue);
+
+        // 將誤差值平均分攤到具有最大重量的項次
+        const adjustmentPerItem = finalDiscrepancy / maxWeightItems.length;
+        maxWeightItems.forEach(item => {
+            item.weight += adjustmentPerItem; // 加上平均誤差值
         });
     }
 
@@ -2294,14 +2280,14 @@ function spreadWeight() {
         netWtElement.value = item.weight.toFixed(decimalPlaces);
     });
 
-    // 確保鎖定重量項次的值不變（不受小數點限制）
+    // 確保鎖定重量項次的值不變
     fixedWeights.forEach(fixed => {
         const netWtElement = items[fixed.index].querySelector('.NET_WT');
         netWtElement.value = fixed.netWeight; // 保持原始值
     });
 
     // 最終確認重量總和
-    finalTotalWeight = Array.from(items).reduce((sum, item) => {
+    const finalTotalWeight = Array.from(items).reduce((sum, item) => {
         const netWeight = parseFloat(item.querySelector('.NET_WT').value);
         return sum + (isNaN(netWeight) ? 0 : netWeight);
     }, 0).toFixed(decimalPlaces);
