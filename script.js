@@ -2226,13 +2226,13 @@ function spreadWeight() {
 
     // 如果鎖定項次的重量總和大於或等於總淨重，則提示錯誤
     if (fixedWeightTotal >= totalNetWeight) {
-        alert('鎖定項次的重量總和必須小於報單表頭的總淨重');
+        alert('鎖定的重量總和必須小於報單表頭的總淨重');
         return;
     }
 
     // 確保非鎖定項次的數量總和大於零
     if (totalQuantity <= 0) {
-        alert('非鎖定項次的數量總和必須大於零，否則無法分配剩餘淨重');
+        alert('非鎖定的數量總和必須大於零，否則無法分配剩餘淨重');
         return;
     }
 
