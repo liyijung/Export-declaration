@@ -2223,7 +2223,7 @@ function spreadWeight() {
     });
 
     if (totalQuantity <= 0) {
-        alert('所有項次的數量總和必須大於零');
+        alert('未鎖定的數量總和必須大於零');
         return;
     }
 
@@ -2257,7 +2257,7 @@ function spreadWeight() {
     // 確保固定重量項次的值不變
     fixedWeights.forEach(fixed => {
         const netWtElement = items[fixed.index].querySelector('.NET_WT');
-        netWtElement.value = fixed.netWeight.toFixed(decimalPlaces);
+        netWtElement.value = fixed.netWeight;
     });
 
     // 最後調整確保分配重量總和等於總淨重
