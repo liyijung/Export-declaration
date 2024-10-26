@@ -2263,70 +2263,47 @@ function spreadWeight() {
         netWtElement.value = item.netWeight.toFixed(decimalPlaces);
     });
 
-    // 確保鎖定重量項次的值不變
+    // 確保鎖定重量項次的值不變（不受小數點限制）
     fixedWeights.forEach(fixed => {
         const netWtElement = items[fixed.index].querySelector('.NET_WT');
-        netWtElement.value = fixed.netWeight.toFixed(decimalPlaces);
+        netWtElement.value = fixed.netWeight; // 保持原始值
     });
 
-    // 最後調整確保分配重量總和等於總淨重
+    // 最後從最後一個未鎖定項次開始往前分攤誤差，直到總和等於總淨重
     let finalTotalWeight = Array.from(items).reduce((sum, item) => {
         const netWeight = parseFloat(item.querySelector('.NET_WT').value);
         return sum + (isNaN(netWeight) ? 0 : netWeight);
     }, 0);
 
     let finalDiscrepancy = totalNetWeight - finalTotalWeight;
+    const step = Math.pow(10, -decimalPlaces); // 誤差分攤的最小單位
 
-    if (finalDiscrepancy !== 0) {
-        // 找到數量值最大的未鎖定項次
-        let maxQuantityItems = [];
-        let maxQuantity = -Infinity;
-
-        items.forEach((item, index) => {
-            const quantity = parseFloat(item.querySelector('.QTY').value);
-            const checkbox = item.querySelector('.ISCALC_WT');
-            if (quantity >= maxQuantity && (!checkbox || !checkbox.checked)) {
-                if (quantity > maxQuantity) {
-                    maxQuantityItems = [{ item, quantity }];
-                    maxQuantity = quantity;
-                } else {
-                    maxQuantityItems.push({ item, quantity });
-                }
-            }
-        });
-
-        if (maxQuantityItems.length > 0) {
-            let totalMaxQuantity = maxQuantityItems.reduce((sum, item) => sum + item.quantity, 0);
-            maxQuantityItems.forEach(itemData => {
-                const netWtElement = itemData.item.querySelector('.NET_WT');
-                const adjustment = (itemData.quantity / totalMaxQuantity) * finalDiscrepancy;
-                const adjustedWeight = parseFloat(netWtElement.value) + adjustment;
-                netWtElement.value = adjustedWeight.toFixed(decimalPlaces);
-            });
-        }
-
-        // 再次計算總重量，確保最終總和正確
-        finalTotalWeight = Array.from(items).reduce((sum, item) => {
-            const netWeight = parseFloat(item.querySelector('.NET_WT').value);
-            return sum + (isNaN(netWeight) ? 0 : netWeight);
-        }, 0);
-
-        finalDiscrepancy = totalNetWeight - finalTotalWeight;
-
-        if (finalDiscrepancy !== 0) {
-            const largestItem = maxQuantityItems.reduce((prev, current) => (prev.quantity > current.quantity ? prev : current));
-            const netWtElement = largestItem.item.querySelector('.NET_WT');
-            const adjustedWeight = parseFloat(netWtElement.value) + finalDiscrepancy;
-            netWtElement.value = adjustedWeight.toFixed(decimalPlaces);
+    for (let i = distributedWeights.length - 1; i >= 0 && Math.abs(finalDiscrepancy) >= step; i--) {
+        const itemIndex = distributedWeights[i].index;
+        const netWtElement = items[itemIndex].querySelector('.NET_WT');
+        const netWeight = parseFloat(netWtElement.value);
+        if (!isNaN(netWeight)) {
+            const adjustment = finalDiscrepancy > 0 ? step : -step;
+            netWtElement.value = (netWeight + adjustment).toFixed(decimalPlaces);
+            finalDiscrepancy -= adjustment;
         }
     }
 
-    // 顯示最終加總的重量
-    const adjustedTotalWeight = Array.from(items).reduce((sum, item) => {
+    // 若仍有微小誤差，將剩餘誤差加到最後一個未鎖定項次
+    if (Math.abs(finalDiscrepancy) > 0) {
+        const lastNonFixedItemIndex = distributedWeights[distributedWeights.length - 1].index;
+        const lastNetWtElement = items[lastNonFixedItemIndex].querySelector('.NET_WT');
+        lastNetWtElement.value = (parseFloat(lastNetWtElement.value) + finalDiscrepancy).toFixed(decimalPlaces);
+    }
+
+    // 再次確認總重量是否精確等於總淨重
+    finalTotalWeight = Array.from(items).reduce((sum, item) => {
         const netWeight = parseFloat(item.querySelector('.NET_WT').value);
         return sum + (isNaN(netWeight) ? 0 : netWeight);
     }, 0).toFixed(decimalPlaces);
-    alert(`報單表頭的總淨重為：${totalNetWeight}\n各項次的淨重加總為：${adjustedTotalWeight}`);
+
+    // 顯示最終加總的重量
+    alert(`報單表頭的總淨重為：${totalNetWeight}\n各項次的淨重加總為：${finalTotalWeight}`);
 }
 
 // 更新DOC_OTR_DESC的值，勾選時加入描述，取消勾選時移除描述
