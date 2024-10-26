@@ -615,14 +615,14 @@ async function exportToPDF() {
         doc.text(separator, pageWidth - separatorWidth - 6, yPosition);
 
         const totalData = [
-            { label: '', value: totalNetWt > 0 ? totalNetWt.toFixed(2) + ' KGM' : '', y: yPosition },
+            { label: '', value: totalNetWt > 0 ? parseFloat(totalNetWt.toFixed(6)) + ' KGM' : '', y: yPosition },
         ];
 
         Object.entries(totalQtyMap).forEach(([unit, qty], index) => {
             if (qty > 0) {
                 totalData.push({
                     label: '',
-                    value: qty.toFixed(2) + ' ' + unit,
+                    value: parseFloat(qty.toFixed(6)) + ' ' + unit,
                     y: yPosition
                 });
                 yPosition += 4;
