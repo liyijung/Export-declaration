@@ -169,8 +169,8 @@ async function exportToPDF() {
             doc.text("TWD", 171, totalFobPriceTwY);
             doc.text(formattedTotalFobPriceTw, totalFobPriceTwX, totalFobPriceTwY);
             
-            // 添加匯率，顯示在 x: 192, y: 100.5
-            doc.text(exchangeRate.toString(), 192, 100.5);
+            // 添加匯率，顯示在 x: 192.5, y: 100.5
+            doc.text(exchangeRate.toString(), 192.5, 100.5);
         }
 
         // 添加二維條碼
