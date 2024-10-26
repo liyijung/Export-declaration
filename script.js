@@ -2313,10 +2313,12 @@ function spreadWeight() {
     }
 
     // 顯示最終加總的重量
-    const adjustedTotalWeight = Array.from(items).reduce((sum, item) => {
-        const netWeight = parseFloat(item.querySelector('.NET_WT').value);
-        return sum + (isNaN(netWeight) ? 0 : netWeight);
-    }, 0).toFixed(decimalPlaces);
+    const adjustedTotalWeight = parseFloat(
+        Array.from(items).reduce((sum, item) => {
+            const netWeight = parseFloat(item.querySelector('.NET_WT').value);
+            return sum + (isNaN(netWeight) ? 0 : netWeight);
+        }, 0).toFixed(6)
+    );
     alert(`報單表頭的總淨重為：${totalNetWeight}\n各項次的淨重加總為：${adjustedTotalWeight}`);
 }
 
