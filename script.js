@@ -2206,24 +2206,33 @@ function spreadWeight() {
     let fixedWeights = [];
     let remainingNetWeight = totalNetWeight;
     let totalQuantity = 0;
+    let fixedWeightTotal = 0; // 計算鎖定項次的重量總和
 
-    // 確定哪些項次是固定的
+    // 確定哪些項次是鎖定的，並累加鎖定項次重量與非鎖定項次的數量
     items.forEach((item, index) => {
         const checkbox = item.querySelector('.ISCALC_WT');
-        const netWeight = parseFloat(item.querySelector('.NET_WT').value);
+        const netWeight = parseFloat(item.querySelector('.NET_WT')?.value);
+        const quantity = parseFloat(item.querySelector('.QTY')?.value);
+        
+        // 如果是鎖定項次且淨重為有效數字
         if (checkbox && checkbox.checked && !isNaN(netWeight)) {
             fixedWeights.push({ index, netWeight });
-            remainingNetWeight -= netWeight;
-        } else {
-            const quantity = parseFloat(item.querySelector('.QTY').value);
-            if (!isNaN(quantity)) {
-                totalQuantity += quantity;
-            }
+            fixedWeightTotal += netWeight; // 累加鎖定項次的重量
+            remainingNetWeight -= netWeight; // 從總淨重中扣除
+        } else if (!isNaN(quantity)) {
+            totalQuantity += quantity; // 累加非鎖定項次的數量
         }
     });
 
+    // 如果鎖定項次的重量總和大於或等於總淨重，則提示錯誤
+    if (fixedWeightTotal >= totalNetWeight) {
+        alert('鎖定項次的重量總和必須小於報單表頭的總淨重');
+        return;
+    }
+
+    // 確保非鎖定項次的數量總和大於零
     if (totalQuantity <= 0) {
-        alert('所有項次的數量總和必須大於零');
+        alert('非鎖定項次的數量總和必須大於零，否則無法分配剩餘淨重');
         return;
     }
 
@@ -2232,7 +2241,7 @@ function spreadWeight() {
         return;
     }
 
-    // 將剩餘淨重按比例分配到未固定的項次
+    // 將剩餘淨重按比例分配到未鎖定的項次
     let distributedWeights = [];
     const minWeight = Math.pow(10, -decimalPlaces); // 確保最小值不為0
     items.forEach((item, index) => {
@@ -2254,7 +2263,7 @@ function spreadWeight() {
         netWtElement.value = item.netWeight.toFixed(decimalPlaces);
     });
 
-    // 確保固定重量項次的值不變
+    // 確保鎖定重量項次的值不變
     fixedWeights.forEach(fixed => {
         const netWtElement = items[fixed.index].querySelector('.NET_WT');
         netWtElement.value = fixed.netWeight.toFixed(decimalPlaces);
