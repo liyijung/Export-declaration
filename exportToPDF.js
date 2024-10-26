@@ -633,7 +633,7 @@ async function exportToPDF() {
             if (qty > 0) {
                 totalData.push({
                     label: '',
-                    value: `(${qty.toFixed(2)} ${unit})`,
+                    value: `(${parseFloat(qty.toFixed(6))} ${unit})`,
                     y: yPosition
                 });
                 yPosition += 4;
@@ -643,7 +643,7 @@ async function exportToPDF() {
         if (totalAmt > 0) {
             totalData.push({
                 label: '',
-                value: totalAmt.toFixed(2),
+                value: parseFloat(totalAmt.toFixed(6)),
                 y: yPosition
             });
             yPosition += 4;
