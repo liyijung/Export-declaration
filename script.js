@@ -2241,26 +2241,57 @@ function spreadWeight() {
         return;
     }
 
-    // 將剩餘淨重按比例分配到未鎖定的項次
+    // 基礎分配計算
+    const baseWeight = parseFloat((remainingNetWeight / totalQuantity).toFixed(decimalPlaces));
+    const remainder = remainingNetWeight - (baseWeight * totalQuantity); // 計算分配後的剩餘誤差
+
     let distributedWeights = [];
-    const minWeight = Math.pow(10, -decimalPlaces); // 確保最小值不為0
     items.forEach((item, index) => {
         if (!fixedWeights.some(fixed => fixed.index === index)) {
             const quantity = parseFloat(item.querySelector('.QTY').value);
             if (!isNaN(quantity) && quantity > 0) {
-                let netWeight = parseFloat(((quantity / totalQuantity) * remainingNetWeight).toFixed(decimalPlaces));
-                if (netWeight <= 0) {
-                    netWeight = minWeight; // 確保最小值不為0
-                }
-                distributedWeights.push({ index, netWeight });
+                distributedWeights.push({
+                    index,
+                    weight: baseWeight,
+                });
             }
         }
     });
 
+    // 分攤誤差到部分項次上
+    const adjustmentUnit = Math.pow(10, -decimalPlaces); // 以最小單位進行調整
+    let adjustmentCount = Math.abs(Math.round(remainder / adjustmentUnit));
+
+    if (remainder > 0) {
+        // 若需要增加重量
+        for (let i = 0; i < adjustmentCount; i++) {
+            distributedWeights[i % distributedWeights.length].weight += adjustmentUnit;
+        }
+    } else if (remainder < 0) {
+        // 若需要減少重量
+        for (let i = 0; i < adjustmentCount; i++) {
+            const item = distributedWeights[i % distributedWeights.length];
+            if (item.weight - adjustmentUnit > 0) { // 檢查是否會導致重量小於等於0
+                item.weight -= adjustmentUnit;
+            }
+        }
+    }
+
+    // 最後將剩餘誤差直接分配到項次，不受小數點限制
+    let finalTotalWeight = distributedWeights.reduce((sum, item) => sum + item.weight, 0) + fixedWeightTotal;
+    let finalDiscrepancy = totalNetWeight - finalTotalWeight;
+
+    if (finalDiscrepancy !== 0) {
+        const adjustmentPerItem = finalDiscrepancy / distributedWeights.length;
+        distributedWeights.forEach(item => {
+            item.weight += adjustmentPerItem; // 直接加上誤差調整值，不受小數點位數影響
+        });
+    }
+
     // 將分配的重量應用到每個項次
     distributedWeights.forEach(item => {
         const netWtElement = items[item.index].querySelector('.NET_WT');
-        netWtElement.value = item.netWeight.toFixed(decimalPlaces);
+        netWtElement.value = item.weight.toFixed(decimalPlaces);
     });
 
     // 確保鎖定重量項次的值不變（不受小數點限制）
@@ -2269,40 +2300,13 @@ function spreadWeight() {
         netWtElement.value = fixed.netWeight; // 保持原始值
     });
 
-    // 最後從最後一個未鎖定項次開始往前分攤誤差，直到總和等於總淨重
-    let finalTotalWeight = Array.from(items).reduce((sum, item) => {
-        const netWeight = parseFloat(item.querySelector('.NET_WT').value);
-        return sum + (isNaN(netWeight) ? 0 : netWeight);
-    }, 0);
-
-    let finalDiscrepancy = totalNetWeight - finalTotalWeight;
-    const step = Math.pow(10, -decimalPlaces); // 誤差分攤的最小單位
-
-    for (let i = distributedWeights.length - 1; i >= 0 && Math.abs(finalDiscrepancy) >= step; i--) {
-        const itemIndex = distributedWeights[i].index;
-        const netWtElement = items[itemIndex].querySelector('.NET_WT');
-        const netWeight = parseFloat(netWtElement.value);
-        if (!isNaN(netWeight)) {
-            const adjustment = finalDiscrepancy > 0 ? step : -step;
-            netWtElement.value = (netWeight + adjustment).toFixed(decimalPlaces);
-            finalDiscrepancy -= adjustment;
-        }
-    }
-
-    // 若仍有微小誤差，將剩餘誤差加到最後一個未鎖定項次
-    if (Math.abs(finalDiscrepancy) > 0) {
-        const lastNonFixedItemIndex = distributedWeights[distributedWeights.length - 1].index;
-        const lastNetWtElement = items[lastNonFixedItemIndex].querySelector('.NET_WT');
-        lastNetWtElement.value = (parseFloat(lastNetWtElement.value) + finalDiscrepancy).toFixed(decimalPlaces);
-    }
-
-    // 再次確認總重量是否精確等於總淨重
+    // 最終確認重量總和
     finalTotalWeight = Array.from(items).reduce((sum, item) => {
         const netWeight = parseFloat(item.querySelector('.NET_WT').value);
         return sum + (isNaN(netWeight) ? 0 : netWeight);
     }, 0).toFixed(decimalPlaces);
 
-    // 顯示最終加總的重量
+    // 顯示結果
     alert(`報單表頭的總淨重為：${totalNetWeight}\n各項次的淨重加總為：${finalTotalWeight}`);
 }
 
