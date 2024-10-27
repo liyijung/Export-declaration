@@ -595,7 +595,7 @@ async function exportToPDF() {
         // 在最後一頁的最後一行位置顯示加總，靠右對齊距離右邊38px
         const pageWidth = doc.internal.pageSize.getWidth();
         const marginRight = 38;
-        let yPosition = lastY + 4;
+        let yPosition = lastY;
 
         // 檢查加總部分是否會超過首頁的頁面底部的 Y 坐標
         const currentPage = doc.internal.getCurrentPageInfo().pageNumber;
@@ -612,31 +612,27 @@ async function exportToPDF() {
         // 添加分隔線
         const separator = '- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -';
         const separatorWidth = doc.getTextWidth(separator);
-        doc.text(separator, pageWidth - separatorWidth - 6, yPosition);
+        doc.text(separator, pageWidth - separatorWidth - 6, yPosition - 3);
 
         const totalData = [
             { label: '', value: totalNetWt > 0 ? parseFloat(totalNetWt.toFixed(6)) + ' KGM' : '', y: yPosition },
         ];
 
-        Object.entries(totalQtyMap).forEach(([unit, qty], index) => {
+        Object.entries(totalQtyMap).forEach(([unit, qty]) => {
             if (qty > 0) {
                 totalData.push({
                     label: '',
                     value: parseFloat(qty.toFixed(6)) + ' ' + unit,
-                    y: yPosition
                 });
-                yPosition += 4;
             }
         });
 
-        Object.entries(totalStatQtyMap).forEach(([unit, qty], index) => {
+        Object.entries(totalStatQtyMap).forEach(([unit, qty]) => {
             if (qty > 0) {
                 totalData.push({
                     label: '',
                     value: `(${parseFloat(qty.toFixed(6))} ${unit})`,
-                    y: yPosition
                 });
-                yPosition += 4;
             }
         });
 
@@ -644,9 +640,7 @@ async function exportToPDF() {
             totalData.push({
                 label: '',
                 value: parseFloat(totalAmt.toFixed(6)),
-                y: yPosition
             });
-            yPosition += 4;
         }
 
         // 更新 yPosition 為新頁面的起始座標
@@ -660,10 +654,9 @@ async function exportToPDF() {
         });
 
         // 根據 totalStatQtyMap 顯示情況動態調整 'VVVVVVVVVVVVVVVVVVVVV' 的位置
-        const vvvY = yPosition;
         const vvvText = 'VVVVVVVVVVVVVVVVVVVVV';
         const vvvTextWidth = doc.getTextWidth(vvvText);
-        doc.text(vvvText, pageWidth - vvvTextWidth - marginRight, vvvY);
+        doc.text(vvvText, pageWidth - vvvTextWidth - marginRight, yPosition);
 
         // 保存 PDF，文件名為 FILE_NO 的值
         const fileName = document.getElementById('FILE_NO').value || 'export';
