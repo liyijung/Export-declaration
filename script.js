@@ -2210,8 +2210,17 @@ function spreadWeight() {
     // 確定哪些項次是固定的
     items.forEach((item, index) => {
         const checkbox = item.querySelector('.ISCALC_WT');
-        const netWeight = parseFloat(item.querySelector('.NET_WT').value);
-        if (checkbox && checkbox.checked && !isNaN(netWeight)) {
+        let netWeight = parseFloat(item.querySelector('.NET_WT').value);
+    
+        // 如果 .NET_WT 欄位為空或為零，則取消 checkbox 選中
+        if (!netWeight || isNaN(netWeight)) {
+            if (checkbox && checkbox.checked) {
+                checkbox.checked = false; // 取消勾選
+            }
+            netWeight = 0; // 設為零以避免NaN
+        }
+    
+        if (checkbox && checkbox.checked) {
             fixedWeights.push({ index, netWeight });
             remainingNetWeight -= netWeight;
         } else {
