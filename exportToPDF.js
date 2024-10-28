@@ -225,8 +225,6 @@ async function exportToPDF() {
             { value: document.getElementById('DOC_CTN_UM').value, x: 50, y: 201.5 },
             { value: document.getElementById('CTN_DESC').value, x: 85, y: 201.5 },
             { value: document.getElementById('DCL_GW').value, x: 190, y: 201.5 },
-            { value: document.getElementById('DOC_MARKS_DESC').value, x: 8, y: 211 },
-            { value: document.getElementById('DOC_OTR_DESC').value, x: 7, y: 260 },
         ];
 
         // 自動換行的收件人地址處理
@@ -293,6 +291,42 @@ async function exportToPDF() {
         document.querySelectorAll("#item-container .item-row").forEach(item => {
             const docTotP = parseFloat(item.querySelector('.DOC_TOT_P')?.value) || 0;
             docTotPTotal += docTotP;
+        });
+
+        // 獲取 'DOC_MARKS_DESC' 的完整內容
+        const docMarksDescElement = document.getElementById('DOC_MARKS_DESC');
+        const docMarksDescText = docMarksDescElement.value;
+
+        // 將 'DOC_MARKS_DESC' 分割為多行，行寬限制在一定寬度（例如 120）
+        const docMarksDescLines = doc.splitTextToSize(docMarksDescText, 120);
+
+        // 初始顯示行與溢出行分開存放
+        const initialLines = docMarksDescLines.slice(0, 10); // 取前十一行
+        const overflowLines = docMarksDescLines.slice(10);   // 第十一行以後
+
+        // 將初始顯示行顯示在指定位置（例如 x: 8, y: 211）
+        let docMarksDescY = 211;
+        initialLines.forEach(line => {
+            doc.text(line, 8, docMarksDescY);
+            docMarksDescY += 4; // 行高，根據需要調整
+        });
+
+        // 獲取 'DOC_OTR_DESC' 的完整內容
+        const docOtrDescElement = document.getElementById('DOC_OTR_DESC');
+        const docOtrDescText = docOtrDescElement.value;
+
+        // 將 'DOC_OTR_DESC' 分割為多行，行寬限制在一定寬度（例如 120）
+        const docOtrDescLines = doc.splitTextToSize(docOtrDescText, 120);
+
+        // 前六行與其餘行分開存放
+        const firstSixLines = docOtrDescLines.slice(0, 6); // 取前六行
+        const remainingLines = docOtrDescLines.slice(6);   // 第七行以後
+
+        // 將前六行顯示在指定位置（例如 x: 7, y: 260）
+        let docOtrDescY = 260;
+        firstSixLines.forEach(line => {
+            doc.text(line, 8, docOtrDescY);
+            docOtrDescY += 4; // 行高，根據需要調整
         });
 
         // 添加項次資料
@@ -657,6 +691,88 @@ async function exportToPDF() {
         const vvvText = 'VVVVVVVVVVVVVVVVVVVVV';
         const vvvTextWidth = doc.getTextWidth(vvvText);
         doc.text(vvvText, pageWidth - vvvTextWidth - marginRight, yPosition);
+
+        // 在生成 PDF 前的最後一行位置（yPosition）顯示剩餘行
+        yPosition += 10; // 加大間距以便和前面的內容分隔
+
+        // 使用 for...of 迴圈來允許在迴圈內使用 await
+        for (const line of overflowLines) {
+            // 檢查是否為首頁
+            const currentPage = doc.internal.getCurrentPageInfo().pageNumber;
+            if (currentPage === 1) {
+                // 若為首頁則新增續頁
+                doc.addPage(); // 新增一頁
+                await renderTemplate(doc, templateContinuation, 1); // 渲染續頁模板
+
+                // 在新頁面右上角添加頁碼
+                addPageNumber(doc, currentPage + 1, totalPages, false);
+
+                // 每頁顯示文件編號及運單號
+                addFileNoToBottomLeft(doc, fileNo);
+                addlotnoToBottomLeft(doc, lotno);
+
+                yPosition = 63; // 續頁的初始 Y 坐標
+            } 
+            // 如果已是續頁，則檢查 yPosition 是否超過 maxYContinuation
+            else if (yPosition > maxYContinuation) {
+                doc.addPage(); // 新增一頁
+                await renderTemplate(doc, templateContinuation, 1); // 渲染續頁模板
+
+                // 在新頁面右上角添加頁碼
+                addPageNumber(doc, currentPage + 1, totalPages, false);
+
+                // 每頁顯示文件編號及運單號
+                addFileNoToBottomLeft(doc, fileNo);
+                addlotnoToBottomLeft(doc, lotno);
+
+                yPosition = 63; // 續頁的初始 Y 坐標
+            }
+
+            // 顯示當前行內容
+            doc.text(line, 14, yPosition); 
+            yPosition += 4; // 行高
+        }
+
+        // 在生成 PDF 前的最後一行位置（yPosition）顯示剩餘行
+        yPosition += 10; // 加大間距以便和前面的內容分隔
+
+        // 使用 for...of 迴圈來允許在迴圈內使用 await
+        for (const line of remainingLines) {
+            // 檢查是否為首頁
+            const currentPage = doc.internal.getCurrentPageInfo().pageNumber;
+            if (currentPage === 1) {
+                // 若為首頁則新增續頁
+                doc.addPage(); // 新增一頁
+                await renderTemplate(doc, templateContinuation, 1); // 渲染續頁模板
+        
+                // 在新頁面右上角添加頁碼
+                addPageNumber(doc, currentPage + 1, totalPages, false);
+
+                // 每頁顯示文件編號及運單號
+                addFileNoToBottomLeft(doc, fileNo);
+                addlotnoToBottomLeft(doc, lotno);
+
+                yPosition = 63; // 續頁的初始 Y 坐標
+            } 
+            // 如果已是續頁，則檢查 yPosition 是否超過 maxYContinuation
+            else if (yPosition > maxYContinuation) {
+                doc.addPage(); // 新增一頁
+                await renderTemplate(doc, templateContinuation, 1); // 渲染續頁模板
+        
+                // 在新頁面右上角添加頁碼
+                addPageNumber(doc, currentPage + 1, totalPages, false);
+
+                // 每頁顯示文件編號及運單號
+                addFileNoToBottomLeft(doc, fileNo);
+                addlotnoToBottomLeft(doc, lotno);
+
+                yPosition = 63; // 續頁的初始 Y 坐標
+            }
+
+            // 顯示當前行內容
+            doc.text(line, 14, yPosition); 
+            yPosition += 4; // 行高
+        }
 
         // 保存 PDF，文件名為 FILE_NO 的值
         const fileName = document.getElementById('FILE_NO').value || 'export';
