@@ -304,6 +304,11 @@ async function exportToPDF() {
         const initialLines = docMarksDescLines.slice(0, 10); // 取前十一行
         const overflowLines = docMarksDescLines.slice(10);   // 第十一行以後
 
+        // 如果第十一行以後有值，則在 initialLines 的最後一行添加 '\n- CONTINUE -'
+        if (overflowLines.length > 0) {
+            initialLines[initialLines.length - 1] += '\n- CONTINUE -';
+        }
+        
         // 將初始顯示行顯示在指定位置（例如 x: 8, y: 211）
         let docMarksDescY = 211;
         initialLines.forEach(line => {
