@@ -14,7 +14,7 @@ async function exportToPDF() {
         const fontBase64 = arrayBufferToBase64(fontBytes);
         doc.addFileToVFS("NotoSansCJKtc-Regular.ttf", fontBase64);
         doc.addFont("NotoSansCJKtc-Regular.ttf", "NotoSansCJKtc", "normal");
-        doc.setFont("NotoSansCJKtc");
+        doc.setFont("NotoSansCJKtc", "normal");
 
         // 設置字體顏色
         doc.setTextColor(0, 0, 0); // 黑色
