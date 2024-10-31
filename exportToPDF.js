@@ -5,16 +5,40 @@ async function exportToPDF() {
 
     try {
         const { jsPDF } = window.jspdf;
-
-        // 創建新的 jsPDF 實例
         const doc = new jsPDF();
+        await loadAndEmbedFont(doc, "NotoSansCJKtc-Regular.ttf", "NotoSansCJKtc");
 
-        // 加載字體
-        const fontBytes = await fetch("NotoSansCJKtc-Regular.ttf").then(res => res.arrayBuffer());
-        const fontBase64 = arrayBufferToBase64(fontBytes);
-        doc.addFileToVFS("NotoSansCJKtc-Regular.ttf", fontBase64);
-        doc.addFont("NotoSansCJKtc-Regular.ttf", "NotoSansCJKtc", "normal");
-        doc.setFont("NotoSansCJKtc", "normal");
+        // 字體轉換與載入
+        async function loadAndEmbedFont(doc, fontPath, fontName) {
+            try {
+                // 獲取字體檔案的二進制數據
+                const fontBytes = await fetch(fontPath).then(res => res.arrayBuffer());
+                
+                // 將字體數據轉換為 Base64 編碼格式
+                const fontBase64 = arrayBufferToBase64(fontBytes);
+
+                // 添加字體到 VFS (虛擬文件系統)
+                doc.addFileToVFS(fontName, fontBase64);
+                doc.addFont(fontName, fontName, "normal");
+
+                // 設定字體
+                doc.setFont(fontName, "normal");
+            } catch (error) {
+                console.error("字體載入或嵌入時出現錯誤：", error);
+            }
+        }
+
+        // 將 ArrayBuffer 轉換為 Base64 編碼的函數
+        function arrayBufferToBase64(buffer) {
+            let binary = '';
+            const bytes = new Uint8Array(buffer);
+            const chunkSize = 4096; // 每次處理的塊大小
+
+            for (let i = 0; i < bytes.length; i += chunkSize) {
+                binary += String.fromCharCode.apply(null, bytes.subarray(i, i + chunkSize));
+            }
+            return btoa(binary);
+        }
 
         // 設置字體顏色
         doc.setTextColor(0, 0, 0); // 黑色
@@ -788,18 +812,6 @@ async function exportToPDF() {
     } finally {
         loadingMessage.style.display = 'none'; // 隱藏提示訊息
     }
-}
-
-// 將 ArrayBuffer 轉換為 Base64 編碼的函數
-function arrayBufferToBase64(buffer) {
-    let binary = '';
-    const bytes = new Uint8Array(buffer);
-    const chunkSize = 4096; // 每次處理的塊大小
-
-    for (let i = 0; i < bytes.length; i += chunkSize) {
-        binary += String.fromCharCode.apply(null, bytes.subarray(i, i + chunkSize));
-    }
-    return btoa(binary);
 }
 
 // 為輸出PDF按鈕添加事件監聽器
