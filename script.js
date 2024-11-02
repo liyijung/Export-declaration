@@ -1612,7 +1612,7 @@ function createItemRow(data) {
     const cccCodeInput = row.querySelector('.CCC_CODE');
     if (cccCodeInput) {
         cccCodeInput.addEventListener('input', (event) => handleCCCCodeInput(event, cccCodeInput));
-        cccCodeInput.addEventListener('change', (event) => handleCCCCodeInput(event, cccCodeInput)); // 輔助測試用
+        cccCodeInput.addEventListener('change', (event) => handleCCCCodeInput(event, cccCodeInput));
 
         // 呼叫 handleCCCCodeInput 函式進行初始化
         handleCCCCodeInput(null, cccCodeInput);
