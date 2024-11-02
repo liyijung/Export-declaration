@@ -1549,6 +1549,11 @@ function checkFieldValues(data) {
     updateFieldVisibility();
 }
 
+// 當頁面初始化或更新時，調用 updateFieldVisibility 以確保同步顯示
+document.addEventListener('DOMContentLoaded', () => {
+    updateFieldVisibility();
+});
+
 // 創建項次的HTML結構
 function createItemRow(data) {
     const row = document.createElement('div');
@@ -1669,9 +1674,9 @@ function initializeFieldVisibility() {
     });
 }
 
-// 當頁面初始化或更新時，調用 updateFieldVisibility 以確保同步顯示
+// 當頁面初始化或更新時，調用 initializeFieldVisibility 以確保同步顯示
 document.addEventListener('DOMContentLoaded', () => {
-    updateFieldVisibility();
+    initializeFieldVisibility();
 });
 
 let textareaCounter = 0;
