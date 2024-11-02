@@ -1608,7 +1608,14 @@ function createItemRow(data) {
     `;
     itemCount++;
 
-    // 檢查
+    // 將行添加到 DOM 後添加事件監聽器
+    const cccCodeInput = row.querySelector('.CCC_CODE');
+    if (cccCodeInput) {
+        cccCodeInput.addEventListener('input', (event) => handleCCCCodeInput(event, cccCodeInput));
+        cccCodeInput.addEventListener('change', (event) => handleCCCCodeInput(event, cccCodeInput)); // 輔助測試用
+    }
+
+     // 更新欄位的顯示狀態
     initializeFieldVisibility();
     
     return row;
