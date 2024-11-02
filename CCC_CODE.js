@@ -18,7 +18,7 @@ fetch('./tax_data.json')
 
 function searchTariff(inputElement, isModal = false) {
     let keyword = inputElement.value.toLowerCase();
-    keyword = keyword.replace(/[.\-]/g, ''); // 移除 '.' 和 '-' 符號
+    keyword = keyword.replace(/[.\-\s]/g, ''); // 移除 '.'、'-' 以及所有的空格
     const resultsDiv = isModal ? document.getElementById('modal-results') : document.getElementById('results');
     resultsDiv.innerHTML = '';
 
@@ -30,7 +30,7 @@ function searchTariff(inputElement, isModal = false) {
     resultsDiv.appendChild(hint);
 
     const results = window.taxData.filter(item => {
-        const cleanedItemCode = item['貨品分類號列'].toString().toLowerCase().replace(/[.\-]/g, '');
+        const cleanedItemCode = item['貨品分類號列'].toString().toLowerCase().replace(/[.\-\s]/g, '');
         return cleanedItemCode.startsWith(keyword) ||
             (item['中文貨名'] && item['中文貨名'].toLowerCase().includes(keyword)) ||
             (item['英文貨名'] && item['英文貨名'].toLowerCase().includes(keyword)) ||
@@ -253,7 +253,7 @@ window.addEventListener('click', function(event) {
 
 // 處理 CCC_CODE 欄位輸入事件，即時查詢稅則數據
 function handleCCCCodeInput(event, inputElement) {
-    let keyword = inputElement.value.toLowerCase().replace(/[.\-]/g, ''); // 移除 '.' 和 '-' 符號
+    let keyword = inputElement.value.toLowerCase().replace(/[.\-\s]/g, ''); // 移除 '.'、'-' 以及所有的空格
     if (keyword) {
         updateTariff(inputElement, keyword); // 查詢稅則數據並即時更新
     } else {
@@ -269,7 +269,7 @@ function updateTariff(inputElement, keyword = '') {
     }
 
     const results = window.taxData.filter(item => {
-        const cleanedItemCode = item['貨品分類號列'].toString().toLowerCase().replace(/[.\-]/g, '');
+        const cleanedItemCode = item['貨品分類號列'].toString().toLowerCase().replace(/[.\-\s]/g, '');
         return cleanedItemCode.startsWith(keyword);
     });
 
