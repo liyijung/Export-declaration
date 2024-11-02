@@ -1618,8 +1618,10 @@ function createItemRow(data) {
         handleCCCCodeInput(null, cccCodeInput);
     }
 
-    // 更新欄位的顯示狀態
-    initializeFieldVisibility();
+    // 延遲執行 initializeFieldVisibility 以確保欄位已處理完畢
+    setTimeout(() => {
+        initializeFieldVisibility();
+    }, 0); // 可以將延遲時間設為 0，這樣會等當前的執行堆疊清空後再執行
     
     return row;
 }
