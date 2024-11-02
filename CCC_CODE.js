@@ -93,7 +93,7 @@ function searchTariff(inputElement, isModal = false) {
                         // 將 item['統計數量單位'] 和 QTY 的值填入同一項次的 ST_QTY 和 ST_UM 欄位
                         const itemRow = inputElement.closest('.item-row');
                         
-                        let qty, docum, stqty, stum, netwt, wide, wideum, lengt, lengthum;
+                        let qty, docum, stqty, stum, netwt, wide, wideum, lengt, lengthum, wideV = 0, lengtV = 0;
 
                         // 根據是否有 itemRow 來選擇欄位來源
                         if (itemRow) {
@@ -144,14 +144,19 @@ function searchTariff(inputElement, isModal = false) {
                                 } else if (item['統計數量單位'] === 'KGM') {
                                     stqty.value = netwt.value;
                                 } else if (item['統計數量單位'] === 'MTK') {
-                                    if (wideum.value === 'MTR') wide.value = wide.value * 1
-                                    if (wideum.value === 'YRD') wide.value = wide.value * 0.9144
-                                    if (wideum.value === 'INC') wide.value = wide.value * 0.0254
-                                    if (lengthum.value === 'MTR') lengt.value = lengt.value * 1
-                                    if (lengthum.value === 'YRD') lengt.value = lengt.value * 0.9144
-                                    if (lengthum.value === 'INC') lengt.value = lengt.value * 0.0254
-                                    if (wide.value > 0 && lengt.value > 0) {
-                                        stqty.value = (wide.value * lengt.value).toFixed(2);
+                                    // 轉換寬度單位
+                                    if (wideum.value === 'MTR') wideV = wide.value * 1
+                                    if (wideum.value === 'YRD') wideV = wide.value * 0.9144
+                                    if (wideum.value === 'INC') wideV = wide.value * 0.0254
+
+                                    // 轉換長度單位
+                                    if (lengthum.value === 'MTR') lengtV = lengt.value * 1
+                                    if (lengthum.value === 'YRD') lengtV = lengt.value * 0.9144
+                                    if (lengthum.value === 'INC') lengtV = lengt.value * 0.0254
+
+                                    // 計算面積並四捨五入到小數點第 2 位
+                                    if (wideV > 0 && lengtV > 0) {
+                                        stqty.value = (wideV * lengtV).toFixed(2);
                                     }
                                 }
                             }
@@ -321,7 +326,7 @@ function updateFields(inputElement, item) {
     // 將 item['統計數量單位'] 和 QTY 的值填入同一項次的 ST_QTY 和 ST_UM 欄位
     const itemRow = inputElement.closest('.item-row');
 
-    let qty, docum, stqty, stum, netwt, wide, wideum, lengt, lengthum;
+    let qty, docum, stqty, stum, netwt, wide, wideum, lengt, lengthum, wideV = 0, lengtV = 0;;
 
     // 根據是否有 itemRow 來選擇欄位來源
     if (itemRow) {
@@ -372,14 +377,19 @@ function updateFields(inputElement, item) {
             } else if (item['統計數量單位'] === 'KGM') {
                 stqty.value = netwt.value;
             } else if (item['統計數量單位'] === 'MTK') {
-                if (wideum.value === 'MTR') wide.value = wide.value * 1
-                if (wideum.value === 'YRD') wide.value = wide.value * 0.9144
-                if (wideum.value === 'INC') wide.value = wide.value * 0.0254
-                if (lengthum.value === 'MTR') lengt.value = lengt.value * 1
-                if (lengthum.value === 'YRD') lengt.value = lengt.value * 0.9144
-                if (lengthum.value === 'INC') lengt.value = lengt.value * 0.0254
-                if (wide.value > 0 && lengt.value > 0) {
-                    stqty.value = (wide.value * lengt.value).toFixed(2);
+                // 轉換寬度單位
+                if (wideum.value === 'MTR') wideV = wide.value * 1
+                if (wideum.value === 'YRD') wideV = wide.value * 0.9144
+                if (wideum.value === 'INC') wideV = wide.value * 0.0254
+
+                // 轉換長度單位
+                if (lengthum.value === 'MTR') lengtV = lengt.value * 1
+                if (lengthum.value === 'YRD') lengtV = lengt.value * 0.9144
+                if (lengthum.value === 'INC') lengtV = lengt.value * 0.0254
+
+                // 計算面積並四捨五入到小數點第 2 位
+                if (wideV > 0 && lengtV > 0) {
+                    stqty.value = (wideV * lengtV).toFixed(2);
                 }
             }
         }
