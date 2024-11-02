@@ -1673,7 +1673,7 @@ function initializeFieldVisibility() {
         const fieldElements = document.querySelectorAll(`.item-header .${field}, #item-container .${field}`);
         
         // 判斷該欄位在所有項次中是否有值
-        let hasValue = fieldsToShow[field] || false;
+        let hasValue = false;
         document.querySelectorAll(`#item-container .${field}`).forEach(itemField => {
             if (itemField.value && itemField.value.trim() !== '') {
                 hasValue = true;
