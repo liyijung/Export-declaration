@@ -1669,6 +1669,16 @@ function initializeFieldVisibility() {
                 } else {
                     formGroup.classList.add('hidden');
                 }
+
+                // 如果是 ST_UM 欄位有值時，自動顯示 ST_QTY，不論 ST_QTY 是否有值
+                if (field === 'ST_UM' && fieldElement.value && fieldElement.value.trim() !== '') {
+                    document.querySelectorAll('.ST_QTY').forEach(stQtyField => {
+                        const stQtyFormGroup = stQtyField.closest('.form-group');
+                        if (stQtyFormGroup) {
+                            stQtyFormGroup.classList.remove('hidden');
+                        }
+                    });
+                }
             }
         });
     });
