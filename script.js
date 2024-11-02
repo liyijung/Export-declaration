@@ -754,9 +754,6 @@ function saveItem() {
     // 重新編號所有項次
     renumberItems();
 
-    closeItemModal();
-    applyToggleFields();
-
     // 自動計算新項次的金額
     const decimalPlacesInput = document.getElementById('decimal-places');
     let decimalPlaces = parseInt(decimalPlacesInput.value);
@@ -768,8 +765,11 @@ function saveItem() {
 
     calculateAmountsForRow(item, decimalPlaces);
 
-    // 確保在新增項次後即時更新顯示狀態
-    initializeFieldVisibility(); // 這行應該保證在所有操作結束後執行
+    // 先應用選擇的欄位顯示，再檢查更新欄位可見性
+    applyToggleFields();
+    initializeFieldVisibility(); // 最後確保所有操作完成後調用
+
+    closeItemModal();
 }
 
 // 函數：應用顯示的欄位到新項次
