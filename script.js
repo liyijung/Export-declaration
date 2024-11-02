@@ -1618,7 +1618,7 @@ function createItemRow(data) {
         handleCCCCodeInput(null, cccCodeInput);
     }
 
-     // 更新欄位的顯示狀態
+    // 更新欄位的顯示狀態
     initializeFieldVisibility();
     
     return row;
