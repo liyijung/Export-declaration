@@ -93,7 +93,7 @@ function searchTariff(inputElement, isModal = false) {
                         // 將 item['統計數量單位'] 和 QTY 的值填入同一項次的 ST_QTY 和 ST_UM 欄位
                         const itemRow = inputElement.closest('.item-row');
                         
-                        let qty, docum, stqty, stum;
+                        let qty, docum, stqty, stum, netwt, wide, wideum, lengt, lengthum;
 
                         // 根據是否有 itemRow 來選擇欄位來源
                         if (itemRow) {
@@ -102,16 +102,26 @@ function searchTariff(inputElement, isModal = false) {
                             docum = itemRow.querySelector('.DOC_UM');
                             stqty = itemRow.querySelector('.ST_QTY');
                             stum = itemRow.querySelector('.ST_UM');
+                            netwt = itemRow.querySelector('.NET_WT');
+                            wide = itemRow.querySelector('.WIDE');
+                            wideum = itemRow.querySelector('.WIDE_UM');
+                            lengt = itemRow.querySelector('.LENGT_');
+                            lengthum = itemRow.querySelector('.LENGTH_UM');
                         } else {
                             // 選取彈跳框中的欄位
                             qty = document.getElementById('QTY');
                             docum = document.getElementById('DOC_UM');
                             stqty = document.getElementById('ST_QTY');
                             stum = document.getElementById('ST_UM');
+                            netwt = document.getElementById('NET_WT');
+                            wide = document.getElementById('WIDE');
+                            wideum = document.getElementById('WIDE_UM');
+                            lengt = document.getElementById('LENGT_');
+                            lengthum = document.getElementById('LENGTH_UM');
                         }
 
                         // 填入數據
-                        if (item['統計數量單位'] && item['統計數量單位'] !== 'MTK') {
+                        if (item['統計數量單位']) {
                             if (stqty && qty && docum && stqty.value === '') {
                                 if (docum.value === item['統計數量單位']) {
                                     stqty.value = qty.value;
@@ -121,6 +131,28 @@ function searchTariff(inputElement, isModal = false) {
                                     stqty.value = qty.value;
                                 } else if (docum.value === 'EAC' && item['統計數量單位'] === 'PCE') {
                                     stqty.value = qty.value;
+                                } else if (docum.value === 'SHE' && item['統計數量單位'] === 'PCE') {
+                                    stqty.value = qty.value;
+                                } else if (docum.value === 'NPR' && item['統計數量單位'] === 'PCE') {
+                                    stqty.value = qty.value * 2;
+                                } else if (docum.value === 'KPC' && item['統計數量單位'] === 'PCE') {
+                                    stqty.value = qty.value * 1000;
+                                } else if (docum.value === 'PCE' && item['統計數量單位'] === 'DZN') {
+                                    stqty.value = (qty.value / 12).toFixed(2);
+                                } else if (docum.value === 'KPC' && item['統計數量單位'] === 'DZN') {
+                                    stqty.value = (qty.value * 1000 / 12).toFixed(2);
+                                } else if (item['統計數量單位'] === 'KGM') {
+                                    stqty.value = netwt.value;
+                                } else if (item['統計數量單位'] === 'MTK') {
+                                    if (wideum.value === 'MTR') wide.value = wide.value * 1
+                                    if (wideum.value === 'YRD') wide.value = wide.value * 0.9144
+                                    if (wideum.value === 'INC') wide.value = wide.value * 0.0254
+                                    if (lengthum.value === 'MTR') lengt.value = lengt.value * 1
+                                    if (lengthum.value === 'YRD') lengt.value = lengt.value * 0.9144
+                                    if (lengthum.value === 'INC') lengt.value = lengt.value * 0.0254
+                                    if (wide.value > 0 && lengt.value > 0) {
+                                        stqty.value = (wide.value * lengt.value).toFixed(2);
+                                    }
                                 }
                             }
                             if (stum) stum.value = item['統計數量單位'];
@@ -289,23 +321,35 @@ function updateFields(inputElement, item) {
     // 將 item['統計數量單位'] 和 QTY 的值填入同一項次的 ST_QTY 和 ST_UM 欄位
     const itemRow = inputElement.closest('.item-row');
 
-    let qty, docum, stqty, stum;
+    let qty, docum, stqty, stum, netwt, wide, wideum, lengt, lengthum;
 
+    // 根據是否有 itemRow 來選擇欄位來源
     if (itemRow) {
-        console.log("Found item-row:", itemRow); // 調試代碼
+        // 選取項次內的欄位
         qty = itemRow.querySelector('.QTY');
         docum = itemRow.querySelector('.DOC_UM');
         stqty = itemRow.querySelector('.ST_QTY');
         stum = itemRow.querySelector('.ST_UM');
+        netwt = itemRow.querySelector('.NET_WT');
+        wide = itemRow.querySelector('.WIDE');
+        wideum = itemRow.querySelector('.WIDE_UM');
+        lengt = itemRow.querySelector('.LENGT_');
+        lengthum = itemRow.querySelector('.LENGTH_UM');
     } else {
-        console.warn("item-row not found for the given input element.");
+        // 選取彈跳框中的欄位
         qty = document.getElementById('QTY');
         docum = document.getElementById('DOC_UM');
         stqty = document.getElementById('ST_QTY');
         stum = document.getElementById('ST_UM');
+        netwt = document.getElementById('NET_WT');
+        wide = document.getElementById('WIDE');
+        wideum = document.getElementById('WIDE_UM');
+        lengt = document.getElementById('LENGT_');
+        lengthum = document.getElementById('LENGTH_UM');
     }
 
-    if (item['統計數量單位'] && item['統計數量單位'] !== 'MTK') {
+    // 填入數據
+    if (item['統計數量單位']) {
         if (stqty && qty && docum && stqty.value === '') {
             if (docum.value === item['統計數量單位']) {
                 stqty.value = qty.value;
@@ -315,6 +359,28 @@ function updateFields(inputElement, item) {
                 stqty.value = qty.value;
             } else if (docum.value === 'EAC' && item['統計數量單位'] === 'PCE') {
                 stqty.value = qty.value;
+            } else if (docum.value === 'SHE' && item['統計數量單位'] === 'PCE') {
+                stqty.value = qty.value;
+            } else if (docum.value === 'NPR' && item['統計數量單位'] === 'PCE') {
+                stqty.value = qty.value * 2;
+            } else if (docum.value === 'KPC' && item['統計數量單位'] === 'PCE') {
+                stqty.value = qty.value * 1000;
+            } else if (docum.value === 'PCE' && item['統計數量單位'] === 'DZN') {
+                stqty.value = (qty.value / 12).toFixed(2);
+            } else if (docum.value === 'KPC' && item['統計數量單位'] === 'DZN') {
+                stqty.value = (qty.value * 1000 / 12).toFixed(2);
+            } else if (item['統計數量單位'] === 'KGM') {
+                stqty.value = netwt.value;
+            } else if (item['統計數量單位'] === 'MTK') {
+                if (wideum.value === 'MTR') wide.value = wide.value * 1
+                if (wideum.value === 'YRD') wide.value = wide.value * 0.9144
+                if (wideum.value === 'INC') wide.value = wide.value * 0.0254
+                if (lengthum.value === 'MTR') lengt.value = lengt.value * 1
+                if (lengthum.value === 'YRD') lengt.value = lengt.value * 0.9144
+                if (lengthum.value === 'INC') lengt.value = lengt.value * 0.0254
+                if (wide.value > 0 && lengt.value > 0) {
+                    stqty.value = (wide.value * lengt.value).toFixed(2);
+                }
             }
         }
         if (stum) stum.value = item['統計數量單位'];
