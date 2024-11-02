@@ -1613,6 +1613,9 @@ function createItemRow(data) {
     if (cccCodeInput) {
         cccCodeInput.addEventListener('input', (event) => handleCCCCodeInput(event, cccCodeInput));
         cccCodeInput.addEventListener('change', (event) => handleCCCCodeInput(event, cccCodeInput)); // 輔助測試用
+
+        // 呼叫 handleCCCCodeInput 函式進行初始化
+        handleCCCCodeInput(null, cccCodeInput);
     }
 
      // 更新欄位的顯示狀態
