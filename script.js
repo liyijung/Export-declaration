@@ -1044,6 +1044,7 @@ function applyFieldData() {
     const overwriteOption = document.getElementById('overwrite-option').value;
     const itemContainer = document.getElementById('item-container');
     const items = itemContainer.querySelectorAll('.item-row');
+    let hasUpdatedCCCCode = false; // 新增：紀錄是否有更新CCC_CODE欄位
 
     if (mode === 'custom') {
         const itemNumbers = document.getElementById('specify-item-numbers').value;
@@ -1077,6 +1078,10 @@ function applyFieldData() {
                         currentNumber++; // 新增：編號遞增
                     } else {
                         fieldElement.value = fieldValue;
+                    }
+                    // 紀錄是否更新了CCC_CODE
+                    if (fieldName === 'CCC_CODE') {
+                        hasUpdatedCCCCode = true;
                     }
                 }
             }
@@ -1114,11 +1119,26 @@ function applyFieldData() {
                         if (overwriteOption === 'all' || (overwriteOption === 'empty' && !targetFieldElement.value) || (overwriteOption === 'specified' && targetFieldElement.value)) {
                             targetFieldElement.value = sourceFieldElement.value;
                         }
+                        // 紀錄是否更新了CCC_CODE
+                        if (fieldName === 'CCC_CODE') {
+                            hasUpdatedCCCCode = true;
+                        }
                     });
                 }
             });
         }
     }
+    
+    // 檢查是否有更新CCC_CODE欄位，若有則對所有更新的CCC_CODE欄位執行handleCCCCodeInput
+    if (hasUpdatedCCCCode) {
+        items.forEach(item => {
+            const cccCodeInput = item.querySelector('.CCC_CODE');
+            if (cccCodeInput) {
+                handleCCCCodeInput(null, cccCodeInput); // 最後執行處理CCC_CODE欄位的邏輯
+            }
+        });
+    }
+
     closeSpecifyFieldModal();
 }
 
