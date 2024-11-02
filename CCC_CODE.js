@@ -89,6 +89,49 @@ function searchTariff(inputElement, isModal = false) {
                     td.addEventListener('click', function() {
                         const formattedCode = formatCode(item['貨品分類號列'].toString());
                         inputElement.value = formattedCode; // 填入關鍵字欄位
+
+                        // 將 item['統計數量單位'] 和 QTY 的值填入同一項次的 ST_QTY 和 ST_UM 欄位
+                        const itemRow = inputElement.closest('.item-row');
+                        
+                        let qty, docum, stqty, stum;
+
+                        // 根據是否有 itemRow 來選擇欄位來源
+                        if (itemRow) {
+                            // 選取項次內的欄位
+                            qty = itemRow.querySelector('.QTY');
+                            docum = itemRow.querySelector('.DOC_UM');
+                            stqty = itemRow.querySelector('.ST_QTY');
+                            stum = itemRow.querySelector('.ST_UM');
+                        } else {
+                            // 選取彈跳框中的欄位
+                            qty = document.getElementById('QTY');
+                            docum = document.getElementById('DOC_UM');
+                            stqty = document.getElementById('ST_QTY');
+                            stum = document.getElementById('ST_UM');
+                        }
+
+                        // 填入數據
+                        if (item['統計數量單位'] && item['統計數量單位'] !== 'MTK') {
+                            if (stqty && qty && docum && stqty.value === '') {
+                                if (docum.value === item['統計數量單位']) {
+                                    stqty.value = qty.value;
+                                } else if (docum.value === 'SET' && item['統計數量單位'] === 'PCE') {
+                                    stqty.value = qty.value;
+                                } else if (docum.value === 'PCE' && item['統計數量單位'] === 'SET') {
+                                    stqty.value = qty.value;
+                                } else if (docum.value === 'EAC' && item['統計數量單位'] === 'PCE') {
+                                    stqty.value = qty.value;
+                                }
+                            }
+                            if (stum) stum.value = item['統計數量單位'];
+                        } else {
+                            // 如果 '統計數量單位' 為空，將 ST_QTY 和 ST_UM 設置為空
+                            if (stqty) stqty.value = '';
+                            if (stum) stum.value = '';
+                        }
+
+                        // 更新欄位顯示狀態
+                        initializeFieldVisibility(); // 確保根據新值更新顯示
                         closeTaxModal();
                         inputElement.focus(); // 選中項目後焦點返回輸入框
                         searchTariff(inputElement);
@@ -132,7 +175,6 @@ function searchTariff(inputElement, isModal = false) {
                 inputElement.focus(); // 當按下 Enter 後焦點返回輸入框
             }
         });
-
     } else {
         resultsDiv.innerHTML = '<br><p>未找到相關稅則。</p>'; // 添加空行
     }
@@ -209,11 +251,105 @@ window.addEventListener('click', function(event) {
     }
 });
 
+// 處理 CCC_CODE 欄位輸入事件，即時查詢稅則數據
+function handleCCCCodeInput(event, inputElement) {
+    let keyword = inputElement.value.toLowerCase().replace(/[.\-]/g, ''); // 移除 '.' 和 '-' 符號
+    if (keyword) {
+        updateTariff(inputElement, keyword); // 查詢稅則數據並即時更新
+    } else {
+        clearFields(inputElement); // 當輸入為空時清空欄位
+    }
+}
+
+function updateTariff(inputElement, keyword = '') {
+    // 確認 keyword 是否為 11 位數字
+    if (keyword.length !== 11) {
+        clearFields(inputElement); // 如果 keyword 不是 11 位，清空相關欄位
+        return;
+    }
+
+    const results = window.taxData.filter(item => {
+        const cleanedItemCode = item['貨品分類號列'].toString().toLowerCase().replace(/[.\-]/g, '');
+        return cleanedItemCode.startsWith(keyword);
+    });
+
+    if (results.length > 0) {
+        const item = results[0]; // 取首個匹配結果
+        updateFields(inputElement, item); // 更新欄位
+    } else {
+        clearFields(inputElement); // 若無匹配結果，清空相關欄位
+    }
+}
+
+// 更新 QTY、DOC_UM、ST_QTY 和 ST_UM 欄位
+function updateFields(inputElement, item) {
+    const formattedCode = formatCode(item['貨品分類號列'].toString());
+    inputElement.value = formattedCode; // 填入關鍵字欄位
+
+    // 將 item['統計數量單位'] 和 QTY 的值填入同一項次的 ST_QTY 和 ST_UM 欄位
+    const itemRow = inputElement.closest('.item-row');
+
+    let qty, docum, stqty, stum;
+
+    if (itemRow) {
+        console.log("Found item-row:", itemRow); // 調試代碼
+        qty = itemRow.querySelector('.QTY');
+        docum = itemRow.querySelector('.DOC_UM');
+        stqty = itemRow.querySelector('.ST_QTY');
+        stum = itemRow.querySelector('.ST_UM');
+    } else {
+        console.warn("item-row not found for the given input element.");
+        qty = document.getElementById('QTY');
+        docum = document.getElementById('DOC_UM');
+        stqty = document.getElementById('ST_QTY');
+        stum = document.getElementById('ST_UM');
+    }
+
+    if (item['統計數量單位'] && item['統計數量單位'] !== 'MTK') {
+        if (stqty && qty && docum && stqty.value === '') {
+            if (docum.value === item['統計數量單位']) {
+                stqty.value = qty.value;
+            } else if (docum.value === 'SET' && item['統計數量單位'] === 'PCE') {
+                stqty.value = qty.value;
+            } else if (docum.value === 'PCE' && item['統計數量單位'] === 'SET') {
+                stqty.value = qty.value;
+            } else if (docum.value === 'EAC' && item['統計數量單位'] === 'PCE') {
+                stqty.value = qty.value;
+            }
+        }
+        if (stum) stum.value = item['統計數量單位'];
+    } else {
+        // 如果 '統計數量單位' 為空，將 ST_QTY 和 ST_UM 設置為空
+        if (stqty) stqty.value = '';
+        if (stum) stum.value = '';
+    }
+
+    initializeFieldVisibility();
+}
+
+// 清空 QTY、DOC_UM、ST_QTY 和 ST_UM 欄位
+function clearFields(inputElement) {
+    const itemRow = inputElement.closest('.item-row');
+
+    let stqty, stum;
+    if (itemRow) {
+        stqty = itemRow.querySelector('.ST_QTY');
+        stum = itemRow.querySelector('.ST_UM');
+    } else {
+        stqty = document.getElementById('ST_QTY');
+        stum = document.getElementById('ST_UM');
+    }
+
+    if (stqty) stqty.value = '';
+    if (stum) stum.value = '';
+}
+
 // 初始化 CCC_CODE 輸入框
 function initializeCCCCodeInputs() {
     const inputs = document.querySelectorAll('.CCC_CODE, .tax-code-input');
     inputs.forEach(input => {
-        input.addEventListener('keydown', (event) => handleCCCCodeEnter(event, input));
+        input.addEventListener('input', (event) => handleCCCCodeInput(event, input));
+        input.addEventListener('change', (event) => handleCCCCodeInput(event, input)); // 監聽 change 事件作為輔助測試
     });
 }
 
