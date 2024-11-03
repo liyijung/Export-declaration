@@ -1171,18 +1171,17 @@ function handleFile(event) {
             if (element) {
                 let value = headerData[index] ? String(headerData[index][1] || '').trim() : ''; // 將值轉為字串並去除空白
                 
-                // 判斷是否為 CURRENCY 欄位
+                // CURRENCY 欄位轉換處理
                 if (id === 'CURRENCY') {
-                    value = value.toUpperCase(); // 將值轉為大寫
-                    if (value === 'NTD') {
-                        value = 'TWD'; // 如果是 NTD，則改為 TWD
-                    }
+                    value = value.toUpperCase() === 'NTD' ? 'TWD' : value.toUpperCase();
                 }
 
-                if (id === 'TOT_CTN' || id === 'DCL_GW' || id === 'DCL_NW' || id === 'CAL_IP_TOT_ITEM_AMT' || id === 'FRT_AMT' || id === 'INS_AMT' || id === 'ADD_AMT' || id === 'SUBTRACT_AMT') {
+                // 去除千分號的欄位處理
+                const fieldsToRemoveSeparators = ['TOT_CTN', 'DCL_GW', 'DCL_NW', 'CAL_IP_TOT_ITEM_AMT', 'FRT_AMT', 'INS_AMT', 'ADD_AMT', 'SUBTRACT_AMT'];
+                if (fieldsToRemoveSeparators.includes(id)) {
                     value = removeThousandsSeparator(value);
                 }
-                
+
                 element.value = value;
             }
         });
