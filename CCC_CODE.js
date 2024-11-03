@@ -425,7 +425,7 @@ function initializeCCCCodeInputs() {
     const inputs = document.querySelectorAll('.CCC_CODE, .tax-code-input');
     inputs.forEach(input => {
         input.addEventListener('input', (event) => handleCCCCodeInput(event, input));
-        input.addEventListener('change', (event) => handleCCCCodeInput(event, input)); // 監聽 change 事件作為輔助測試
+        input.addEventListener('change', (event) => handleCCCCodeInput(event, input));
     });
 }
 
