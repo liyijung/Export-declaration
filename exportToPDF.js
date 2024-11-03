@@ -321,8 +321,8 @@ async function exportToPDF() {
         const docMarksDescElement = document.getElementById('DOC_MARKS_DESC');
         const docMarksDescText = docMarksDescElement.value;
 
-        // 將 'DOC_MARKS_DESC' 分割為多行，行寬限制在一定寬度（例如 140）
-        const docMarksDescLines = doc.splitTextToSize(docMarksDescText, 140);
+        // 將 'DOC_MARKS_DESC' 分割為多行，行寬限制在一定寬度
+        const docMarksDescLines = doc.splitTextToSize(docMarksDescText, 135);
 
         // 初始顯示行與溢出行分開存放
         const initialLines = docMarksDescLines.slice(0, 10); // 取前十一行
@@ -344,8 +344,8 @@ async function exportToPDF() {
         const docOtrDescElement = document.getElementById('DOC_OTR_DESC');
         const docOtrDescText = docOtrDescElement.value;
 
-        // 將 'DOC_OTR_DESC' 分割為多行，行寬限制在一定寬度（例如 140）
-        const docOtrDescLines = doc.splitTextToSize(docOtrDescText, 140);
+        // 將 'DOC_OTR_DESC' 分割為多行，行寬限制在一定寬度
+        const docOtrDescLines = doc.splitTextToSize(docOtrDescText, 135);
 
         // 前六行與其餘行分開存放
         const firstSixLines = docOtrDescLines.slice(0, 6); // 取前六行
