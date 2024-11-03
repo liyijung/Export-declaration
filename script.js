@@ -1179,6 +1179,10 @@ function handleFile(event) {
                     }
                 }
 
+                if (id === 'TOT_CTN' || id === 'DCL_GW' || id === 'DCL_NW' || id === 'CAL_IP_TOT_ITEM_AMT' || id === 'FRT_AMT' || id === 'INS_AMT' || id === 'ADD_AMT' || id === 'SUBTRACT_AMT') {
+                    value = removeThousandsSeparator(value);
+                }
+                
                 element.value = value;
             }
         });
@@ -1223,11 +1227,6 @@ function handleFile(event) {
                 }
                 const description = descriptionIndices.map(i => String(row[i] || '')).filter(Boolean).join('\n');
                 currentDescription = description;
-
-                // 去除千分號的輔助函數
-                function removeThousandsSeparator(value) {
-                    return value.replace(/,/g, '');
-                }
 
                 currentItem = createItemRow({
                     ITEM_NO: String(row[0] || ''), // 將數據轉為字串
@@ -1284,6 +1283,11 @@ function handleFile(event) {
         renumberItems();
     };
     reader.readAsArrayBuffer(file);
+}
+
+// 去除千分號的輔助函數
+function removeThousandsSeparator(value) {
+    return value.replace(/,/g, '');
 }
 
 // 根據REMARKS欄位的值來勾選對應選項
