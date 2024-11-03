@@ -629,6 +629,12 @@ async function exportToPDF() {
             } else {
                 const combinedDescription = descriptionText.join('\n');
                 const descriptionLines = doc.splitTextToSize(combinedDescription, 68);
+                
+                // 如果只有一行，則在最後添加一行空白
+                if (descriptionLines.length === 1) {
+                    descriptionLines.push(""); // 添加一行空白
+                }
+                
                 descriptionLines.forEach(line => {
                     doc.text(line, 14, startY);
                     startY += lineHeight;
