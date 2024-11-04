@@ -2526,7 +2526,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     
         if (shouldSetExamType) {
-            examType.value = '8';
+            // examType.value = '8'; 暫取消查驗
         }
         
         // 用於顯示變數值的控制台日誌
