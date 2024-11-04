@@ -1675,6 +1675,13 @@ function initializeFieldVisibility() {
     allFields.forEach(field => {
         const fieldElements = document.querySelectorAll(`.item-header .${field}, #item-container .${field}`);
         
+        // 設置 ST_UM 欄位為只讀
+        if (field === 'ST_UM') {
+            fieldElements.forEach(fieldElement => {
+                fieldElement.setAttribute('readonly', true);
+            });
+        }
+        
         // 判斷該欄位在所有項次中是否有值
         let hasValue = false;
         document.querySelectorAll(`#item-container .${field}`).forEach(itemField => {
