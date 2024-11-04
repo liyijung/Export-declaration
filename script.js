@@ -1693,7 +1693,22 @@ function initializeFieldVisibility() {
                     formGroup.classList.add('hidden');
                 }
 
-                // 如果是 ST_UM 欄位有值時，自動顯示 ST_QTY，不論 ST_QTY 是否有值
+                // 如果 ST_UM 欄位的值為 "MTK"，且 DOC_UM 的值不是 "MTK" 時，自動顯示 WIDE, WIDE_UM, LENGT_, LENGTH_UM 欄位
+                if (field === 'ST_UM' && fieldElement.value && fieldElement.value.trim() === 'MTK') {
+                    const docUmField = document.querySelector(`#item-container .DOC_UM`);
+                    if (docUmField && docUmField.value.trim() !== 'MTK') {
+                        ['WIDE', 'WIDE_UM', 'LENGT_', 'LENGTH_UM'].forEach(relatedField => {
+                            document.querySelectorAll(`.${relatedField}`).forEach(relatedFieldElement => {
+                                const relatedFormGroup = relatedFieldElement.closest('.form-group');
+                                if (relatedFormGroup) {
+                                    relatedFormGroup.classList.remove('hidden');
+                                }
+                            });
+                        });
+                    }
+                }
+                
+                // 如果 ST_UM 欄位有值時，自動顯示 ST_QTY，不論 ST_QTY 是否有值
                 if (field === 'ST_UM' && fieldElement.value && fieldElement.value.trim() !== '') {
                     document.querySelectorAll('.ST_QTY').forEach(stQtyField => {
                         const stQtyFormGroup = stQtyField.closest('.form-group');
