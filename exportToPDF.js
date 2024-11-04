@@ -426,7 +426,6 @@ async function exportToPDF() {
         const maxYHome = 185;  // 首頁的頁面底部的 Y 坐標
         const maxYContinuation = 275;  // 續頁的頁面底部的 Y 坐標
         const lineHeight = 4;  // 每行的高度
-        const tradeMarkLineSpacing = 4; // 商標換行時的間距
 
         let itemCounter = 1; // 用於標記項次編號
         let lastY = startY; // 用於保存最後一個項次的位置
@@ -527,7 +526,54 @@ async function exportToPDF() {
                 const textWidth = doc.getTextWidth(line); // 取得文本寬度
                 const x = tradeMarkX + (20 - textWidth); // 計算右對齊的 x 位置
                 doc.text(line, x, tradeMarkY);
-                tradeMarkY += tradeMarkLineSpacing;
+                tradeMarkY += lineHeight;
+            });
+
+            let descriptionTextY = tradeMarkY;
+
+            // 顯示前置描述和品名
+            const descriptionText = [];
+            if (item.sellerItemCode) descriptionText.push(`S/N:${item.sellerItemCode}`);
+            if (item.goodsModel) descriptionText.push(`MODEL:${item.goodsModel}`);
+            if (item.goodsSpec) descriptionText.push(`SPEC:${item.goodsSpec}`);
+            descriptionText.push(item.description); // 添加品名描述
+
+            if (item.index === '*') {
+                const combinedDescription = descriptionText.join('\n');
+                const descriptionLines = doc.splitTextToSize(combinedDescription, 68);
+                descriptionLines.forEach(line => {
+                    addUnderlinedText(doc, line, 14, descriptionTextY, lineHeight);
+                    descriptionTextY += lineHeight;
+                });
+            } else {
+                const combinedDescription = descriptionText.join('\n');
+                const descriptionLines = doc.splitTextToSize(combinedDescription, 68);
+                
+                // 如果只有一行，則在最後添加一行空白
+                if (descriptionLines.length === 1) {
+                    descriptionLines.push(""); // 添加一行空白
+                }
+
+                descriptionLines.forEach(line => {
+                    doc.text(line, 14, descriptionTextY);
+                    descriptionTextY += lineHeight;
+                });
+                itemCounter++; // 增加項次計數器
+            }
+
+            // 顯示原進口報單號碼、原進口報單項次、產證號碼、產證項次、原進倉報單號碼、原進倉報單項次
+            const fieldsToShow = [
+                { name: '原進口報單號碼', value: item.origImpDclNo, itemValue: item.origImpDclNoItem },
+                { name: '產證號碼', value: item.certNo, itemValue: item.certNoItem },
+                { name: '原進倉報單號碼', value: item.origDclNo, itemValue: item.origDclNoItem }
+            ];
+
+            fieldsToShow.forEach(field => {
+                if (field.value) {
+                    const fieldText = field.itemValue ? `${field.name}: ${field.value} 項次${field.itemValue}` : `${field.name}${field.value}`;
+                    doc.text(fieldText, 14, descriptionTextY);
+                    descriptionTextY += lineHeight;
+                }
             });
 
             if (item.index !== '*') {
@@ -571,7 +617,7 @@ async function exportToPDF() {
                 }
             }
 
-            startY = tradeMarkY;
+            startY += lineHeight
 
             // 顯示稅則、單價、數量、統計方式
             const taxX = 102;
@@ -612,53 +658,8 @@ async function exportToPDF() {
             const bondNoteX = 102 - bondNoteWidth / 2;
             doc.text(bondNoteText, bondNoteX, startY + lineHeight);
             
-            // 顯示前置描述和品名
-            const descriptionText = [];
-            if (item.sellerItemCode) descriptionText.push(`S/N:${item.sellerItemCode}`);
-            if (item.goodsModel) descriptionText.push(`MODEL:${item.goodsModel}`);
-            if (item.goodsSpec) descriptionText.push(`SPEC:${item.goodsSpec}`);
-            descriptionText.push(item.description); // 添加品名描述
-
-            if (item.index === '*') {
-                const combinedDescription = descriptionText.join('\n');
-                const descriptionLines = doc.splitTextToSize(combinedDescription, 68);
-                descriptionLines.forEach(line => {
-                    addUnderlinedText(doc, line, 14, startY, lineHeight);
-                    startY += lineHeight;
-                });
-            } else {
-                const combinedDescription = descriptionText.join('\n');
-                const descriptionLines = doc.splitTextToSize(combinedDescription, 68);
-                
-                // 如果只有一行，則在最後添加一行空白
-                if (descriptionLines.length === 1) {
-                    descriptionLines.push(""); // 添加一行空白
-                }
-                
-                descriptionLines.forEach(line => {
-                    doc.text(line, 14, startY);
-                    startY += lineHeight;
-                });
-                itemCounter++; // 增加項次計數器
-            }
-
-            // 顯示原進口報單號碼、原進口報單項次、產證號碼、產證項次、原進倉報單號碼、原進倉報單項次
-            const fieldsToShow = [
-                { name: '原進口報單號碼', value: item.origImpDclNo, itemValue: item.origImpDclNoItem },
-                { name: '產證號碼', value: item.certNo, itemValue: item.certNoItem },
-                { name: '原進倉報單號碼', value: item.origDclNo, itemValue: item.origDclNoItem }
-            ];
-
-            fieldsToShow.forEach(field => {
-                if (field.value) {
-                    const fieldText = field.itemValue ? `${field.name}: ${field.value} 項次${field.itemValue}` : `${field.name}${field.value}`;
-                    doc.text(fieldText, 14, startY);
-                    startY += lineHeight;
-                }
-            });
-            
-            startY += lineHeight;
-            lastY = startY; // 更新最後一個項次的位置
+            startY = descriptionTextY + lineHeight;
+            lastY = startY
         }
 
         // 在最後一頁的最後一行位置顯示加總，靠右對齊距離右邊38px
