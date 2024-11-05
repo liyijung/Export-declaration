@@ -394,6 +394,11 @@ function updateFields(inputElement, item) {
             }
         }
         if (stum) stum.value = item['統計數量單位'];
+
+        // 加入新的條件檢查並計算面積
+        if (wide && wideum && lengt && lengthum && stum && stum.value === 'MTK') {
+            updateArea(stqty, stum, wide, wideum, lengt, lengthum);
+        }
     } else {
         // 如果 '統計數量單位' 為空，將 ST_QTY 和 ST_UM 設置為空
         if (stqty) stqty.value = '';
@@ -401,6 +406,7 @@ function updateFields(inputElement, item) {
     }
 
     initializeFieldVisibility();
+    initializeDimensionListeners(itemRow);
 }
 
 // 清空 QTY、DOC_UM、ST_QTY 和 ST_UM 欄位
@@ -430,3 +436,82 @@ function initializeCCCCodeInputs() {
 }
 
 document.addEventListener('DOMContentLoaded', initializeCCCCodeInputs);
+
+// 自動計算 ST_QTY 的函數
+function calculateSTQTYForMTK() {
+    const wide = document.getElementById('WIDE').value;
+    const wideUM = document.getElementById('WIDE_UM').value;
+    const lengt = document.getElementById('LENGT_').value;
+    const lengthUM = document.getElementById('LENGTH_UM').value;
+    const stum = document.getElementById('ST_UM').value;
+    const stqty = document.getElementById('ST_QTY');
+
+    let wideV = 0, lengtV = 0;
+
+    // 確認四個欄位有值且 ST_UM 為 'MTK'
+    if (stum === 'MTK' && wide && wideUM && lengt && lengthUM) {
+        // 轉換寬度
+        if (wideUM === 'MTR') wideV = parseFloat(wide) * 1;
+        if (wideUM === 'YRD') wideV = parseFloat(wide) * 0.9144;
+        if (wideUM === 'INC') wideV = parseFloat(wide) * 0.0254;
+
+        // 轉換長度
+        if (lengthUM === 'MTR') lengtV = parseFloat(lengt) * 1;
+        if (lengthUM === 'YRD') lengtV = parseFloat(lengt) * 0.9144;
+        if (lengthUM === 'INC') lengtV = parseFloat(lengt) * 0.0254;
+
+        // 計算並更新 ST_QTY
+        if (wideV > 0 && lengtV > 0) {
+            stqty.value = (wideV * lengtV).toFixed(2);
+        }
+    } else {
+        stqty.value = ''; // 若條件不符則清空 ST_QTY
+    }
+}
+
+// 初始化寬度和長度欄位的監聽器
+function initializeDimensionListeners(itemRow) {
+    const wide = itemRow.querySelector('.WIDE');
+    const wideum = itemRow.querySelector('.WIDE_UM');
+    const lengt = itemRow.querySelector('.LENGT_');
+    const lengthum = itemRow.querySelector('.LENGTH_UM');
+
+    if (wide && wideum && lengt && lengthum) {
+        const updateAreaCallback = () => updateArea(itemRow.querySelector('.ST_QTY'), itemRow.querySelector('.ST_UM'), wide, wideum, lengt, lengthum);
+        
+        // 監聽四個欄位的輸入變化，即時更新面積
+        wide.addEventListener('input', updateAreaCallback);
+        wideum.addEventListener('change', updateAreaCallback);
+        lengt.addEventListener('input', updateAreaCallback);
+        lengthum.addEventListener('change', updateAreaCallback);
+    }
+}
+
+// 計算面積並更新 ST_QTY
+function updateArea(stqty, stum, wide, wideum, lengt, lengthum) {
+    if (stum && stum.value === 'MTK') {
+        let wideV = 0, lengtV = 0;
+
+        // 轉換寬度單位
+        if (wideum.value === 'MTR') wideV = parseFloat(wide.value) || 0;
+        if (wideum.value === 'YRD') wideV = (parseFloat(wide.value) || 0) * 0.9144;
+        if (wideum.value === 'INC') wideV = (parseFloat(wide.value) || 0) * 0.0254;
+
+        // 轉換長度單位
+        if (lengthum.value === 'MTR') lengtV = parseFloat(lengt.value) || 0;
+        if (lengthum.value === 'YRD') lengtV = (parseFloat(lengt.value) || 0) * 0.9144;
+        if (lengthum.value === 'INC') lengtV = (parseFloat(lengt.value) || 0) * 0.0254;
+
+        // 計算面積並四捨五入到小數點第 2 位
+        if (wideV > 0 && lengtV > 0) {
+            stqty.value = (wideV * lengtV).toFixed(2);
+        } else {
+            stqty.value = ''; // 如果數據不完整則清空 stqty
+        }
+    }
+}
+
+// 在頁面載入完成後初始化 CCC_CODE 和欄位監聽
+document.addEventListener('DOMContentLoaded', () => {
+    initializeCCCCodeInputs();
+});
