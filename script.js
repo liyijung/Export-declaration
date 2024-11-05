@@ -414,9 +414,13 @@ function calculateFreight() {
 
         // 如果匯率和總毛重有效，計算運費並顯示
         if (currencyRate && !isNaN(weight)) {
+            // 基礎運費計算
             const freight = (weight * 3 * usdRate) / currencyRate;
             const decimalPlaces = currency === "TWD" ? 0 : 2;
             document.getElementById('FRT_AMT').value = freight.toFixed(decimalPlaces);
+
+            // 計算後調用調整函數
+            adjustFreightAndInsurance();
         } else {
             // 如果輸入無效，顯示錯誤訊息
             document.getElementById('FRT_AMT').value = "輸入無效";
@@ -441,6 +445,7 @@ function calculateInsurance() {
 
         // 如果匯率和總金額有效，計算保險費並顯示
         if (currencyRate && !isNaN(totalAmount)) {
+            // 基礎保險費計算
             let insurance = totalAmount * 0.0011;
             const minimumInsurance = 450 / currencyRate;
             if (insurance < minimumInsurance) {
@@ -448,11 +453,46 @@ function calculateInsurance() {
             }
             const decimalPlaces = currency === "TWD" ? 0 : 2;
             document.getElementById('INS_AMT').value = insurance.toFixed(decimalPlaces);
+
+            // 計算後調用調整函數
+            adjustFreightAndInsurance();
         } else {
             // 如果輸入無效，顯示錯誤訊息
             document.getElementById('INS_AMT').value = "輸入無效";
         }
     });
+}
+
+// 根據 TERMS_SALES 進一步判斷並調整運費和保險費
+function adjustFreightAndInsurance() {
+    const termsSales = document.getElementById('TERMS_SALES').value.toUpperCase();
+    const totalAmount = parseFloat(document.getElementById('CAL_IP_TOT_ITEM_AMT').value);
+
+    let freight = parseFloat(document.getElementById('FRT_AMT').value);
+    let insurance = parseFloat(document.getElementById('INS_AMT').value);
+
+    // EXW 和 FOB 條件判斷
+    if (termsSales === "EXW" || termsSales === "FOB") {
+        freight = '';
+        insurance = '';
+    }
+    // CFR 條件判斷
+    else if (termsSales === "CFR" && freight > totalAmount) {
+        freight = totalAmount / 2;
+    }
+    // C&I 條件判斷
+    else if (termsSales === "C&I" && insurance > totalAmount) {
+        insurance = totalAmount / 2;
+    }
+    // CIF 條件判斷
+    else if (termsSales === "CIF" && (freight + insurance) > totalAmount) {
+        freight = totalAmount / 4;
+        insurance = totalAmount / 4;
+    }
+
+    // 更新 FRT_AMT 和 INS_AMT 顯示
+    document.getElementById('FRT_AMT').value = freight === '' ? '' : freight.toFixed(2);
+    document.getElementById('INS_AMT').value = insurance === '' ? '' : insurance.toFixed(2);
 }
 
 // 計算應加費用並顯示結果
