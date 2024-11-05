@@ -610,6 +610,13 @@ function openItemModal() {
     if (firstInputField) {
         firstInputField.focus();
     }
+
+    // 加入即時監聽事件
+    document.getElementById('WIDE').addEventListener('input', calculateSTQTYForMTK);
+    document.getElementById('WIDE_UM').addEventListener('change', calculateSTQTYForMTK);
+    document.getElementById('LENGT_').addEventListener('input', calculateSTQTYForMTK);
+    document.getElementById('LENGTH_UM').addEventListener('change', calculateSTQTYForMTK);
+    document.getElementById('ST_UM').addEventListener('change', calculateSTQTYForMTK);
 }
 
 // 新增監聽 Alt+a 鍵，表示開啟新增項次彈跳框
