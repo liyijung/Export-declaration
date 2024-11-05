@@ -589,7 +589,7 @@ async function exportToPDF() {
                 doc.text(item.currency, currencyX, startY);
         
                 // 顯示淨重，靠右對齊
-                const netWtX = 172.4;
+                const netWtX = 172.5;
                 const netWtWidth = doc.getTextWidth(`${item.netWt}KGM`);
                 doc.text(`${formatWithThousandsSeparator(item.netWt)}KGM`, netWtX - netWtWidth, startY);
 
