@@ -589,9 +589,9 @@ async function exportToPDF() {
                 doc.text(item.currency, currencyX, startY);
         
                 // 顯示淨重，靠右對齊
-                const netWtX = 172.5;
-                const netWtWidth = doc.getTextWidth(`${item.netWt} KGM`);
-                doc.text(`${item.netWt} KGM`, netWtX - netWtWidth, startY);
+                const netWtX = 172;
+                const netWtWidth = doc.getTextWidth(`${item.netWt}KGM`);
+                doc.text(`${formatWithThousandsSeparator(item.netWt)}KGM`, netWtX - netWtWidth, startY);
 
                 // 加總誤差修正邏輯 - 在 itemsData 完成後進行調整
                 let fobTwTotal = itemsData.reduce((sum, item) => sum + parseFloat(item.fobTw), 0);
@@ -630,14 +630,23 @@ async function exportToPDF() {
             const taxStartX = taxX - taxWidth / 2;
             doc.text(item.values[0].value, taxStartX, startY);
             
-            // 單價居中對齊
-            const unitPriceWidth = doc.getTextWidth(item.values[1].value);
-            const unitPriceStartX = unitPriceX - unitPriceWidth / 2;
-            doc.text(item.values[1].value, unitPriceStartX, startY);
+            // 千分號格式化函數，僅在小數點前加上千分號
+            function formatWithThousandsSeparator(value) {
+                const [integerPart, decimalPart] = value.toString().split('.'); // 分離整數與小數部分
+                const formattedIntegerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ','); // 只在整數部分加上千分號
+                return decimalPart ? `${formattedIntegerPart}.${decimalPart}` : formattedIntegerPart;
+            }
 
-            // 數量靠右對齊
-            const qtyWidth = doc.getTextWidth(item.values[2].value);
-            doc.text(item.values[2].value, qtyX - qtyWidth, startY);
+            // 單價居中對齊，顯示時加入千分號
+            const unitPriceDisplay = formatWithThousandsSeparator(item.values[1].value); // 格式化單價用於顯示
+            const unitPriceWidth = doc.getTextWidth(unitPriceDisplay);
+            const unitPriceStartX = unitPriceX - unitPriceWidth / 2;
+            doc.text(unitPriceDisplay, unitPriceStartX, startY);
+
+            // 數量靠右對齊，顯示時加入千分號並去除空格
+            const qtyDisplay = formatWithThousandsSeparator(item.values[2].value).replace(/\s+/g, ''); // 格式化數量並去除空格
+            const qtyWidth = doc.getTextWidth(qtyDisplay);
+            doc.text(qtyDisplay, qtyX - qtyWidth, startY);
 
             // 統計方式顯示
             doc.text(item.values[3].value, statMethodX, startY);
@@ -646,7 +655,7 @@ async function exportToPDF() {
             const statQtyX = 172.5;
             const statQty = item.statQty || ''; // 統計數量
             const statUnit = item.statUnit || ''; // 統計單位
-            const combinedStatText = statQty ? `(${statQty} ${statUnit})` : '' ;
+            const combinedStatText = statQty ? `(${formatWithThousandsSeparator(statQty)}${statUnit})` : '' ;
             const combinedStatTextWidth = doc.getTextWidth(combinedStatText);
 
             // 統計數量和統計單位一起顯示，靠右對齊
@@ -685,14 +694,14 @@ async function exportToPDF() {
         doc.text(separator, pageWidth - separatorWidth - 6, yPosition - 3);
 
         const totalData = [
-            { label: '', value: totalNetWt > 0 ? parseFloat(totalNetWt.toFixed(6)) + ' KGM' : '', y: yPosition },
+            { label: '', value: totalNetWt > 0 ? formatWithThousandsSeparator(parseFloat(totalNetWt.toFixed(6))) + 'KGM' : '', y: yPosition },
         ];
 
         Object.entries(totalQtyMap).forEach(([unit, qty]) => {
             if (qty > 0) {
                 totalData.push({
                     label: '',
-                    value: parseFloat(qty.toFixed(6)) + ' ' + unit,
+                    value: formatWithThousandsSeparator(parseFloat(qty.toFixed(6))) + '' + unit,
                 });
             }
         });
@@ -701,7 +710,7 @@ async function exportToPDF() {
             if (qty > 0) {
                 totalData.push({
                     label: '',
-                    value: `(${parseFloat(qty.toFixed(6))} ${unit})`,
+                    value: `(${formatWithThousandsSeparator(parseFloat(qty.toFixed(6)))}${unit})`,
                 });
             }
         });
@@ -709,7 +718,7 @@ async function exportToPDF() {
         if (totalAmt > 0) {
             totalData.push({
                 label: '',
-                value: parseFloat(totalAmt.toFixed(6)),
+                value: formatWithThousandsSeparator(parseFloat(totalAmt.toFixed(6))),
             });
         }
 
