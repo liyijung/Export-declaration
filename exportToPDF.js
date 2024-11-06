@@ -533,10 +533,10 @@ async function exportToPDF() {
 
             // 顯示前置描述和品名
             const descriptionText = [];
-            if (item.sellerItemCode) descriptionText.push(`S/N:${item.sellerItemCode}`);
-            if (item.goodsModel) descriptionText.push(`MODEL:${item.goodsModel}`);
-            if (item.goodsSpec) descriptionText.push(`SPEC:${item.goodsSpec}`);
-            descriptionText.push(item.description); // 添加品名描述
+            if (item.sellerItemCode) descriptionText.push(`S/N:${item.sellerItemCode}`.trim());
+            if (item.goodsModel) descriptionText.push(`MODEL:${item.goodsModel}`.trim());
+            if (item.goodsSpec) descriptionText.push(`SPEC:${item.goodsSpec}`.trim());
+            descriptionText.push(item.description.trim()); // 添加品名描述
 
             if (item.index === '*') {
                 const combinedDescription = descriptionText.join('\n');
