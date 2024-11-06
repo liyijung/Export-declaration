@@ -208,7 +208,7 @@ body {
 }
 
 #adjust-order-modal .modal-content {
-    width: 500px;
+    width: 1000px;
     background: linear-gradient(to left, #f0f0f0, #c7daf8);
 }
 
@@ -258,6 +258,7 @@ body {
     padding: 10px;
     border-bottom: 1px solid #ddd;
     cursor: move;
+    padding: 0px; /* 可根據需要減小 padding 值 */
 }
 
 .order-item span {
