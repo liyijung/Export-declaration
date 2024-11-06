@@ -371,7 +371,7 @@ async function exportToPDF() {
                 expSeqNo: item.querySelector('.EXP_SEQ_NO')?.value || '', // 輸出許可項次
                 currency: document.getElementById('CURRENCY')?.value || '', // 確保獲取正確的幣別值
                 netWt: parseFloat(item.querySelector('.NET_WT')?.value) || 0, // 淨重
-                description: item.querySelector('.DESCRIPTION')?.value || '', // 品名
+                description: item.querySelector('.DESCRIPTION')?.value.trim() || '', // 品名
                 statQty: parseFloat(item.querySelector('.ST_QTY')?.value) || 0, // 統計數量
                 statUnit: item.querySelector('.ST_UM')?.value || '', // 統計單位
                 origImpDclNo: item.querySelector('.ORG_IMP_DCL_NO')?.value || '', // 原進口報單號碼
@@ -533,10 +533,10 @@ async function exportToPDF() {
 
             // 顯示前置描述和品名
             const descriptionText = [];
-            if (item.sellerItemCode) descriptionText.push(`S/N:${item.sellerItemCode}`.trim());
-            if (item.goodsModel) descriptionText.push(`MODEL:${item.goodsModel}`.trim());
-            if (item.goodsSpec) descriptionText.push(`SPEC:${item.goodsSpec}`.trim());
-            descriptionText.push(item.description.trim()); // 添加品名描述
+            if (item.sellerItemCode) descriptionText.push(`S/N:${item.sellerItemCode}`);
+            if (item.goodsModel) descriptionText.push(`MODEL:${item.goodsModel}`);
+            if (item.goodsSpec) descriptionText.push(`SPEC:${item.goodsSpec}`);
+            descriptionText.push(item.description); // 添加品名描述
 
             if (item.index === '*') {
                 const combinedDescription = descriptionText.join('\n');
