@@ -66,7 +66,7 @@ async function exportToPDF() {
             };
             await page.render(renderContext).promise;
 
-            const imgData = canvas.toDataURL('image/jpeg');
+            const imgData = canvas.toDataURL('image/jpeg', 0.7);
             const pdfWidth = doc.internal.pageSize.getWidth();
             const pdfHeight = doc.internal.pageSize.getHeight();
             doc.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
