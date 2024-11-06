@@ -2727,7 +2727,20 @@ document.addEventListener('DOMContentLoaded', function () {
             { className: 'ST_MTD', name: '統計方法' },
             { className: 'NET_WT', name: '淨重' }
         ];
-    
+
+        // 檢查 DCL_DOC_TYPE 是否為 B8 或 B9，並確保 SHPR_BONDED_ID 或 FAC_BONDED_ID_EX 其中一欄需有值
+        if (['B8', 'B9'].includes(dclDocType)) {
+            let shprBondedId = document.getElementById('SHPR_BONDED_ID')?.value.trim();
+            let facBondedIdEx = document.getElementById('FAC_BONDED_ID_EX')?.value.trim();
+            let facBanIdEx = document.getElementById('FAC_BAN_ID_EX')?.value.trim();
+
+            // 如果 SHPR_BONDED_ID 和 FAC_BONDED_ID_EX 都為空，則顯示錯誤訊息並中止匯出
+            if (!shprBondedId && !facBondedIdEx) {
+                alert('當報單類別為 B8 或 B9 時，海關監管編號需填列');
+                return; // 中止匯出過程
+            }
+        }
+        
         // 如果 DCL_DOC_TYPE 是 B8、B9、D5 或 F5，還需要檢查 SELLER_ITEM_CODE 和 BOND_NOTE
         if (['B8', 'B9', 'D5', 'F5'].includes(dclDocType)) {
             itemRequiredFields.push(
