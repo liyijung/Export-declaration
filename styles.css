@@ -212,6 +212,17 @@ body {
     background: linear-gradient(to left, #f0f0f0, #c7daf8);
 }
 
+#adjust-order-modal h2 {
+    margin-top: 0px; /* 縮小上方間距 */
+    margin-bottom: 0px; /* 縮小下方間距 */
+}
+
+#adjust-order-modal h4 {
+    margin-top: 5px; /* 縮小上方間距 */
+    margin-bottom: 10px; /* 縮小下方間距 */
+    text-align: left; /* 讓 h4 標題靠左對齊 */
+}
+
 #adjust-order-modal .modal-header {
     background: linear-gradient(to left, #f0f0f0, #c7daf8);
     padding: 10px;
