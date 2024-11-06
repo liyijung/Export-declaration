@@ -199,9 +199,14 @@ async function exportToPDF() {
 
         // 添加二維條碼
         const barcodeCanvas = document.createElement('canvas');
-        JsBarcode(barcodeCanvas, 'CX  13696', { format: 'CODE128' });
+        JsBarcode(barcodeCanvas, 'CX 13696', {
+            format: 'CODE128',
+            width: 3,           // 調整寬度，讓條碼變長（默認為 2）
+            height: 40,         // 可以適當調低高度來強調長度
+            displayValue: true  // 數字顯示
+        });
         const barcodeImgData = barcodeCanvas.toDataURL('image/jpeg');
-        doc.addImage(barcodeImgData, 'JPEG', 118, 12, 20, 10); // 調整位置和大小
+        doc.addImage(barcodeImgData, 'JPEG', 118, 12, 40, 10); // 調整圖像的顯示寬度
 
         // 拆分 TO_DESC 為多行，每行最多寬度25
         const toDescElement = document.getElementById('TO_DESC');
