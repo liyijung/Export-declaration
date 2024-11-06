@@ -66,7 +66,7 @@ async function exportToPDF() {
             };
             await page.render(renderContext).promise;
 
-            const imgData = canvas.toDataURL('image/jpeg', 0.1);
+            const imgData = canvas.toDataURL('image/jpeg');
             const pdfWidth = doc.internal.pageSize.getWidth();
             const pdfHeight = doc.internal.pageSize.getHeight();
             doc.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
@@ -200,7 +200,7 @@ async function exportToPDF() {
         // 添加二維條碼
         const barcodeCanvas = document.createElement('canvas');
         JsBarcode(barcodeCanvas, 'CX  13696', { format: 'CODE128' });
-        const barcodeImgData = barcodeCanvas.toDataURL('image/jpeg', 0.1);
+        const barcodeImgData = barcodeCanvas.toDataURL('image/jpeg');
         doc.addImage(barcodeImgData, 'JPEG', 118, 12, 20, 10); // 調整位置和大小
 
         // 拆分 TO_DESC 為多行，每行最多寬度25
