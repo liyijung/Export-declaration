@@ -568,9 +568,9 @@ async function exportToPDF() {
 
             // 顯示原進口報單號碼、原進口報單項次、產證號碼、產證項次、原進倉報單號碼、原進倉報單項次
             const fieldsToShow = [
-                { name: '原進口報單號碼', value: item.origImpDclNo, itemValue: item.origImpDclNoItem },
+                { name: '原進口報單', value: item.origImpDclNo, itemValue: item.origImpDclNoItem },
                 { name: '產證號碼', value: item.certNo, itemValue: item.certNoItem },
-                { name: '原進倉報單號碼', value: item.origDclNo, itemValue: item.origDclNoItem }
+                { name: '原進倉報單', value: item.origDclNo, itemValue: item.origDclNoItem }
             ];
 
             fieldsToShow.forEach(field => {
