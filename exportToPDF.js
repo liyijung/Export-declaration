@@ -559,6 +559,13 @@ async function exportToPDF() {
             if (item.goodsSpec) descriptionText.push(`SPEC:${item.goodsSpec}`);
             descriptionText.push(item.description); // 添加品名描述
 
+            // 顯示原進口報單號碼、原進口報單項次、產證號碼、產證項次、原進倉報單號碼、原進倉報單項次
+            const fieldsToShow = [
+                { name: '原進口報單', value: item.origImpDclNo, itemValue: item.origImpDclNoItem },
+                { name: '產證號碼', value: item.certNo, itemValue: item.certNoItem },
+                { name: '原進倉報單', value: item.origDclNo, itemValue: item.origDclNoItem }
+            ];            
+
             if (item.index === '*') {
                 const combinedDescription = descriptionText.join('\n');
                 const descriptionLines = doc.splitTextToSize(combinedDescription, 68);
@@ -570,8 +577,9 @@ async function exportToPDF() {
                 const combinedDescription = descriptionText.join('\n');
                 const descriptionLines = doc.splitTextToSize(combinedDescription, 68);
                 
-                // 如果只有一行，則在最後添加一行空白
-                if (descriptionLines.length === 1) {
+                // 檢查是否只有一行描述且 fieldsToShow 中所有 field.value 都為空
+                const hasNoFieldsToShow = fieldsToShow.every(field => !field.value);
+                if (descriptionLines.length === 1 && hasNoFieldsToShow) {
                     descriptionLines.push(""); // 添加一行空白
                 }
 
@@ -581,13 +589,6 @@ async function exportToPDF() {
                 });
                 itemCounter++; // 增加項次計數器
             }
-
-            // 顯示原進口報單號碼、原進口報單項次、產證號碼、產證項次、原進倉報單號碼、原進倉報單項次
-            const fieldsToShow = [
-                { name: '原進口報單', value: item.origImpDclNo, itemValue: item.origImpDclNoItem },
-                { name: '產證號碼', value: item.certNo, itemValue: item.certNoItem },
-                { name: '原進倉報單', value: item.origDclNo, itemValue: item.origDclNoItem }
-            ];
 
             fieldsToShow.forEach(field => {
                 if (field.value) {
