@@ -208,6 +208,22 @@ async function exportToPDF() {
         const barcodeImgData = barcodeCanvas.toDataURL('image/jpeg');
         doc.addImage(barcodeImgData, 'JPEG', 118, 12, 40, 10); // 調整圖像的顯示寬度
 
+        // AEO 編號對照表
+        const aeoMapping = {
+            "23218022": "TWAEO-103000025", // 矽格股份有限公司
+            "84149456": "TWAEO-104000026", // 矽格聯測股份有限公司
+            "27951609": "TWAEO-108000019", // 群聯電子股份有限公司竹南分公司
+            "11384708": "TWAEO-105000007", // 長春人造樹脂廠股份有限公司
+            "70848839": "TWAEO-104000014" // 日月光半導體製造股份有限公司中壢分公司
+        };
+
+        // 查找 AEO 編號並顯示在 PDF 指定位置
+        const shprBanId = document.getElementById('SHPR_BAN_ID').value;
+        const aeoNumber = aeoMapping[shprBanId] || ''; // 如果無對應則顯示 'NIL'
+        
+        // 顯示 AEO 編號
+        doc.text(aeoNumber, 175, 65.5);
+        
         // 拆分 TO_DESC 為多行，每行最多寬度25
         const toDescElement = document.getElementById('TO_DESC');
         const toDescText = toDescElement.value;
