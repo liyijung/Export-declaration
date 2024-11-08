@@ -340,7 +340,7 @@ async function exportToPDF() {
 
         // 獲取 'DOC_MARKS_DESC' 的完整內容
         const docMarksDescElement = document.getElementById('DOC_MARKS_DESC');
-        const docMarksDescText = docMarksDescElement.value;
+        const docMarksDescText = docMarksDescElement.value.replace(/\t/g, ' '); // 將 Tab 替換成空格
 
         // 將 'DOC_MARKS_DESC' 分割為多行，行寬限制在一定寬度
         const docMarksDescLines = doc.splitTextToSize(docMarksDescText, 135);
@@ -363,7 +363,7 @@ async function exportToPDF() {
 
         // 獲取 'DOC_OTR_DESC' 的完整內容
         const docOtrDescElement = document.getElementById('DOC_OTR_DESC');
-        const docOtrDescText = docOtrDescElement.value;
+        const docOtrDescText = docOtrDescElement.value.replace(/\t/g, ' '); // 將 Tab 替換成空格
 
         // 將 'DOC_OTR_DESC' 分割為多行，行寬限制在一定寬度
         const docOtrDescLines = doc.splitTextToSize(docOtrDescText, 135);
@@ -387,34 +387,34 @@ async function exportToPDF() {
 
             itemsData.push({
                 index: item.querySelector('.ITEM_NO')?.checked ? '*' : index + 1,  // 如果選中則顯示'*'，否則顯示編號
-                tradeMark: item.querySelector('.TRADE_MARK')?.value.trim() || '', // 商標
-                expNo: item.querySelector('.EXP_NO')?.value.trim() || '', // 輸出許可號碼
-                expSeqNo: item.querySelector('.EXP_SEQ_NO')?.value.trim() || '', // 輸出許可項次
-                currency: document.getElementById('CURRENCY')?.value.trim() || '', // 確保獲取正確的幣別值
-                netWt: parseFloat(item.querySelector('.NET_WT')?.value.trim()) || 0, // 淨重
-                description: item.querySelector('.DESCRIPTION')?.value.trim() || '', // 品名
-                statQty: parseFloat(item.querySelector('.ST_QTY')?.value.trim()) || 0, // 統計數量
-                statUnit: item.querySelector('.ST_UM')?.value.trim() || '', // 統計單位
-                origImpDclNo: item.querySelector('.ORG_IMP_DCL_NO')?.value.trim() || '', // 原進口報單號碼
-                origImpDclNoItem: item.querySelector('.ORG_IMP_DCL_NO_ITEM')?.value.trim() || '', // 原進口報單項次
-                certNo: item.querySelector('.CERT_NO')?.value.trim() || '', // 產證號碼
-                certNoItem: item.querySelector('.CERT_NO_ITEM')?.value.trim() || '', // 產證項次
-                origDclNo: item.querySelector('.ORG_DCL_NO')?.value.trim() || '', // 原進倉報單號碼
-                origDclNoItem: item.querySelector('.ORG_DCL_NO_ITEM')?.value.trim() || '', // 原進倉報單項次
-                sellerItemCode: item.querySelector('.SELLER_ITEM_CODE')?.value.trim() || '', // 賣方料號
-                goodsModel: item.querySelector('.GOODS_MODEL')?.value.trim() || '', // 型號
-                goodsSpec: item.querySelector('.GOODS_SPEC')?.value.trim() || '', // 規格
-                bondNote: item.querySelector('.BOND_NOTE')?.value.trim() || '', // 保稅貨物註記
+                tradeMark: item.querySelector('.TRADE_MARK')?.value.trim().replace(/\t/g, ' ') || '', // 商標
+                expNo: item.querySelector('.EXP_NO')?.value.trim().replace(/\t/g, ' ') || '', // 輸出許可號碼
+                expSeqNo: item.querySelector('.EXP_SEQ_NO')?.value.trim().replace(/\t/g, ' ') || '', // 輸出許可項次
+                currency: document.getElementById('CURRENCY')?.value.trim().replace(/\t/g, ' ') || '', // 確保獲取正確的幣別值
+                netWt: parseFloat(item.querySelector('.NET_WT')?.value.trim().replace(/\t/g, ' ')) || 0, // 淨重
+                description: item.querySelector('.DESCRIPTION')?.value.trim().replace(/\t/g, ' ') || '', // 品名
+                statQty: parseFloat(item.querySelector('.ST_QTY')?.value.trim().replace(/\t/g, ' ')) || 0, // 統計數量
+                statUnit: item.querySelector('.ST_UM')?.value.trim().replace(/\t/g, ' ') || '', // 統計單位
+                origImpDclNo: item.querySelector('.ORG_IMP_DCL_NO')?.value.trim().replace(/\t/g, ' ') || '', // 原進口報單號碼
+                origImpDclNoItem: item.querySelector('.ORG_IMP_DCL_NO_ITEM')?.value.trim().replace(/\t/g, ' ') || '', // 原進口報單項次
+                certNo: item.querySelector('.CERT_NO')?.value.trim().replace(/\t/g, ' ') || '', // 產證號碼
+                certNoItem: item.querySelector('.CERT_NO_ITEM')?.value.trim().replace(/\t/g, ' ') || '', // 產證項次
+                origDclNo: item.querySelector('.ORG_DCL_NO')?.value.trim().replace(/\t/g, ' ') || '', // 原進倉報單號碼
+                origDclNoItem: item.querySelector('.ORG_DCL_NO_ITEM')?.value.trim().replace(/\t/g, ' ') || '', // 原進倉報單項次
+                sellerItemCode: item.querySelector('.SELLER_ITEM_CODE')?.value.trim().replace(/\t/g, ' ') || '', // 賣方料號
+                goodsModel: item.querySelector('.GOODS_MODEL')?.value.trim().replace(/\t/g, ' ') || '', // 型號
+                goodsSpec: item.querySelector('.GOODS_SPEC')?.value.trim().replace(/\t/g, ' ') || '', // 規格
+                bondNote: item.querySelector('.BOND_NOTE')?.value.trim().replace(/\t/g, ' ') || '', // 保稅貨物註記
                 fobTw: fobTw.toFixed(0), // 計算的初始 fobTw 值
                 values: [
-                    { value: item.querySelector('.CCC_CODE')?.value.trim() || '', x: 89 },
-                    { value: item.querySelector('.DOC_UNIT_P')?.value.trim() || '', x: 130 },
-                    { value: (item.querySelector('.QTY')?.value.trim() || '') + ' ' + (item.querySelector('.DOC_UM')?.value.trim() || ''), x: 160 },
-                    { value: item.querySelector('.ST_MTD')?.value.trim() || '', x: 200 },
+                    { value: item.querySelector('.CCC_CODE')?.value.trim().replace(/\t/g, ' ') || '', x: 89 },
+                    { value: item.querySelector('.DOC_UNIT_P')?.value.trim().replace(/\t/g, ' ') || '', x: 130 },
+                    { value: (item.querySelector('.QTY')?.value.trim().replace(/\t/g, ' ') || '') + ' ' + (item.querySelector('.DOC_UM')?.value.trim().replace(/\t/g, ' ') || ''), x: 160 },
+                    { value: item.querySelector('.ST_MTD')?.value.trim().replace(/\t/g, ' ') || '', x: 200 },
                 ],
-                qty: parseFloat(item.querySelector('.QTY')?.value.trim()) || 0, // 數量
-                unit: item.querySelector('.DOC_UM')?.value.trim() || '', // 單位
-                itemAmt: parseFloat(item.querySelector('.ITEM_AMT')?.value.trim()) || 0 // 金額
+                qty: parseFloat(item.querySelector('.QTY')?.value.trim().replace(/\t/g, ' ')) || 0, // 數量
+                unit: item.querySelector('.DOC_UM')?.value.trim().replace(/\t/g, ' ') || '', // 單位
+                itemAmt: parseFloat(item.querySelector('.ITEM_AMT')?.value.trim().replace(/\t/g, ' ')) || 0 // 金額
             });
         });
 
