@@ -3147,9 +3147,10 @@ document.addEventListener('DOMContentLoaded', function () {
                     // 替換單位及稅則
                     value = replaceValue(className, value);
 
-                    // 對 DESCRIPTION 欄位進行去除前後空格的處理
+                    // 對 DESCRIPTION 欄位進行處理
                     if (className === 'DESCRIPTION') {
-                        value = value.trim();
+                        value = value.trim(); // 去除前後空格
+                        value = value.replace(/ {10,}/g, '\n'); // 十個以上空格替換為換行
                     }
                 }
                 xmlContent += `    <fields>\n      <field_name>${className}</field_name>\n      <field_value>${value}</field_value>\n    </fields>\n`;
