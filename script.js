@@ -3092,10 +3092,10 @@ document.addEventListener('DOMContentLoaded', function () {
         };
         
         // 查找對應的 AEO 編號
-        const brokerAeo = aeoMapping[shprBanId] || ''; // 若未找到，則設為空字串
+        const shprAeo = aeoMapping[shprBanId] || ''; // 若未找到，則設為空字串
 
-        // 添加 BROKER_AEO 欄位至 xmlContent
-        xmlContent += `  <fields>\n    <field_name>BROKER_AEO</field_name>\n    <field_value>${brokerAeo}</field_value>\n  </fields>\n`;
+        // 添加 SHPR_AEO 欄位
+        xmlContent += `  <fields>\n    <field_name>SHPR_AEO</field_name>\n    <field_value>${shprAeo}</field_value>\n  </fields>\n`;
 
         headerFields.forEach(id => {
             let element = document.getElementById(id);
