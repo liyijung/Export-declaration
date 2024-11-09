@@ -210,10 +210,12 @@
             <div class="header-group">
                 <label for="DOC_MARKS_DESC">標記及貨櫃號碼</label>
                 <textarea id="DOC_MARKS_DESC" name="DOC_MARKS_DESC" rows="5"></textarea>
+                <button type="button" onclick="toggleRows('DOC_MARKS_DESC', this)">展開</button>
             </div>
             <div class="header-group">
                 <label for="DOC_OTR_DESC">其它申報事項</label>
                 <textarea id="DOC_OTR_DESC" name="DOC_OTR_DESC" rows="5"></textarea>
+                <button type="button" onclick="toggleRows('DOC_OTR_DESC', this)">展開</button>
             </div>
             <select id="doc_otr_desc_dropdown" class="custom-select" style="width: 180px;"> <!-- 調整這裡的寬度 -->
                 <option value="">備註選單</option>
