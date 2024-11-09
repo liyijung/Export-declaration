@@ -380,6 +380,7 @@ h4 {
     padding: 5px;
     border-radius: 5px;
     border: 1px solid #ccc;
+    overflow-y: hidden; /* 隱藏垂直滾軸 */
 }
 
 input,
