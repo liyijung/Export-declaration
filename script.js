@@ -1717,7 +1717,7 @@ function createItemRow(data) {
         <div class="form-group fix item-number" style="width: 2%;">
             <label>${itemNumber}</label>
         </div>
-        ${createTextareaField('DESCRIPTION', data.DESCRIPTION)}
+        ${createTextareaField('DESCRIPTION', data.DESCRIPTION.trim())}
         ${createInputField('QTY', data.QTY, true)}
         ${createInputField('DOC_UM', replaceValue('DOC_UM', data.DOC_UM), true)}
         ${createInputField('DOC_UNIT_P', data.DOC_UNIT_P, true)}
