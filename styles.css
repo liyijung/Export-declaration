@@ -638,3 +638,9 @@ input[type="checkbox"]:hover {
     margin-top: 10px; /* 與上方元素保持一定距離 */
     line-height: 1.6; /* 調整行距，使文字更加易讀 */
 }
+
+.vertical-text {
+    writing-mode: vertical-rl; /* 垂直排列文字 */
+    padding: 0px 3.5px 0px 0px; /* 調整上方的間距 */
+    align-items: flex-start; /* 讓文字靠上對齊 */
+}
