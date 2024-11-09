@@ -697,10 +697,25 @@ async function exportToPDF() {
             doc.addPage();
             await renderTemplate(doc, templateContinuation, 1);
             yPosition = 63; // 續頁的起始 Y 坐標
+
+            // 在新頁面右上角添加頁碼
+            addPageNumber(doc, currentPage + 1, totalPages, false);
+
+            // 每頁顯示文件編號及運單號
+            addFileNoToBottomLeft(doc, fileNo);
+            addlotnoToBottomLeft(doc, lotno);
+            
         } else if (yPosition > maxYContinuation) {
             doc.addPage();
             await renderTemplate(doc, templateContinuation, 1);
             yPosition = 63; // 續頁的起始 Y 坐標
+
+            // 在新頁面右上角添加頁碼
+            addPageNumber(doc, currentPage + 1, totalPages, false);
+
+            // 每頁顯示文件編號及運單號
+            addFileNoToBottomLeft(doc, fileNo);
+            addlotnoToBottomLeft(doc, lotno);    
         }
 
         // 添加分隔線
