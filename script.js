@@ -811,8 +811,8 @@ function saveItem() {
     const itemContainer = document.getElementById('item-container');
     let descriptionText = document.getElementById('DESCRIPTION').value.trim();
 
-    // 若空格超過 10 個，則替換為換行符號 "\n"
-    descriptionText = descriptionText.replace(/ {10,}/g, '\n'); // 十個以上空格替換為換行
+    // 若空格超過 10 個，則替換為換行符號 "\n" 及 移除多個連續的空行
+    descriptionText = descriptionText.replace(/ {10,}/g, '\n').replace(/\n\s*\n/g, '\n');
     
     const newItemData = {
         ITEM_NO: document.getElementById('ITEM_NO').checked ? '*' : '', // 根據勾選狀態設置 ITEM_NO
@@ -3160,6 +3160,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     if (className === 'DESCRIPTION') {
                         value = value.trim(); // 去除前後空格
                         value = value.replace(/ {10,}/g, '\n'); // 十個以上空格替換為換行
+                        value = value.replace(/\n\s*\n/g, '\n'); // 移除多個連續的空行
                     }
                 }
                 xmlContent += `    <fields>\n      <field_name>${className}</field_name>\n      <field_value>${value}</field_value>\n    </fields>\n`;
