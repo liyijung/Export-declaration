@@ -641,6 +641,6 @@ input[type="checkbox"]:hover {
 
 .vertical-text {
     writing-mode: vertical-rl; /* 垂直排列文字 */
-    padding: 0px 3.5px 0px 0px; /* 調整上方的間距 */
+    padding: 0px 3.5px 0px 0px; /* 調整間距 */
     align-items: flex-start; /* 讓文字靠上對齊 */
 }
