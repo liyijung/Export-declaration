@@ -521,6 +521,18 @@ function calculateAdditional() {
     });
 }
 
+// 標記及貨櫃號碼 及 其它申報事項 展開/折疊
+function toggleRows(textareaId, button) {
+    const textarea = document.getElementById(textareaId);
+    if (textarea.rows === 5) {
+        textarea.rows = 15;
+        button.textContent = "折疊";
+    } else {
+        textarea.rows = 5;
+        button.textContent = "展開";
+    }
+}
+
 // 其它申報事項備註選單
 document.addEventListener('DOMContentLoaded', () => {
     const dropdown = document.getElementById('doc_otr_desc_dropdown');
