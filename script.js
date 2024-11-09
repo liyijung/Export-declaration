@@ -745,6 +745,20 @@ function rememberItemModalData() {
     alert("彈跳框內容已記憶");
 }
 
+// 彈跳框品名 展開/折疊
+function toggleDescriptionRows() {
+    const textarea = document.getElementById("DESCRIPTION");
+    const button = event.target; // 取得觸發此事件的按鈕
+
+    if (textarea.rows === 5) {
+        textarea.rows = 10;
+        button.textContent = "折疊";
+    } else {
+        textarea.rows = 5;
+        button.textContent = "展開";
+    }
+}
+
 // 關閉新增項次的彈跳框
 function closeItemModal() {
     // 隱藏彈跳框
