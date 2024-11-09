@@ -773,9 +773,14 @@ function closeItemModal() {
 // 儲存新增的項次
 function saveItem() {
     const itemContainer = document.getElementById('item-container');
+    let descriptionText = document.getElementById('DESCRIPTION').value.trim();
+
+    // 若空格超過 10 個，則替換為換行符號 "\n"
+    descriptionText = descriptionText.replace(/ {10,}/g, '\n'); // 十個以上空格替換為換行
+    
     const newItemData = {
         ITEM_NO: document.getElementById('ITEM_NO').checked ? '*' : '', // 根據勾選狀態設置 ITEM_NO
-        DESCRIPTION: document.getElementById('DESCRIPTION').value.trim(),
+        DESCRIPTION: descriptionText, // 使用替換後的 DESCRIPTION
         QTY: document.getElementById('QTY').value.trim(),
         DOC_UM: document.getElementById('DOC_UM').value.trim(),
         DOC_UNIT_P: document.getElementById('DOC_UNIT_P').value.trim(),
