@@ -385,7 +385,7 @@ async function exportToPDF() {
                 expSeqNo: item.querySelector('.EXP_SEQ_NO')?.value.trim().replace(/\t/g, '  ') || '', // 輸出許可項次
                 currency: document.getElementById('CURRENCY')?.value.trim().replace(/\t/g, '  ') || '', // 確保獲取正確的幣別值
                 netWt: parseFloat(item.querySelector('.NET_WT')?.value.trim().replace(/\t/g, '  ')) || 0, // 淨重
-                description: item.querySelector('.DESCRIPTION')?.value.trim().replace(/\t/g, '  ') || '', // 品名
+                description: item.querySelector('.DESCRIPTION')?.value.trim().replace(/\t/g, '  ').replace(/ {10,}/g, '\n') || '', // 品名
                 statQty: parseFloat(item.querySelector('.ST_QTY')?.value.trim().replace(/\t/g, '  ')) || 0, // 統計數量
                 statUnit: item.querySelector('.ST_UM')?.value.trim().replace(/\t/g, '  ') || '', // 統計單位
                 origImpDclNo: item.querySelector('.ORG_IMP_DCL_NO')?.value.trim().replace(/\t/g, '  ') || '', // 原進口報單號碼
