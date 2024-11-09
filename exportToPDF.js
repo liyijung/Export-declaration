@@ -450,33 +450,19 @@ async function exportToPDF() {
             doc.line(x, y + 1, x + textWidth, y + 1); // 添加底線，+1 是為了讓底線在文字下方
         }
 
-        // 計算總頁數
-        let totalPages = 1;
         let currentMaxY = maxYHome;
-        for (const item of itemsData) {
-            const itemDescriptionLines = doc.splitTextToSize(item.description, 150).length;
-            const itemLinesNeeded = item.index === '*' ? itemDescriptionLines + 2 : itemDescriptionLines + 1;
-            if (startY + lineHeight * itemLinesNeeded > currentMaxY) {
-                totalPages++;
-                currentMaxY = maxYContinuation;
-                startY = 63;
-            }
-            startY += lineHeight * itemLinesNeeded;
-        }
 
         startY = 130;  // 重置初始的 Y 坐標
         currentMaxY = maxYHome;
 
-        function addPageNumber(doc, currentPage, totalPages) {
+        function addPageNumber(doc, currentPage) {
             doc.setFontSize(9.5);
             if (currentPage === 1) {
                 // 首頁頁碼位置
                 doc.text(`${currentPage}`, 186, 10);
-                // doc.text(`${totalPages}`, 198, 10);
             } else {
                 // 續頁頁碼位置
                 doc.text(`${currentPage}`, 184, 13);
-                // doc.text(`${totalPages}`, 198, 13);
             }
         }
 
@@ -516,7 +502,7 @@ async function exportToPDF() {
 
                 // 在新頁面右上角添加頁碼
                 const currentPage = doc.internal.getCurrentPageInfo().pageNumber;
-                addPageNumber(doc, currentPage, totalPages, false);
+                addPageNumber(doc, currentPage, false);
 
                 // 每頁顯示文件編號及運單號
                 addFileNoToBottomLeft(doc, fileNo);
@@ -526,7 +512,7 @@ async function exportToPDF() {
             // 在首頁右上角添加頁碼
             if (doc.internal.getCurrentPageInfo().pageNumber === 1) {
                 const currentPage = doc.internal.getCurrentPageInfo().pageNumber;
-                addPageNumber(doc, currentPage, totalPages, true);
+                addPageNumber(doc, currentPage, true);
             }
 
             // 顯示項次編號
@@ -699,7 +685,7 @@ async function exportToPDF() {
             yPosition = 63; // 續頁的起始 Y 坐標
 
             // 在新頁面右上角添加頁碼
-            addPageNumber(doc, currentPage + 1, totalPages, false);
+            addPageNumber(doc, currentPage + 1, false);
 
             // 每頁顯示文件編號及運單號
             addFileNoToBottomLeft(doc, fileNo);
@@ -711,7 +697,7 @@ async function exportToPDF() {
             yPosition = 63; // 續頁的起始 Y 坐標
 
             // 在新頁面右上角添加頁碼
-            addPageNumber(doc, currentPage + 1, totalPages, false);
+            addPageNumber(doc, currentPage + 1, false);
 
             // 每頁顯示文件編號及運單號
             addFileNoToBottomLeft(doc, fileNo);
@@ -780,7 +766,7 @@ async function exportToPDF() {
                 await renderTemplate(doc, templateContinuation, 1); // 渲染續頁模板
 
                 // 在新頁面右上角添加頁碼
-                addPageNumber(doc, currentPage + 1, totalPages, false);
+                addPageNumber(doc, currentPage + 1, false);
 
                 // 每頁顯示文件編號及運單號
                 addFileNoToBottomLeft(doc, fileNo);
@@ -794,7 +780,7 @@ async function exportToPDF() {
                 await renderTemplate(doc, templateContinuation, 1); // 渲染續頁模板
 
                 // 在新頁面右上角添加頁碼
-                addPageNumber(doc, currentPage + 1, totalPages, false);
+                addPageNumber(doc, currentPage + 1, false);
 
                 // 每頁顯示文件編號及運單號
                 addFileNoToBottomLeft(doc, fileNo);
@@ -821,7 +807,7 @@ async function exportToPDF() {
                 await renderTemplate(doc, templateContinuation, 1); // 渲染續頁模板
         
                 // 在新頁面右上角添加頁碼
-                addPageNumber(doc, currentPage + 1, totalPages, false);
+                addPageNumber(doc, currentPage + 1, false);
 
                 // 每頁顯示文件編號及運單號
                 addFileNoToBottomLeft(doc, fileNo);
@@ -835,7 +821,7 @@ async function exportToPDF() {
                 await renderTemplate(doc, templateContinuation, 1); // 渲染續頁模板
         
                 // 在新頁面右上角添加頁碼
-                addPageNumber(doc, currentPage + 1, totalPages, false);
+                addPageNumber(doc, currentPage + 1, false);
 
                 // 每頁顯示文件編號及運單號
                 addFileNoToBottomLeft(doc, fileNo);
@@ -848,6 +834,21 @@ async function exportToPDF() {
             doc.text(line, 14, yPosition); 
             yPosition += 4; // 行高
         }
+
+        // **完成所有頁面後，獲取總頁數**
+        const totalPages = doc.internal.getNumberOfPages();
+
+        // 定義一個函數來添加頁碼
+        function addPageNumbers(doc, totalPages) {
+            for (let i = 1; i <= totalPages; i++) {
+                doc.setPage(i);  // 設置到當前頁
+                const yPosition = (i === 1) ? 10 : 13;  // 根據是否首頁設置不同的 y 值
+                doc.text(`${totalPages}`, 198, yPosition);
+            }
+        }
+
+        // 最後在每頁添加頁碼
+        addPageNumbers(doc, totalPages);
 
         // 保存 PDF，文件名為 FILE_NO 的值
         const fileName = document.getElementById('FILE_NO').value || 'export';
