@@ -218,12 +218,17 @@ body {
 
 #item-modal h2,
 #adjust-order-modal h2,
-#adjust-order-modal h4,
 #specify-field-modal h2,
 #toggle-fields-modal h2{
     margin-top: 0px; /* 縮小上方間距 */
     margin-bottom: 0px; /* 縮小下方間距 */
-    text-align: left; /* 讓 h4 標題靠左對齊 */
+    text-align: left; /* 標題靠左對齊 */
+}
+
+#adjust-order-modal h4{
+    margin-top: 0px; /* 縮小上方間距 */
+    margin-bottom: 10px; /* 縮小下方間距 */
+    text-align: left; /* 標題靠左對齊 */
 }
 
 #adjust-order-modal .modal-header {
