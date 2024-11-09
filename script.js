@@ -1861,15 +1861,23 @@ function createTextareaField(name, value) {
     `;
 }
 
-// 切換所有報單項次頁面的文本域的顯示和隱藏
+// 設置行數選項
+let currentRowSetting = 0; // 用來追蹤當前行數狀態
+const rowOptions = [1, 5, 10]; // 定義三種行數選項
+
 function toggleAllTextareas() {
-    allExpanded = !allExpanded;
-    const newRows = allExpanded ? 5 : 1;
+    // 更新行數設定，循環切換至下一個行數
+    currentRowSetting = (currentRowSetting + 1) % rowOptions.length;
+    const newRows = rowOptions[currentRowSetting];
+
+    // 設置所有文本域的行數
     document.querySelectorAll('.declaration-item textarea').forEach(textarea => {
         textarea.rows = newRows;
     });
-    // 更新按鈕文本
-    document.getElementById('toggle-all-btn').textContent = allExpanded ? '折疊全部品名' : '展開全部品名';
+
+    // 更新按鈕文本根據行數
+    const buttonText = newRows === 1 ? '展開全部至 5 行' : (newRows === 5 ? '展開全部至 10 行' : '折疊全部至 1 行');
+    document.getElementById('toggle-all-btn').textContent = buttonText;
 }
 
 // 處理 Alt+w 鍵的函數
