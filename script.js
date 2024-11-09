@@ -759,6 +759,42 @@ function toggleDescriptionRows() {
     }
 }
 
+// 處理貼上後內容，移除首尾的 " 並將 "" 還原為 "
+function cleanPastedText(text) {
+    // 檢查字串的開頭和結尾是否有 "，並移除
+    if (text.startsWith('"') && text.endsWith('"')) {
+        text = text.slice(1, -1);
+    }
+    // 將中間的 "" 替換為單一的 "
+    text = text.replace(/""/g, '"');
+    return text;
+}
+
+// 監聽 DESCRIPTION 欄位的貼上事件
+document.getElementById('DESCRIPTION').addEventListener('paste', function(event) {
+    // 防止預設貼上行為
+    event.preventDefault();
+
+    // 取得剪貼板中的文字
+    const pastedText = (event.clipboardData || window.clipboardData).getData('text');
+    
+    // 清理貼上的文字
+    let cleanedText = cleanPastedText(pastedText);
+    
+    // 插入清理後的文字到 `textarea`
+    const descriptionField = document.getElementById('DESCRIPTION');
+    descriptionField.value = cleanedText;
+    
+    // 在貼上內容後，強制再次去除首尾的 " 符號
+    setTimeout(() => {
+        // 再次檢查並強制去除首尾的 " 符號
+        cleanedText = descriptionField.value.trim();
+        if (cleanedText.startsWith('"') && cleanedText.endsWith('"')) {
+            descriptionField.value = cleanedText.slice(1, -1);
+        }
+    }, 0); // 無延遲立即處理
+});
+
 // 關閉新增項次的彈跳框
 function closeItemModal() {
     // 隱藏彈跳框
