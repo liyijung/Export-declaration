@@ -3078,6 +3078,25 @@ document.addEventListener('DOMContentLoaded', function () {
         // 添加 PROC_NO
         xmlContent += `  <fields>\n    <field_name>PROC_NO</field_name>\n    <field_value>${procNo}</field_value>\n  </fields>\n`;
 
+        // 取得 SHPR_BAN_ID 欄位的值
+        const shprBanIdElement = document.getElementById('SHPR_BAN_ID');
+        const shprBanId = shprBanIdElement ? shprBanIdElement.value.trim() : '';
+
+        // AEO 編號對照表
+        const aeoMapping = {
+            "23218022": "TWAEO-103000025", // 矽格股份有限公司
+            "84149456": "TWAEO-104000026", // 矽格聯測股份有限公司
+            "27951609": "TWAEO-108000019", // 群聯電子股份有限公司竹南分公司
+            "11384708": "TWAEO-105000007", // 長春人造樹脂廠股份有限公司
+            "70848839": "TWAEO-104000014" // 日月光半導體製造股份有限公司中壢分公司
+        };
+        
+        // 查找對應的 AEO 編號
+        const brokerAeo = aeoMapping[shprBanId] || ''; // 若未找到，則設為空字串
+
+        // 添加 BROKER_AEO 欄位至 xmlContent
+        xmlContent += `  <fields>\n    <field_name>BROKER_AEO</field_name>\n    <field_value>${brokerAeo}</field_value>\n  </fields>\n`;
+
         headerFields.forEach(id => {
             let element = document.getElementById(id);
             if (element) {
