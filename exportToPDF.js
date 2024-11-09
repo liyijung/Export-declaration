@@ -75,6 +75,16 @@ async function exportToPDF() {
         // 渲染第一頁模板
         await renderTemplate(doc, templateHome, 1);
 
+        doc.setFontSize(9.5);
+        doc.text(`空運`, 75, 10)
+
+        // 獲取報單類別的值和文本
+        const dclDocTypeElement = document.getElementById('DCL_DOC_TYPE');
+        const dclDocTypeValue = dclDocTypeElement.value;
+        const optionElement = dclDocTypeElement.list.querySelector(`option[value="${dclDocTypeValue}"]`);
+        const dclDocTypeText = optionElement ? optionElement.text : '';
+        doc.text(`${dclDocTypeValue}${dclDocTypeText}`, 103, 10)
+
         // 獲取今天的日期
         var today = new Date();
         var Tyear = today.getFullYear();
@@ -100,14 +110,42 @@ async function exportToPDF() {
             CustomsDeclarationDate = (Tyear - 1911) + '/' + Tmonth + '/' + Tday; // 當前日期格式
         }
 
-        // 生成報單號碼
+        // 報單號碼
         var OrderNumber = 'CX/  /' + yearPart + '/696/';
+        doc.text(OrderNumber, 75, 18.5)
+        
+        // 添加二維條碼
+        const barcodeCanvas = document.createElement('canvas');
+        JsBarcode(barcodeCanvas, 'CX 13696', {
+            format: 'CODE128',
+            width: 3,           // 調整寬度，讓條碼變長（默認為 2）
+            height: 40,         // 可以適當調低高度來強調長度
+            displayValue: true  // 數字顯示
+        });
+        const barcodeImgData = barcodeCanvas.toDataURL('image/jpeg');
+        doc.addImage(barcodeImgData, 'JPEG', 118, 12, 40, 10); // 調整圖像的顯示寬度
 
-        // 獲取報單類別的值和文本
-        const dclDocTypeElement = document.getElementById('DCL_DOC_TYPE');
-        const dclDocTypeValue = dclDocTypeElement.value;
-        const optionElement = dclDocTypeElement.list.querySelector(`option[value="${dclDocTypeValue}"]`);
-        const dclDocTypeText = optionElement ? optionElement.text : '';
+        doc.text(CustomsDeclarationDate, 62, 35) // 報關日期
+        doc.text(`TWTPE`,30.5, 40.5)
+        doc.text(`TAOYUAN`, 24, 44)
+        doc.text(`AIRPORT`, 24, 48)
+        doc.text(document.getElementById('TO_CODE').value, 70,  40.5)
+
+        // 拆分 TO_DESC 為多行，每行最多寬度25
+        const toDescElement = document.getElementById('TO_DESC');
+        const toDescText = toDescElement.value;
+        const toDescLines = doc.splitTextToSize(toDescText, 25)
+        doc.text(toDescLines.join('\n'), 61, 44)
+
+        // 在 PDF 上指定位置顯示 "Y" 或 "N"，根據 copy_3_e 和 copy_3 checkbox 狀態
+        if (document.getElementById('copy_3_e').checked || document.getElementById('copy_3').checked) {
+            doc.text('Y', 106, 44);
+        } else {
+            doc.text('N', 106, 44);
+        }
+
+        doc.text(`42`, 136, 44) // 運輸方式
+        doc.text(`C2051 遠雄第四快遞貨棧`, 30, 53.5)
 
         // 獲取並格式化數字值
         const calIpTotItemAmt = formatNumberValue('CAL_IP_TOT_ITEM_AMT');
@@ -174,9 +212,6 @@ async function exportToPDF() {
         let formattedTotalFobPrice = totalFobPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         let formattedTotalFobPriceTw = Math.round(totalFobPriceTw).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
-        // 設定字體大小
-        doc.setFontSize(9.5);
-
         // 計算文字寬度以達到靠右對齊
         let totalFobPriceX = 205 - doc.getTextWidth(formattedTotalFobPrice);
         let totalFobPriceTwX = 205 - doc.getTextWidth(formattedTotalFobPriceTw);
@@ -184,7 +219,18 @@ async function exportToPDF() {
         let totalFobPriceY = 58; // 設定 y 值顯示 totalFobPrice
         let totalFobPriceTwY = 61.5; // 設定 y 值顯示 totalFobPriceTw
 
-        // 在 x: 171, y: totalFobPriceY 顯示 currency
+        doc.text(currency, 171, 29)
+        doc.text(calIpTotItemAmt, calculateRightAlignedX(calIpTotItemAmt, 0, 205), 29)
+        doc.text(formattedFrtAmt, calculateRightAlignedX(formattedFrtAmt, 0, 205), 36)
+        doc.text(formattedInsAmt, calculateRightAlignedX(formattedInsAmt, 0, 205), 43)
+        doc.text(formattedAddAmt, calculateRightAlignedX(formattedAddAmt, 0, 205), 49)
+        doc.text(formattedSubtractAmt, calculateRightAlignedX(formattedSubtractAmt, 0, 205), 54)
+        doc.text(formattedFrtAmt !== 'NIL' ? currency : '', 171, 36)
+        doc.text(formattedInsAmt !== 'NIL' ? currency : '', 171, 43)
+        doc.text(formattedAddAmt !== 'NIL' ? currency : '', 171, 49)
+        doc.text(formattedSubtractAmt !== 'NIL' ? currency : '', 171, 54)
+
+        // 總離岸價格
         doc.text(currency, 171, totalFobPriceY);
         doc.text(formattedTotalFobPrice, totalFobPriceX, totalFobPriceY);
 
@@ -197,16 +243,12 @@ async function exportToPDF() {
             doc.text(exchangeRate.toString(), 192.5, 100.5);
         }
 
-        // 添加二維條碼
-        const barcodeCanvas = document.createElement('canvas');
-        JsBarcode(barcodeCanvas, 'CX 13696', {
-            format: 'CODE128',
-            width: 3,           // 調整寬度，讓條碼變長（默認為 2）
-            height: 40,         // 可以適當調低高度來強調長度
-            displayValue: true  // 數字顯示
-        });
-        const barcodeImgData = barcodeCanvas.toDataURL('image/jpeg');
-        doc.addImage(barcodeImgData, 'JPEG', 118, 12, 40, 10); // 調整圖像的顯示寬度
+        // 出口人
+        doc.text(document.getElementById('SHPR_BAN_ID').value, 30, 60)
+        doc.text(document.getElementById('SHPR_BONDED_ID').value, 94, 60)
+        doc.text(document.getElementById('SHPR_C_NAME').value, 30, 66.5)
+        doc.text(document.getElementById('SHPR_E_NAME').value, 30, 71.5)
+        doc.text(document.getElementById('SHPR_C_ADDR').value, 30, 76.5)
 
         // AEO 編號對照表
         const aeoMapping = {
@@ -224,55 +266,10 @@ async function exportToPDF() {
         // 顯示 AEO 編號
         doc.text(aeoNumber, 175, 65.5);
         
-        // 拆分 TO_DESC 為多行，每行最多寬度25
-        const toDescElement = document.getElementById('TO_DESC');
-        const toDescText = toDescElement.value;
-        const toDescLines = doc.splitTextToSize(toDescText, 25)
-        
-        // 設置表頭欄位與位置
-        const headerData = [
-            { value: `空運`, x: 75, y: 10 },
-            { value: OrderNumber, x: 75, y: 18.5 },
-            { value: CustomsDeclarationDate, x: 62, y: 35 },
-            { value: `TWTPE`, x: 30.5, y: 40.5 },
-            { value: `TAOYUAN`, x: 24, y: 44 },
-            { value: `AIRPORT`, x: 24, y: 48 },
-            { value: `42`, x: 136, y: 44 },
-            { value: `台灣順豐速運`, x: 148, y: 271 },
-            { value: `股份有限公司`, x: 148, y: 276 },
-            { value: `696`, x: 148, y: 281 },
-            { value: `紀書琴`, x: 188, y: 271 },
-            { value: `00718`, x: 188, y: 276 },
-            { value: `C2051 遠雄第四快遞貨棧`, x: 30, y: 53.5 },
-            { value: `${dclDocTypeValue}${dclDocTypeText}`, x: 103, y: 10 },
-            { value: currency, x: 171, y: 29 },
-            { value: calIpTotItemAmt, x: calculateRightAlignedX(calIpTotItemAmt, 0, 205), y: 29 },
-            { value: formattedFrtAmt, x: calculateRightAlignedX(formattedFrtAmt, 0, 205), y: 36 },
-            { value: formattedInsAmt, x: calculateRightAlignedX(formattedInsAmt, 0, 205), y: 43 },
-            { value: formattedAddAmt, x: calculateRightAlignedX(formattedAddAmt, 0, 205), y: 49 },
-            { value: formattedSubtractAmt, x: calculateRightAlignedX(formattedSubtractAmt, 0, 205), y: 54 },
-            { value: formattedFrtAmt !== 'NIL' ? currency : '', x: 171, y: 36 },
-            { value: formattedInsAmt !== 'NIL' ? currency : '', x: 171, y: 43 },
-            { value: formattedAddAmt !== 'NIL' ? currency : '', x: 171, y: 49 },
-            { value: formattedSubtractAmt !== 'NIL' ? currency : '', x: 171, y: 54 },
-            { value: document.getElementById('TO_CODE').value, x: 70, y: 40.5 },
-            { value: toDescLines.join('\n'), x: 61, y: 44 },
-            { value: document.getElementById('SHPR_BAN_ID').value, x: 30, y: 60 },
-            { value: document.getElementById('SHPR_BONDED_ID').value, x: 94, y: 60 },
-            { value: document.getElementById('SHPR_C_NAME').value, x: 30, y: 66.5 },
-            { value: document.getElementById('SHPR_E_NAME').value, x: 30, y: 71.5 },
-            { value: document.getElementById('SHPR_C_ADDR').value, x: 30, y: 76.5 },
-            { value: document.getElementById('CNEE_E_NAME').value, x: 30, y: 87 },
-            { value: document.getElementById('CNEE_COUNTRY_CODE').value, x: 30, y: 100.5 },
-            { value: document.getElementById('CNEE_BAN_ID').value, x: 63, y: 100.5 },
-            { value: document.getElementById('TERMS_SALES').value, x: 165, y: 100.5 },
-            { value: document.getElementById('TOT_CTN').value, x: 43, y: 201.5 },
-            { value: document.getElementById('DOC_CTN_UM').value, x: 50, y: 201.5 },
-            { value: document.getElementById('CTN_DESC').value, x: 85, y: 201.5 },
-            { value: document.getElementById('DCL_GW').value, x: 190, y: 201.5 },
-        ];
+        // 買方名稱
+        doc.text(document.getElementById('CNEE_E_NAME').value, 30, 87)
 
-        // 自動換行的收件人地址處理
+        // 處理地址自動換行
         const cneeEAddrElement = document.getElementById('CNEE_E_ADDR');
         const cneeEAddrText = cneeEAddrElement.value;
 
@@ -284,29 +281,25 @@ async function exportToPDF() {
         let cneeAddressY = 91; // 使用不同名稱的變數來避免衝突
         const cneeLineHeight = 4; // 使用不同名稱的變數來避免衝突
 
-        // 確保字體大小與前面一致
-        doc.setFontSize(9.5);
-
         // 繪製地址，每行一段
         cneeEAddrLines.forEach(line => {
             doc.text(line, 30, cneeAddressY);
             cneeAddressY += cneeLineHeight;
         });
         
-        // 設置表頭字體大小並添加文本
-        doc.setFontSize(9.5);
-        headerData.forEach(row => {
-            const value = row.value;
-            doc.text(value, row.x, row.y);
-        });
+        doc.text(document.getElementById('CNEE_COUNTRY_CODE').value, 30, 100.5)
+        doc.text(document.getElementById('CNEE_BAN_ID').value, 63, 100.5)
+        doc.text(document.getElementById('TERMS_SALES').value, 165, 100.5)
+        doc.text(document.getElementById('TOT_CTN').value, 43, 201.5)
+        doc.text(document.getElementById('DOC_CTN_UM').value, 50, 201.5)
+        doc.text(document.getElementById('CTN_DESC').value, 85, 201.5)
+        doc.text(document.getElementById('DCL_GW').value, 190, 201.5)
+        doc.text(`台灣順豐速運`, 148, 271)
+        doc.text(`股份有限公司`, 148, 276)
+        doc.text(`696`, 148, 281)
+        doc.text(`紀書琴`, 188, 271)
+        doc.text(`00718`, 188, 276)
         
-        // 在 PDF 上指定位置顯示 "Y" 或 "N"，根據 copy_3_e 和 copy_3 checkbox 狀態
-        if (document.getElementById('copy_3_e').checked || document.getElementById('copy_3').checked) {
-            doc.text('Y', 106, 44);
-        } else {
-            doc.text('N', 106, 44);
-        }
-
         // 檢查統計方式及輸出許可號碼欄位，決定是否更新 EXAM_TYPE 為 '8'
         let shouldSetExamType = false;
         document.querySelectorAll("#item-container .item-row").forEach((item) => {
