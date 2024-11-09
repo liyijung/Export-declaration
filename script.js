@@ -851,10 +851,11 @@ function saveItem() {
 
     const item = createItemRow(newItemData);
 
-    // 判斷輸入域目前是展開全部品名還是折疊全部品名
+    // 設置行數選項根據 currentRowSetting
     const textareas = item.querySelectorAll('.DESCRIPTION');
+    const newRows = rowOptions[currentRowSetting];
     textareas.forEach(textarea => {
-        textarea.rows = allExpanded ? 5 : 1; // 根據 allExpanded 狀態設置行數
+        textarea.rows = newRows; // 根據 currentRowSetting 設置行數
     });
 
     // 應用顯示的欄位
