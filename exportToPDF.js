@@ -709,6 +709,15 @@ async function exportToPDF() {
         const separatorWidth = doc.getTextWidth(separator);
         doc.text(separator, pageWidth - separatorWidth - 6, yPosition - 3);
 
+        if (exchangeRate && (Tymd === Fymd || !Fymd)) {
+            // 顯示離岸價格(新台幣)，靠右對齊並加入千分位逗號
+            let formattedTotalFobPriceTw = Math.round(totalFobPriceTw).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+            const fobTwX = 197.5;
+            const fobTwWidth = doc.getTextWidth(formattedTotalFobPriceTw);
+            doc.text(formattedTotalFobPriceTw, fobTwX - fobTwWidth, startY);
+            doc.text('VVVVVVVVVV', 178, startY + 4)
+        }
+        
         const totalData = [
             { label: '', value: totalNetWt > 0 ? formatWithThousandsSeparator(parseFloat(totalNetWt.toFixed(6))) + 'KGM' : '', y: yPosition },
         ];
