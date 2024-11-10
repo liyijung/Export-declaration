@@ -650,3 +650,9 @@ input[type="checkbox"]:hover {
     padding: 0px 3.5px 0px 0px; /* 調整間距 */
     align-items: flex-start; /* 讓文字靠上對齊 */
 }
+
+/* 靠左對齊 .video-link 區塊 */
+.video-link {
+    text-align: left;
+    margin-bottom: 10px;
+}
