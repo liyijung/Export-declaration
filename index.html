@@ -16,11 +16,11 @@
             <div class="tab-links" onclick="openTab('transfer-customer')">轉檔客戶專區</div>
             <!-- 影片鏈接部分 -->
             <div class="video-link" style="margin-top: 10px;">
-                <select id="videoSelector" onchange="updateVideoLink()">
+                <select id="videoSelector" onchange="updateVideoLink()" tabindex="-1">
                     <option value="video/Interface_Operation.mp4">介面操作</option>
                     <option value="video/Transfer_Customer.mp4">轉檔客戶</option>
                 </select>
-                <a id="videoLink" href="video/Interface_Operation.mp4" target="_blank">【影片說明】</a>
+                <a id="videoLink" href="video/Interface_Operation.mp4" target="_blank" tabindex="-1">【影片說明】</a>
             </div>
         </div>
     </div>
@@ -29,9 +29,9 @@
 
     <div class="scroll-container">
         <!-- 回到頂部按鈕 -->
-        <button class="scroll-btn" onclick="scrollToTop()" title="回到頂部">▲</button>
+        <button class="scroll-btn" onclick="scrollToTop()" title="回到頂部" tabindex="-1">▲</button>
         <!-- 移到最下方按鈕 -->
-        <button class="scroll-btn" onclick="scrollToBottom()" title="移到最下方">▼</button>
+        <button class="scroll-btn" onclick="scrollToBottom()" title="移到最下方" tabindex="-1">▼</button>
     </div>
     
     <!--出口報單表頭-->    
@@ -51,7 +51,7 @@
                 <input type="text" id="SHPR_BAN_ID" name="SHPR_BAN_ID" oninput="filterAlphanumeric(this)"
                 placeholder="輸入統一編號以查找資料" onkeydown="preventArrowKeyAdjustment(event)">
                 <span id="noDataMessage" style="color: rgba(255, 0, 0, 0.634); display: none; margin-left: 4px; margin-right: 4px; margin-top: 4px;">查無資料</span>
-                <button type="button" onclick="searchData()">搜尋</button>
+                <button type="button" onclick="searchData()" tabindex="-1">搜尋</button>
             </div>
             <div class="header-group">
                 <label for="SHPR_BONDED_ID">海關監管編號</label>
@@ -60,19 +60,19 @@
             </div>
             <div class="header-group">
                 <label for="SHPR_C_NAME">出口人中文名稱</label>
-                <input type="text" id="SHPR_C_NAME" name="SHPR_C_NAME">
+                <input type="text" id="SHPR_C_NAME" name="SHPR_C_NAME" tabindex="-1">
             </div>
             <div class="header-group">
                 <label for="SHPR_E_NAME">出口人英文名稱</label>
-                <input type="text" id="SHPR_E_NAME" name="SHPR_E_NAME">
+                <input type="text" id="SHPR_E_NAME" name="SHPR_E_NAME" tabindex="-1">
             </div>
             <div class="header-group">
                 <label for="SHPR_C_ADDR">出口人中文地址</label>
-                <input type="text" id="SHPR_C_ADDR" name="SHPR_C_ADDR">
+                <input type="text" id="SHPR_C_ADDR" name="SHPR_C_ADDR" tabindex="-1">
             </div>
             <div class="header-group">
                 <label for="SHPR_E_ADDR">出口人英文地址</label>
-                <input type="text" id="SHPR_E_ADDR" name="SHPR_E_ADDR">
+                <input type="text" id="SHPR_E_ADDR" name="SHPR_E_ADDR" tabindex="-1">
             </div>
             <hr>
             <div class="header-group">
@@ -90,18 +90,18 @@
             </div>
             <div class="header-group">
                 <label for="CNEE_BAN_ID">買方統一編號</label>
-                <input type="text" id="CNEE_BAN_ID" name="CNEE_BAN_ID" oninput="filterAlphanumeric(this)"
+                <input type="text" id="CNEE_BAN_ID" name="CNEE_BAN_ID" oninput="filterAlphanumeric(this)" tabindex="-1"
                 placeholder="(非台灣營業公司此欄免填)" onkeydown="preventArrowKeyAdjustment(event)">
             </div>            
             <hr>
             <div class="header-group">
                 <label for="BUYER_E_NAME">收方名稱</label>
-                <input type="text" id="BUYER_E_NAME" name="BUYER_E_NAME"
+                <input type="text" id="BUYER_E_NAME" name="BUYER_E_NAME" tabindex="-1"
                 placeholder="(買方為台灣營業公司需填列)">
             </div>
             <div class="header-group">
                 <label for="BUYER_E_ADDR">收方地址</label>
-                <input type="text" id="BUYER_E_ADDR" name="BUYER_E_ADDR"
+                <input type="text" id="BUYER_E_ADDR" name="BUYER_E_ADDR" tabindex="-1"
                 placeholder="(買方為台灣營業公司需填列)">
             </div>
             <div class="header-group">
@@ -111,7 +111,7 @@
             </div>
             <div class="header-group">
                 <label for="TO_DESC">目的地(名稱)</label>
-                <input type="text" id="TO_DESC" name="TO_DESC"
+                <input type="text" id="TO_DESC" name="TO_DESC" tabindex="-1"
                 placeholder="(英文名稱)">
             </div>
         </div>
@@ -129,7 +129,7 @@
             </div>
             <div class="header-group">
                 <label for="CTN_DESC">包裝說明</label>
-                <input type="text" id="CTN_DESC" name="CTN_DESC"
+                <input type="text" id="CTN_DESC" name="CTN_DESC" tabindex="-1"
                 placeholder="(一般倉或ECFA包裝說明)">
             </div>
             <div class="header-group">
@@ -183,25 +183,25 @@
             <hr>
             <div class="header-group">
                 <label for="FRT_AMT">運費</label>
-                <input type="number" id="FRT_AMT" name="FRT_AMT"
+                <input type="number" id="FRT_AMT" name="FRT_AMT" tabindex="-1"
                 placeholder="(CFR、CIF 需填列運費，EXW 不得填列運費)" onkeydown="preventArrowKeyAdjustment(event)">
                 <button id="calculate-freight-button">計算運費</button>
             </div>   
             <div class="header-group">
                 <label for="INS_AMT">保險費</label>
-                <input type="number" id="INS_AMT" name="INS_AMT"
+                <input type="number" id="INS_AMT" name="INS_AMT" tabindex="-1"
                 placeholder="(C&I、CIF 需填列保險費，EXW 不得填列保險費)" onkeydown="preventArrowKeyAdjustment(event)">
                 <button id="calculate-insurance-button">計算保險費</button>
             </div>
             <div class="header-group">
                 <label for="ADD_AMT">應加費用</label>
-                <input type="number" id="ADD_AMT" name="ADD_AMT"
+                <input type="number" id="ADD_AMT" name="ADD_AMT" tabindex="-1"
                 placeholder="(EXW 需填列應加費用)" onkeydown="preventArrowKeyAdjustment(event)">
                 <button id="calculate-additional-button">計算應加費用(TWD500)</button>
             </div>
             <div class="header-group">
                 <label for="SUBTRACT_AMT">應減費用</label>
-                <input type="number" id="SUBTRACT_AMT" name="SUBTRACT_AMT" 
+                <input type="number" id="SUBTRACT_AMT" name="SUBTRACT_AMT" tabindex="-1"
                 placeholder="(EXW 不得填列應減費用)" onkeydown="preventArrowKeyAdjustment(event)">
             </div>
         </div>
@@ -210,14 +210,14 @@
             <div class="header-group">
                 <label for="DOC_MARKS_DESC">標記及貨櫃號碼</label>
                 <textarea id="DOC_MARKS_DESC" name="DOC_MARKS_DESC" rows="5"></textarea>
-                <button type="button" class="vertical-text" onclick="toggleRows('DOC_MARKS_DESC', this)">展開</button>
+                <button type="button" class="vertical-text" onclick="toggleRows('DOC_MARKS_DESC', this)" tabindex="-1">展開</button>
             </div>
             <div class="header-group">
                 <label for="DOC_OTR_DESC">其它申報事項</label>
                 <textarea id="DOC_OTR_DESC" name="DOC_OTR_DESC" rows="5"></textarea>
-                <button type="button" class="vertical-text" onclick="toggleRows('DOC_OTR_DESC', this)">展開</button>
+                <button type="button" class="vertical-text" onclick="toggleRows('DOC_OTR_DESC', this)" tabindex="-1">展開</button>
             </div>
-            <select id="doc_otr_desc_dropdown" class="custom-select" style="width: 180px;"> <!-- 調整這裡的寬度 -->
+            <select id="doc_otr_desc_dropdown" class="custom-select" tabindex="-1" style="width: 180px;"> <!-- 調整這裡的寬度 -->
                 <option value="">備註選單</option>
                 <option value="國貨樣品/贈送不再進口">【統計方式04】國貨樣品/贈送不再進口</option>
                 <option value="委外加工不再進口">【統計方式05】委外加工不再進口</option>
@@ -252,16 +252,16 @@
         <!--申請報單副本-->
         <div class="header-section">
             <div class="flex-group">
-                <input type="checkbox" id="copy_3_e" name="copy_option">申請沖退原料稅(E化退稅)<br>
+                <input type="checkbox" id="copy_3_e" name="copy_option" tabindex="-1">申請沖退原料稅(E化退稅)<br>
             </div>
             <div class="flex-group">
-                <input type="checkbox" id="copy_3" name="copy_option">申請報單副本第三聯(沖退原料稅用聯)<br>
+                <input type="checkbox" id="copy_3" name="copy_option" tabindex="-1">申請報單副本第三聯(沖退原料稅用聯)<br>
             </div>
             <div class="flex-group">
-                <input type="checkbox" id="copy_4" name="copy_option">申請報單副本第四聯(退內地稅用聯)<br>
+                <input type="checkbox" id="copy_4" name="copy_option" tabindex="-1">申請報單副本第四聯(退內地稅用聯)<br>
             </div>
             <div class="flex-group">
-                <input type="checkbox" id="copy_5" name="copy_option">申請報單副本第五聯(出口證明用聯)<br>
+                <input type="checkbox" id="copy_5" name="copy_option" tabindex="-1">申請報單副本第五聯(出口證明用聯)<br>
             </div>  
         </div>
         <input type="hidden" id="APP_DUTY_REFUND" value="">
@@ -440,7 +440,7 @@
             <div class="header-group">
                 <label for="DESCRIPTION">品名</label>
                 <textarea id="DESCRIPTION" class="DESCRIPTION" rows="5"></textarea>
-                <button type="button" class="vertical-text" onclick="toggleDescriptionRows()">展開</button>
+                <button type="button" class="vertical-text" onclick="toggleDescriptionRows()" tabindex="-1">展開</button>
             </div>
             <div class="header-group">
                 <label for="QTY">數量</label>
@@ -457,7 +457,7 @@
             </div>
             <div class="header-group">
                 <label for="DOC_TOT_P">金額</label>
-                <input type="number" id="DOC_TOT_P" class="DOC_TOT_P" min="0" readonly>
+                <input type="number" id="DOC_TOT_P" class="DOC_TOT_P" min="0" readonly tabindex="-1">
             </div>
             <div class="header-group">
                 <label for="TRADE_MARK">商標</label>
@@ -580,12 +580,12 @@
             </div>
             <div class="header-group">
                 <label for="ST_UM">統計單位</label>
-                <input type="text" id="ST_UM" class="ST_UM" readonly>
+                <input type="text" id="ST_UM" class="ST_UM" readonly tabindex="-1">
             </div>           
             <div class="floating-buttons">
-                <button id="rememberButton" onclick="rememberItemModalData()">記憶</button>
-                <button onclick="saveItem()">儲存</button>
-                <button onclick="closeItemModal()">取消</button>
+                <button id="rememberButton" onclick="rememberItemModalData()" tabindex="-1">記憶</button>
+                <button onclick="saveItem()" tabindex="-1">儲存</button>
+                <button onclick="closeItemModal()" tabindex="-1">取消</button>
             </div>
         </div>
     </div>
@@ -875,14 +875,14 @@
     <!--各標籤頁下方-->
     <div class="import-export-buttons">
         <input type="file" id="import-excel" accept=".xlsx, .xls" style="display:none;">
-        <button class="excel-btn" onclick="document.getElementById('import-excel').click();">匯入Excel</button>
-        <button class="excel-btn" id="export-excel">匯出Excel</button>
+        <button class="excel-btn" onclick="document.getElementById('import-excel').click();" tabindex="-1">匯入Excel</button>
+        <button class="excel-btn" id="export-excel" tabindex="-1">匯出Excel</button>
         <div>｜</div>
         <input type="file" id="import-xml" accept=".xml" style="display:none;">
-        <button class="xml-btn" onclick="document.getElementById('import-xml').click();">匯入XML</button>
-        <button class="xml-btn" id="export-to-xml">匯出XML</button>
+        <button class="xml-btn" onclick="document.getElementById('import-xml').click();" tabindex="-1">匯入XML</button>
+        <button class="xml-btn" id="export-to-xml" tabindex="-1">匯出XML</button>
         <div>｜</div>
-        <button id="export-to-pdf">出口報單預覽</button>
+        <button id="export-to-pdf" tabindex="-1">出口報單預覽</button>
     </div>
     <!-- 提示訊息 -->
     <div id="loadingMessage" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); padding:20px; background-color:#f8f8f8; border:1px solid #ccc; z-index:1000;">
