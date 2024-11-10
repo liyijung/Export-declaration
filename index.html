@@ -14,14 +14,6 @@
             <div class="tab-links" onclick="openTab('items')">出口報單項次</div>
             <div class="tab-links" onclick="openTab('bonded')">保稅相關信息</div>
             <div class="tab-links" onclick="openTab('transfer-customer')">轉檔客戶專區</div>
-            <!-- 影片鏈接部分 -->
-            <div class="video-link" style="margin-top: 10px;">
-                <select id="videoSelector" onchange="updateVideoLink()" tabindex="-1">
-                    <option value="video/Interface_Operation.mp4">介面操作</option>
-                    <option value="video/Transfer_Customer.mp4">轉檔客戶</option>
-                </select>
-                <a id="videoLink" href="video/Interface_Operation.mp4" target="_blank" tabindex="-1">【影片說明】</a>
-            </div>
         </div>
     </div>
 
@@ -833,6 +825,14 @@
 
     <!--轉檔客戶專區-->
     <div id="transfer-customer" class="tab" style="text-align: center;">
+        <!-- 影片鏈接部分 -->
+        <div class="video-link" style="margin-top: 10px;">
+            <select id="videoSelector" onchange="updateVideoLink()" tabindex="-1">
+                <option value="video/Transfer_Customer.mp4">轉檔客戶</option>
+                <option value="video/Interface_Operation.mp4">介面操作</option>
+            </select>
+            <a id="videoLink" href="video/Transfer_Customer.mp4" target="_blank" tabindex="-1">【影片說明】</a>
+        </div>
         <table border="1" style="margin: 0 auto;">
             <thead>
                 <tr>
