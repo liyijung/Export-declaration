@@ -1159,14 +1159,15 @@ function applyFieldData() {
     const overwriteOption = document.getElementById('overwrite-option').value;
     const itemContainer = document.getElementById('item-container');
     const items = itemContainer.querySelectorAll('.item-row');
-    let hasUpdatedCCCCode = false; // 新增：紀錄是否有更新CCC_CODE欄位
+    let hasUpdatedCCCCode = false; // 紀錄是否有更新CCC_CODE欄位
+    let hasUpdatedQtyOrUnitPrice = false; // 紀錄是否有更新QTY或DOC_UNIT_P欄位
 
     if (mode === 'custom') {
         const itemNumbers = document.getElementById('specify-item-numbers').value;
         const fieldName = document.getElementById('specify-field-name').value;
         const fieldValue = document.getElementById('specify-field-value').value;
-        const startNumber = parseInt(document.getElementById('start-number').value, 10); // 新增：起始編號
-        let currentNumber = startNumber; // 新增：當前編號
+        const startNumber = parseInt(document.getElementById('start-number').value, 10); // 起始編號
+        let currentNumber = startNumber; // 當前編號
 
         const ranges = itemNumbers.split(',').map(range => range.trim());
         let indices = [];
@@ -1189,14 +1190,19 @@ function applyFieldData() {
                 if (overwriteOption === 'all' || (overwriteOption === 'empty' && !fieldElement.value) || (overwriteOption === 'specified' && fieldElement.value)) {
                     // 如果選擇的是產證序號，則填入指定的編號
                     if (fieldName === 'CERT_NO_ITEM') {
-                        fieldElement.value = `${currentNumber}`; // 新增：填入指定的編號
-                        currentNumber++; // 新增：編號遞增
+                        fieldElement.value = `${currentNumber}`; // 填入指定的編號
+                        currentNumber++; // 編號遞增
                     } else {
                         fieldElement.value = fieldValue;
                     }
                     // 紀錄是否更新了CCC_CODE
                     if (fieldName === 'CCC_CODE') {
                         hasUpdatedCCCCode = true;
+                    }
+
+                    // 紀錄是否更新了QTY或DOC_UNIT_P
+                    if (fieldName === 'QTY' || fieldName === 'DOC_UNIT_P') {
+                        hasUpdatedQtyOrUnitPrice = true;
                     }
                 }
             }
@@ -1238,6 +1244,10 @@ function applyFieldData() {
                         if (fieldName === 'CCC_CODE') {
                             hasUpdatedCCCCode = true;
                         }
+                        // 紀錄是否更新了QTY或DOC_UNIT_P
+                        if (fieldName === 'QTY' || fieldName === 'DOC_UNIT_P') {
+                            hasUpdatedQtyOrUnitPrice = true;
+                        }
                     });
                 }
             });
@@ -1250,6 +1260,22 @@ function applyFieldData() {
             const cccCodeInput = item.querySelector('.CCC_CODE');
             if (cccCodeInput) {
                 handleCCCCodeInput(null, cccCodeInput); // 最後執行處理CCC_CODE欄位的邏輯
+            }
+        });
+    }
+
+    // 檢查是否有更新QTY或DOC_UNIT_P欄位，若有則對所有更新的欄位執行金額計算
+    if (hasUpdatedQtyOrUnitPrice) {
+        items.forEach(item => {
+            const qtyInput = item.querySelector('.QTY');
+            const docUnitPInput = item.querySelector('.DOC_UNIT_P');
+            const docTotPInput = item.querySelector('.DOC_TOT_P');
+            
+            if (qtyInput && docUnitPInput && docTotPInput) {
+                const qtyValue = parseFloat(qtyInput.value) || 0;
+                const unitPriceValue = parseFloat(docUnitPInput.value) || 0;
+                // 計算 DOC_TOT_P 並設置其值
+                docTotPInput.value = qtyValue * unitPriceValue;
             }
         });
     }
