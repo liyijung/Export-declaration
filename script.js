@@ -49,6 +49,11 @@ window.onresize = function() {
     adjustMargin();
 };
 
+// 游標在頁面載入後自動聚焦到 文件編號 欄位
+window.onload = function() {
+    document.getElementById("FILE_NO").focus();
+};
+
 // 【影片說明】
 function updateVideoLink() {
     var selector = document.getElementById("videoSelector");
