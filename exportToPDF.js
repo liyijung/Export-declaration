@@ -339,10 +339,10 @@ async function exportToPDF() {
         const docMarksDescLines = doc.splitTextToSize(docMarksDescText, 135);
 
         // 初始顯示行與溢出行分開存放
-        const initialLines = docMarksDescLines.slice(0, 10); // 取前十一行
-        const overflowLines = docMarksDescLines.slice(10);   // 第十一行以後
+        const initialLines = docMarksDescLines.slice(0, 10); // 取前十行
+        const overflowLines = docMarksDescLines.slice(10);   // 第十行以後
 
-        // 如果第十一行以後有值，則在 initialLines 的最後一行添加 '\n- CONTINUE -'
+        // 如果第十行以後有值，則在 initialLines 的最後一行添加 '\n- CONTINUE -'
         if (overflowLines.length > 0) {
             initialLines[initialLines.length - 1] += '\n- CONTINUE -';
         }
