@@ -1738,7 +1738,7 @@ function createItemRow(data) {
             <label>${itemCount + 1}</label>
         </div>
         <div class="form-group fix">
-            <input type="checkbox" class="ITEM_NO" ${isChecked ? 'checked' : ''}>
+            <input type="checkbox" class="ITEM_NO" tabindex="-1" ${isChecked ? 'checked' : ''}>
         </div>
         <div class="form-group fix item-number" style="width: 2%;">
             <label>${itemNumber}</label>
@@ -1772,7 +1772,7 @@ function createItemRow(data) {
         ${createInputField('ST_QTY', data.ST_QTY, fieldsToShow.ST_QTY)}
         ${createInputField('ST_UM', replaceValue('ST_UM', data.ST_UM), fieldsToShow.ST_UM)}
         <div class="form-group fix">
-            <button class="delete-button" onclick="removeItem(this)">Ｘ</button>
+            <button class="delete-button" onclick="removeItem(this)" tabindex="-1">Ｘ</button>
         </div>
     `;
     itemCount++;
