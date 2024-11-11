@@ -714,8 +714,8 @@ async function exportToPDF() {
             let formattedTotalFobPriceTw = Math.round(totalFobPriceTw).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
             const fobTwX = 197.5;
             const fobTwWidth = doc.getTextWidth(formattedTotalFobPriceTw);
-            doc.text(formattedTotalFobPriceTw, fobTwX - fobTwWidth, startY);
-            doc.text('VVVVVVVVVV', 178, startY + 4)
+            doc.text(formattedTotalFobPriceTw, fobTwX - fobTwWidth, yPosition);
+            doc.text('VVVVVVVVVV', 178, yPosition + 4)
         }
         
         const totalData = [
