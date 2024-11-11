@@ -2042,7 +2042,7 @@ function createInputField(name, value, isVisible, iscalcWtValue) {
         `;
     } else if (['CCC_CODE'].includes(name)) {
         return `
-            <div class="form-group ${visibilityClass}" style="width: 100%;">
+            <div class="form-group ${visibilityClass}" style="width: 105%;">
                 ${inputField}
             </div>
         `;
