@@ -750,6 +750,42 @@ function rememberItemModalData() {
     alert("彈跳框內容已記憶");
 }
 
+// 清空彈跳框的內容
+function clearAllFields() {
+    document.getElementById('ITEM_NO').checked = false;
+    document.getElementById('DESCRIPTION').value = '';
+    document.getElementById('QTY').value = '';
+    document.getElementById('DOC_UM').value = '';
+    document.getElementById('DOC_UNIT_P').value = '';
+    document.getElementById('DOC_TOT_P').value = '';
+    document.getElementById('TRADE_MARK').value = '';
+    document.getElementById('CCC_CODE').value = '';
+    document.getElementById('ST_MTD').value = '';
+    document.getElementById('NET_WT').value = '';
+    document.getElementById('ORG_COUNTRY').value = '';
+    document.getElementById('ORG_IMP_DCL_NO').value = '';
+    document.getElementById('ORG_IMP_DCL_NO_ITEM').value = '';
+    document.getElementById('SELLER_ITEM_CODE').value = '';
+    document.getElementById('BOND_NOTE').value = '';
+    document.getElementById('GOODS_MODEL').value = '';
+    document.getElementById('GOODS_SPEC').value = '';
+    document.getElementById('CERT_NO').value = '';
+    document.getElementById('CERT_NO_ITEM').value = '';
+    document.getElementById('ORG_DCL_NO').value = '';
+    document.getElementById('ORG_DCL_NO_ITEM').value = '';
+    document.getElementById('EXP_NO').value = '';
+    document.getElementById('EXP_SEQ_NO').value = '';
+    document.getElementById('WIDE').value = '';
+    document.getElementById('WIDE_UM').value = '';
+    document.getElementById('LENGT_').value = '';
+    document.getElementById('LENGTH_UM').value = '';
+    document.getElementById('ST_QTY').value = '';
+    document.getElementById('ST_UM').value = '';
+
+    // 清空下拉選單的選擇
+    document.getElementById('COPY_ITEM').selectedIndex = 0;
+}
+
 // 彈跳框品名 展開/折疊
 function toggleDescriptionRows() {
     const textarea = document.getElementById("DESCRIPTION");
