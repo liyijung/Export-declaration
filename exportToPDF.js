@@ -676,7 +676,7 @@ async function exportToPDF() {
         // 在最後一頁的最後一行位置顯示加總，靠右對齊距離右邊38px
         const pageWidth = doc.internal.pageSize.getWidth();
         const marginRight = 38;
-        let yPosition = lastY;
+        let yPosition = lastY + 1;
 
         // 檢查加總部分是否會超過首頁的頁面底部的 Y 坐標
         const currentPage = doc.internal.getCurrentPageInfo().pageNumber;
