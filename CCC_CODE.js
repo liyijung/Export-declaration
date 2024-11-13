@@ -135,7 +135,10 @@ function searchTariff(inputElement, isModal = false) {
                                     const shprBanId = shprBanIdElement ? shprBanIdElement.value : '';
 
                                     // 判斷 SHPR_BAN_ID 是否為指定的例外值
-                                    const exceptionIds = ['22099174'];
+                                    const exceptionIds = [
+                                        '22099174', // 元隆電子股份有限公司
+                                        '27890054', // 碩呈科技股份有限公司
+                                    ];
                                     if (exceptionIds.includes(shprBanId)) {
                                         stqty.value = ''; // 不執行計算，清空 ST_QTY
                                     } else {
@@ -378,7 +381,10 @@ function updateFields(inputElement, item) {
                 const shprBanId = shprBanIdElement ? shprBanIdElement.value : '';
 
                 // 判斷 SHPR_BAN_ID 是否為指定的例外值
-                const exceptionIds = ['22099174'];
+                const exceptionIds = [
+                    '22099174', // 元隆電子股份有限公司
+                    '27890054', // 碩呈科技股份有限公司
+                ];
                 if (exceptionIds.includes(shprBanId)) {
                     stqty.value = ''; // 不執行計算，清空 ST_QTY
                 } else {
