@@ -708,7 +708,7 @@ async function exportToPDF() {
         // 添加分隔線
         const separator = '- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -';
         const separatorWidth = doc.getTextWidth(separator);
-        doc.text(separator, pageWidth - separatorWidth - 6, yPosition - 3);
+        doc.text(separator, pageWidth - separatorWidth - 6, yPosition - 2.5);
 
         if (exchangeRate && (Tymd === Fymd || !Fymd)) {
             // 顯示離岸價格(新台幣)，靠右對齊並加入千分位逗號
