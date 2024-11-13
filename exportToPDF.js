@@ -438,7 +438,7 @@ async function exportToPDF() {
         // 添加項次資料到 PDF
         let startY = 130;  // 設置初始的 Y 坐標
         const maxYHome = 188;  // 首頁的頁面底部的 Y 坐標
-        const maxYContinuation = 278;  // 續頁的頁面底部的 Y 坐標
+        const maxYContinuation = 279;  // 續頁的頁面底部的 Y 坐標
         const lineHeight = 4;  // 每行的高度
 
         let itemCounter = 1; // 用於標記項次編號
@@ -532,18 +532,27 @@ async function exportToPDF() {
             let descriptionTextY = tradeMarkY;
 
             // 顯示前置描述和品名
-            const descriptionText = [];
-            if (item.sellerItemCode) descriptionText.push(`S/N:${item.sellerItemCode}`);
-            if (item.goodsModel) descriptionText.push(`MODEL:${item.goodsModel}`);
-            if (item.goodsSpec) descriptionText.push(`SPEC:${item.goodsSpec}`);
-            descriptionText.push(item.description); // 添加品名描述
+            const descriptionText = [
+                item.sellerItemCode ? `S/N:${item.sellerItemCode}` : '',
+                item.goodsModel ? `MODEL:${item.goodsModel}` : '',
+                item.goodsSpec ? `SPEC:${item.goodsSpec}` : '',
+                item.description || '' // 確保 description 不為 undefined 或 null
+            ].filter(Boolean); // 過濾掉空字串
 
-            // 顯示原進口報單號碼、原進口報單項次、產證號碼、產證項次、原進倉報單號碼、原進倉報單項次
-            const fieldsToShow = [
-                { name: '原進口報單', value: item.origImpDclNo, itemValue: item.origImpDclNoItem },
-                { name: '產證號碼', value: item.certNo, itemValue: item.certNoItem },
-                { name: '原進倉報單', value: item.origDclNo, itemValue: item.origDclNoItem }
-            ];            
+            // 顯示指定欄位
+            const fields = [
+                { label: '原進口報單', value: item.origImpDclNo, itemValue: item.origImpDclNoItem },
+                { label: '產證號碼', value: item.certNo, itemValue: item.certNoItem },
+                { label: '原進倉報單', value: item.origDclNo, itemValue: item.origDclNoItem }
+            ];
+
+            const fieldsToShow = fields.filter(field => field.value || field.itemValue); // 過濾掉空值
+
+            // 如果 fieldsToShow 有值，併入 descriptionText
+            fieldsToShow.forEach(field => {
+                const combinedValue = `${field.label}: ${field.value || ''}${field.itemValue ? ` 項次${field.itemValue}` : ''}`;
+                descriptionText.push(combinedValue.trim());
+            });
 
             if (item.index === '*') {
                 const combinedDescription = descriptionText.join('\n');
@@ -555,12 +564,16 @@ async function exportToPDF() {
             } else {
                 const combinedDescription = descriptionText.join('\n');
                 const descriptionLines = doc.splitTextToSize(combinedDescription, 68);
-                
-                // 檢查是否只有一行描述且 fieldsToShow 中所有 field.value 都為空
-                const hasNoFieldsToShow = fieldsToShow.every(field => !field.value);
-                if (descriptionLines.length === 1 && hasNoFieldsToShow) {
-                    descriptionLines.push(""); // 添加一行空白
-                    descriptionLines.push(""); // 添加一行空白
+                const statUnit = item.statUnit || ''; // 統計單位
+
+                // 根據統計數量和品名行數進行處理
+                if (descriptionLines.length === 1) {
+                    descriptionLines.push(''); // 添加一行空白
+                    if (statUnit) {
+                        descriptionLines.push(''); // 如果統計單位有值，再添加多一行空白
+                    }
+                } else if (descriptionLines.length === 2 && statUnit) {
+                    descriptionLines.push(''); // 如果統計單位有值，且已有兩行描述，再添加一行空白
                 }
 
                 descriptionLines.forEach(line => {
@@ -569,14 +582,6 @@ async function exportToPDF() {
                 });
                 itemCounter++; // 增加項次計數器
             }
-
-            fieldsToShow.forEach(field => {
-                if (field.value) {
-                    const fieldText = field.itemValue ? `${field.name}: ${field.value} 項次${field.itemValue}` : `${field.name}${field.value}`;
-                    doc.text(fieldText, 14, descriptionTextY);
-                    descriptionTextY += lineHeight;
-                }
-            });
 
             if (item.index !== '*') {
                 // 顯示輸出許可號碼和輸出許可項次，居中對齊
@@ -680,7 +685,7 @@ async function exportToPDF() {
 
         // 檢查加總部分是否會超過首頁的頁面底部的 Y 坐標
         const currentPage = doc.internal.getCurrentPageInfo().pageNumber;
-        if (currentPage === 1 && yPosition + 8 > maxYHome) {
+        if (currentPage === 1 && yPosition > maxYHome) {
             doc.addPage();
             await renderTemplate(doc, templateContinuation, 1);
             yPosition = 63; // 續頁的起始 Y 坐標
@@ -692,7 +697,7 @@ async function exportToPDF() {
             addFileNoToBottomLeft(doc, fileNo);
             addlotnoToBottomLeft(doc, lotno);
             
-        } else if (yPosition + 8 > maxYContinuation) {
+        } else if (yPosition > maxYContinuation) {
             doc.addPage();
             await renderTemplate(doc, templateContinuation, 1);
             yPosition = 63; // 續頁的起始 Y 坐標
