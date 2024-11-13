@@ -685,7 +685,7 @@ async function exportToPDF() {
 
         // 檢查加總部分是否會超過首頁的頁面底部的 Y 坐標
         const currentPage = doc.internal.getCurrentPageInfo().pageNumber;
-        if (currentPage === 1 && yPosition > maxYHome) {
+        if (currentPage === 1 && yPosition + lineHeight > maxYHome) {
             doc.addPage();
             await renderTemplate(doc, templateContinuation, 1);
             yPosition = 63; // 續頁的起始 Y 坐標
@@ -697,7 +697,7 @@ async function exportToPDF() {
             addFileNoToBottomLeft(doc, fileNo);
             addlotnoToBottomLeft(doc, lotno);
             
-        } else if (yPosition > maxYContinuation) {
+        } else if (yPosition + lineHeight > maxYContinuation) {
             doc.addPage();
             await renderTemplate(doc, templateContinuation, 1);
             yPosition = 63; // 續頁的起始 Y 坐標
