@@ -437,8 +437,8 @@ async function exportToPDF() {
 
         // 添加項次資料到 PDF
         let startY = 130;  // 設置初始的 Y 坐標
-        const maxYHome = 180;  // 首頁的頁面底部的 Y 坐標
-        const maxYContinuation = 270;  // 續頁的頁面底部的 Y 坐標
+        const maxYHome = 188;  // 首頁的頁面底部的 Y 坐標
+        const maxYContinuation = 278;  // 續頁的頁面底部的 Y 坐標
         const lineHeight = 4;  // 每行的高度
 
         let itemCounter = 1; // 用於標記項次編號
@@ -560,6 +560,7 @@ async function exportToPDF() {
                 const hasNoFieldsToShow = fieldsToShow.every(field => !field.value);
                 if (descriptionLines.length === 1 && hasNoFieldsToShow) {
                     descriptionLines.push(""); // 添加一行空白
+                    descriptionLines.push(""); // 添加一行空白
                 }
 
                 descriptionLines.forEach(line => {
@@ -668,7 +669,7 @@ async function exportToPDF() {
             const bondNoteX = 102 - bondNoteWidth / 2;
             doc.text(bondNoteText, bondNoteX, startY + lineHeight);
             
-            startY = descriptionTextY + lineHeight;
+            startY = descriptionTextY;
             lastY = startY
         }
 
@@ -679,7 +680,7 @@ async function exportToPDF() {
 
         // 檢查加總部分是否會超過首頁的頁面底部的 Y 坐標
         const currentPage = doc.internal.getCurrentPageInfo().pageNumber;
-        if (currentPage === 1 && yPosition > maxYHome) {
+        if (currentPage === 1 && yPosition + 8 > maxYHome) {
             doc.addPage();
             await renderTemplate(doc, templateContinuation, 1);
             yPosition = 63; // 續頁的起始 Y 坐標
@@ -691,7 +692,7 @@ async function exportToPDF() {
             addFileNoToBottomLeft(doc, fileNo);
             addlotnoToBottomLeft(doc, lotno);
             
-        } else if (yPosition > maxYContinuation) {
+        } else if (yPosition + 8 > maxYContinuation) {
             doc.addPage();
             await renderTemplate(doc, templateContinuation, 1);
             yPosition = 63; // 續頁的起始 Y 坐標
