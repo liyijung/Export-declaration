@@ -130,7 +130,17 @@ function searchTariff(inputElement, isModal = false) {
                                 } else if (docum.value === 'PCE' && item['統計數量單位'] === 'SET') {
                                     stqty.value = qty.value;
                                 } else if (docum.value === 'EAC' && item['統計數量單位'] === 'PCE') {
-                                    stqty.value = qty.value;
+                                    // 獲取 SHPR_BAN_ID 欄位值
+                                    const shprBanIdElement = document.getElementById('SHPR_BAN_ID');
+                                    const shprBanId = shprBanIdElement ? shprBanIdElement.value : '';
+
+                                    // 判斷 SHPR_BAN_ID 是否為指定的例外值
+                                    const exceptionIds = ['22099174'];
+                                    if (exceptionIds.includes(shprBanId)) {
+                                        stqty.value = ''; // 不執行計算，清空 ST_QTY
+                                    } else {
+                                        stqty.value = qty.value; // 正常計算
+                                    }
                                 } else if (docum.value === 'SHE' && item['統計數量單位'] === 'PCE') {
                                     stqty.value = qty.value;
                                 } else if (docum.value === 'NPR' && item['統計數量單位'] === 'PCE') {
@@ -363,7 +373,17 @@ function updateFields(inputElement, item) {
             } else if (docum.value === 'PCE' && item['統計數量單位'] === 'SET') {
                 stqty.value = qty.value;
             } else if (docum.value === 'EAC' && item['統計數量單位'] === 'PCE') {
-                stqty.value = qty.value;
+                // 獲取 SHPR_BAN_ID 欄位值
+                const shprBanIdElement = document.getElementById('SHPR_BAN_ID');
+                const shprBanId = shprBanIdElement ? shprBanIdElement.value : '';
+
+                // 判斷 SHPR_BAN_ID 是否為指定的例外值
+                const exceptionIds = ['22099174'];
+                if (exceptionIds.includes(shprBanId)) {
+                    stqty.value = ''; // 不執行計算，清空 ST_QTY
+                } else {
+                    stqty.value = qty.value; // 正常計算
+                }                
             } else if (docum.value === 'SHE' && item['統計數量單位'] === 'PCE') {
                 stqty.value = qty.value;
             } else if (docum.value === 'NPR' && item['統計數量單位'] === 'PCE') {
