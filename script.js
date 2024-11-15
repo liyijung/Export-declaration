@@ -3102,9 +3102,6 @@ document.addEventListener('DOMContentLoaded', function () {
             'APP_DUTY_REFUND', 'MARK_TOT_LINES', 'EXAM_TYPE', 'COPY_QTY',
         ];
 
-        // 將 PROC_NO 的值固定設置為 'X8CS'
-        let procNo = 'X8CS';
-
         const itemFields = [
             'DESCRIPTION', 'QTY', 'DOC_UM', 'DOC_UNIT_P', 'DOC_TOT_P',
             'TRADE_MARK', 'CCC_CODE', 'ST_MTD', 'ISCALC_WT', 'NET_WT', 'ORG_COUNTRY', 
@@ -3114,13 +3111,18 @@ document.addEventListener('DOMContentLoaded', function () {
             'WIDE', 'WIDE_UM', 'LENGT_', 'LENGTH_UM', 'ST_QTY' ,'ST_UM',
         ];
         let xmlContent = '<?xml version="1.0" encoding="UTF-8"?>\n<Root>\n  <sys_code>GICCDS</sys_code>\n<head>\n  <head_table_name>DOC_HEAD</head_table_name>\n';
-        
-        // 添加 PROC_NO
-        xmlContent += `  <fields>\n    <field_name>PROC_NO</field_name>\n    <field_value>${procNo}</field_value>\n  </fields>\n`;
 
         // 取得 SHPR_BAN_ID 欄位的值
         const shprBanIdElement = document.getElementById('SHPR_BAN_ID');
         const shprBanId = shprBanIdElement ? shprBanIdElement.value.trim() : '';
+
+        // 將 PROC_NO 的值設置為 'X8CS'
+        let procNo = 'X8CS';
+        const excludedProcNoIds = ['23570158']; // 排除的 SHPR_BAN_ID 值清單
+        if (excludedProcNoIds.includes(shprBanId)) {
+            procNo = ''; // 如果在排除列表中，清空 PROC_NO
+        }
+        xmlContent += `  <fields>\n    <field_name>PROC_NO</field_name>\n    <field_value>${procNo}</field_value>\n  </fields>\n`;
 
         // AEO 編號對照表
         const aeoMapping = {
