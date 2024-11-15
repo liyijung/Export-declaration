@@ -2831,6 +2831,7 @@ document.addEventListener('DOMContentLoaded', function () {
             { className: 'DOC_UNIT_P', name: '單價' },
             { className: 'DOC_TOT_P', name: '金額' },
             { className: 'TRADE_MARK', name: '商標' },
+            { className: 'CCC_CODE', name: '稅則' },
             { className: 'ST_MTD', name: '統計方法' },
             { className: 'NET_WT', name: '淨重' }
         ];
