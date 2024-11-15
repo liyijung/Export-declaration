@@ -111,17 +111,7 @@ function dragElement(element, header) {
     }
 }
 
-// 切換固定頁面寬度
-function toggleWidth() {
-    var itemsTab = document.getElementById("items");
-    if (document.getElementById("toggle-width").checked) {
-        itemsTab.classList.add("fixed-width");
-    } else {
-        itemsTab.classList.remove("fixed-width");
-    }
-}
-
-// 切換固定項次標題
+// 切換固定欄位標題
 function toggleFixTop() {
     var headerContainer = document.getElementById('header-container');
     var checkbox = document.getElementById('toggle-fix-top');
@@ -129,6 +119,29 @@ function toggleFixTop() {
         headerContainer.classList.add('fixed-top');
     } else {
         headerContainer.classList.remove('fixed-top');
+    }
+}
+
+// 初始化固定欄位標題
+function initFixTop() {
+    var headerContainer = document.getElementById('header-container');
+    var checkbox = document.getElementById('toggle-fix-top');
+    
+    if (headerContainer && checkbox && checkbox.checked) {
+        headerContainer.classList.add('fixed-top');
+    }
+}
+
+// 確保初始化在頁面加載後執行
+window.addEventListener('DOMContentLoaded', initFixTop);
+
+// 切換固定頁面寬度
+function toggleWidth() {
+    var itemsTab = document.getElementById("items");
+    if (document.getElementById("toggle-width").checked) {
+        itemsTab.classList.add("fixed-width");
+    } else {
+        itemsTab.classList.remove("fixed-width");
     }
 }
 
