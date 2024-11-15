@@ -50,16 +50,20 @@ body {
 
 .tab.active {
     display: block;
+    margin-bottom: 50px;
 }
 
 .import-export-buttons {
+    position: fixed; /* 固定定位 */
+    background-color: rgba(255, 255, 255, 0.9); /* 半透明背景，提升對比度 */
     bottom: 0;
     left: 0;
+    right: 0;
     width: 100%;
-    padding: 5px 0;
+    padding: 5px 0px 0px 5px; /* 上、右、下、左的內邊距 */
     display: flex;
     justify-content: center;
-    margin-bottom: 50px;
+    margin-bottom: 0px;
     z-index: 1000;
     gap: 10px;
 }
@@ -521,6 +525,7 @@ th, td {
 #items.fixed-width {
     width: 1700px; /* 固定頁面的寬度 */
     margin: 0 auto;
+    padding-bottom: 80px; /* 空出下方的空間 */
 }
 
 #items {
