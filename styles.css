@@ -8,7 +8,7 @@ body {
     position: fixed;
     top: 0;
     width: 100%;
-    background-color: #fff;
+    background-color: rgba(255, 255, 255, 0.9); /* 半透明背景，提升對比度 */
     z-index: 1000;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     font-size: 18px;
