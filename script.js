@@ -2046,6 +2046,12 @@ function createInputField(name, value, isVisible, iscalcWtValue) {
                 ${inputField}
             </div>
         `;
+    } else if (['SELLER_ITEM_CODE'].includes(name)) {
+        return `
+            <div class="form-group ${visibilityClass}" style="width: 130%;">
+                ${inputField}
+            </div>
+        `;
     } else {
         return `
             <div class="form-group ${visibilityClass}">
