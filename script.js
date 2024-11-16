@@ -3066,7 +3066,14 @@ document.addEventListener('DOMContentLoaded', function () {
             for (let field of itemFieldLengthChecks) {
                 let element = item.querySelector(`.${field.className}`);
                 if (element && element.value.trim()) { // 如果欄位有值則進行檢查
-                    let length = element.value.trim().length;
+                    let value = element.value.trim();
+
+                    // 特別處理 CCC_CODE，移除符號 '.' 和 '-'
+                    if (field.className === 'CCC_CODE') {
+                        value = value.replace(/[.\-]/g, '');
+                    }
+        
+                    let length = value.length;
                     if (!field.validLengths.includes(length)) {
                         invalidItemFields.push(`${field.name} (應為 ${field.validLengths.join(' 或 ')} 碼)`);
                     }
