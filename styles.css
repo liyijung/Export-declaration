@@ -79,6 +79,14 @@ body {
     font-weight: bold;
 }
 
+.import-export-buttons button:hover {
+    transform: scale(1.05); /* 微放大效果 */
+}
+
+.import-export-buttons button:active {
+    transform: scale(0.95); /* 按下時縮小效果 */
+}
+
 .add-buttons button,
 .add-buttons label {
     font-size: 16px;
