@@ -616,6 +616,10 @@ function openItemModal() {
     const itemModal = document.getElementById('item-modal');
     itemModal.style.display = 'flex';
 
+    // 允許點擊背後的頁面欄位
+    itemModal.style.pointerEvents = 'none';
+    itemModal.children[0].style.pointerEvents = 'auto'; // 只允許模態框內部的第一個子元素接收點擊
+
     // 滾動到最上方
     document.querySelector('#item-modal .modal-content').scrollTop = 0;
 
