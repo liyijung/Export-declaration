@@ -221,6 +221,7 @@ body {
 
 #item-modal .modal-content {
     width: 800px;
+    pointer-events: auto; /* 只允許模態框內容點擊 */
 }
 
 #adjust-order-modal .modal-content {
