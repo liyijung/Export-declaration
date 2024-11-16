@@ -64,6 +64,7 @@ body {
     justify-content: center;
     z-index: 1000;
     gap: 10px;
+    margin-left: 5px;
 }
 
 .import-export-buttons button {
