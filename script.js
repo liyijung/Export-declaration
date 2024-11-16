@@ -63,24 +63,18 @@ function updateVideoLink() {
 
 // 滾動到頂部
 function scrollToTop() {
-    const scrollArea = document.querySelector('.tab.active');
-    if (scrollArea) {
-        scrollArea.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        });
-    }
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
 }
 
 // 滾動到底部
 function scrollToBottom() {
-    const scrollArea = document.querySelector('.tab.active');
-    if (scrollArea) {
-        scrollArea.scrollTo({
-            top: scrollArea.scrollHeight,
-            behavior: 'smooth'
-        });
-    }
+    window.scrollTo({
+        top: document.body.scrollHeight,
+        behavior: 'smooth'
+    });
 }
 
 function dragElement(element, header) {
