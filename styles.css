@@ -46,7 +46,7 @@ body {
 .tab {
     display: none;
     padding: 10px;
-    height: calc(100vh - 150px); /* 自動調整高度，確保滾動區域可用 */
+    height: calc(100vh - 0px); /* 自動調整高度，確保滾動區域可用 */
     overflow-y: auto; /* 獨立滾動 */
 }
 
