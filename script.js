@@ -3051,6 +3051,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // 欄位碼數檢查設定 (每個項次都需檢查的欄位)
         const itemFieldLengthChecks = [
             { className: 'DOC_UM', name: '單位', validLengths: [3] },
+            { className: 'CCC_CODE', name: '稅則', validLengths: [11] },
             { className: 'ST_MTD', name: '統計方式', validLengths: [2] },
             { className: 'ORG_COUNTRY', name: '生產國別', validLengths: [2] },
             { className: 'ORG_IMP_DCL_NO', name: '原進口報單號碼', validLengths: [14] },
