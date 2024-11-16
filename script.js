@@ -2867,7 +2867,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // 如果 SHPR_BONDED_ID 和 FAC_BONDED_ID_EX 都為空，則顯示錯誤訊息並中止匯出
             if (!shprBondedId && !facBondedIdEx) {
-                alert('當報單類別為 B8 或 B9 時，海關監管編號需填列');
+                alert('當報單類別為 B8 或 B9 時，海關監管編號需填列\n(若為合作外銷案件，則改填保稅相關信息—保稅廠欄位)');
                 return; // 中止匯出過程
             }
         }
