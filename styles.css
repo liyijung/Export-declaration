@@ -80,11 +80,11 @@ body {
 }
 
 .import-export-buttons button:hover {
-    transform: scale(1.05); /* 微放大效果 */
+    transform: scale(1.03); /* 微放大效果 */
 }
 
 .import-export-buttons button:active {
-    transform: scale(0.95); /* 按下時縮小效果 */
+    transform: scale(0.97); /* 按下時縮小效果 */
 }
 
 .add-buttons button,
