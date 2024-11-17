@@ -205,13 +205,16 @@
                 <button type="button" class="vertical-text" onclick="toggleRows('DOC_MARKS_DESC', this)" tabindex="-1">展開</button>
             </div>
             <div class="button-group">
-                <button type="button" onclick="fillText('MADE IN TAIWAN')">TW</button>
-                <button type="button" onclick="fillText('MADE IN CHINA')">CN</button>
+                <button type="button" onclick="fillText('MADE IN TAIWAN')" title="台灣">TW</button>
+                <button type="button" onclick="fillText('MADE IN CHINA')" title="中國" tabindex="-1">CN</button>
+                <button type="button" onclick="fillText('MADE IN UNITED KINGDOM')" title="英國" tabindex="-1">GB</button>                
+                <button type="button" onclick="fillText('MADE IN HONG KONG')" title="香港" tabindex="-1">HK</button>
                 <button type="button" onclick="fillText('MADE IN JAPAN')" title="日本" tabindex="-1">JP</button>
-                <button type="button" onclick="fillText('MADE IN VIETNAM')" title="越南" tabindex="-1">VN</button>
+                <button type="button" onclick="fillText('MADE IN KOREA')" title="韓國" tabindex="-1">KR</button>
                 <button type="button" onclick="fillText('MADE IN PHILIPPINES')" title="菲律賓" tabindex="-1">PH</button>
+                <button type="button" onclick="fillText('MADE IN SINGAPORE')" title="新加坡" tabindex="-1">SG</button>
                 <button type="button" onclick="fillText('MADE IN UNITED STATES')" title="美國" tabindex="-1">US</button>
-                <button type="button" onclick="fillText('MADE IN UNITED KINGDOM')" title="英國" tabindex="-1">GB</button>
+                <button type="button" onclick="fillText('MADE IN VIETNAM')" title="越南" tabindex="-1">VN</button>
             </div>
             <div class="header-group">
                 <label for="DOC_OTR_DESC">其它申報事項</label>
