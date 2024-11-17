@@ -81,7 +81,7 @@ body {
 }
 
 .import-export-buttons button:hover {
-    transform: scale(1.03); /* 微放大效果 */
+    transform: scale(1.05); /* 微放大效果 */
 }
 
 .import-export-buttons button:active {
@@ -108,7 +108,7 @@ body {
 .add-buttons button:hover {
     background-color: #97b3eb;
     color: #333;
-    transform: scale(1.03); /* 微放大效果 */
+    transform: scale(1.05); /* 微放大效果 */
 }
 
 .item-header {
@@ -603,22 +603,23 @@ tr.selected {
 
 /* 上箭頭文字靠上 */
 .scroll-btn.up {
-    align-items: flex-start; /* 垂直對齊到頂部 */
+    align-items: center; /* 垂直罝中 */
     line-height: 1; /* 確保行距不影響 */
-    padding-bottom: 5px; /* 根據需要調整間距 */
+    padding-bottom: 4px; /* 根據需要調整間距 */
 }
 
 /* 下箭頭文字靠下 */
 .scroll-btn.down {
-    align-items: flex-end; /* 垂直對齊到底部 */
+    align-items: center; /* 垂直罝中 */
     line-height: 1; /* 確保行距不影響 */
-    padding-top: 5px; /* 根據需要調整間距 */    
+    padding-top: 4px; /* 根據需要調整間距 */    
 }
 
 /* 添加懸停效果 */
 .scroll-btn:hover {
     opacity: 1;
     background-color: #00BFFF;
+    transform: scale(1.2); /* 放大效果 */
 }
 
 /* 設定所有input元素的placeholder字體顏色 */
