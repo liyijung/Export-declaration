@@ -667,6 +667,13 @@ document.addEventListener('keydown', function(event) {
     }
 });
 
+// 新增監聽 Alt+q 鍵，表示關閉新增項次彈跳框
+document.addEventListener('keydown', function(event) {
+    if (event.altKey && (event.key === 'q' || event.key === 'Q')) {
+        closeItemModal();
+    }
+});
+
 // 計算彈跳框中的金額
 function calculateModalAmount() {
     const qty = parseFloat(document.getElementById('QTY').value) || 0;
