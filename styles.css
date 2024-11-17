@@ -619,7 +619,7 @@ tr.selected {
 .scroll-btn:hover {
     opacity: 1;
     background-color: #00BFFF;
-    transform: scale(1.2); /* 放大效果 */
+    transform: scale(1.4); /* 放大效果 */
 }
 
 /* 設定所有input元素的placeholder字體顏色 */
