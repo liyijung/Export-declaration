@@ -542,7 +542,7 @@ function calculateAdditional() {
 // 標記及貨櫃號碼 MADE IN
 function fillText(text) {
     const textarea = document.getElementById('DOC_MARKS_DESC');
-    textarea.value = textarea.value + text + '\n';
+    textarea.value = textarea.value + '\n' + text;
 }
 
 // 標記及貨櫃號碼 及 其它申報事項 展開/折疊
