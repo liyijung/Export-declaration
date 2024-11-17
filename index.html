@@ -206,18 +206,18 @@
             </div>
             <div class="button-group">
                 <button type="button" onclick="fillText('MADE IN TAIWAN')">TW</button>
-                <button type="button" onclick="fillText('MADE IN CHINA')">CN</button>
-                <button type="button" onclick="fillText('MADE IN JAPAN')">JP</button>
-                <button type="button" onclick="fillText('MADE IN PHILIPPINES')">PH</button>
-                <button type="button" onclick="fillText('MADE IN UNITED STATES')">US</button>
-                <button type="button" onclick="fillText('MADE IN UNITED KINGDOM')">GB</button>
+                <button type="button" onclick="fillText('MADE IN CHINA')" tabindex="-1">CN</button>
+                <button type="button" onclick="fillText('MADE IN JAPAN')" tabindex="-1">JP</button>
+                <button type="button" onclick="fillText('MADE IN PHILIPPINES')" tabindex="-1">PH</button>
+                <button type="button" onclick="fillText('MADE IN UNITED STATES')" tabindex="-1">US</button>
+                <button type="button" onclick="fillText('MADE IN UNITED KINGDOM')" tabindex="-1">GB</button>
             </div>
             <div class="header-group">
                 <label for="DOC_OTR_DESC">其它申報事項</label>
                 <textarea id="DOC_OTR_DESC" name="DOC_OTR_DESC" rows="5"></textarea>
                 <button type="button" class="vertical-text" onclick="toggleRows('DOC_OTR_DESC', this)" tabindex="-1">展開</button>
             </div>
-            <select id="doc_otr_desc_dropdown" class="custom-select" tabindex="-1" style="width: 180px;"> <!-- 調整這裡的寬度 -->
+            <select id="doc_otr_desc_dropdown" class="custom-select" style="width: 180px;"> <!-- 調整這裡的寬度 -->
                 <option value="">備註選單</option>
                 <option value="國貨樣品/贈送不再進口">【統計方式04】國貨樣品/贈送不再進口</option>
                 <option value="委外加工不再進口">【統計方式05】委外加工不再進口</option>
