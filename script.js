@@ -542,7 +542,7 @@ function calculateAdditional() {
 // 標記及貨櫃號碼 MADE IN
 function fillText(text) {
     const textarea = document.getElementById('DOC_MARKS_DESC');
-    textarea.value = textarea.value + '\n' + text;
+    textarea.value = textarea.value.trim() + '\n' + text;
     textarea.focus(); // 將焦點設回欄位
 }
 
@@ -566,7 +566,7 @@ document.addEventListener('DOMContentLoaded', () => {
     dropdown.addEventListener('change', () => {
         if (dropdown.value) {
             if (textarea.value) {
-                textarea.value += '\n' + dropdown.value; // 在已有內容後添加新內容
+                textarea.value = textarea.value.trim() + '\n' + dropdown.value; // 在已有內容後添加新內容
                 textarea.focus(); // 將焦點設回欄位
             } else {
                 textarea.value = dropdown.value; // 如果textarea是空的，直接添加內容
