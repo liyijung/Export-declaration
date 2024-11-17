@@ -585,14 +585,14 @@ tr.selected {
 
 /* 淡藍色背景的浮動按鈕樣式 */
 .scroll-btn {
-    width: 30px;
-    height: 30px;
+    width: 20px;
+    height: 20px;
     background-color: #87CEEB;
     color: #fff;
     border: none;
     border-radius: 50%;
     cursor: pointer;
-    font-size: 20px; /* 根據需要調整字體大小 */
+    font-size: 16px; /* 根據需要調整字體大小 */
     line-height: 30px; /* 與按鈕高度相同 */
     display: flex;
     justify-content: center;
@@ -601,6 +601,21 @@ tr.selected {
     transition: opacity 0.3s, background-color 0.3s;
 }
 
+/* 上箭頭文字靠上 */
+.scroll-btn.up {
+    align-items: flex-start; /* 垂直對齊到頂部 */
+    line-height: 1; /* 確保行距不影響 */
+    padding-bottom: 5px; /* 根據需要調整間距 */
+}
+
+/* 下箭頭文字靠下 */
+.scroll-btn.down {
+    align-items: flex-end; /* 垂直對齊到底部 */
+    line-height: 1; /* 確保行距不影響 */
+    padding-top: 5px; /* 根據需要調整間距 */    
+}
+
+/* 添加懸停效果 */
 .scroll-btn:hover {
     opacity: 1;
     background-color: #00BFFF;
