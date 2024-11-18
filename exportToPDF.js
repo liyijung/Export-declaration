@@ -859,7 +859,8 @@ async function exportToPDF() {
             for (let i = 1; i <= totalPages; i++) {
                 doc.setPage(i);  // 設置到當前頁
                 const yPosition = (i === 1) ? 10 : 13;  // 根據是否首頁設置不同的 y 值
-                doc.text(`${totalPages}`, 198, yPosition);
+                const xPosition = (totalPages < 10) ? 198 : 197; // 根據 totalPages 設置不同的 x 值
+                doc.text(`${totalPages}`, xPosition, yPosition);
             }
         }
 
