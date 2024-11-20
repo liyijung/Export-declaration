@@ -435,7 +435,7 @@ function calculateFreight() {
             // 基礎運費計算
             const freight = (weight * 3 * usdRate) / currencyRate;
             const decimalPlaces = currency === "TWD" ? 0 : 2;
-            document.getElementById('FRT_AMT').value = freight.toFixed(decimalPlaces);
+            document.getElementById('FRT_AMT').value = new Decimal(freight).toFixed(decimalPlaces);
 
             // 計算後調用調整函數
             adjustFreightAndInsurance();
@@ -470,7 +470,7 @@ function calculateInsurance() {
                 insurance = minimumInsurance;
             }
             const decimalPlaces = currency === "TWD" ? 0 : 2;
-            document.getElementById('INS_AMT').value = insurance.toFixed(decimalPlaces);
+            document.getElementById('INS_AMT').value = new Decimal(insurance).toFixed(decimalPlaces);
 
             // 計算後調用調整函數
             adjustFreightAndInsurance();
@@ -531,7 +531,7 @@ function calculateAdditional() {
         if (currencyRate) {
             const additionalFee = 500 / currencyRate;
             const decimalPlaces = currency === "TWD" ? 0 : 2;
-            document.getElementById('ADD_AMT').value = additionalFee.toFixed(decimalPlaces);
+            document.getElementById('ADD_AMT').value = new Decimal(additionalFee).toFixed(decimalPlaces);
         } else {
             // 如果輸入無效，顯示錯誤訊息
             document.getElementById('ADD_AMT').value = "輸入無效";
@@ -678,8 +678,8 @@ document.addEventListener('keydown', function(event) {
 
 // 計算彈跳框中的金額
 function calculateModalAmount() {
-    const qty = parseFloat(document.getElementById('QTY').value) || 0;
-    const unitPrice = parseFloat(document.getElementById('DOC_UNIT_P').value) || 0;
+    const qty = document.getElementById('QTY').value || 0;
+    const unitPrice = document.getElementById('DOC_UNIT_P').value || 0;
     const decimalPlacesInput = document.getElementById('decimal-places');
     let decimalPlaces = parseInt(decimalPlacesInput.value);
 
@@ -689,7 +689,7 @@ function calculateModalAmount() {
     }
 
     const amount = qty * unitPrice;
-    document.getElementById('DOC_TOT_P').value = (amount === 0) ? '' : (Math.round(amount * Math.pow(10, decimalPlaces)) / Math.pow(10, decimalPlaces)).toFixed(decimalPlaces);
+    document.getElementById('DOC_TOT_P').value = (amount === 0) ? '' : new Decimal(amount).toDecimalPlaces(10, Decimal.ROUND_UP).toFixed(decimalPlaces);
 }
 
 // 函數禁止方向鍵調整數字
@@ -947,15 +947,15 @@ function applyToggleFieldsToRow(row) {
 
 // 計算單行金額的函數
 function calculateAmountsForRow(row, decimalPlaces) {
-    const qty = parseFloat(row.querySelector('.QTY').value) || 0;
-    const unitPrice = parseFloat(row.querySelector('.DOC_UNIT_P').value) || 0;
+    const qty = row.querySelector('.QTY').value || 0;
+    const unitPrice = row.querySelector('.DOC_UNIT_P').value || 0;
     const totalPrice = qty * unitPrice;
     const totalPriceField = row.querySelector('.DOC_TOT_P');
     
     if (totalPrice === 0) {
         totalPriceField.value = '';
     } else {
-        totalPriceField.value = (Math.round(totalPrice * Math.pow(10, decimalPlaces)) / Math.pow(10, decimalPlaces)).toFixed(decimalPlaces);
+        totalPriceField.value = (new Decimal(totalPrice).toDecimalPlaces(10, Decimal.ROUND_UP).toFixed(decimalPlaces));
     }
 }
 
@@ -1298,16 +1298,7 @@ function applyFieldData() {
     // 檢查是否有更新QTY或DOC_UNIT_P欄位，若有則對所有更新的欄位執行金額計算
     if (hasUpdatedQtyOrUnitPrice) {
         items.forEach(item => {
-            const qtyInput = item.querySelector('.QTY');
-            const docUnitPInput = item.querySelector('.DOC_UNIT_P');
-            const docTotPInput = item.querySelector('.DOC_TOT_P');
-            
-            if (qtyInput && docUnitPInput && docTotPInput) {
-                const qtyValue = parseFloat(qtyInput.value) || 0;
-                const unitPriceValue = parseFloat(docUnitPInput.value) || 0;
-                // 計算 DOC_TOT_P 並設置其值
-                docTotPInput.value = qtyValue * unitPriceValue;
-            }
+            calculateAmountsForRow(item, decimalPlaces);
         });
     }
 
@@ -2029,7 +2020,7 @@ function createInputField(name, value, isVisible, iscalcWtValue) {
     const escapedValue = value ? escapeXml(value).trim() : ''; // 確保只有在必要時才轉義值並去除前後空格
 
     // 處理最大四捨五入至小數6位，並移除後面的多餘零
-    const roundedValue = (['QTY', 'DOC_UNIT_P', 'NET_WT', 'WIDE', 'LENGT_', 'ST_QTY'].includes(name) && value) ? parseFloat(value).toFixed(6).replace(/\.?0+$/, '') : escapedValue;
+    const roundedValue = (['QTY', 'DOC_UNIT_P', 'NET_WT', 'WIDE', 'LENGT_', 'ST_QTY'].includes(name) && value) ? new Decimal(value).toFixed(6).replace(/\.?0+$/, '') : escapedValue;
     const inputField = `<input type="${inputType}" class="${name} ${name === 'CCC_CODE' ? 'CCC_CODE' : 'tax-code-input'}" value="${roundedValue}" ${onInputAttribute} ${minAttribute} ${readonlyAttribute} ${onFocusAttribute} ${onBlurAttribute} ${onKeyDownAttribute} ${onInputUpperCaseAttribute} style="flex: 1; margin-right: 0;">`;
 
     if (name === 'NET_WT') {
@@ -2191,8 +2182,8 @@ document.querySelectorAll('.QTY, .DOC_UNIT_P').forEach(input => {
 // 定義 calculateAmount 函數
 function calculateAmount(event) {
     const row = event.target.closest('.item-row');
-    const qty = parseFloat(row.querySelector('.QTY').value) || 0;
-    const unitPrice = parseFloat(row.querySelector('.DOC_UNIT_P').value) || 0;
+    const qty = row.querySelector('.QTY').value || 0;
+    const unitPrice = row.querySelector('.DOC_UNIT_P').value || 0;
     const decimalPlacesInput = document.getElementById('decimal-places');
     let decimalPlaces = parseInt(decimalPlacesInput.value);
 
@@ -2207,7 +2198,7 @@ function calculateAmount(event) {
     if (totalPrice === 0) {
         totalPriceField.value = '';
     } else {
-        totalPriceField.value = (Math.round(totalPrice * Math.pow(10, decimalPlaces)) / Math.pow(10, decimalPlaces)).toFixed(decimalPlaces);
+        totalPriceField.value = new Decimal(totalPrice).toDecimalPlaces(10, Decimal.ROUND_UP).toFixed(decimalPlaces);
     }
 }
 
@@ -2289,23 +2280,8 @@ function updateItemAmounts() {
 
     const items = document.querySelectorAll('#item-container .item-row');
     items.forEach((item) => {
-        // 取得數量與單價
-        const quantityInput = item.querySelector('.QTY');
-        const unitPriceInput = item.querySelector('.DOC_UNIT_P');
-        const amountInput = item.querySelector('.DOC_TOT_P');
-
-        const quantity = parseFloat(quantityInput.value);
-        const unitPrice = parseFloat(unitPriceInput.value);
-
-        // 判斷數量或單價是否為無效數字
-        if (isNaN(quantity) || isNaN(unitPrice)) {
-            // 若數量或單價無效，則將金額設為空白
-            amountInput.value = '';
-        } else {
-            // 根據數量與單價計算金額並設為指定的小數位數
-            const amount = quantity * unitPrice;
-            amountInput.value = amount.toFixed(decimalPlaces);
-        }
+        // 呼叫 calculateAmountsForRow 函式進行金額計算
+        calculateAmountsForRow(item, decimalPlaces);
     });
 }
 
@@ -2694,7 +2670,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 copy3.checked = false;
                 // 清空 REMARK1 欄位的值
                 remark1.value = '';
-                return; // 退出函数以确保不進行後續處理
+                return; // 退出函數以确保不進行後續處理
             }
         } else if (copy3.checked) {
             if (copy3_e.checked) {
@@ -2703,7 +2679,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 copy3.checked = false;
                 // 清空 REMARK1 欄位的值
                 remark1.value = '';
-                return; // 退出函数以确保不進行後續處理
+                return; // 退出函數以确保不進行後續處理
             }
         }
 
