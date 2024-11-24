@@ -2029,90 +2029,95 @@ function addTextarea() {
 
 // 創建輸入域
 function createInputField(name, value, isVisible, iscalcWtValue) {
-    const visibilityClass = isVisible ? '' : 'hidden';
-    const numberFields = ['QTY', 'DOC_UNIT_P', 'NET_WT', 'ORG_IMP_DCL_NO_ITEM', 'CERT_NO_ITEM', 'ORG_DCL_NO_ITEM', 'EXP_SEQ_NO', 'WIDE', 'LENGT_', 'ST_QTY'];
-    const upperCaseFields = ['LOT_NO', 'SHPR_BONDED_ID', 'CNEE_COUNTRY_CODE', 'TO_CODE', 'DOC_CTN_UM', 'DCL_DOC_TYPE', 'TERMS_SALES', 'CURRENCY', 'DOC_UM', 'ST_MTD', 'ORG_COUNTRY', 'ORG_IMP_DCL_NO', 'BOND_NOTE', 'CERT_NO', 'ORG_DCL_NO', 'EXP_NO', 'WIDE_UM', 'LENGTH_UM', 'ST_UM'];
-    const inputType = numberFields.includes(name) ? 'number' : 'text';
-    const onInputAttribute = numberFields.includes(name) ? 'oninput="calculateAmount(event); validateNumberInput(event)"' : '';
-    const minAttribute = numberFields.includes(name) ? 'min="0"' : '';
-    const readonlyAttribute = (name === 'DOC_TOT_P') ? 'readonly' : '';
-    const onFocusAttribute = 'onfocus="highlightRow(this)"';
-    const onBlurAttribute = 'onblur="removeHighlight(this)"';
-    const onKeyDownAttribute = 'onkeydown="handleInputKeyDown(event, this)"';
-    const onInputUpperCaseAttribute = upperCaseFields.includes(name) ? 'oninput="this.value = this.value.toUpperCase()"' : '';
-
-    // 格式化 ORG_IMP_DCL_NO 和 ORG_DCL_NO 的值
-    if (['ORG_IMP_DCL_NO', 'ORG_DCL_NO'].includes(name) && value) {
-        // 先移除所有空格和斜線
-        const trimmedValue = value.replace(/[\s/]+/g, '');
-        
-        if (trimmedValue.length === 12) {
-            // 在第3碼之後插入兩個空格
-            value = `${trimmedValue.slice(0, 2)}  ${trimmedValue.slice(2)}`;
-        } else if (trimmedValue.length === 14) {
-            // 直接使用去除空格和斜線後的值
-            value = trimmedValue;
+    try {
+        const visibilityClass = isVisible ? '' : 'hidden';
+        const numberFields = ['QTY', 'DOC_UNIT_P', 'NET_WT', 'ORG_IMP_DCL_NO_ITEM', 'CERT_NO_ITEM', 'ORG_DCL_NO_ITEM', 'EXP_SEQ_NO', 'WIDE', 'LENGT_', 'ST_QTY'];
+        const upperCaseFields = ['LOT_NO', 'SHPR_BONDED_ID', 'CNEE_COUNTRY_CODE', 'TO_CODE', 'DOC_CTN_UM', 'DCL_DOC_TYPE', 'TERMS_SALES', 'CURRENCY', 'DOC_UM', 'ST_MTD', 'ORG_COUNTRY', 'ORG_IMP_DCL_NO', 'BOND_NOTE', 'CERT_NO', 'ORG_DCL_NO', 'EXP_NO', 'WIDE_UM', 'LENGTH_UM', 'ST_UM'];
+        const inputType = numberFields.includes(name) ? 'number' : 'text';
+        const onInputAttribute = numberFields.includes(name) ? 'oninput="calculateAmount(event); validateNumberInput(event)"' : '';
+        const minAttribute = numberFields.includes(name) ? 'min="0"' : '';
+        const readonlyAttribute = (name === 'DOC_TOT_P') ? 'readonly' : '';
+        const onFocusAttribute = 'onfocus="highlightRow(this)"';
+        const onBlurAttribute = 'onblur="removeHighlight(this)"';
+        const onKeyDownAttribute = 'onkeydown="handleInputKeyDown(event, this)"';
+        const onInputUpperCaseAttribute = upperCaseFields.includes(name) ? 'oninput="this.value = this.value.toUpperCase()"' : '';
+    
+        // 格式化 ORG_IMP_DCL_NO 和 ORG_DCL_NO 的值
+        if (['ORG_IMP_DCL_NO', 'ORG_DCL_NO'].includes(name) && value) {
+            // 先移除所有空格和斜線
+            const trimmedValue = value.replace(/[\s/]+/g, '');
+            
+            if (trimmedValue.length === 12) {
+                // 在第3碼之後插入兩個空格
+                value = `${trimmedValue.slice(0, 2)}  ${trimmedValue.slice(2)}`;
+            } else if (trimmedValue.length === 14) {
+                // 直接使用去除空格和斜線後的值
+                value = trimmedValue;
+            }
         }
-    }
-
-    const escapedValue = value ? escapeXml(value).trim() : ''; // 確保只有在必要時才轉義值並去除前後空格
-
-    // 處理最大四捨五入至小數6位，並移除後面的多餘零
-    const roundedValue = (['QTY', 'DOC_UNIT_P', 'NET_WT', 'WIDE', 'LENGT_', 'ST_QTY'].includes(name) && value) ? new Decimal(value).toFixed(6).replace(/\.?0+$/, '') : escapedValue;
-    const inputField = `<input type="${inputType}" class="${name} ${name === 'CCC_CODE' ? 'CCC_CODE' : 'tax-code-input'}" value="${roundedValue}" ${onInputAttribute} ${minAttribute} ${readonlyAttribute} ${onFocusAttribute} ${onBlurAttribute} ${onKeyDownAttribute} ${onInputUpperCaseAttribute} style="flex: 1; margin-right: 0;">`;
-
-    if (name === 'NET_WT') {
-        const isCalcChecked = iscalcWtValue === 'Y' ? 'checked' : ''; // 根據 ISCALC_WT 判斷是否勾選
-        return `
-            <div class="form-group ${visibilityClass}" style="width: 20%; display: flex; align-items: center;">
-                <input type="checkbox" class="ISCALC_WT" style="margin-left: 5px;" ${isCalcChecked} tabindex="-1">
-            </div>
-            <div class="form-group ${visibilityClass}" style="width: 60%; display: flex; align-items: center;">
-                ${inputField}
-            </div>
-        `;
-    } else if (['DOC_TOT_P', 'TRADE_MARK'].includes(name)) {
-        return `
-            <div class="form-group ${visibilityClass}" style="width: 80%;">
-                ${inputField}
-            </div>
-        `;
-    } else if (['QTY', 'DOC_UNIT_P', 'ST_QTY', 'GOODS_MODEL', 'GOODS_SPEC', 'WIDE', 'LENGT_'].includes(name)) {
-        return `
-            <div class="form-group ${visibilityClass}" style="width: 60%;">
-                ${inputField}
-            </div>
-        `;
-    } else if (['DOC_UM', 'WIDE_UM', 'LENGTH_UM', 'ST_UM'].includes(name)) {
-        return `
-            <div class="form-group ${visibilityClass}" style="width: 40%;">
-                ${inputField}
-            </div>
-        `;
-    } else if (['ST_MTD', 'ORG_COUNTRY', 'ORG_IMP_DCL_NO_ITEM', 'BOND_NOTE', 'CERT_NO_ITEM', 'ORG_DCL_NO_ITEM', 'EXP_SEQ_NO'].includes(name)) {
-        return `
-            <div class="form-group ${visibilityClass}" style="width: 30%;">
-                ${inputField}
-            </div>
-        `;
-    } else if (['CCC_CODE'].includes(name)) {
-        return `
-            <div class="form-group ${visibilityClass}" style="width: 105%;">
-                ${inputField}
-            </div>
-        `;
-    } else if (['SELLER_ITEM_CODE'].includes(name)) {
-        return `
-            <div class="form-group ${visibilityClass}" style="width: 130%;">
-                ${inputField}
-            </div>
-        `;
-    } else {
-        return `
-            <div class="form-group ${visibilityClass}">
-                ${inputField}
-            </div>
-        `;
+    
+        const escapedValue = value ? escapeXml(value).trim() : ''; // 確保只有在必要時才轉義值並去除前後空格
+    
+        // 處理最大四捨五入至小數6位，並移除後面的多餘零
+        const roundedValue = (['QTY', 'DOC_UNIT_P', 'NET_WT', 'WIDE', 'LENGT_', 'ST_QTY'].includes(name) && value) ? new Decimal(value).toFixed(6).replace(/\.?0+$/, '') : escapedValue;
+        const inputField = `<input type="${inputType}" class="${name} ${name === 'CCC_CODE' ? 'CCC_CODE' : 'tax-code-input'}" value="${roundedValue}" ${onInputAttribute} ${minAttribute} ${readonlyAttribute} ${onFocusAttribute} ${onBlurAttribute} ${onKeyDownAttribute} ${onInputUpperCaseAttribute} style="flex: 1; margin-right: 0;">`;
+    
+        if (name === 'NET_WT') {
+            const isCalcChecked = iscalcWtValue === 'Y' ? 'checked' : ''; // 根據 ISCALC_WT 判斷是否勾選
+            return `
+                <div class="form-group ${visibilityClass}" style="width: 20%; display: flex; align-items: center;">
+                    <input type="checkbox" class="ISCALC_WT" style="margin-left: 5px;" ${isCalcChecked} tabindex="-1">
+                </div>
+                <div class="form-group ${visibilityClass}" style="width: 60%; display: flex; align-items: center;">
+                    ${inputField}
+                </div>
+            `;
+        } else if (['DOC_TOT_P', 'TRADE_MARK'].includes(name)) {
+            return `
+                <div class="form-group ${visibilityClass}" style="width: 80%;">
+                    ${inputField}
+                </div>
+            `;
+        } else if (['QTY', 'DOC_UNIT_P', 'ST_QTY', 'GOODS_MODEL', 'GOODS_SPEC', 'WIDE', 'LENGT_'].includes(name)) {
+            return `
+                <div class="form-group ${visibilityClass}" style="width: 60%;">
+                    ${inputField}
+                </div>
+            `;
+        } else if (['DOC_UM', 'WIDE_UM', 'LENGTH_UM', 'ST_UM'].includes(name)) {
+            return `
+                <div class="form-group ${visibilityClass}" style="width: 40%;">
+                    ${inputField}
+                </div>
+            `;
+        } else if (['ST_MTD', 'ORG_COUNTRY', 'ORG_IMP_DCL_NO_ITEM', 'BOND_NOTE', 'CERT_NO_ITEM', 'ORG_DCL_NO_ITEM', 'EXP_SEQ_NO'].includes(name)) {
+            return `
+                <div class="form-group ${visibilityClass}" style="width: 30%;">
+                    ${inputField}
+                </div>
+            `;
+        } else if (['CCC_CODE'].includes(name)) {
+            return `
+                <div class="form-group ${visibilityClass}" style="width: 105%;">
+                    ${inputField}
+                </div>
+            `;
+        } else if (['SELLER_ITEM_CODE'].includes(name)) {
+            return `
+                <div class="form-group ${visibilityClass}" style="width: 130%;">
+                    ${inputField}
+                </div>
+            `;
+        } else {
+            return `
+                <div class="form-group ${visibilityClass}">
+                    ${inputField}
+                </div>
+            `;
+        }
+    } catch (error) {
+        console.error(`Error creating input field for ${name}:`, error);
+        alert(`Error creating input field for ${name}. Please check the configuration.`);
     }
 }
 
