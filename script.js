@@ -1588,12 +1588,14 @@ function exportToExcel() {
         }
     }
 
-    // 設置報單項次 A 欄至 AD 欄全為文字格式
+    // 設置報單項次 A 欄至 AD 欄為文字格式，並針對 D, F, G, K 欄設置為通用格式
+    const generalCols = [3, 5, 6, 10]; // D(3), F(5), G(6), K(10)
+
+    // 取得工作表範圍
     const range = XLSX.utils.decode_range(itemsWorksheet['!ref']);
 
-    // 確保範圍覆蓋 A 欄 (0) 到 AD 欄 (29) 和行數到 1000
+    // 更新範圍以涵蓋 A 到 AD 欄
     range.e.c = Math.max(range.e.c, 29);
-    range.e.r = Math.max(range.e.r, 999); // 1000 行（從 0 開始計算）
 
     // 更新工作表範圍
     itemsWorksheet['!ref'] = XLSX.utils.encode_range(range);
@@ -1607,8 +1609,12 @@ function exportToExcel() {
                 itemsWorksheet[cellRef] = { t: 's', v: '' }; // 設置為空的文字單元格
             }
 
-            // 設置所有欄位格式為文字格式
-            itemsWorksheet[cellRef].z = '@'; // 文字格式
+            // 如果欄位是 D, F, G, K 則設置為通用格式，否則設置為文字格式
+            if (generalCols.includes(col)) {
+                itemsWorksheet[cellRef].z = 'General'; // 通用格式
+            } else {
+                itemsWorksheet[cellRef].z = '@'; // 文字格式
+            }
         }
     }
     
