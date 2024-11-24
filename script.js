@@ -1516,53 +1516,78 @@ function exportToExcel() {
 
     // 收集報單項次數據
     const itemsData = [
-    ['No.(必填)', '項次(非必填，大品名註記以"*"表示，可無編號)', '品名', '數量', '單位', '單價', '金額', 
-    '商標', '稅則', '統計方式', '淨重', '生產國別', '原進口報單號碼', '原進口報單項次', 
-    '賣方料號', '保稅貨物註記', '型號', '規格', '產證號碼', '產證項次', 
-    '原進倉報單號碼', '原進倉報單項次', '輸出許可號碼', '輸出許可項次', 
-    '寬度(幅寬)', '寬度單位', '長度(幅長)', '長度單位' ,'統計數量' ,'統計單位']
+        ['No.(必填)', '項次(非必填，大品名註記以"*"表示，可無編號)', '數量', '單位', '單價', '金額', 
+        '商標', '稅則', '統計方式', '淨重', '生產國別', '原進口報單號碼', '原進口報單項次', 
+        '賣方料號', '保稅貨物註記', '型號', '規格', '產證號碼', '產證項次', 
+        '原進倉報單號碼', '原進倉報單項次', '輸出許可號碼', '輸出許可項次', 
+        '寬度(幅寬)', '寬度單位', '長度(幅長)', '長度單位', '統計數量', '統計單位']
     ];
 
     let itemNoCounter = 0; // 計算有效的 ITEM_NO
+    let maxDescLines = 1; // 品名最大分行數，至少為1
+
+    // 計算品名的最大行數
+    document.querySelectorAll("#item-container .item-row").forEach((item) => {
+        const description = item.querySelector('.DESCRIPTION').value || '';
+        const lines = description.split('\n'); // 按行分割品名
+        if (lines.length > maxDescLines) {
+            maxDescLines = lines.length; // 更新最大行數
+        }
+    });
+
+    // 動態增加品名欄位至表頭
+    const fixedColumns = itemsData[0].slice(0, 2); // 保留前兩個固定欄位（No. 和 項次）
+    const dynamicColumns = Array(maxDescLines).fill('品名'); // 動態生成品名欄位，至少包含1欄
+    const remainingColumns = itemsData[0].slice(2); // 剩餘固定欄位
+    itemsData[0] = [...fixedColumns, ...dynamicColumns, ...remainingColumns]; // 合併所有欄位
+
+    // 處理每一項的數據
     document.querySelectorAll("#item-container .item-row").forEach((item, index) => {
         const isChecked = item.querySelector('.ITEM_NO').checked;
-
+    
         // 根據條件決定是否增加計數器
         if (!isChecked) {
             itemNoCounter++;
         }
-
+    
+        const description = item.querySelector('.DESCRIPTION').value || '';
+        const descriptionLines = description.split('\n'); // 按行分割品名
+    
+        // 填充品名到多個欄位，未滿的部分補空，至少保留一個品名欄位
+        const descriptionCols = Array.from({ length: maxDescLines }, (_, i) => descriptionLines[i] || '');
+    
+        // 添加固定數據
         itemsData.push([
-            index + 1,
-            isChecked ? '*' : itemNoCounter, // 只有當未勾選時才顯示計數器的值
-            item.querySelector('.DESCRIPTION').value || '',
-            item.querySelector('.QTY').value || '',
-            replaceValue('DOC_UM', item.querySelector('.DOC_UM').value || ''),
-            item.querySelector('.DOC_UNIT_P').value || '',
-            item.querySelector('.DOC_TOT_P').value || '',
-            item.querySelector('.TRADE_MARK').value || '',
-            replaceValue('CCC_CODE', item.querySelector('.CCC_CODE').value || ''),
-            item.querySelector('.ST_MTD').value || '',
-            item.querySelector('.NET_WT').value || '',
-            item.querySelector('.ORG_COUNTRY').value || '',
-            item.querySelector('.ORG_IMP_DCL_NO').value || '',
-            item.querySelector('.ORG_IMP_DCL_NO_ITEM').value || '',
-            item.querySelector('.SELLER_ITEM_CODE').value || '',
-            item.querySelector('.BOND_NOTE').value || '',            
-            item.querySelector('.GOODS_MODEL').value || '',
-            item.querySelector('.GOODS_SPEC').value || '',
-            item.querySelector('.CERT_NO').value || '',
-            item.querySelector('.CERT_NO_ITEM').value || '',
-            item.querySelector('.ORG_DCL_NO').value || '',
-            item.querySelector('.ORG_DCL_NO_ITEM').value || '',
-            item.querySelector('.EXP_NO').value || '',
-            item.querySelector('.EXP_SEQ_NO').value || '',
-            item.querySelector('.WIDE').value || '',
-            replaceValue('WIDE_UM', item.querySelector('.WIDE_UM').value || ''),
-            item.querySelector('.LENGT_').value || '',
-            replaceValue('LENGTH_UM', item.querySelector('.LENGTH_UM').value || ''),
-            item.querySelector('.ST_QTY').value || '',
-            replaceValue('ST_UM', item.querySelector('.ST_UM').value || ''),
+            index + 1, // No.
+            isChecked ? '*' : itemNoCounter, // 項次
+            ...descriptionCols, // 動態品名欄位
+            item.querySelector('.QTY').value || '', // 數量
+            replaceValue('DOC_UM', item.querySelector('.DOC_UM').value || ''), // 單位
+            item.querySelector('.DOC_UNIT_P').value || '', // 單價
+            item.querySelector('.DOC_TOT_P').value || '', // 金額
+            item.querySelector('.TRADE_MARK').value || '', // 商標
+            replaceValue('CCC_CODE', item.querySelector('.CCC_CODE').value || ''), // 稅則
+            item.querySelector('.ST_MTD').value || '', // 統計方式
+            item.querySelector('.NET_WT').value || '', // 淨重
+            item.querySelector('.ORG_COUNTRY').value || '', // 生產國別
+            item.querySelector('.ORG_IMP_DCL_NO').value || '', // 原進口報單號碼
+            item.querySelector('.ORG_IMP_DCL_NO_ITEM').value || '', // 原進口報單項次
+            item.querySelector('.SELLER_ITEM_CODE').value || '', // 賣方料號
+            item.querySelector('.BOND_NOTE').value || '', // 保稅貨物註記
+            item.querySelector('.GOODS_MODEL').value || '', // 型號
+            item.querySelector('.GOODS_SPEC').value || '', // 規格
+            item.querySelector('.CERT_NO').value || '', // 產證號碼
+            item.querySelector('.CERT_NO_ITEM').value || '', // 產證項次
+            item.querySelector('.ORG_DCL_NO').value || '', // 原進倉報單號碼
+            item.querySelector('.ORG_DCL_NO_ITEM').value || '', // 原進倉報單項次
+            item.querySelector('.EXP_NO').value || '', // 輸出許可號碼
+            item.querySelector('.EXP_SEQ_NO').value || '', // 輸出許可項次
+            item.querySelector('.WIDE').value || '', // 寬度
+            replaceValue('WIDE_UM', item.querySelector('.WIDE_UM').value || ''), // 寬度單位
+            item.querySelector('.LENGT_').value || '', // 長度
+            replaceValue('LENGTH_UM', item.querySelector('.LENGTH_UM').value || ''), // 長度單位
+            item.querySelector('.ST_QTY').value || '', // 統計數量
+            replaceValue('ST_UM', item.querySelector('.ST_UM').value || ''), // 統計單位
         ]);
     });
 
