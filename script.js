@@ -2118,6 +2118,7 @@ function createInputField(name, value, isVisible, iscalcWtValue) {
     } catch (error) {
         console.error(`Error creating input field for ${name}:`, error);
         alert(`Error creating input field for ${name}. Please check the configuration.`);
+        throw error; // 中斷執行
     }
 }
 
