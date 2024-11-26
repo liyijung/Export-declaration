@@ -2116,8 +2116,39 @@ function createInputField(name, value, isVisible, iscalcWtValue) {
             `;
         }
     } catch (error) {
-        console.error(`Error creating input field for ${name}:`, error);
-        alert(`Error creating input field for ${name}. Please check the configuration.`);
+        const fieldLabels = {
+            DESCRIPTION: "品名",
+            QTY: "數量",
+            DOC_UM: "單位",
+            DOC_UNIT_P: "單價",
+            DOC_TOT_P: "金額",
+            TRADE_MARK: "商標",
+            CCC_CODE: "稅則",
+            ST_MTD: "統計方式",
+            NET_WT: "淨重",
+            ORG_COUNTRY: "生產國別",
+            ORG_IMP_DCL_NO: "原進口報單號碼",
+            ORG_IMP_DCL_NO_ITEM: "原進口報單項次",
+            SELLER_ITEM_CODE: "賣方料號",
+            BOND_NOTE: "保稅貨物註記",
+            GOODS_MODEL: "型號",
+            GOODS_SPEC: "規格",
+            CERT_NO: "產證號碼",
+            CERT_NO_ITEM: "產證項次",
+            ORG_DCL_NO: "原進倉報單號碼",
+            ORG_DCL_NO_ITEM: "原進倉報單項次",
+            EXP_NO: "輸出許可號碼",
+            EXP_SEQ_NO: "輸出許可項次",
+            WIDE: "寬度(幅寬)",
+            WIDE_UM: "寬度單位",
+            LENGT_: "長度(幅長)",
+            LENGTH_UM: "長度單位",
+            ST_QTY: "統計數量",
+            ST_UM: "統計單位"
+        };
+
+        const fieldLabel = fieldLabels[name] || name; // 若無對應中文名稱，顯示原始名稱
+        alert(`[ ${fieldLabel} ] 欄位錯誤，請檢查檔案後再重新匯入。`);
         throw error; // 中斷執行
     }
 }
