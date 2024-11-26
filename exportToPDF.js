@@ -545,9 +545,9 @@ async function exportToPDF() {
 
             // 顯示指定欄位
             const fields = [
+                { label: '原進倉報單', value: item.origDclNo, itemValue: item.origDclNoItem },
                 { label: '原進口報單', value: item.origImpDclNo, itemValue: item.origImpDclNoItem },
                 { label: '產證號碼', value: item.certNo, itemValue: item.certNoItem },
-                { label: '原進倉報單', value: item.origDclNo, itemValue: item.origDclNoItem }
             ];
 
             const fieldsToShow = fields.filter(field => field.value || field.itemValue); // 過濾掉空值
