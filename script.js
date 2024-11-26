@@ -3440,3 +3440,16 @@ function clearExistingData() {
     document.getElementById('copy_4').checked = false;
     document.getElementById('copy_5').checked = false;
 }
+
+// 監聽 copy_3_e 和 copy_3 的勾選事件
+document.getElementById('copy_3_e').addEventListener('change', function () {
+    if (this.checked) {
+        document.getElementById('copy_3').checked = false; // 取消 copy_3 的勾選
+    }
+});
+
+document.getElementById('copy_3').addEventListener('change', function () {
+    if (this.checked) {
+        document.getElementById('copy_3_e').checked = false; // 取消 copy_3_e 的勾選
+    }
+});
