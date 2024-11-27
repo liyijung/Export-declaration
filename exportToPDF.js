@@ -234,7 +234,11 @@ async function exportToPDF() {
         doc.text(currency, 171, totalFobPriceY);
         doc.text(formattedTotalFobPrice, totalFobPriceX, totalFobPriceY);
 
-        if (exchangeRate && (Tymd === Fymd || !Fymd)) {
+        // 當旬匯率日期區間
+        const startDate = '1131121'
+        const endDate = '1131130'
+        
+        if (exchangeRate && (Fymd >= startDate && Fymd <= endDate)) {
             // 在 x: 171, y: totalFobPriceTwY 顯示 "TWD"
             doc.text("TWD", 171, totalFobPriceTwY);
             doc.text(formattedTotalFobPriceTw, totalFobPriceTwX, totalFobPriceTwY);
@@ -619,7 +623,7 @@ async function exportToPDF() {
                     }
                 }
 
-                if (exchangeRate && (Tymd === Fymd || !Fymd)) {
+                if (exchangeRate && (Fymd >= startDate && Fymd <= endDate)) {
                     // 顯示離岸價格(新台幣)，靠右對齊並加入千分位逗號
                     const fobTwX = 197.5;
                     const formattedFobTw = parseFloat(item.fobTw).toLocaleString('en-US'); // 將 fobTw 格式化為千分位
@@ -719,7 +723,7 @@ async function exportToPDF() {
         const separatorWidth = doc.getTextWidth(separator);
         doc.text(separator, pageWidth - separatorWidth - 6, yPosition - 3);
 
-        if (exchangeRate && (Tymd === Fymd || !Fymd)) {
+        if (exchangeRate && (Fymd >= startDate && Fymd <= endDate)) {
             // 顯示離岸價格(新台幣)，靠右對齊並加入千分位逗號
             let formattedTotalFobPriceTw = Math.round(totalFobPriceTw).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
             const fobTwX = 197.5;
