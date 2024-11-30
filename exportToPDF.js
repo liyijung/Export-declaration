@@ -235,8 +235,8 @@ async function exportToPDF() {
         doc.text(formattedTotalFobPrice, totalFobPriceX, totalFobPriceY);
 
         // 當旬匯率日期區間
-        const startDate = '1131121'
-        const endDate = '1131130'
+        const startDate = '1131201'
+        const endDate = '1131210'
         
         if (exchangeRate && (Fymd >= startDate && Fymd <= endDate)) {
             // 在 x: 171, y: totalFobPriceTwY 顯示 "TWD"
