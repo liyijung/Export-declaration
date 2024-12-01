@@ -3567,7 +3567,7 @@ function summarizeOrgCountry() {
                 prev = current;
             }
             ranges.push(start === prev ? `${start}` : `${start}-${prev}`);
-            return ranges.join(',');
+            return ranges.join(', ');
         };
 
         // 匯整結果，按項次排序
