@@ -3690,53 +3690,45 @@ function summarizeOrgCountry() {
     }
 
     // 其它申報事項
-    const stMtdMap = {}; // 用於儲存 ST_MTD 與對應項次
+    const stMtdMap = {}; // 用於儲存 ST_MTD 與對應的項次與條件
 
+    // ST_MTD 對應表
     const stMtdMapping = {
-        '02': { value: "國貨銷售"},
-        '04': { value: "國貨樣品/贈送不再進口"},
-        '05': { value: "委外加工不再進口"},
-        '06': { value: "本批貨物為國外提供原料委託加工出口"},
-        '53': { value: "此為貨樣出口，後續將依規定限期內返台"},
-        '91': { value: "本批貨物為國貨修理後復出口"},
-        '95': { value: "委外加工再復運進口"},
-        '9M': { value: "洋貨復出口，復出口原因：退回修理，修理完畢後會再復運進口"},
-        '81': { value: "洋貨轉售"},
-        '82': { value: "洋貨復出口不再進口(贈送/樣品/不良品退回)"},
-    }
+        '02': { value: "國貨銷售" },
+        '04': { value: "國貨樣品/贈送不再進口" },
+        '05': { value: "委外加工不再進口" },
+        '06': { value: "本批貨物為國外提供原料委託加工出口" },
+        '53': { value: "此為貨樣出口，後續將依規定限期內返台" },
+        '91': { value: "本批貨物為國貨修理後復出口" },
+        '95': { value: "委外加工再復運進口" },
+        '9M': { value: "洋貨復出口，復出口原因：退回修理，修理完畢後會再復運進口" },
+        '81': { value: "洋貨轉售" },
+        '82': { value: "洋貨復出口不再進口" },
+    };
 
-    document.querySelectorAll('.ST_MTD').forEach((input, index) => {
-        if (!input || typeof input.value !== 'string') {
-            console.warn(`無法獲取第 ${index} 項的 ST_MTD 值，跳過。`);
-            return; // 跳過無效元素
-        }
-        
-        const value = input.value.trim(); // 獲取 ST_MTD 的值
-    
-        // 找到當前項次的行
-        const itemRow = input.closest('.item-row');
+    // 條件判斷函數
+    const addAdditionalInfo = (itemRow, stMtdValue) => {
         if (!itemRow) {
-            console.warn(`無法找到第 ${index} 項的 .item-row，跳過。`);
-            return;
+            console.warn("itemRow 無效，跳過條件判斷。");
+            return stMtdValue;
         }
-    
-        // 獲取 itemNumber，根據行內的 .item-number 標籤
-        const itemNumberLabel = itemRow.querySelector('.item-number label');
-        const itemNumber = itemNumberLabel ? parseInt(itemNumberLabel.textContent.trim(), 10) : NaN;
-    
-        if (isNaN(itemNumber)) {
-            console.warn(`第 ${index} 項的 itemNumber 為 NaN，跳過。`);
-            return; // 跳過無效的項次
-        }
-    
-        if (!stMtdMap[value]) {
-            stMtdMap[value] = []; // 初始化為空陣列
-        }
-        stMtdMap[value].push(itemNumber); // 將當前項次加入對應的值
-    });
 
-    // 將項次轉換為範圍格式
-    const formatRangesST_MTD = (numbers) => {
+        const descriptionField = itemRow.querySelector('.DESCRIPTION');
+        const descriptionValue = descriptionField ? descriptionField.value.trim() : '';
+        const orgImpDclNo = itemRow.querySelector('.ORG_IMP_DCL_NO')?.value.trim() || '';
+        const orgDclNo = itemRow.querySelector('.ORG_DCL_NO')?.value.trim() || '';
+
+        if (descriptionValue.includes('發票號碼') && (!orgImpDclNo || !orgDclNo)) {
+            return `${stMtdValue}\n因無法提供原進口報單號碼，特附國內購買憑證以茲證明`;
+        } else if (orgImpDclNo || orgDclNo) {
+            return `${stMtdValue}，附原進口報單`;
+        } else {
+            return `${stMtdValue}\n因無法取得原進口報單及購買憑證，願繳納推廣貿易服務費`;
+        }
+    };
+
+    // 格式化項次範圍
+    const formatRanges = (numbers) => {
         const ranges = [];
         let start = numbers[0];
         let prev = numbers[0];
@@ -3750,35 +3742,85 @@ function summarizeOrgCountry() {
             prev = current;
         }
         ranges.push(start === prev ? `${start}` : `${start}-${prev}`);
-        return ranges.join(',');
+        return ranges;
     };
 
-    // 匯整結果，按項次排序
-    const result = Object.entries(stMtdMap)
-        .filter(([key]) => key) // 過濾空值
-        .map(([key, items]) => {
-            const stMtdData = stMtdMapping[key] || { value: key }; // 找不到則顯示預設值
-            const stMtdName = `${stMtdData.value}`;
-            const sortedItems = items.sort((a, b) => a - b); // 排序項次
-            const ranges = formatRangesST_MTD(sortedItems); // 將項次轉為範圍
-            return { ranges, stMtdName }; // 返回範圍與名稱
-        })
-        .sort((a, b) => {
-            // 依照範圍的第一個數字排序
-            const firstA = parseInt(a.ranges.split(',')[0], 10);
-            const firstB = parseInt(b.ranges.split(',')[0], 10);
-            return firstA - firstB;
-        })
-        .map(({ ranges, stMtdName }) => {
-            return `ITEM ${ranges}: ${stMtdName}`; // 組合描述
-        })
-        .join('\n');
+    // 合併具有相同備註的範圍
+    const mergeSameRemarks = (data) => {
+        const merged = {};
 
-    // 顯示結果在 DOC_OTR_DESC
+        data.forEach(({ ranges, remark }) => {
+            if (!merged[remark]) {
+                merged[remark] = [];
+            }
+            merged[remark] = merged[remark].concat(ranges);
+        });
+
+        return Object.entries(merged).map(([remark, rangeList]) => {
+            const sortedRanges = [...new Set(rangeList)].sort((a, b) => a - b);
+            return `ITEM ${formatRanges(sortedRanges).join(', ')}: ${remark}`;
+        });
+    };
+
+    // 處理每一行
+    document.querySelectorAll('.item-row').forEach((itemRow, index) => {
+        // 查找 .ST_MTD 元素
+        const stMtdInput = itemRow.querySelector('.ST_MTD');
+        const itemNumberLabel = itemRow.querySelector('.item-number label');
+
+        // 檢查元素是否存在
+        if (!stMtdInput) {
+            console.warn(`第 ${index} 行找不到 .ST_MTD 元素，跳過處理。`);
+            return;
+        }
+        if (!itemNumberLabel) {
+            console.warn(`第 ${index} 行找不到 .item-number label 元素，跳過處理。`);
+            return;
+        }
+
+        // 確保 .value 存在
+        const stMtdValue = stMtdInput.value?.trim();
+        if (!stMtdValue) {
+            console.warn(`第 ${index} 行的 ST_MTD 值為空，跳過處理。`);
+            return;
+        }
+
+        const itemNumber = parseInt(itemNumberLabel.textContent.trim(), 10);
+        if (isNaN(itemNumber)) {
+            console.warn(`第 ${index} 行的項次無效，跳過處理。`);
+            return;
+        }
+
+        // 處理邏輯...
+        let stMtdName = stMtdMapping[stMtdValue]?.value || stMtdValue;
+        if (['9M', '81', '82'].includes(stMtdValue)) {
+            stMtdName = addAdditionalInfo(itemRow, stMtdName);
+        }
+
+        const groupKey = `${stMtdValue}|${stMtdName}`;
+        if (!stMtdMap[groupKey]) {
+            stMtdMap[groupKey] = [];
+        }
+        stMtdMap[groupKey].push(itemNumber);
+    });
+
+    // 匯整結果
+    const resultData = Object.entries(stMtdMap)
+        .flatMap(([key, items]) => {
+            const [stMtdValue, stMtdName] = key.split('|');
+            const sortedItems = items.sort((a, b) => a - b);
+            const ranges = formatRanges(sortedItems);
+            return ranges.map(range => ({ ranges: [range], remark: stMtdName }));
+        });
+
+    const finalResult = mergeSameRemarks(resultData).join('\n');
+
+    // 更新到 DOC_OTR_DESC
     const docOtrDesc = document.getElementById('DOC_OTR_DESC');
     if (docOtrDesc) {
-        docOtrDesc.value = docOtrDesc.value.trim() + '\n' + result; // 顯示匯整結果
+        docOtrDesc.value = docOtrDesc.value.trim() + '\n' + finalResult;
     } else {
         console.error("找不到 DOC_OTR_DESC 元素，無法顯示結果。");
     }
+
 }
