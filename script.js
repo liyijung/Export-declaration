@@ -3491,203 +3491,117 @@ document.getElementById('copy_3').addEventListener('change', function () {
 function summarizeOrgCountry() {
     // 標記及貨櫃號碼
     const orgCountryMap = {}; // 用於儲存 ORG_COUNTRY 與對應項次
+    let countryMapping = {}; // 從 CSV 加載的國家代碼
 
-    const countryMapping = {
-        TW: { value: "Taiwan", valueChinese: "台灣" },
-        CN: { value: "China", valueChinese: "中國" },
-        HK: { value: "Hong Kong", valueChinese: "香港" },
-        MO: { value: "Macau", valueChinese: "澳門" },
-        AU: { value: "Australia", valueChinese: "澳大利亞(澳洲)" },
-        BH: { value: "Bahrain", valueChinese: "巴林" },
-        BT: { value: "Bhutan", valueChinese: "不丹" },
-        BN: { value: "Brunei Darussalam", valueChinese: "汶萊" },
-        KH: { value: "Cambodia", valueChinese: "柬埔寨" },
-        FJ: { value: "Fiji", valueChinese: "斐濟" },
-        GU: { value: "Guam", valueChinese: "關島" },
-        IN: { value: "India", valueChinese: "印度" },
-        ID: { value: "Indonesia", valueChinese: "印尼" },
-        IR: { value: "Iran", valueChinese: "伊朗" },
-        IL: { value: "Israel", valueChinese: "以色列" },
-        JP: { value: "Japan", valueChinese: "日本" },
-        JO: { value: "Jordan", valueChinese: "約旦" },
-        KW: { value: "Kuwait", valueChinese: "科威特" },
-        KR: { value: "Korea", valueChinese: "韓國" },
-        LA: { value: "Lao", valueChinese: "寮國" },
-        MY: { value: "Malaysia", valueChinese: "馬來西亞" },
-        NR: { value: "Nauru", valueChinese: "諾魯" },
-        NZ: { value: "New Zealand", valueChinese: "紐西蘭" },
-        OM: { value: "Oman", valueChinese: "阿曼" },
-        PK: { value: "Pakistan", valueChinese: "巴基斯坦" },
-        PG: { value: "Papua New Guinea", valueChinese: "巴布亞紐幾內亞" },
-        PH: { value: "Philippines", valueChinese: "菲律賓" },
-        QA: { value: "Qatar", valueChinese: "卡達" },
-        SG: { value: "Singapore", valueChinese: "新加坡" },
-        SA: { value: "Saudi Arabia", valueChinese: "沙烏地阿拉伯" },
-        SB: { value: "Solomon Islands", valueChinese: "索羅門群島" },
-        LK: { value: "Sri Lanka", valueChinese: "斯里蘭卡" },
-        SY: { value: "Syrian Arab Republic", valueChinese: "敘利亞" },
-        TH: { value: "Thailand", valueChinese: "泰國" },
-        TR: { value: "Turkey", valueChinese: "土耳其" },
-        AE: { value: "United Arab Emirates", valueChinese: "阿拉伯聯合大公國" },
-        VN: { value: "Viet Nam", valueChinese: "越南" },
-        YE: { value: "Yemen", valueChinese: "葉門" },
-        AM: { value: "Armenia", valueChinese: "亞美尼亞" },
-        AT: { value: "Austria", valueChinese: "奧地利" },
-        AZ: { value: "Azerbaijan", valueChinese: "亞塞拜然" },
-        BY: { value: "Belarus", valueChinese: "白俄羅斯" },
-        BE: { value: "Belgium", valueChinese: "比利時" },
-        BG: { value: "Bulgaria", valueChinese: "保加利亞" },
-        CY: { value: "Cyprus", valueChinese: "塞普勒斯" },
-        CZ: { value: "Czech", valueChinese: "捷克" },
-        DK: { value: "Denmark", valueChinese: "丹麥" },
-        EE: { value: "Estonia", valueChinese: "愛沙尼亞" },
-        FI: { value: "Finland", valueChinese: "芬蘭" },
-        FR: { value: "France", valueChinese: "法國" },
-        GE: { value: "Georgia", valueChinese: "喬治亞" },
-        DE: { value: "Germany", valueChinese: "德國" },
-        GB: { value: "United Kingdom", valueChinese: "英國" },
-        GR: { value: "Greece", valueChinese: "希臘" },
-        HU: { value: "Hungary", valueChinese: "匈牙利" },
-        IE: { value: "Ireland", valueChinese: "愛爾蘭" },
-        IT: { value: "Italy", valueChinese: "義大利" },
-        KZ: { value: "Kazakhstan", valueChinese: "哈薩克" },
-        KG: { value: "Kyrgyzstan", valueChinese: "吉爾吉斯" },
-        LV: { value: "Latvia", valueChinese: "拉脫維亞" },
-        LT: { value: "Lithuania", valueChinese: "立陶宛" },
-        LU: { value: "Luxembourg", valueChinese: "盧森堡" },
-        MT: { value: "Malta", valueChinese: "馬耳他" },
-        MD: { value: "Moldova", valueChinese: "摩爾多瓦" },
-        NL: { value: "Netherlands", valueChinese: "荷蘭" },
-        NO: { value: "Norway", valueChinese: "挪威" },
-        PL: { value: "Poland", valueChinese: "波蘭" },
-        PT: { value: "Portugal", valueChinese: "葡萄牙" },
-        ES: { value: "Spain", valueChinese: "西班牙" },
-        CH: { value: "Switzerland", valueChinese: "瑞士" },
-        SE: { value: "Sweden", valueChinese: "瑞典" },
-        TJ: { value: "Tajikistan", valueChinese: "塔吉克" },
-        TM: { value: "Turkmenistan", valueChinese: "土庫曼" },
-        UA: { value: "Ukraine", valueChinese: "烏克蘭" },
-        UZ: { value: "Uzbekistan", valueChinese: "烏茲別克" },
-        CA: { value: "Canada", valueChinese: "加拿大" },
-        US: { value: "United States", valueChinese: "美國" },
-        AR: { value: "Argentina", valueChinese: "阿根廷" },
-        BB: { value: "Barbados", valueChinese: "巴貝多" },
-        BO: { value: "Bolivia", valueChinese: "玻利維亞" },
-        BR: { value: "Brazil", valueChinese: "巴西" },
-        CL: { value: "Chile", valueChinese: "智利" },
-        CO: { value: "Colombia", valueChinese: "哥倫比亞" },
-        CR: { value: "Costa Rica", valueChinese: "哥斯大黎加" },
-        EC: { value: "Ecuador", valueChinese: "厄瓜多" },
-        SV: { value: "El Salvador", valueChinese: "薩爾瓦多" },
-        GT: { value: "Guatemala", valueChinese: "瓜地馬拉" },
-        HN: { value: "Honduras", valueChinese: "宏都拉斯" },
-        JM: { value: "Jamaica", valueChinese: "牙買加" },
-        MX: { value: "Mexico", valueChinese: "墨西哥" },
-        PA: { value: "Panama", valueChinese: "巴拿馬" },
-        PY: { value: "Paraguay", valueChinese: "巴拉圭" },
-        PE: { value: "Peru", valueChinese: "秘魯" },
-        PR: { value: "Puerto Rico", valueChinese: "波多黎各" },
-        UY: { value: "Uruguay", valueChinese: "烏拉圭" },
-        VE: { value: "Venezuela", valueChinese: "委內瑞拉" },
-        BJ: { value: "Benin", valueChinese: "貝南" },
-        CI: { value: "Ivory Coast", valueChinese: "象牙海岸" },
-        DJ: { value: "Djibouti", valueChinese: "吉布地" },
-        EG: { value: "Egypt", valueChinese: "埃及" },
-        ET: { value: "Ethiopia", valueChinese: "衣索比亞" },
-        GH: { value: "Ghana", valueChinese: "迦納" },
-        KE: { value: "Kenya", valueChinese: "肯亞" },
-        LS: { value: "Lesotho", valueChinese: "賴索托" },
-        MG: { value: "Madagascar", valueChinese: "馬達加斯加" },
-        MW: { value: "Malawi", valueChinese: "馬拉威" },
-        ML: { value: "Mali", valueChinese: "馬利" },
-        MU: { value: "Mauritius", valueChinese: "模里西斯" },
-        MZ: { value: "Mozambique", valueChinese: "莫三比克" },
-        NE: { value: "Niger", valueChinese: "尼日" },
-        NG: { value: "Nigeria", valueChinese: "奈及利亞" },
-        SN: { value: "Senegal", valueChinese: "塞內加爾" },
-        SL: { value: "Sierra Leone", valueChinese: "獅子山" },
-        ZA: { value: "South Africa", valueChinese: "南非" },
-        SD: { value: "Sudan", valueChinese: "蘇丹" },
-        TZ: { value: "Tanzania", valueChinese: "坦尚尼亞" },
-        TG: { value: "Togo", valueChinese: "多哥" }
+    // 讀取 countryMapping.csv 文件並解析
+    const loadCountryMapping = async () => {
+        try {
+            const response = await fetch('./countryMapping.csv');
+            const csvText = await response.text();
+
+            // 解析 CSV 文件
+            const lines = csvText.trim().split('\n');
+            const headers = lines[0].split(','); // 解析標題列
+            const dataLines = lines.slice(1);
+
+            dataLines.forEach((line) => {
+                const values = line.split(',');
+                const code = values[0].trim();
+                const value = values[1].trim();
+                const valueChinese = values[2].trim();
+                const region = values[3].trim();
+
+                countryMapping[code] = { value, valueChinese, region };
+            });
+        } catch (error) {
+            console.error('Error loading countryMapping.csv:', error);
+        }
     };
+    
+    // 初始化函數
+    const init = async () => {
+        await loadCountryMapping(); // 加載 CSV 文件
 
-    document.querySelectorAll('.ORG_COUNTRY').forEach((input, index) => {
-        if (!input || typeof input.value !== 'string') {
-            console.warn(`無法獲取第 ${index} 項的 ORG_COUNTRY 值，跳過。`);
-            return; // 跳過無效元素
-        }
-        
-        const value = input.value.trim(); // 獲取 ORG_COUNTRY 的值
-    
-        // 找到當前項次的行
-        const itemRow = input.closest('.item-row');
-        if (!itemRow) {
-            console.warn(`無法找到第 ${index} 項的 .item-row，跳過。`);
-            return;
-        }
-    
-        // 獲取 itemNumber，根據行內的 .item-number 標籤
-        const itemNumberLabel = itemRow.querySelector('.item-number label');
-        const itemNumber = itemNumberLabel ? parseInt(itemNumberLabel.textContent.trim(), 10) : NaN;
-    
-        if (isNaN(itemNumber)) {
-            console.warn(`第 ${index} 項的 itemNumber 為 NaN，跳過。`);
-            return; // 跳過無效的項次
-        }
-    
-        if (!orgCountryMap[value]) {
-            orgCountryMap[value] = []; // 初始化為空陣列
-        }
-        orgCountryMap[value].push(itemNumber); // 將當前項次加入對應的值
-    });
-
-    // 將項次轉換為範圍格式
-    const formatRangesORG_COUNTRY = (numbers) => {
-        const ranges = [];
-        let start = numbers[0];
-        let prev = numbers[0];
-
-        for (let i = 1; i < numbers.length; i++) {
-            const current = numbers[i];
-            if (current !== prev + 1) {
-                ranges.push(start === prev ? `${start}` : `${start}-${prev}`);
-                start = current;
+        document.querySelectorAll('.ORG_COUNTRY').forEach((input, index) => {
+            if (!input || typeof input.value !== 'string') {
+                console.warn(`無法獲取第 ${index} 項的 ORG_COUNTRY 值，跳過。`);
+                return; // 跳過無效元素
             }
-            prev = current;
+            
+            const value = input.value.trim(); // 獲取 ORG_COUNTRY 的值
+        
+            // 找到當前項次的行
+            const itemRow = input.closest('.item-row');
+            if (!itemRow) {
+                console.warn(`無法找到第 ${index} 項的 .item-row，跳過。`);
+                return;
+            }
+        
+            // 獲取 itemNumber，根據行內的 .item-number 標籤
+            const itemNumberLabel = itemRow.querySelector('.item-number label');
+            const itemNumber = itemNumberLabel ? parseInt(itemNumberLabel.textContent.trim(), 10) : NaN;
+        
+            if (isNaN(itemNumber)) {
+                console.warn(`第 ${index} 項的 itemNumber 為 NaN，跳過。`);
+                return; // 跳過無效的項次
+            }
+        
+            if (!orgCountryMap[value]) {
+                orgCountryMap[value] = []; // 初始化為空陣列
+            }
+            orgCountryMap[value].push(itemNumber); // 將當前項次加入對應的值
+        });
+
+        // 將項次轉換為範圍格式
+        const formatRangesORG_COUNTRY = (numbers) => {
+            const ranges = [];
+            let start = numbers[0];
+            let prev = numbers[0];
+
+            for (let i = 1; i < numbers.length; i++) {
+                const current = numbers[i];
+                if (current !== prev + 1) {
+                    ranges.push(start === prev ? `${start}` : `${start}-${prev}`);
+                    start = current;
+                }
+                prev = current;
+            }
+            ranges.push(start === prev ? `${start}` : `${start}-${prev}`);
+            return ranges.join(',');
+        };
+
+        // 匯整結果，按項次排序
+        const resultORG_COUNTRY = Object.entries(orgCountryMap)
+            .filter(([key]) => key) // 過濾空值
+            .map(([key, items]) => {
+                const countryData = countryMapping[key] || { value: key }; // 找不到則顯示預設值
+                const countryName = `${countryData.value}`;
+                const sortedItems = items.sort((a, b) => a - b); // 排序項次
+                const ranges = formatRangesORG_COUNTRY(sortedItems); // 將項次轉為範圍
+                return { ranges, countryName }; // 返回範圍與國名
+            })
+            .sort((a, b) => {
+                // 依照範圍的第一個數字排序
+                const firstA = parseInt(a.ranges.split(',')[0], 10);
+                const firstB = parseInt(b.ranges.split(',')[0], 10);
+                return firstA - firstB;
+            })
+            .map(({ ranges, countryName }) => {
+                return `ITEM ${ranges}: MADE IN ${countryName.toUpperCase()}`; // 組合描述
+            })
+            .join('\n');
+
+        // 顯示結果在 DOC_MARKS_DESC
+        const docMarksDesc = document.getElementById('DOC_MARKS_DESC');
+        if (docMarksDesc) {
+            docMarksDesc.value = docMarksDesc.value.trim() + '\n' + resultORG_COUNTRY; // 顯示匯整結果
+        } else {
+            console.error("找不到 DOC_MARKS_DESC 元素，無法顯示結果。");
         }
-        ranges.push(start === prev ? `${start}` : `${start}-${prev}`);
-        return ranges.join(',');
     };
 
-    // 匯整結果，按項次排序
-    const resultORG_COUNTRY = Object.entries(orgCountryMap)
-        .filter(([key]) => key) // 過濾空值
-        .map(([key, items]) => {
-            const countryData = countryMapping[key] || { value: key }; // 找不到則顯示預設值
-            const countryName = `${countryData.value}`;
-            const sortedItems = items.sort((a, b) => a - b); // 排序項次
-            const ranges = formatRangesORG_COUNTRY(sortedItems); // 將項次轉為範圍
-            return { ranges, countryName }; // 返回範圍與國名
-        })
-        .sort((a, b) => {
-            // 依照範圍的第一個數字排序
-            const firstA = parseInt(a.ranges.split(',')[0], 10);
-            const firstB = parseInt(b.ranges.split(',')[0], 10);
-            return firstA - firstB;
-        })
-        .map(({ ranges, countryName }) => {
-            return `ITEM ${ranges}: MADE IN ${countryName.toUpperCase()}`; // 組合描述
-        })
-        .join('\n');
-
-    // 顯示結果在 DOC_MARKS_DESC
-    const docMarksDesc = document.getElementById('DOC_MARKS_DESC');
-    if (docMarksDesc) {
-        docMarksDesc.value = docMarksDesc.value.trim() + '\n' + resultORG_COUNTRY; // 顯示匯整結果
-    } else {
-        console.error("找不到 DOC_MARKS_DESC 元素，無法顯示結果。");
-    }
+    // 啟動初始化
+    init();
 
     // 其它申報事項
     const stMtdMap = {}; // 用於儲存 ST_MTD 與對應的項次與條件
