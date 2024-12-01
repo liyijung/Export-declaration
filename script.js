@@ -546,10 +546,15 @@ function fillText(text) {
     textarea.focus(); // 將焦點設回欄位
 }
 
-// 標記及貨櫃號碼 及 其它申報事項 展開/折疊
+// 標記及貨櫃號碼及其它申報事項展開/折疊
 function toggleRows(textareaId, button) {
     const textarea = document.getElementById(textareaId);
-    if (textarea.rows === 5) {
+    const currentRows = textarea.rows;
+
+    if (currentRows === 5) {
+        textarea.rows = 10;
+        button.textContent = "展開";
+    } else if (currentRows === 10) {
         textarea.rows = 15;
         button.textContent = "折疊";
     } else {
