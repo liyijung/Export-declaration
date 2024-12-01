@@ -3702,7 +3702,7 @@ function summarizeOrgCountry() {
         '95': { value: "委外加工再復運進口"},
         '9M': { value: "洋貨復出口，復出口原因：退回修理，修理完畢後會再復運進口"},
         '81': { value: "洋貨轉售"},
-        '82': { value: "洋貨復出口不再進口"},
+        '82': { value: "洋貨復出口不再進口(贈送/樣品/不良品退回)"},
     }
 
     document.querySelectorAll('.ST_MTD').forEach((input, index) => {
