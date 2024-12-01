@@ -3719,11 +3719,11 @@ function summarizeOrgCountry() {
         const orgDclNo = itemRow.querySelector('.ORG_DCL_NO')?.value.trim() || '';
 
         if (descriptionValue.includes('發票號碼') && (!orgImpDclNo || !orgDclNo)) {
-            return `${stMtdValue}\n因無法提供原進口報單號碼，特附國內購買憑證以茲證明`;
+            return `${stMtdValue}，因無法提供原進口報單號碼，特附國內購買憑證以茲證明`;
         } else if (orgImpDclNo || orgDclNo) {
             return `${stMtdValue}，附原進口報單`;
         } else {
-            return `${stMtdValue}\n因無法取得原進口報單及購買憑證，願繳納推廣貿易服務費`;
+            return `${stMtdValue}，因無法取得原進口報單及購買憑證，願繳納推廣貿易服務費`;
         }
     };
 
