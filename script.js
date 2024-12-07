@@ -176,7 +176,7 @@ function filterSFAndNumbers(input) {
     input.value = input.value.replace(/[^SF0-9]/gi, '');
 
     if (/[^\dSF]/gi.test(originalValue)) {
-        showHint(input, '僅允許輸入半形 S、F 和數字');
+        showHint(input, '僅允許輸入 SF 和半形數字');
     }
 }
 
@@ -190,23 +190,23 @@ function filterNumbers(input) {
     }
 }
 
-// 僅允許字母 A-Z
+// 僅允許英文 A-Z
 function filterAlphabets(input) {
     const originalValue = input.value;
     input.value = input.value.replace(/[^A-Z]/gi, '');
 
     if (/[^A-Za-z]/.test(originalValue)) {
-        showHint(input, '僅允許輸入半形字母');
+        showHint(input, '僅允許輸入半形英文');
     }
 }
 
-// 僅允許數字 0-9 和字母 A-Z
+// 僅允許數字 0-9 和英文 A-Z
 function filterAlphanumeric(input) {
     const originalValue = input.value;
     input.value = input.value.replace(/[^0-9A-Z]/gi, '');
 
     if (/[^0-9A-Za-z]/.test(originalValue)) {
-        showHint(input, '僅允許輸入半形數字和字母');
+        showHint(input, '僅允許輸入半形數字和英文');
     }
 }
 
