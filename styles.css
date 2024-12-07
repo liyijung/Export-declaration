@@ -718,4 +718,5 @@ input[type="checkbox"]:hover {
     margin-top: 4px;
     margin-left: 4px;
     margin-right: 4px;
+    pointer-events: none; /* 防止阻擋 TAB 功能 */
 }
