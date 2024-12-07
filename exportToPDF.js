@@ -5,10 +5,13 @@ async function exportToPDF() {
 
     try {
         const { jsPDF } = window.jspdf;
-        const doc = new jsPDF();
-        await loadAndEmbedFont(doc, "NotoSansCJKtc-Regular.ttf", "NotoSansCJKtc");
+        const doc = new jsPDF({
+            precision: 2, // 精度設定
+            compress: true, // 開啟壓縮
+        });
 
         // 字體轉換與載入
+        await loadAndEmbedFont(doc, "NotoSansCJKtc-Regular.ttf", "NotoSansCJKtc");
         async function loadAndEmbedFont(doc, fontPath, fontName) {
             try {
                 if (!doc.existsFileInVFS(fontName)) {
