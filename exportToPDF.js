@@ -11,18 +11,20 @@ async function exportToPDF() {
         // 字體轉換與載入
         async function loadAndEmbedFont(doc, fontPath, fontName) {
             try {
-                // 獲取字體檔案的二進制數據
-                const fontBytes = await fetch(fontPath).then(res => res.arrayBuffer());
-                
-                // 將字體數據轉換為 Base64 編碼格式
-                const fontBase64 = arrayBufferToBase64(fontBytes);
-
-                // 添加字體到 VFS (虛擬文件系統)
-                doc.addFileToVFS(fontName, fontBase64);
-                doc.addFont(fontName, fontName, "normal");
-
-                // 設定字體
-                doc.setFont(fontName, "normal");
+                if (!doc.existsFileInVFS(fontName)) {
+                    // 獲取字體檔案的二進制數據
+                    const fontBytes = await fetch(fontPath).then(res => res.arrayBuffer());
+                    
+                    // 將字體數據轉換為 Base64 編碼格式
+                    const fontBase64 = arrayBufferToBase64(fontBytes);
+    
+                    // 添加字體到 VFS (虛擬文件系統)
+                    doc.addFileToVFS(fontName, fontBase64);
+                    doc.addFont(fontName, fontName, "normal");
+    
+                    // 設定字體
+                    doc.setFont(fontName, "normal");
+                }
             } catch (error) {
                 console.error("字體載入或嵌入時出現錯誤：", error);
             }
