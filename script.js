@@ -170,29 +170,61 @@ function toggleSelect(element) {
     element.classList.toggle('selected');
 }
 
-// 運單號過濾，僅允許 'SF' 和數字，並進行全形轉半形
+// 運單號過濾，僅允許 'SF' 和數字
 function filterSFAndNumbers(input) {
-    // 全形轉半形
-    input.value = input.value.replace(/[\uff01-\uff5e]/g, function(ch) { 
-        return String.fromCharCode(ch.charCodeAt(0) - 0xFEE0); 
-    });
-    // 只保留 S, F 和數字
+    const originalValue = input.value;
     input.value = input.value.replace(/[^SF0-9]/gi, '');
+
+    if (/[^\dSF]/gi.test(originalValue)) {
+        showHint(input, '僅允許輸入半形 S、F 和數字');
+    }
 }
 
+// 僅允許數字 0-9
 function filterNumbers(input) {
-    // 只允許數字 0-9
+    const originalValue = input.value;
     input.value = input.value.replace(/[^0-9]/g, '');
+
+    if (/[^0-9]/.test(originalValue)) {
+        showHint(input, '僅允許輸入半形數字');
+    }
 }
 
+// 僅允許字母 A-Z
 function filterAlphabets(input) {
-    // 只允許字母 A-Z
+    const originalValue = input.value;
     input.value = input.value.replace(/[^A-Z]/gi, '');
+
+    if (/[^A-Za-z]/.test(originalValue)) {
+        showHint(input, '僅允許輸入半形字母');
+    }
 }
 
+// 僅允許數字 0-9 和字母 A-Z
 function filterAlphanumeric(input) {
-    // 只允許數字 0-9 和字母 A-Z
+    const originalValue = input.value;
     input.value = input.value.replace(/[^0-9A-Z]/gi, '');
+
+    if (/[^0-9A-Za-z]/.test(originalValue)) {
+        showHint(input, '僅允許輸入半形數字和字母');
+    }
+}
+
+// 提示函式
+function showHint(input, message) {
+    const hint = document.createElement('div');
+    hint.className = 'input-hint';
+    hint.textContent = message;
+
+    if (!input.nextElementSibling || input.nextElementSibling.className !== 'input-hint') {
+        input.insertAdjacentElement('afterend', hint);
+
+        setTimeout(() => {
+            if (hint.parentNode) {
+                hint.parentNode.removeChild(hint);
+            }
+        }, 2000);
+    }
 }
 
 // 依據統一編號的不同範圍對應相應的CSV檔案
