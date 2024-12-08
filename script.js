@@ -172,7 +172,7 @@ function smoothScrollBy(deltaX, deltaY, duration = 200) {
 
 // 處理 Alt+PageUp、Alt+PageDown、PageUp 和 PageDown 的捲動
 function handlePageScroll(event) {
-    const scrollHorizontalAmount = window.innerWidth * 0.9; // 水平捲動距離
+    const scrollHorizontalAmount = window.innerWidth * 0.85; // 水平捲動距離
     const scrollVerticalAmount = window.innerHeight * 0.75; // 垂直捲動距離
     const duration = 150; // 設定更快的捲動速度（時間以毫秒為單位）
 
@@ -197,6 +197,17 @@ function handlePageScroll(event) {
 
 // 全域監聽鍵盤事件
 document.addEventListener('keydown', handlePageScroll);
+
+// 限制 Alt+左箭頭 功能
+function restrictAltLeftArrow(event) {
+    // 檢查是否按下 Alt 鍵以及左箭頭鍵
+    if (event.altKey && event.key === 'ArrowLeft') {
+        event.preventDefault(); // 阻止預設行為
+    }
+}
+
+// 監聽鍵盤按下事件
+document.addEventListener('keydown', restrictAltLeftArrow);
 
 // 切換所有項次編號的反色
 document.addEventListener('DOMContentLoaded', function() {
