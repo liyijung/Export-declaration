@@ -145,6 +145,48 @@ function toggleWidth() {
     }
 }
 
+// 自定義平滑捲動函數
+function smoothScrollBy(deltaX, duration = 200) {
+    const start = window.scrollX;
+    const startTime = performance.now();
+
+    function step(currentTime) {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1); // 計算進度（0 到 1）
+        const easeInOut = progress < 0.5
+            ? 2 * progress * progress
+            : -1 + (4 - 2 * progress) * progress; // 緩入緩出效果
+        const scrollAmount = easeInOut * deltaX;
+
+        window.scrollTo(start + scrollAmount, window.scrollY);
+
+        if (elapsed < duration) {
+            requestAnimationFrame(step);
+        }
+    }
+
+    requestAnimationFrame(step);
+}
+
+// 處理 Alt+PageUp 和 Alt+PageDown 的捲動
+function handlePageScroll(event) {
+    const scrollAmount = window.innerWidth * 0.9; // 調整為視窗寬度的 0.9 倍
+    const duration = 150; // 設定更快的捲動速度（時間以毫秒為單位）
+
+    if (event.altKey && event.key === 'PageUp') {
+        // Alt+PageUp 向左捲動
+        smoothScrollBy(-scrollAmount, duration);
+        event.preventDefault(); // 防止預設行為
+    } else if (event.altKey && event.key === 'PageDown') {
+        // Alt+PageDown 向右捲動
+        smoothScrollBy(scrollAmount, duration);
+        event.preventDefault(); // 防止預設行為
+    }
+}
+
+// 全域監聽鍵盤事件
+document.addEventListener('keydown', handlePageScroll);
+
 // 切換所有項次編號的反色
 document.addEventListener('DOMContentLoaded', function() {
     // 切換所有項次編號的反色
@@ -2005,14 +2047,14 @@ function toggleAllTextareas() {
 }
 
 // 處理 Alt+w 鍵的函數
-function handleAltOKey(event) {
+function handleAltWKey(event) {
     if (event.altKey && (event.key === 'w' || event.key === 'W')) {
         toggleAllTextareas();
     }
 }
 
 // 全域監聽 Alt+w 鍵，表示切換所有文本域顯示和隱藏
-document.addEventListener('keydown', handleAltOKey);
+document.addEventListener('keydown', handleAltWKey);
 
 // 函數實現文本域上下導航
 function handleTextareaArrowKeyNavigation(event) {
