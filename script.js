@@ -198,16 +198,18 @@ function handlePageScroll(event) {
 // 全域監聽鍵盤事件
 document.addEventListener('keydown', handlePageScroll);
 
-// 限制 Alt+左箭頭 功能
-function restrictAltLeftArrow(event) {
-    // 檢查是否按下 Alt 鍵以及左箭頭鍵
-    if (event.altKey && event.key === 'ArrowLeft') {
+// 限制 Alt+左箭頭、Alt+右箭頭 和 Alt+Home 的功能
+function restrictAltKeyCombos(event) {
+    if (
+        event.altKey && 
+        (event.key === 'ArrowLeft' || event.key === 'ArrowRight' || event.key === 'Home')
+    ) {
         event.preventDefault(); // 阻止預設行為
     }
 }
 
 // 監聽鍵盤按下事件
-document.addEventListener('keydown', restrictAltLeftArrow);
+document.addEventListener('keydown', restrictAltKeyCombos);
 
 // 切換所有項次編號的反色
 document.addEventListener('DOMContentLoaded', function() {
