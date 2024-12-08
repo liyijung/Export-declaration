@@ -146,8 +146,9 @@ function toggleWidth() {
 }
 
 // 自定義平滑捲動函數
-function smoothScrollBy(deltaX, duration = 200) {
-    const start = window.scrollX;
+function smoothScrollBy(deltaX, deltaY, duration = 200) {
+    const startX = window.scrollX;
+    const startY = window.scrollY;
     const startTime = performance.now();
 
     function step(currentTime) {
@@ -156,9 +157,10 @@ function smoothScrollBy(deltaX, duration = 200) {
         const easeInOut = progress < 0.5
             ? 2 * progress * progress
             : -1 + (4 - 2 * progress) * progress; // 緩入緩出效果
-        const scrollAmount = easeInOut * deltaX;
+        const scrollX = easeInOut * deltaX;
+        const scrollY = easeInOut * deltaY;
 
-        window.scrollTo(start + scrollAmount, window.scrollY);
+        window.scrollTo(startX + scrollX, startY + scrollY);
 
         if (elapsed < duration) {
             requestAnimationFrame(step);
@@ -168,18 +170,27 @@ function smoothScrollBy(deltaX, duration = 200) {
     requestAnimationFrame(step);
 }
 
-// 處理 Alt+PageUp 和 Alt+PageDown 的捲動
+// 處理 Alt+PageUp、Alt+PageDown、PageUp 和 PageDown 的捲動
 function handlePageScroll(event) {
-    const scrollAmount = window.innerWidth * 0.9; // 調整為視窗寬度的 0.9 倍
+    const scrollHorizontalAmount = window.innerWidth * 0.9; // 水平捲動距離
+    const scrollVerticalAmount = window.innerHeight * 0.75; // 垂直捲動距離
     const duration = 150; // 設定更快的捲動速度（時間以毫秒為單位）
 
     if (event.altKey && event.key === 'PageUp') {
         // Alt+PageUp 向左捲動
-        smoothScrollBy(-scrollAmount, duration);
+        smoothScrollBy(-scrollHorizontalAmount, 0, duration);
         event.preventDefault(); // 防止預設行為
     } else if (event.altKey && event.key === 'PageDown') {
         // Alt+PageDown 向右捲動
-        smoothScrollBy(scrollAmount, duration);
+        smoothScrollBy(scrollHorizontalAmount, 0, duration);
+        event.preventDefault(); // 防止預設行為
+    } else if (!event.altKey && event.key === 'PageUp') {
+        // PageUp 向上捲動
+        smoothScrollBy(0, -scrollVerticalAmount, duration);
+        event.preventDefault(); // 防止預設行為
+    } else if (!event.altKey && event.key === 'PageDown') {
+        // PageDown 向下捲動
+        smoothScrollBy(0, scrollVerticalAmount, duration);
         event.preventDefault(); // 防止預設行為
     }
 }
