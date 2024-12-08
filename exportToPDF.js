@@ -56,7 +56,7 @@ async function exportToPDF() {
         const templateContinuation = await pdfjsLib.getDocument({ data: templateContinuationBytes }).promise;
 
         // 獲取並渲染模板頁面
-        async function renderTemplate(doc, templatePdf, pageNum, scale = 4.0) {
+        async function renderTemplate(doc, templatePdf, pageNum, scale = 3.0) {
             const page = await templatePdf.getPage(pageNum);
             const viewport = page.getViewport({ scale: scale });
 
