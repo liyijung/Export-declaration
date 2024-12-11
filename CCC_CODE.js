@@ -450,6 +450,9 @@ function clearFields(inputElement) {
 
     if (stqty) stqty.value = '';
     if (stum) stum.value = '';
+
+    // 移除 '.'、'-' 以及所有的空格
+    inputElement.value = inputElement.value.replace(/[.\-\s]/g, '');
 }
 
 // 初始化 CCC_CODE 輸入框
