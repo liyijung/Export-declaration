@@ -3238,6 +3238,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     // 特別處理 CCC_CODE，移除符號 '.' 和 '-'
                     if (field.className === 'CCC_CODE') {
+                        // 檢查是否包含符號 '.' 或 '-'
+                        if (!value.includes('.') && !value.includes('-')) {
+                            alert(`稅則錯誤！`);
+                            return; // 中止匯出過程
+                        }
+                        // 移除符號進行長度檢查
                         value = value.replace(/[.\-]/g, '');
                     }
         
