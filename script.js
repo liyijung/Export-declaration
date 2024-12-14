@@ -1481,6 +1481,45 @@ function handleFile(event) {
         let currentItem = null;
         let currentDescription = '';
 
+        const tariffCodeMapping = {
+            "IC": "8542390022",
+            "Protect IC": "8542390022",
+            "2nd Protection IC": "8542390022",
+            "LED": "8541410090",
+            "BAT Conn.": "8536902000",
+            "Power MOSFET": "8541299000",
+            "Switching Transistor": "8541299000",
+            "NPN TRANSISTOR SMD": "8541299000",
+            "Thermistor": "8533400000",
+            "Resistor": "8533400000",
+            "Current Sensor Resistor": "8533400000",
+            "Capacitor": "8532300000",
+            "TVS Diode": "8541101000",
+            "Zener Diode": "8541101000",
+            "Switching Diode": "8541101000",
+            "WAFER SMT": "8542390021",
+            "CHIP CAP.": "8542390021",
+            "CHIP RESISTOR": "8542390021",
+            "VARIABLE RESISTOR": "8533400000",
+            "INDUCTOR": "8504509000",
+            "POWER INDUCTOR": "8504509000",
+            "INDUCTOR SMD": "8504509000",
+            "PLANAR E CORE": "8504900000",
+            "PLANAR EQ CORE": "8504900000",
+            "NTC RESISTOR": "8533400000",
+            "ALUMINUM Polymer CAP.": "8532220000",
+            "ALUMINUM CAP.": "8532220000",
+            "DIODE SMD": "8541101000",
+            "ZENER DIODE": "8541101000",
+            "FAST DIODE": "8541101000",
+            "SCHOTTKY DIODE": "8541101000",
+            "N MOS DIP": "8504900000",
+            "PF CAP.": "8532220000",
+            "CURRENT SHUNT MONITORS SMD": "8542390022",
+            "排PIN": "8538909000",
+            "圓PIN": "8538909000",
+        };
+
         itemsData.slice(1).forEach((row, index) => {
             const hasItemNo = row[0]; // 判斷項次是否有數據
             const hasDescription = descriptionIndices.some(i => row[i]);
@@ -1493,6 +1532,18 @@ function handleFile(event) {
                 const description = descriptionIndices.map(i => String(row[i] || '')).filter(Boolean).join('\n');
                 currentDescription = description;
 
+                let cccCode = String(row[descriptionIndices[descriptionIndices.length - 1] + 6] || '').trim();
+
+                // 檢查CCC_CODE為空並匹配稅則
+                if (!cccCode) {
+                    const matchedCode = Object.keys(tariffCodeMapping).find(key =>
+                        currentDescription.split('\n').some(line => line.trim().startsWith(key))
+                    );
+                    if (matchedCode) {
+                        cccCode = tariffCodeMapping[matchedCode];
+                    }
+                }
+                
                 currentItem = createItemRow({
                     ITEM_NO: String(row[0] || ''), // 將數據轉為字串
                     DESCRIPTION: currentDescription || '',
@@ -1501,7 +1552,7 @@ function handleFile(event) {
                     DOC_UNIT_P: removeThousandsSeparator(String(row[descriptionIndices[descriptionIndices.length - 1] + 3] || '')),
                     DOC_TOT_P: removeThousandsSeparator(String(row[descriptionIndices[descriptionIndices.length - 1] + 4] || '')),
                     TRADE_MARK: String(row[descriptionIndices[descriptionIndices.length - 1] + 5] || ''),
-                    CCC_CODE: String(row[descriptionIndices[descriptionIndices.length - 1] + 6] || ''),
+                    CCC_CODE: cccCode, // 使用匹配稅則或原始值
                     ST_MTD: String(row[descriptionIndices[descriptionIndices.length - 1] + 7] || ''),
                     NET_WT: removeThousandsSeparator(String(row[descriptionIndices[descriptionIndices.length - 1] + 8] || '')),
                     ORG_COUNTRY: String(row[descriptionIndices[descriptionIndices.length - 1] + 9] || ''),
