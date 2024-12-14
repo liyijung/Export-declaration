@@ -1534,23 +1534,13 @@ function handleFile(event) {
 
                 let cccCode = String(row[descriptionIndices[descriptionIndices.length - 1] + 6] || '').trim();
 
-                // 檢查 SHPR_BAN_ID 並匹配稅則編碼
-                const shprBanIdElement = document.getElementById('SHPR_BAN_ID');
-                const shprBanId = shprBanIdElement ? shprBanIdElement.value.trim() : '';
-                const isSpecialShprBanId = ['86009297', '96969724'].includes(shprBanId);
-
+                // 檢查CCC_CODE為空並匹配稅則
                 if (!cccCode) {
-                    if (isSpecialShprBanId) {
-                        // 特定 SHPR_BAN_ID 對應的稅則邏輯
-                        cccCode = '8504900000'; // 範例稅則編碼
-                    } else {
-                        // 按描述匹配稅則邏輯
-                        const matchedCode = Object.keys(tariffCodeMapping).find(key =>
-                            currentDescription.split('\n').some(line => line.trim().startsWith(key))
-                        );
-                        if (matchedCode) {
-                            cccCode = tariffCodeMapping[matchedCode];
-                        }
+                    const matchedCode = Object.keys(tariffCodeMapping).find(key =>
+                        currentDescription.split('\n').some(line => line.trim().startsWith(key))
+                    );
+                    if (matchedCode) {
+                        cccCode = tariffCodeMapping[matchedCode];
                     }
                 }
                 
