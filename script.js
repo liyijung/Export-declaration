@@ -1510,7 +1510,6 @@ function handleFile(event) {
             "ALUMINUM Polymer CAP.": "8532220000",
             "ALUMINUM CAP.": "8532220000",
             "DIODE SMD": "8541101000",
-            "ZENER DIODE": "8541101000",
             "FAST DIODE": "8541101000",
             "SCHOTTKY DIODE": "8541101000",
             "N MOS DIP": "8504900000",
