@@ -1535,8 +1535,11 @@ function handleFile(event) {
 
                 // 檢查CCC_CODE為空並匹配稅則
                 if (!cccCode) {
+                    // 將描述內容轉為大寫
+                    const upperCaseDescription = currentDescription.toUpperCase();
+                    
                     const matchedCode = Object.keys(tariffCodeMapping).find(key =>
-                        currentDescription.split('\n').some(line => line.trim().startsWith(key))
+                        upperCaseDescription.split('\n').some(line => line.trim().startsWith(key.toUpperCase()))
                     );
                     if (matchedCode) {
                         cccCode = tariffCodeMapping[matchedCode];
