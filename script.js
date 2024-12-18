@@ -3980,8 +3980,8 @@ function parseCustomDate(dateString) {
     return new Date(`${fullYear}-${month}-${day}`);
 }
 
-document.getElementById('SHPR_BAN_ID').addEventListener('input', function () {
-    const SHPR_BAN_ID = this.value.trim();
+function handleCheck() {
+    const SHPR_BAN_ID = document.getElementById('SHPR_BAN_ID').value.trim();
     const docOtrDesc = document.getElementById('DOC_OTR_DESC');
 
     // 僅移除以 "長期委任字號" 開頭的行，保留其他內容
@@ -4010,4 +4010,10 @@ document.getElementById('SHPR_BAN_ID').addEventListener('input', function () {
                 : newContent;
         }
     });
-});
+};
+
+// 綁定輸入框事件
+document.getElementById('SHPR_BAN_ID').addEventListener('input', handleCheck);
+
+// 綁定按鍵事件
+document.getElementById('checkBtn').addEventListener('click', handleCheck);
