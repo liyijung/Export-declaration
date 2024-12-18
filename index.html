@@ -229,7 +229,7 @@
                 <textarea id="DOC_OTR_DESC" name="DOC_OTR_DESC" rows="5"></textarea>
                 <button type="button" class="vertical-text" onclick="toggleRows('DOC_OTR_DESC', this)" tabindex="-1">展開</button>
             </div>
-            <div class="button-group">
+            <div>
                 <select id="doc_otr_desc_dropdown" class="custom-select" style="width: 180px;"> <!-- 調整這裡的寬度 -->
                     <option value="">備註選單</option>
                     <option value="國貨樣品/贈送不再進口">【統計方式04】國貨樣品/贈送不再進口</option>
@@ -251,7 +251,8 @@
                     <option value="洋貨復出口不再進口，因無法提供原進口報單號碼，特附國內購買憑證以茲證明">洋貨復出口不再進口(贈送/樣品/不良品退回)，因無法提供原進口報單號碼，特附國內購買憑證以茲證明</option>
                     <option value="洋貨復出口不再進口，因無法取得原進口報單及購買憑證，願繳納推廣貿易服務費">洋貨復出口不再進口(贈送/樣品/不良品退回)，因無法取得原進口報單及購買憑證，願繳納推廣貿易服務費</option>
                 </select>
-                <button type="button" data-tooltip="品名(發票號碼)、統計方式、生產國別、原進口報單，填列完成後再進行匯整" onclick="summarizeOrgCountry()">匯整產地及備註</button>
+                <button id="summarizeButton" data-tooltip="品名(發票號碼)、統計方式、生產國別、原進口報單，填列完成後再進行匯整" onclick="summarizeOrgCountry()">匯整產地及備註</button>
+                <button id="checkBtn">長期委任字號</button>
             </div>            
             <div class="header-group hidden">
                 <label for="REMARK1">REMARKS</label>
