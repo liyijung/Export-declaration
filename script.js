@@ -3948,3 +3948,66 @@ function summarizeOrgCountry() {
     }
 
 }
+
+// 長期委任字號：
+const excelFilePath = './出口長委登記表.xls';
+
+function fetchAndParseExcel(callback) {
+    fetch(excelFilePath)
+        .then(response => {
+            if (!response.ok) throw new Error('無法讀取 Excel 檔案');
+            return response.arrayBuffer();
+        })
+        .then(data => {
+            const workbook = XLSX.read(data, { type: 'array' });
+            const sheet = workbook.Sheets[workbook.SheetNames[0]];
+            const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+            callback(rows);
+        })
+        .catch(error => {
+            console.error('讀取 Excel 檔案時發生錯誤:', error);
+            alert('讀取 Excel 檔案失敗');
+        });
+}
+
+function parseCustomDate(dateString) {
+    // 將日期格式 "118.01.30" 轉換為標準日期格式
+    const [year, month, day] = dateString.split('.');
+    if (!year || !month || !day) return null;
+
+    // 將 "民國" 年份轉換為西元年份
+    const fullYear = parseInt(year, 10) + 1911;
+    return new Date(`${fullYear}-${month}-${day}`);
+}
+
+document.getElementById('SHPR_BAN_ID').addEventListener('input', function () {
+    const SHPR_BAN_ID = this.value.trim();
+    const docOtrDesc = document.getElementById('DOC_OTR_DESC');
+
+    // 僅移除以 "長期委任字號" 開頭的行，保留其他內容
+    docOtrDesc.value = docOtrDesc.value.replace(/^長期委任字號：.*$/gm, '').trim();
+
+    fetchAndParseExcel(rows => {
+        const today = new Date();
+        const validEntries = [];
+
+        // 遍歷 rows，收集所有未逾期且符合條件的資料
+        rows.forEach(row => {
+            const id = row[1] ? row[1].toString() : null;
+            const expiryDate = row[3] ? parseCustomDate(row[3]) : null;
+
+            // 確保 ID 符合且到期日不早於今天
+            if (id === SHPR_BAN_ID && expiryDate && expiryDate >= today) {
+                validEntries.push(`長期委任字號：${row[2]}至${row[3]}`);
+            }
+        });
+
+        if (validEntries.length > 0) {
+            // 合併所有未逾期的項目，保留其他原內容
+            const newContent = validEntries.join('\n');
+            docOtrDesc.value = docOtrDesc.value
+                ? `${docOtrDesc.value}\n${newContent}`
+                : newContent;
+        }
+    });
+});
