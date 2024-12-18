@@ -686,13 +686,15 @@ input[type="checkbox"]:hover {
     margin-bottom: 10px;
 }
 
-.button-group button {
+.button-group button,
+#summarizeButton {
     margin-top: 2px;
     margin-bottom: 2px;
     position: relative;
 }
 
-.button-group button::after {
+.button-group button::after,
+#summarizeButton::after {
     content: attr(data-tooltip);
     position: absolute;
     bottom: 100%;
@@ -709,7 +711,8 @@ input[type="checkbox"]:hover {
     transition: opacity 0.1s;
 }
 
-.button-group button:hover::after {
+.button-group button:hover::after,
+#summarizeButton:hover::after {
     opacity: 1;
 }
 
