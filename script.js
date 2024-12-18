@@ -1452,6 +1452,8 @@ function handleFile(event) {
             }
         });
 
+        handleCheck(); // 長期委任字號
+        
         // 檢查REMARKS欄位來勾選對應選項
         headerData.forEach(row => {
             const remarksIndex = row.indexOf('REMARKS');
@@ -1895,6 +1897,8 @@ function importXML(event) {
                 }
             });
 
+            handleCheck(); // 長期委任字號
+            
             // 解析項次資料
             const items = xmlDoc.getElementsByTagName("detail")[0].getElementsByTagName("items");
             const itemContainer = document.getElementById('item-container');
