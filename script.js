@@ -4076,7 +4076,7 @@ function showPopup(content) {
     popup.style.left = '50%';
     popup.style.transform = 'translate(-50%, -50%)';
     popup.style.padding = '10px';
-    popup.style.backgroundColor = '#ffffff'; // 背景色設置
+    popup.style.backgroundColor = '#fef5f5'; // 背景色設置
     popup.style.boxShadow = '0 2px 5px rgba(0, 0, 0, 0.1)';
     popup.style.zIndex = '1000';
     popup.style.whiteSpace = 'pre-line'; // 保留換行
