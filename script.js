@@ -4064,7 +4064,7 @@ function thingsToNote() {
         if (validEntries.length > 0) {
             // 合併所有內容
             const newContent = validEntries.join('\n');
-            const finalContent = `【注意事項！】\n${newContent}`;
+            const finalContent = `${newContent}`;
             showPopup(finalContent);
         }
     });
@@ -4088,6 +4088,33 @@ function showPopup(content) {
     popup.style.lineHeight = '1.6'; // 調整行距
     popup.style.minWidth = '400px'; // 設定最小寬度
 
+    let isDragging = false;
+    let offsetX, offsetY;
+
+    const header = document.createElement('div');
+    header.style.cursor = 'move'; // 設置可拖動光標
+    header.textContent = '【注意事項！】';
+    popup.appendChild(header);
+
+    header.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        offsetX = e.clientX - popup.getBoundingClientRect().left;
+        offsetY = e.clientY - popup.getBoundingClientRect().top;
+        popup.style.transition = 'none';
+    });
+
+    document.addEventListener('mousemove', (e) => {
+        if (isDragging) {
+            popup.style.left = `${e.clientX - offsetX}px`;
+            popup.style.top = `${e.clientY - offsetY}px`;
+            popup.style.transform = 'none';
+        }
+    });
+
+    document.addEventListener('mouseup', () => {
+        isDragging = false;
+    });
+    
     // 添加內容
     const contentElem = document.createElement('p');
     contentElem.textContent = content;
