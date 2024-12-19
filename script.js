@@ -4085,7 +4085,7 @@ function showPopup(content) {
     popup.style.borderRadius = '5px'; // 邊角圓滑
     popup.style.fontSize = '16px'; // 字體大小
     popup.style.lineHeight = '1.6'; // 調整行距
-    popup.style.minWidth = '300px'; // 設定最小寬度
+    popup.style.minWidth = '400px'; // 設定最小寬度
 
     // 添加內容
     const contentElem = document.createElement('p');
