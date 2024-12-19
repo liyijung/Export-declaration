@@ -4021,3 +4021,88 @@ document.getElementById('SHPR_BAN_ID').addEventListener('input', handleCheck);
 
 // 綁定按鍵事件
 document.getElementById('checkBtn').addEventListener('click', handleCheck);
+
+// 注意事項：
+const thingsToNoteexcelFilePath = './注意事項.xls';
+
+function thingsToNoteExcel(callback) {
+    fetch(thingsToNoteexcelFilePath)
+        .then(response => {
+            if (!response.ok) throw new Error('無法讀取 Excel 檔案');
+            return response.arrayBuffer();
+        })
+        .then(data => {
+            const workbook = XLSX.read(data, { type: 'array' });
+            const sheet = workbook.Sheets[workbook.SheetNames[0]];
+            const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+            callback(rows);
+        })
+        .catch(error => {
+            console.error('讀取 Excel 檔案時發生錯誤:', error);
+            alert('讀取 Excel 檔案失敗');
+        });
+}
+
+function thingsToNote() {
+    const SHPR_BAN_ID = document.getElementById('SHPR_BAN_ID').value.trim();
+
+    thingsToNoteExcel(rows => {
+        const validEntries = [];
+
+        // 遍歷 rows，收集所有未逾期且符合條件的資料
+        rows.forEach(row => {
+            const id = row[1] ? row[1].toString() : null;
+
+            if (id === SHPR_BAN_ID) {
+                validEntries.push(`【注意事項！】\n${row[1]} ${row[0]}\n\n${row[2]}`);
+            }
+        });
+
+        if (validEntries.length > 0) {
+            // 合併所有內容
+            const newContent = validEntries.join('\n');
+            showPopup(newContent);
+        }
+    });
+};
+
+function showPopup(content) {
+    // 創建彈跳框元素
+    const popup = document.createElement('div');
+    popup.style.position = 'fixed';
+    popup.style.top = '50%';
+    popup.style.left = '50%';
+    popup.style.transform = 'translate(-50%, -50%)';
+    popup.style.padding = '10px';
+    popup.style.backgroundColor = '#ffffff'; // 背景色設置
+    popup.style.boxShadow = '0 2px 5px rgba(0, 0, 0, 0.1)';
+    popup.style.zIndex = '1000';
+    popup.style.whiteSpace = 'pre-line'; // 保留換行
+    popup.style.border = '5px solid #f5c2c2'; // 添加邊框
+    popup.style.borderRadius = '5px'; // 邊角圓滑
+    popup.style.fontSize = '16px'; // 字體大小
+    popup.style.lineHeight = '1.6'; // 調整行距
+
+    // 添加內容
+    const contentElem = document.createElement('p');
+    contentElem.textContent = content;
+    contentElem.style.marginTop = '0'; // 上移文字
+    popup.appendChild(contentElem);
+
+    // 添加關閉按鈕
+    const closeButton = document.createElement('button');
+    closeButton.textContent = '關閉';
+    closeButton.style.position = 'absolute';
+    closeButton.style.top = '10px';
+    closeButton.style.right = '10px';
+    closeButton.addEventListener('click', () => {
+        document.body.removeChild(popup);
+    });
+    popup.appendChild(closeButton);
+
+    // 添加到頁面
+    document.body.appendChild(popup);
+}
+
+// 綁定輸入框事件
+document.getElementById('SHPR_BAN_ID').addEventListener('input', thingsToNote);
