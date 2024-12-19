@@ -4023,7 +4023,7 @@ document.getElementById('SHPR_BAN_ID').addEventListener('input', handleCheck);
 document.getElementById('checkBtn').addEventListener('click', handleCheck);
 
 // 注意事項：
-const thingsToNoteexcelFilePath = './注意事項.xls';
+const thingsToNoteExcelFilePath = './thingsToNote.xlsx';
 
 function thingsToNoteExcel(callback) {
     fetch(thingsToNoteexcelFilePath)
