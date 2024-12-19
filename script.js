@@ -4026,7 +4026,7 @@ document.getElementById('checkBtn').addEventListener('click', handleCheck);
 const thingsToNoteExcelFilePath = './thingsToNote.xlsx';
 
 function thingsToNoteExcel(callback) {
-    fetch(thingsToNoteexcelFilePath)
+    fetch(thingsToNoteExcelFilePath)
         .then(response => {
             if (!response.ok) throw new Error('無法讀取 Excel 檔案');
             return response.arrayBuffer();
