@@ -1453,6 +1453,7 @@ function handleFile(event) {
         });
 
         handleCheck(); // 長期委任字號
+        thingsToNote(); // 注意事項
         
         // 檢查REMARKS欄位來勾選對應選項
         headerData.forEach(row => {
@@ -1898,6 +1899,7 @@ function importXML(event) {
             });
 
             handleCheck(); // 長期委任字號
+            thingsToNote(); // 注意事項
             
             // 解析項次資料
             const items = xmlDoc.getElementsByTagName("detail")[0].getElementsByTagName("items");
