@@ -4110,6 +4110,7 @@ function showPopup(content) {
         offsetX = e.clientX - popup.getBoundingClientRect().left;
         offsetY = e.clientY - popup.getBoundingClientRect().top;
         popup.style.transition = 'none';
+        document.body.style.userSelect = 'none'; // 禁止選取文字
     });
 
     document.addEventListener('mousemove', (e) => {
@@ -4122,6 +4123,7 @@ function showPopup(content) {
 
     document.addEventListener('mouseup', () => {
         isDragging = false;
+        document.body.style.userSelect = ''; // 恢復文字選取
     });
     
     // 添加內容
