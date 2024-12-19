@@ -363,6 +363,7 @@ function searchData(showErrorMessage = false) {
             }
         });
     }
+    thingsToNote(); // 注意事項
 }
 
 // 即時帶入資料，不顯示錯誤訊息
@@ -4056,7 +4057,7 @@ function thingsToNote() {
             const id = row[1] ? row[1].toString() : null;
 
             if (id === SHPR_BAN_ID) {
-                validEntries.push(`【注意事項！】\n${row[1]} ${row[0]}\n${row[2]}`);
+                validEntries.push(`【注意事項！】\n${row[2]}`);
             }
         });
 
