@@ -4057,14 +4057,15 @@ function thingsToNote() {
             const id = row[1] ? row[1].toString() : null;
 
             if (id === SHPR_BAN_ID) {
-                validEntries.push(`【注意事項！】\n${row[2]}`);
+                validEntries.push(`${row[2]}`);
             }
         });
 
         if (validEntries.length > 0) {
             // 合併所有內容
             const newContent = validEntries.join('\n');
-            showPopup(newContent);
+            const finalContent = `【注意事項！】\n${newContent}`;
+            showPopup(finalContent);
         }
     });
 };
