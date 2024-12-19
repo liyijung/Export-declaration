@@ -4065,14 +4065,23 @@ function thingsToNote() {
             // 合併所有內容
             const newContent = validEntries.join('\n');
             const finalContent = `${newContent}`;
+            closeExistingPopup();
             showPopup(finalContent);
         }
     });
 };
 
+function closeExistingPopup() {
+    const existingPopup = document.querySelector('.popup');
+    if (existingPopup) {
+        existingPopup.remove();
+    }
+}
+
 function showPopup(content) {
     // 創建彈跳框元素
     const popup = document.createElement('div');
+    popup.className = 'popup';
     popup.style.position = 'fixed';
     popup.style.top = '50%';
     popup.style.left = '50%';
@@ -4128,12 +4137,15 @@ function showPopup(content) {
     closeButton.style.top = '10px';
     closeButton.style.right = '10px';
     closeButton.addEventListener('click', () => {
-        document.body.removeChild(popup);
+        popup.remove();
     });
     popup.appendChild(closeButton);
 
     // 添加到頁面
     document.body.appendChild(popup);
+
+    // 顯示彈跳框
+    popup.style.display = 'block';
 }
 
 // 綁定輸入框事件
