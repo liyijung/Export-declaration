@@ -3957,7 +3957,7 @@ function summarizeOrgCountry() {
 }
 
 // 長期委任字號：
-const excelFilePath = './出口長委登記表.xls';
+const excelFilePath = './出口長委登記表.xlsx';
 
 function fetchAndParseExcel(callback) {
     fetch(excelFilePath)
