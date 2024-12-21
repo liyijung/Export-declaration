@@ -4187,25 +4187,24 @@ function validateDclDocType() {
             const stMtdValue = item.querySelector(".ST_MTD")?.value.trim();
             const isItemChecked = item.querySelector(".ITEM_NO")?.checked;
 
-            // 跳過空的 ST_MTD 項次
-            if (!stMtdValue) return;
-
             // 找到第一個有值的項次且未檢查過
             if (!firstValueChecked) {
-                if (!isItemChecked && stMtdValue) {
+                if (!isItemChecked) {
                     if (!stMtdCondition1.includes(stMtdValue)) {
-                        // 當 stMtdValue 為 '53' 時檢查 BOND_NOTE 是否為 'NB'
-                        if (stMtdValue === "53") {
-                            const bondNoteValue = item.querySelector(".BOND_NOTE")?.value.trim();
-                            if (bondNoteValue !== "NB") {
-                                validationErrors.add("B9 報單第一個項次，統計方式為 53，保稅貨物註記須為 NB");
-                            }
-                        } else {
+                        if (stMtdValue !== "53") {
                             validationErrors.add("B9 報單第一個項次，須為國貨統計方式");
                         }
                     }
+                    firstValueChecked = true; // 標記已檢查第一個有值的項次
                 }
-                firstValueChecked = true; // 標記已檢查第一個有值的項次
+            }
+
+            // 檢查其他項次中是否有統計方式為 53，但保稅貨物註記不為 NB
+            if (stMtdValue === "53") {
+                const bondNoteValue = item.querySelector(".BOND_NOTE")?.value.trim();
+                if (bondNoteValue !== "NB") {
+                    validationErrors.add(`統計方式為 53，保稅貨物註記須為 NB`);
+                }
             }
         });
     }
