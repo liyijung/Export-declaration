@@ -4093,12 +4093,12 @@ function validateDclDocType() {
                 totalCondition1 += docTotPValue; // 加總條件 1 的金額
                 if (orgCountryValue && orgCountryValue.toUpperCase() !== "TW") {
                     validationErrors.add(
-                        `國貨出口統計方式，生產國別應為空或 TW\n`
+                        `國貨出口統計方式，生產國別應為空或 TW`
                     );
                 }
                 if (orgImpDclNo) {
                     validationErrors.add(
-                        `國貨出口統計方式，原進口報單號碼不應有值\n`
+                        `國貨出口統計方式，原進口報單號碼不應有值`
                     );
                 }
             }
@@ -4109,13 +4109,13 @@ function validateDclDocType() {
                 containsMandatoryOrgCountry = true; // 標記需要檢查所有項次的 ORG_COUNTRY
                 if (!orgCountryValue || orgCountryValue.trim() === "") {
                     validationErrors.add(
-                        `外貨復出口統計方式，生產國別不可為空\n`
+                        `外貨復出口統計方式，生產國別不可為空`
                     );
                 } else if (orgCountryValue.toUpperCase() === "TW") {
                     if (!orgImpDclNo || orgImpDclNo.trim() === "") {
                         validationErrors.add(
                             `外貨復出口統計方式且生產國別為 TW\n` +
-                            `原進口報單號碼 及 原進口報單項次 不可為空\n`
+                            `原進口報單號碼 及 原進口報單項次 不可為空`
                         );
                     }
                 }
@@ -4129,7 +4129,7 @@ function validateDclDocType() {
     
         // 檢查條件 3：若有 ST_MTD 為 外貨復出口統計方式，則所有項次的 ORG_COUNTRY 不可為空
         if (containsMandatoryOrgCountry && hasEmptyOrgCountry) {
-            validationErrors.add("國洋貨合併申報，生產國別必填（國貨請填 TW ）\n");
+            validationErrors.add("國洋貨合併申報，生產國別必填（國貨請填 TW ）");
         }
     
         // 檢查條件 4：報單類別與統計方式是否相符
