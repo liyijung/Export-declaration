@@ -283,7 +283,10 @@ async function exportToPDF() {
         // 顯示 AEO 編號
         doc.text(aeoNumber, 175, 65.5);
         
-        // 買方名稱
+        // 買方中文名稱
+        doc.text(document.getElementById('CNEE_C_NAME').value, 30, 83)
+
+        // 買方中/英名稱
         doc.text(document.getElementById('CNEE_E_NAME').value, 30, 87)
 
         // 處理地址自動換行
