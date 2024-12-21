@@ -3393,6 +3393,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 return; // 中止匯出過程
             }
         }
+
+        // 若 validateDclDocType 發現錯誤，則直接返回，中止後續程式碼
+        if (!validateDclDocType()) {
+            return;
+        }
         
         const headerFields = [
             'LOT_NO', 'SHPR_BAN_ID', 'SHPR_BONDED_ID', 
@@ -3706,6 +3711,12 @@ document.getElementById('copy_3').addEventListener('change', function () {
 
 // 匯整產地及備註
 function summarizeOrgCountry() {
+
+    // 若 validateDclDocType 發現錯誤，則直接返回，中止後續程式碼
+    if (!validateDclDocType()) {
+        return;
+    }
+
     // 標記及貨櫃號碼
     const orgCountryMap = {}; // 用於儲存 ORG_COUNTRY 與對應項次
     let countryMapping = {}; // 從 CSV 加載的國家代碼
@@ -3849,10 +3860,12 @@ function summarizeOrgCountry() {
         const orgImpDclNo = itemRow.querySelector('.ORG_IMP_DCL_NO')?.value.trim() || '';
         const orgDclNo = itemRow.querySelector('.ORG_DCL_NO')?.value.trim() || '';
 
-        if (descriptionValue.includes('發票號碼') && (!orgImpDclNo || !orgDclNo)) {
-            return `${stMtdValue}，因無法提供原進口報單號碼，特附國內購買憑證以茲證明`;
+        if ((orgImpDclNo || orgDclNo) && descriptionValue.includes('發票號碼')) {
+            return `${stMtdValue}，附原進口報單及國內購買憑證以茲證明`;
         } else if (orgImpDclNo || orgDclNo) {
             return `${stMtdValue}，附原進口報單`;
+        } else if (descriptionValue.includes('發票號碼')) {
+            return `${stMtdValue}，因無法提供原進口報單號碼，特附國內購買憑證以茲證明`;
         } else {
             return `${stMtdValue}，因無法取得原進口報單及購買憑證，願繳納推廣貿易服務費`;
         }
@@ -3954,6 +3967,101 @@ function summarizeOrgCountry() {
         console.error("找不到 DOC_OTR_DESC 元素，無法顯示結果。");
     }
 
+}
+
+// 檢查統計方式、生產國別、原進口報單
+function validateDclDocType() {
+    
+    const dclDocType = document.getElementById('DCL_DOC_TYPE').value.trim().toUpperCase();
+    
+    // 當 DCL_DOC_TYPE 為 G3 或 G5 時執行檢查
+    if (["G3", "G5"].includes(dclDocType)) {
+        const stMtdCondition1 = ["02", "04", "05", "06", "2L", "2R", "7M", "1A", "91", "94", "95", "96"];
+        const stMtdCondition2 = ["81", "82", "8B", "8C", "9N", "8A", "8D", "92", "99", "9M"];
+
+        let containsMandatoryOrgCountry = false; // 標記是否包含 ST_MTD 為 外貨復出口統計方式 的項次
+        let hasEmptyOrgCountry = false; // 標記是否存在空的 ORG_COUNTRY
+        let validationErrors = []; // 儲存所有錯誤訊息
+
+        let allCondition1 = true; // 是否所有統計方式都屬於條件 1
+        let allCondition2 = true; // 是否所有統計方式都屬於條件 2
+
+        for (let item of document.querySelectorAll("#item-container .item-row")) {
+            let stMtdValue = item.querySelector(".ST_MTD")?.value.trim();
+            let orgCountryValue = item.querySelector(".ORG_COUNTRY")?.value.trim();
+            let orgImpDclNo = item.querySelector(".ORG_IMP_DCL_NO")?.value.trim();
+            let isItemChecked = item.querySelector(".ITEM_NO")?.checked;
+
+            // 判斷是否全部屬於條件 1 或條件 2
+            if (!stMtdCondition1.includes(stMtdValue)) {
+                allCondition1 = false;
+            }
+            if (!stMtdCondition2.includes(stMtdValue)) {
+                allCondition2 = false;
+            }
+
+            // 檢查條件 1：ST_MTD 為指定值且 ORG_COUNTRY 不為空或不為 TW，且 ORG_IMP_DCL_NO 不應有值
+            if (stMtdCondition1.includes(stMtdValue)) {
+                if (orgCountryValue && orgCountryValue.toUpperCase() !== "TW") {
+                    validationErrors.push(
+                        `國貨出口統計方式 [ 02, 04, 05, 06, 2L, 2R, 7M, 1A, 91, 94, 95, 96 ]\n` +
+                        `生產國別應為空或 TW\n`
+                    );
+                }
+                if (orgImpDclNo) {
+                    validationErrors.push(
+                        `國貨出口統計方式 [ 02, 04, 05, 06, 2L, 2R, 7M, 1A, 91, 94, 95, 96 ]\n` +
+                        `原進口報單號碼不應有值\n`
+                    );
+                }
+            }
+
+            // 檢查條件 2：ST_MTD 為 外貨復出口統計方式 時
+            if (stMtdCondition2.includes(stMtdValue)) {
+                containsMandatoryOrgCountry = true; // 標記需要檢查所有項次的 ORG_COUNTRY
+
+                if (!orgCountryValue || orgCountryValue.trim() === "") {
+                    validationErrors.push(
+                        `外貨復出口統計方式 [ 81, 82, 8B, 8C, 9N, 8A, 8D, 92, 99, 9M ]\n` +
+                        `生產國別不可為空\n`
+                    );
+                } else if (orgCountryValue.toUpperCase() === "TW") {
+                    if (!orgImpDclNo || orgImpDclNo.trim() === "") {
+                        validationErrors.push(
+                            `外貨復出口統計方式且生產國別為 TW\n` +
+                            `原進口報單號碼 及 原進口報單項次 不可為空\n`
+                        );
+                    }
+                }
+            }
+
+            // 標記是否存在空的 ORG_COUNTRY
+            if ((!orgCountryValue || orgCountryValue.trim() === "") && !isItemChecked) {
+                hasEmptyOrgCountry = true;
+            }
+        }
+
+        // 檢查條件 3：若有 ST_MTD 為 外貨復出口統計方式，則所有項次的 ORG_COUNTRY 不可為空
+        if (containsMandatoryOrgCountry && hasEmptyOrgCountry) {
+            validationErrors.push("國洋貨合併申報，生產國別必填（國貨請填 TW ）\n");
+        }
+
+        // 檢查條件 4：報單類別與統計方式是否相符
+        if (allCondition1 && dclDocType !== "G5") {
+            validationErrors.push("統計方式屬於國貨出口，報單類別應為 G5");
+        }
+        if (allCondition2 && dclDocType !== "G3") {
+            validationErrors.push("統計方式屬於外貨復出口，報單類別應為 G3");
+        }
+
+        // 若有任何錯誤，集中提示
+        if (validationErrors.length > 0) {
+            alert(validationErrors.join("\n"));
+            return false; // 返回 false，表示有錯誤
+        }
+    }
+
+    return true; // 返回 true，表示檢查通過
 }
 
 // 長期委任字號：
