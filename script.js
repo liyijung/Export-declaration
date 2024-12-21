@@ -1421,35 +1421,72 @@ function handleFile(event) {
         const headerSheet = workbook.Sheets[workbook.SheetNames[0]];
         const headerData = XLSX.utils.sheet_to_json(headerSheet, { header: 1, raw: false });
 
-        // 將報單表頭數據填充到表單中，確保為文字格式
-        const headerFields = ['FILE_NO', 'LOT_NO', 'SHPR_BAN_ID', 'SHPR_BONDED_ID',
-            'SHPR_C_NAME', 'SHPR_E_NAME', 'SHPR_C_ADDR', 'SHPR_E_ADDR', 
-            'CNEE_E_NAME', 'CNEE_E_ADDR', 
-            'CNEE_COUNTRY_CODE', 'CNEE_BAN_ID',
-            'BUYER_E_NAME', 'BUYER_E_ADDR', 'TO_CODE', 'TO_DESC', 
-            'TOT_CTN', 'DOC_CTN_UM', 'CTN_DESC', 'DCL_GW', 'DCL_NW', 
-            'DCL_DOC_TYPE', 'TERMS_SALES', 'CURRENCY', 'CAL_IP_TOT_ITEM_AMT', 
-            'FRT_AMT', 'INS_AMT', 'ADD_AMT', 'SUBTRACT_AMT', 
-            'DOC_MARKS_DESC', 'DOC_OTR_DESC', 'REMARK1', 
-            'FAC_BAN_ID_EX', 'FAC_BONDED_ID_EX',
-            'FAC_BAN_ID', 'FAC_BONDED_ID', 'IN_BONDED_BAN', 'IN_BONDED_CODE'];
-        headerFields.forEach((id, index) => {
-            const element = document.getElementById(id);
-            if (element) {
-                let value = headerData[index] ? String(headerData[index][1] || '').trim() : ''; // 將值轉為字串並去除空白
-                
-                // CURRENCY 欄位轉換處理
-                if (id === 'CURRENCY') {
-                    value = value.toUpperCase() === 'NTD' ? 'TWD' : value.toUpperCase();
-                }
+        // 定義中文名稱與欄位 ID 的對應關係
+        const headerMapping = {
+            '文件編號': 'FILE_NO',
+            '運單號': 'LOT_NO',
+            '出口人統一編號': 'SHPR_BAN_ID',
+            '海關監管編號': 'SHPR_BONDED_ID',
+            '出口人中文名稱': 'SHPR_C_NAME',
+            '出口人英文名稱': 'SHPR_E_NAME',
+            '出口人中文地址': 'SHPR_C_ADDR',
+            '出口人英文地址': 'SHPR_E_ADDR',
+            '買方中文名稱': 'CNEE_C_NAME',
+            '買方中/英名稱': 'CNEE_E_NAME',
+            '買方中/英地址': 'CNEE_E_ADDR',
+            '買方國家代碼': 'CNEE_COUNTRY_CODE',
+            '買方統一編號': 'CNEE_BAN_ID',
+            '收方名稱': 'BUYER_E_NAME',
+            '收方地址': 'BUYER_E_ADDR',
+            '目的地(代碼)': 'TO_CODE',
+            '目的地(名稱)': 'TO_DESC',
+            '總件數': 'TOT_CTN',
+            '總件數單位': 'DOC_CTN_UM',
+            '包裝說明': 'CTN_DESC',
+            '總毛重': 'DCL_GW',
+            '總淨重': 'DCL_NW',
+            '報單類別': 'DCL_DOC_TYPE',
+            '貿易條件': 'TERMS_SALES',
+            '幣別': 'CURRENCY',
+            '總金額': 'CAL_IP_TOT_ITEM_AMT',
+            '運費': 'FRT_AMT',
+            '保險費': 'INS_AMT',
+            '應加費用': 'ADD_AMT',
+            '應減費用': 'SUBTRACT_AMT',
+            '標記及貨櫃號碼': 'DOC_MARKS_DESC',
+            '其它申報事項': 'DOC_OTR_DESC',
+            'REMARKS': 'REMARK1',
+            '保稅廠統一編號': 'FAC_BAN_ID_EX',
+            '保稅廠監管編號': 'FAC_BONDED_ID_EX',
+            '出倉保稅倉庫統一編號': 'FAC_BAN_ID',
+            '出倉保稅倉庫代碼': 'FAC_BONDED_ID',
+            '進倉保稅倉庫統一編號': 'IN_BONDED_BAN',
+            '進倉保稅倉庫代碼': 'IN_BONDED_CODE'
+        };
 
-                // 去除千分號的欄位處理
-                const fieldsToRemoveSeparators = ['TOT_CTN', 'DCL_GW', 'DCL_NW', 'CAL_IP_TOT_ITEM_AMT', 'FRT_AMT', 'INS_AMT', 'ADD_AMT', 'SUBTRACT_AMT'];
-                if (fieldsToRemoveSeparators.includes(id)) {
-                    value = removeThousandsSeparator(value);
-                }
+        headerData.forEach((row) => {
+            const fieldName = row[0] ? String(row[0]).trim() : ''; // 取 Excel 的中文名稱
+            const fieldValue = row[1] ? String(row[1]).trim() : ''; // 對應值
 
-                element.value = value;
+            const id = headerMapping[fieldName]; // 對應到欄位 ID
+            if (id) {
+                const element = document.getElementById(id);
+                if (element) {
+                    let value = fieldValue;
+
+                    // CURRENCY 欄位轉換處理
+                    if (id === 'CURRENCY') {
+                        value = value.toUpperCase() === 'NTD' ? 'TWD' : value.toUpperCase();
+                    }
+
+                    // 去除千分號的欄位處理
+                    const fieldsToRemoveSeparators = ['TOT_CTN', 'DCL_GW', 'DCL_NW', 'CAL_IP_TOT_ITEM_AMT', 'FRT_AMT', 'INS_AMT', 'ADD_AMT', 'SUBTRACT_AMT'];
+                    if (fieldsToRemoveSeparators.includes(id)) {
+                        value = removeThousandsSeparator(value);
+                    }
+
+                    element.value = value;
+                }
             }
         });
 
@@ -1688,6 +1725,7 @@ function exportToExcel() {
         ['出口人英文名稱', document.getElementById('SHPR_E_NAME').value],
         ['出口人中文地址', document.getElementById('SHPR_C_ADDR').value],
         ['出口人英文地址', document.getElementById('SHPR_E_ADDR').value],
+        ['買方中文名稱', document.getElementById('CNEE_C_NAME').value],
         ['買方中/英名稱', document.getElementById('CNEE_E_NAME').value],
         ['買方中/英地址', document.getElementById('CNEE_E_ADDR').value],
         ['買方國家代碼', document.getElementById('CNEE_COUNTRY_CODE').value],
@@ -3011,7 +3049,6 @@ document.addEventListener('DOMContentLoaded', function () {
             { id: 'FILE_NO', name: '文件編號' },
             { id: 'SHPR_BAN_ID', name: '出口人統一編號' },
             { id: 'SHPR_C_NAME', name: '出口人中文名稱' },
-            { id: 'CNEE_E_NAME', name: '買方中/英名稱' },
             { id: 'CNEE_COUNTRY_CODE', name: '買方國家代碼' },
             { id: 'TOT_CTN', name: '總件數' },
             { id: 'DOC_CTN_UM', name: '總件數單位' },
@@ -3022,7 +3059,7 @@ document.addEventListener('DOMContentLoaded', function () {
             { id: 'CURRENCY', name: '幣別' },
             { id: 'CAL_IP_TOT_ITEM_AMT', name: '總金額' }
         ];
-    
+
         // 檢查是否有未填寫的必要欄位
         let missingFields = [];
         requiredFields.forEach(field => {
@@ -3031,7 +3068,19 @@ document.addEventListener('DOMContentLoaded', function () {
                 missingFields.push(field.name);
             }
         });
+
+        // 單獨檢查 CNEE_C_NAME 和 CNEE_E_NAME 的邏輯
+        let cneeCName = document.getElementById('CNEE_C_NAME');
+        let cneeEName = document.getElementById('CNEE_E_NAME');
+
+        if (
+            (!cneeCName || !cneeCName.value.trim()) &&
+            (!cneeEName || !cneeEName.value.trim())
+        ) {
+            missingFields.push('買方中/英名稱');
+        }        
     
+        // 如果有未填寫的欄位，提示使用者
         if (missingFields.length > 0) {
             alert(`以下欄位為空，請填寫後再匯出：\n${missingFields.join('、')}`);
             return; // 中止匯出過程
@@ -3402,7 +3451,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const headerFields = [
             'LOT_NO', 'SHPR_BAN_ID', 'SHPR_BONDED_ID', 
             'SHPR_C_NAME', 'SHPR_E_NAME', 'SHPR_C_ADDR', 'SHPR_E_ADDR', 
-            'CNEE_E_NAME', 'CNEE_E_ADDR', 
+            'CNEE_C_NAME', 'CNEE_E_NAME', 'CNEE_E_ADDR', 
             'CNEE_COUNTRY_CODE', 'CNEE_BAN_ID',
             'BUYER_E_NAME', 'BUYER_E_ADDR', 'TO_CODE', 'TO_DESC', 
             'TOT_CTN', 'DOC_CTN_UM', 'CTN_DESC', 'DCL_GW', 'DCL_NW', 
@@ -3485,7 +3534,33 @@ document.addEventListener('DOMContentLoaded', function () {
                     // 只允許 S, F 和數字
                     value = value.replace(/[^SF0-9]/gi, '');
                 }
+
+                // 特殊處理 CNEE_C_NAME 和 CNEE_E_NAME
+                if (id === 'CNEE_C_NAME') {
+                    let cneeENameElement = document.getElementById('CNEE_E_NAME');
+                    let cneeENameValue = cneeENameElement ? escapeXml(cneeENameElement.value).trim() : '';
+
+                    if (cneeENameValue) {
+                        // 如果 CNEE_E_NAME 有值，則分別創建兩個節點
+                        xmlContent += `  <fields>\n    <field_name>${id}</field_name>\n    <field_value>${value}</field_value>\n  </fields>\n`;
+                    } else {
+                        // 如果 CNEE_E_NAME 無值，用 CNEE_C_NAME 的值創建 CNEE_E_NAME
+                        xmlContent += `  <fields>\n    <field_name>CNEE_E_NAME</field_name>\n    <field_value>${value}</field_value>\n  </fields>\n`;
+                    }
+                    return; // 不再生成 CNEE_C_NAME 的節點
+                }
+
+                if (id === 'CNEE_E_NAME') {
+                    let cneeCNameElement = document.getElementById('CNEE_C_NAME');
+                    let cneeCNameValue = cneeCNameElement ? escapeXml(cneeCNameElement.value).trim() : '';
+
+                    if (!value && cneeCNameValue) {
+                        // 如果 CNEE_E_NAME 無值且 CNEE_C_NAME 有值，已由 CNEE_C_NAME 處理，不再創建
+                        return;
+                    }
+                }
                 
+                // 將當前欄位加入 XML
                 xmlContent += `  <fields>\n    <field_name>${id}</field_name>\n    <field_value>${value}</field_value>\n  </fields>\n`;
             }
         });
@@ -3652,6 +3727,7 @@ function clearExistingData() {
     document.getElementById('SHPR_E_NAME').value = '';
     document.getElementById('SHPR_C_ADDR').value = '';
     document.getElementById('SHPR_E_ADDR').value = '';
+    document.getElementById('CNEE_C_NAME').value = '';
     document.getElementById('CNEE_E_NAME').value = '';
     document.getElementById('CNEE_E_ADDR').value = '';
     document.getElementById('CNEE_COUNTRY_CODE').value = '';
