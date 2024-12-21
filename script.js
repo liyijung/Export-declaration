@@ -4160,17 +4160,24 @@ function validateDclDocType() {
     // 檢查 B8 的條件
     if (dclDocType === "B8") {
         const rows = document.querySelectorAll("#item-container .item-row");
-        let hasB8Conflict = false;
+        let allCondition1 = false;
+        let allCondition2 = false;
 
         rows.forEach(item => {
             const stMtdValue = item.querySelector(".ST_MTD")?.value.trim();
-            if (stMtdCondition1.includes(stMtdValue)) {
-                hasB8Conflict = true; // 若出現條件1的統計方式，標記合併問題
+            const isItemChecked = item.querySelector(".ITEM_NO")?.checked;
+            if (stMtdCondition1.includes(stMtdValue) && !isItemChecked) {
+                allCondition1 = true; // 有符合條件1的項目且未勾選
+            }
+            if (stMtdCondition2.includes(stMtdValue) && !isItemChecked) {
+                allCondition2 = true; // 有符合條件2的項目且未勾選
             }
         });
 
-        if (hasB8Conflict) {
-            validationErrors.add("B8 及 G5 不得合併申報，必須拆分或以 B9 申報（B9 項次在前）。");
+        if (allCondition1 && allCondition2) {
+            validationErrors.add("B8 及 G5 不得合併申報，必須拆分或以 B9 申報（B9 項次在前）");
+        } else if (allCondition1 && !allCondition2) {
+            validationErrors.add("所有項次為國貨統計方式，報單類別應為 B9");
         }
     }
 
