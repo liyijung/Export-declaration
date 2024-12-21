@@ -4164,7 +4164,7 @@ function validateDclDocType() {
 
         rows.forEach(item => {
             const stMtdValue = item.querySelector(".ST_MTD")?.value.trim();
-            if (stMtdCondition1.includes(stMtdValue) && !isItemChecked) {
+            if (stMtdCondition1.includes(stMtdValue)) {
                 hasB8Conflict = true; // 若出現條件1的統計方式，標記合併問題
             }
         });
