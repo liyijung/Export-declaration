@@ -3994,15 +3994,15 @@ function validateDclDocType() {
             const docTotPValue = parseFloat(item.querySelector(".DOC_TOT_P")?.value.trim() || "0");
     
             // 判斷是否全部屬於條件 1 或條件 2
-            if (!stMtdCondition1.includes(stMtdValue)) {
+            if (!stMtdCondition1.includes(stMtdValue) && !isItemChecked) {
                 allCondition1 = false;
             }
-            if (!stMtdCondition2.includes(stMtdValue)) {
+            if (!stMtdCondition2.includes(stMtdValue) && !isItemChecked) {
                 allCondition2 = false;
             }
     
             // 檢查條件 1：ST_MTD 為指定值且 ORG_COUNTRY 不為空或不為 TW，且 ORG_IMP_DCL_NO 不應有值
-            if (stMtdCondition1.includes(stMtdValue)) {
+            if (stMtdCondition1.includes(stMtdValue) && !isItemChecked) {
                 totalCondition1 += docTotPValue; // 加總條件 1 的金額
                 if (orgCountryValue && orgCountryValue.toUpperCase() !== "TW") {
                     validationErrors.add(
@@ -4019,7 +4019,7 @@ function validateDclDocType() {
             }
     
             // 檢查條件 2：ST_MTD 為 外貨復出口統計方式 時
-            if (stMtdCondition2.includes(stMtdValue)) {
+            if (stMtdCondition2.includes(stMtdValue) && !isItemChecked) {
                 totalCondition2 += docTotPValue; // 加總條件 2 的金額
                 containsMandatoryOrgCountry = true; // 標記需要檢查所有項次的 ORG_COUNTRY
                 if (!orgCountryValue || orgCountryValue.trim() === "") {
@@ -4057,10 +4057,12 @@ function validateDclDocType() {
         }
     
         // 檢查條件 5：根據 totalCondition1 和 totalCondition2 判斷 dclDocType
-        if (totalCondition1 > totalCondition2 && dclDocType !== "G5") {
-            validationErrors.add("國貨的加總金額大於外貨，報單類別應為 G5");
-        } else if (totalCondition1 < totalCondition2 && dclDocType !== "G3") {
-            validationErrors.add("外貨的加總金額大於國貨，報單類別應為 G3");
+        if (totalCondition1 > 0 && totalCondition2 > 0) {
+            if (totalCondition1 > totalCondition2 && dclDocType !== "G5") {
+                validationErrors.add("國貨的加總金額大於外貨，報單類別應為 G5");
+            } else if (totalCondition1 < totalCondition2 && dclDocType !== "G3") {
+                validationErrors.add("外貨的加總金額大於國貨，報單類別應為 G3");
+            }
         }
 
         // 顯示條件 1 和條件 2 的加總金額
@@ -4075,7 +4077,7 @@ function validateDclDocType() {
 
         rows.forEach(item => {
             const stMtdValue = item.querySelector(".ST_MTD")?.value.trim();
-            if (stMtdCondition1.includes(stMtdValue)) {
+            if (stMtdCondition1.includes(stMtdValue) && !isItemChecked) {
                 hasB8Conflict = true; // 若出現條件1的統計方式，標記合併問題
             }
         });
