@@ -1409,8 +1409,17 @@ function applyFieldData() {
     closeSpecifyFieldModal();
 }
 
+function clearField() {
+    const cneeCNameInput = document.getElementById('CNEE_C_NAME');
+    if (cneeCNameInput) {
+        cneeCNameInput.value = ''; // 清空輸入框內容
+    }
+}
+
 // 匯入Excel文件的功能
 function handleFile(event) {
+    clearField(); // 清空輸入框內容
+    
     const file = event.target.files[0];
     const reader = new FileReader();
     reader.onload = function(event) {
@@ -1913,6 +1922,8 @@ function exportToExcel() {
 
 // 匯入XML文件的功能
 function importXML(event) {
+    clearField(); // 清空輸入框內容
+    
     const file = event.target.files[0];
     if (file) {
         
