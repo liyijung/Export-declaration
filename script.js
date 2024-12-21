@@ -4059,7 +4059,7 @@ function summarizeOrgCountry() {
 // 檢查統計方式、生產國別、原進口報單、報單類別
 function validateDclDocType() {
     const dclDocType = document.getElementById('DCL_DOC_TYPE').value.trim().toUpperCase();
-    const stMtdCondition1 = ["02", "04", "05", "06", "2L", "2R", "7M", "1A", "91", "94", "95", "96"];
+    const stMtdCondition1 = ["02", "04", "05", "06", "2L", "2R", "7M", "1A", "94", "95"];
     const stMtdCondition2 = ["81", "82", "8B", "8C", "9N", "8A", "8D", "92", "99", "9M"];
     let validationErrors = new Set(); // 使用 Set 儲存錯誤訊息，避免重複
 
@@ -4093,14 +4093,12 @@ function validateDclDocType() {
                 totalCondition1 += docTotPValue; // 加總條件 1 的金額
                 if (orgCountryValue && orgCountryValue.toUpperCase() !== "TW") {
                     validationErrors.add(
-                        `國貨出口統計方式 [ 02, 04, 05, 06, 2L, 2R, 7M, 1A, 91, 94, 95, 96 ]\n` +
-                        `生產國別應為空或 TW\n`
+                        `國貨出口統計方式，生產國別應為空或 TW\n`
                     );
                 }
                 if (orgImpDclNo) {
                     validationErrors.add(
-                        `國貨出口統計方式 [ 02, 04, 05, 06, 2L, 2R, 7M, 1A, 91, 94, 95, 96 ]\n` +
-                        `原進口報單號碼不應有值\n`
+                        `國貨出口統計方式，原進口報單號碼不應有值\n`
                     );
                 }
             }
@@ -4111,8 +4109,7 @@ function validateDclDocType() {
                 containsMandatoryOrgCountry = true; // 標記需要檢查所有項次的 ORG_COUNTRY
                 if (!orgCountryValue || orgCountryValue.trim() === "") {
                     validationErrors.add(
-                        `外貨復出口統計方式 [ 81, 82, 8B, 8C, 9N, 8A, 8D, 92, 99, 9M ]\n` +
-                        `生產國別不可為空\n`
+                        `外貨復出口統計方式，生產國別不可為空\n`
                     );
                 } else if (orgCountryValue.toUpperCase() === "TW") {
                     if (!orgImpDclNo || orgImpDclNo.trim() === "") {
