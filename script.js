@@ -3969,29 +3969,30 @@ function summarizeOrgCountry() {
 
 }
 
-// 檢查統計方式、生產國別、原進口報單
+// 檢查統計方式、生產國別、原進口報單、報單類別
 function validateDclDocType() {
-    
     const dclDocType = document.getElementById('DCL_DOC_TYPE').value.trim().toUpperCase();
-    
-    // 當 DCL_DOC_TYPE 為 G3 或 G5 時執行檢查
-    if (["G3", "G5"].includes(dclDocType)) {
-        const stMtdCondition1 = ["02", "04", "05", "06", "2L", "2R", "7M", "1A", "91", "94", "95", "96"];
-        const stMtdCondition2 = ["81", "82", "8B", "8C", "9N", "8A", "8D", "92", "99", "9M"];
+    const stMtdCondition1 = ["02", "04", "05", "06", "2L", "2R", "7M", "1A", "91", "94", "95", "96"];
+    const stMtdCondition2 = ["81", "82", "8B", "8C", "9N", "8A", "8D", "92", "99", "9M"];
+    let validationErrors = new Set(); // 使用 Set 儲存錯誤訊息，避免重複
 
+    // 檢查 G5 或 G3 的條件
+    if (["G5", "G3"].includes(dclDocType)) {
         let containsMandatoryOrgCountry = false; // 標記是否包含 ST_MTD 為 外貨復出口統計方式 的項次
         let hasEmptyOrgCountry = false; // 標記是否存在空的 ORG_COUNTRY
-        let validationErrors = []; // 儲存所有錯誤訊息
-
         let allCondition1 = true; // 是否所有統計方式都屬於條件 1
         let allCondition2 = true; // 是否所有統計方式都屬於條件 2
-
-        for (let item of document.querySelectorAll("#item-container .item-row")) {
-            let stMtdValue = item.querySelector(".ST_MTD")?.value.trim();
-            let orgCountryValue = item.querySelector(".ORG_COUNTRY")?.value.trim();
-            let orgImpDclNo = item.querySelector(".ORG_IMP_DCL_NO")?.value.trim();
-            let isItemChecked = item.querySelector(".ITEM_NO")?.checked;
-
+        let totalCondition1 = 0; // 條件 1 的加總金額
+        let totalCondition2 = 0; // 條件 2 的加總金額
+    
+        const rows = document.querySelectorAll("#item-container .item-row");
+        rows.forEach(item => {
+            const stMtdValue = item.querySelector(".ST_MTD")?.value.trim();
+            const orgCountryValue = item.querySelector(".ORG_COUNTRY")?.value.trim();
+            const orgImpDclNo = item.querySelector(".ORG_IMP_DCL_NO")?.value.trim();
+            const isItemChecked = item.querySelector(".ITEM_NO")?.checked;
+            const docTotPValue = parseFloat(item.querySelector(".DOC_TOT_P")?.value.trim() || "0");
+    
             // 判斷是否全部屬於條件 1 或條件 2
             if (!stMtdCondition1.includes(stMtdValue)) {
                 allCondition1 = false;
@@ -3999,66 +4000,127 @@ function validateDclDocType() {
             if (!stMtdCondition2.includes(stMtdValue)) {
                 allCondition2 = false;
             }
-
+    
             // 檢查條件 1：ST_MTD 為指定值且 ORG_COUNTRY 不為空或不為 TW，且 ORG_IMP_DCL_NO 不應有值
             if (stMtdCondition1.includes(stMtdValue)) {
+                totalCondition1 += docTotPValue; // 加總條件 1 的金額
                 if (orgCountryValue && orgCountryValue.toUpperCase() !== "TW") {
-                    validationErrors.push(
+                    validationErrors.add(
                         `國貨出口統計方式 [ 02, 04, 05, 06, 2L, 2R, 7M, 1A, 91, 94, 95, 96 ]\n` +
                         `生產國別應為空或 TW\n`
                     );
                 }
                 if (orgImpDclNo) {
-                    validationErrors.push(
+                    validationErrors.add(
                         `國貨出口統計方式 [ 02, 04, 05, 06, 2L, 2R, 7M, 1A, 91, 94, 95, 96 ]\n` +
                         `原進口報單號碼不應有值\n`
                     );
                 }
             }
-
+    
             // 檢查條件 2：ST_MTD 為 外貨復出口統計方式 時
             if (stMtdCondition2.includes(stMtdValue)) {
+                totalCondition2 += docTotPValue; // 加總條件 2 的金額
                 containsMandatoryOrgCountry = true; // 標記需要檢查所有項次的 ORG_COUNTRY
-
                 if (!orgCountryValue || orgCountryValue.trim() === "") {
-                    validationErrors.push(
+                    validationErrors.add(
                         `外貨復出口統計方式 [ 81, 82, 8B, 8C, 9N, 8A, 8D, 92, 99, 9M ]\n` +
                         `生產國別不可為空\n`
                     );
                 } else if (orgCountryValue.toUpperCase() === "TW") {
                     if (!orgImpDclNo || orgImpDclNo.trim() === "") {
-                        validationErrors.push(
+                        validationErrors.add(
                             `外貨復出口統計方式且生產國別為 TW\n` +
                             `原進口報單號碼 及 原進口報單項次 不可為空\n`
                         );
                     }
                 }
             }
-
+    
             // 標記是否存在空的 ORG_COUNTRY
             if ((!orgCountryValue || orgCountryValue.trim() === "") && !isItemChecked) {
                 hasEmptyOrgCountry = true;
             }
-        }
-
+        });
+    
         // 檢查條件 3：若有 ST_MTD 為 外貨復出口統計方式，則所有項次的 ORG_COUNTRY 不可為空
         if (containsMandatoryOrgCountry && hasEmptyOrgCountry) {
-            validationErrors.push("國洋貨合併申報，生產國別必填（國貨請填 TW ）\n");
+            validationErrors.add("國洋貨合併申報，生產國別必填（國貨請填 TW ）\n");
         }
-
+    
         // 檢查條件 4：報單類別與統計方式是否相符
         if (allCondition1 && dclDocType !== "G5") {
-            validationErrors.push("統計方式屬於國貨出口，報單類別應為 G5");
+            validationErrors.add("統計方式屬於國貨出口，報單類別應為 G5");
         }
         if (allCondition2 && dclDocType !== "G3") {
-            validationErrors.push("統計方式屬於外貨復出口，報單類別應為 G3");
+            validationErrors.add("統計方式屬於外貨復出口，報單類別應為 G3");
+        }
+    
+        // 檢查條件 5：根據 totalCondition1 和 totalCondition2 判斷 dclDocType
+        if (totalCondition1 > totalCondition2 && dclDocType !== "G5") {
+            validationErrors.add("國貨的加總金額大於外貨，報單類別應為 G5");
+        } else if (totalCondition1 < totalCondition2 && dclDocType !== "G3") {
+            validationErrors.add("外貨的加總金額大於國貨，報單類別應為 G3");
         }
 
-        // 若有任何錯誤，集中提示
-        if (validationErrors.length > 0) {
-            alert(validationErrors.join("\n"));
-            return false; // 返回 false，表示有錯誤
+        // 顯示條件 1 和條件 2 的加總金額
+        console.log(`條件 1 的加總金額: ${totalCondition1}`);
+        console.log(`條件 2 的加總金額: ${totalCondition2}`);
+    }
+    
+    // 檢查 B8 的條件
+    if (dclDocType === "B8") {
+        const rows = document.querySelectorAll("#item-container .item-row");
+        let hasB8Conflict = false;
+
+        rows.forEach(item => {
+            const stMtdValue = item.querySelector(".ST_MTD")?.value.trim();
+            if (stMtdCondition1.includes(stMtdValue)) {
+                hasB8Conflict = true; // 若出現條件1的統計方式，標記合併問題
+            }
+        });
+
+        if (hasB8Conflict) {
+            validationErrors.add("B8 及 G5 不得合併申報，必須拆分或以 B9 申報（B9 項次在前）。");
         }
+    }
+
+    // 檢查 B9 的條件
+    if (dclDocType === "B9") {
+        const rows = document.querySelectorAll("#item-container .item-row");
+        let firstValueChecked = false; // 標記是否已檢查第一個有值的項次
+
+        rows.forEach(item => {
+            const stMtdValue = item.querySelector(".ST_MTD")?.value.trim();
+            const isItemChecked = item.querySelector(".ITEM_NO")?.checked;
+
+            // 跳過空的 ST_MTD 項次
+            if (!stMtdValue) return;
+
+            // 找到第一個有值的項次且未檢查過
+            if (!firstValueChecked) {
+                if (!isItemChecked && stMtdValue) {
+                    if (!stMtdCondition1.includes(stMtdValue)) {
+                        // 當 stMtdValue 為 '53' 時檢查 BOND_NOTE 是否為 'NB'
+                        if (stMtdValue === "53") {
+                            const bondNoteValue = item.querySelector(".BOND_NOTE")?.value.trim();
+                            if (bondNoteValue !== "NB") {
+                                validationErrors.add("B9 報單第一個項次，統計方式為 53，保稅貨物註記須為 NB");
+                            }
+                        } else {
+                            validationErrors.add("B9 報單第一個項次，須為國貨統計方式");
+                        }
+                    }
+                }
+                firstValueChecked = true; // 標記已檢查第一個有值的項次
+            }
+        });
+    }
+
+    // 若有任何錯誤，集中提示
+    if (validationErrors.size > 0) {
+        alert(Array.from(validationErrors).join("\n"));
+        return false; // 返回 false，表示有錯誤
     }
 
     return true; // 返回 true，表示檢查通過
