@@ -372,9 +372,9 @@ document.getElementById('SHPR_BAN_ID').addEventListener('input', function() {
 });
 
 // 儲存目的地數據
-let destinations = {};
+let destinationData = [];
 
-// 讀取CSV文件並解析
+// 載入 CSV 資料並解析
 fetch('destinations.csv')
     .then(response => response.text())
     .then(data => {
@@ -382,21 +382,76 @@ fetch('destinations.csv')
             header: true,
             skipEmptyLines: true,
             complete: function(results) {
-                results.data.forEach(item => {
-                    destinations[item["目的地代碼"]] = item["目的地名稱"];
-                });
+                destinationData = results.data.map(item => ({
+                    code: item["目的地代碼"].trim(),
+                    name: item["目的地名稱"].trim()
+                }));
             }
         });
-    });
+    })
+    .catch(err => console.error('Error loading destinations.csv:', err));
 
-// 當用戶填入目的地代碼時，自動填入相應的名稱
+// 自動填入目的地名稱
 document.getElementById('TO_CODE').addEventListener('input', function() {
-    let code = this.value.toUpperCase();
-    if (destinations[code]) {
-        document.getElementById('TO_DESC').value = destinations[code];
-    } else {
-        document.getElementById('TO_DESC').value = '';
+    const code = this.value.toUpperCase();
+    const match = destinationData.find(item => item.code === code);
+    document.getElementById('TO_DESC').value = match ? match.name : '';
+});
+
+// 搜尋目的地名稱並顯示彈跳框
+function searchDestinations(keyword) {
+    const popup = document.getElementById('destination-popup');
+    if (!keyword) {
+        popup.classList.add('hidden');
+        return;
     }
+
+    // 篩選匹配資料
+    const results = destinationData.filter(item =>
+        item.name.toLowerCase().includes(keyword.toLowerCase())
+    );
+    if (results.length === 0) {
+        popup.classList.add('hidden');
+        return;
+    }
+
+    // 顯示彈跳框內容
+    popup.innerHTML = results.map(item =>
+        `<div class="popup-item" data-code="${item.code}" data-name="${item.name}">
+            ${item.name} (${item.code})
+        </div>`
+    ).join('');
+    popup.classList.remove('hidden');
+}
+
+// 綁定事件委派到整個彈跳框
+document.getElementById('destination-popup').addEventListener('mousedown', function(event) {
+    const item = event.target.closest('.popup-item');
+    if (item) {
+        selectDestination(item);
+    }
+});
+
+// 選取後填充資料
+function selectDestination(item) {
+    const destinationCode = item.getAttribute('data-code');
+    const destinationName = item.getAttribute('data-name');
+
+    document.getElementById('TO_CODE').value = destinationCode;
+    document.getElementById('TO_DESC').value = destinationName;
+    document.getElementById('destination-popup').classList.add('hidden');
+}
+
+// 監控名稱輸入事件
+document.getElementById('TO_DESC').addEventListener('input', function(event) {
+    searchDestinations(event.target.value);
+});
+
+// 防止彈跳框立即消失
+document.getElementById('TO_DESC').addEventListener('blur', function() {
+    setTimeout(() => {
+        document.getElementById('destination-popup').classList.add('hidden');
+    }, 200);
 });
 
 // 初始化拖動功能
@@ -4490,73 +4545,3 @@ function showPopup(content) {
 
 // 綁定輸入框事件
 document.getElementById('SHPR_BAN_ID').addEventListener('input', thingsToNote);
-
-let destinationData = [];
-
-// 載入 CSV 資料
-fetch('destinations.csv')
-    .then(response => response.text())
-    .then(data => {
-        destinationData = data.split('\n').slice(1).map(row => {
-            const [code, name] = row.split(',');
-            return { code: code.trim(), name: name.trim() };
-        });
-    })
-    .catch(err => console.error('Error loading destinations.csv:', err));
-
-function searchDestinations(keyword) {
-    const popup = document.getElementById('destination-popup');
-    if (!keyword) {
-        popup.classList.add('hidden');
-        return;
-    }
-
-    // 篩選匹配資料
-    const results = destinationData.filter(item => item.name.toLowerCase().includes(keyword.toLowerCase()));
-    if (results.length === 0) {
-        popup.classList.add('hidden');
-        return;
-    }
-
-    // 顯示彈跳框內容
-    popup.innerHTML = results.map((item) => 
-        `<div class="popup-item" data-code="${item.code}" data-name="${item.name}">
-            ${item.name} (${item.code})
-        </div>`
-    ).join('');
-    popup.classList.remove('hidden');
-}
-
-// 綁定事件委派到整個彈跳框
-document.getElementById('destination-popup').addEventListener('mousedown', function(event) {
-    const item = event.target.closest('.popup-item');
-    if (item) {
-        selectDestination(item); // 選取資料
-    }
-});
-
-// 選取後填充資料的函式
-function selectDestination(item) {
-    // 取得選取的資料
-    const destinationCode = item.getAttribute('data-code');
-    const destinationName = item.getAttribute('data-name');
-
-    // 填入欄位
-    document.getElementById('TO_CODE').value = destinationCode;
-    document.getElementById('TO_DESC').value = destinationName;
-
-    // 隱藏彈跳框
-    document.getElementById('destination-popup').classList.add('hidden');
-}
-
-// 監控輸入事件
-document.getElementById('TO_DESC').addEventListener('input', function(event) {
-    searchDestinations(event.target.value);
-});
-
-// 避免點擊後彈跳框內容被清空
-document.getElementById('TO_DESC').addEventListener('blur', function(event) {
-    setTimeout(() => {
-        document.getElementById('destination-popup').classList.add('hidden');
-    }, 200); // 適當延遲確保點擊事件完成
-});
