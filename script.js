@@ -405,7 +405,7 @@ function searchPopup(inputValue, type) {
     } else {
         document.getElementById('TO_CODE').value = ''; // 清空 TO_CODE
     }
-    
+
     if (!inputValue) {
         popup.classList.add('hidden');
         selectedIndex = -1;
@@ -414,7 +414,9 @@ function searchPopup(inputValue, type) {
 
     // 根據類型篩選資料
     const results = destinationData.filter(item =>
-        (type === 'code' ? item.code : item.name).toLowerCase().includes(inputValue.toLowerCase())
+        type === 'code'
+            ? item.code.toLowerCase().startsWith(inputValue.toLowerCase()) // 開頭匹配
+            : item.name.toLowerCase().includes(inputValue.toLowerCase())   // 名稱部分匹配
     );
 
     if (results.length === 0) {
