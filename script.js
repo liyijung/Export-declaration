@@ -4363,7 +4363,7 @@ document.getElementById('SHPR_BAN_ID').addEventListener('input', handleCheck);
 // 綁定按鍵事件
 document.getElementById('checkBtn').addEventListener('click', handleCheck);
 
-// 注意事項：
+// 出口備註
 const thingsToNoteExcelFilePath = './thingsToNote.xlsx';
 
 function thingsToNoteExcel(callback) {
@@ -4440,7 +4440,7 @@ function showPopup(content) {
 
     const header = document.createElement('div');
     header.style.cursor = 'move'; // 設置可拖動光標
-    header.textContent = '【注意事項！】';
+    header.textContent = '【出口備註】';
     popup.appendChild(header);
 
     header.addEventListener('mousedown', (e) => {
