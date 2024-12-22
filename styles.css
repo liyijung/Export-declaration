@@ -723,3 +723,24 @@ input[type="checkbox"]:hover {
     margin-right: 4px;
     pointer-events: none; /* 防止阻擋 TAB 功能 */
 }
+
+.popup {
+    position: absolute;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1000;
+    width: 200px;
+}
+.popup.hidden {
+    display: none;
+}
+.popup-item {
+    padding: 10px;
+    cursor: pointer;
+}
+.popup-item:hover,
+.popup-item.active {
+    background-color: #f0f0f0;
+}
