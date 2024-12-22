@@ -363,7 +363,6 @@ function searchData(showErrorMessage = false) {
             }
         });
     }
-    thingsToNote(); // 出口備註
 }
 
 // 即時帶入資料，不顯示錯誤訊息
@@ -1628,7 +1627,6 @@ function handleFile(event) {
         });
 
         handleCheck(); // 長期委任字號
-        thingsToNote(); // 出口備註
         
         // 檢查REMARKS欄位來勾選對應選項
         headerData.forEach(row => {
@@ -2077,7 +2075,6 @@ function importXML(event) {
             });
 
             handleCheck(); // 長期委任字號
-            thingsToNote(); // 出口備註
             
             // 解析項次資料
             const items = xmlDoc.getElementsByTagName("detail")[0].getElementsByTagName("items");
@@ -4490,131 +4487,3 @@ document.getElementById('SHPR_BAN_ID').addEventListener('input', handleCheck);
 
 // 綁定按鍵事件
 document.getElementById('checkBtn').addEventListener('click', handleCheck);
-
-// 出口備註
-const thingsToNoteExcelFilePath = './thingsToNote.xlsx';
-
-function thingsToNoteExcel(callback) {
-    fetch(thingsToNoteExcelFilePath)
-        .then(response => {
-            if (!response.ok) throw new Error('無法讀取 Excel 檔案');
-            return response.arrayBuffer();
-        })
-        .then(data => {
-            const workbook = XLSX.read(data, { type: 'array' });
-            const sheet = workbook.Sheets[workbook.SheetNames[0]];
-            const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-            callback(rows);
-        })
-        .catch(error => {
-            console.error('讀取 Excel 檔案時發生錯誤:', error);
-            alert('讀取 Excel 檔案失敗');
-        });
-}
-
-function thingsToNote() {
-    const SHPR_BAN_ID = document.getElementById('SHPR_BAN_ID').value.trim();
-
-    thingsToNoteExcel(rows => {
-        const validEntries = [];
-
-        // 遍歷 rows，收集所有未逾期且符合條件的資料
-        rows.forEach(row => {
-            const id = row[1] ? row[1].toString() : null;
-
-            if (id === SHPR_BAN_ID) {
-                validEntries.push(`${row[2]}`);
-            }
-        });
-
-        if (validEntries.length > 0) {
-            // 合併所有內容
-            const newContent = validEntries.join('\n');
-            const finalContent = `${newContent}`;
-            closeExistingPopup();
-            showPopup(finalContent);
-        }
-    });
-};
-
-function closeExistingPopup() {
-    const existingPopup = document.querySelector('.popup');
-    if (existingPopup) {
-        existingPopup.remove();
-    }
-}
-
-function showPopup(content) {
-    // 創建彈跳框元素
-    const popup = document.createElement('div');
-    popup.className = 'popup';
-    popup.style.position = 'fixed';
-    popup.style.top = '50%';
-    popup.style.left = '50%';
-    popup.style.transform = 'translate(-50%, -50%)';
-    popup.style.padding = '10px';
-    popup.style.backgroundColor = '#fef5f5'; // 背景色設置
-    popup.style.boxShadow = '0 2px 5px rgba(0, 0, 0, 0.1)';
-    popup.style.zIndex = '1000';
-    popup.style.whiteSpace = 'pre-line'; // 保留換行
-    popup.style.border = '5px solid #f5c2c2'; // 添加邊框
-    popup.style.borderRadius = '5px'; // 邊角圓滑
-    popup.style.fontSize = '16px'; // 字體大小
-    popup.style.lineHeight = '1.6'; // 調整行距
-    popup.style.minWidth = '400px'; // 設定最小寬度
-
-    let isDragging = false;
-    let offsetX, offsetY;
-
-    const header = document.createElement('div');
-    header.style.cursor = 'move'; // 設置可拖動光標
-    header.textContent = '【出口備註】';
-    popup.appendChild(header);
-
-    header.addEventListener('mousedown', (e) => {
-        isDragging = true;
-        offsetX = e.clientX - popup.getBoundingClientRect().left;
-        offsetY = e.clientY - popup.getBoundingClientRect().top;
-        popup.style.transition = 'none';
-        document.body.style.userSelect = 'none'; // 禁止選取文字
-    });
-
-    document.addEventListener('mousemove', (e) => {
-        if (isDragging) {
-            popup.style.left = `${e.clientX - offsetX}px`;
-            popup.style.top = `${e.clientY - offsetY}px`;
-            popup.style.transform = 'none';
-        }
-    });
-
-    document.addEventListener('mouseup', () => {
-        isDragging = false;
-        document.body.style.userSelect = ''; // 恢復文字選取
-    });
-    
-    // 添加內容
-    const contentElem = document.createElement('p');
-    contentElem.textContent = content;
-    contentElem.style.marginTop = '0'; // 上移文字
-    popup.appendChild(contentElem);
-
-    // 添加關閉按鈕
-    const closeButton = document.createElement('button');
-    closeButton.textContent = '關閉';
-    closeButton.style.position = 'absolute';
-    closeButton.style.top = '10px';
-    closeButton.style.right = '10px';
-    closeButton.addEventListener('click', () => {
-        popup.remove();
-    });
-    popup.appendChild(closeButton);
-
-    // 添加到頁面
-    document.body.appendChild(popup);
-
-    // 顯示彈跳框
-    popup.style.display = 'block';
-}
-
-// 綁定輸入框事件
-document.getElementById('SHPR_BAN_ID').addEventListener('input', thingsToNote);
