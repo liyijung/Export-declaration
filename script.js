@@ -3071,6 +3071,7 @@ document.addEventListener('DOMContentLoaded', function () {
             { id: 'SHPR_BAN_ID', name: '出口人統一編號' },
             { id: 'SHPR_C_NAME', name: '出口人中文名稱' },
             { id: 'SHPR_C_ADDR', name: '出口人中文地址' },
+            { id: 'CNEE_E_NAME', name: '買方中/英名稱' },
             { id: 'CNEE_COUNTRY_CODE', name: '買方國家代碼' },
             { id: 'TO_CODE', name: '目的地(代碼)' },
             { id: 'TO_DESC', name: '目的地(名稱)' },
@@ -3093,7 +3094,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
 
-        // 單獨檢查 CNEE_C_NAME 和 CNEE_E_NAME 的邏輯
+        // 單獨檢查 CNEE_C_NAME 和 CNEE_E_NAME
         let cneeCName = document.getElementById('CNEE_C_NAME');
         let cneeEName = document.getElementById('CNEE_E_NAME');
 
@@ -3103,7 +3104,25 @@ document.addEventListener('DOMContentLoaded', function () {
         ) {
             missingFields.push('買方中/英名稱');
         }        
-    
+
+        // 單獨檢查 CNEE_COUNTRY_CODE
+        let countryCodeElement = document.getElementById('CNEE_COUNTRY_CODE');
+        if (countryCodeElement && countryCodeElement.value.trim() === 'TW') {
+            // 檢查 CNEE_BAN_ID、BUYER_E_NAME、BUYER_E_ADDR 是否填寫
+            const additionalFields = [
+                { id: 'CNEE_BAN_ID', name: '買方統一編號' },
+                { id: 'BUYER_E_NAME', name: '收方名稱' },
+                { id: 'BUYER_E_ADDR', name: '收方地址' }
+            ];
+
+            additionalFields.forEach(field => {
+                let element = document.getElementById(field.id);
+                if (element && !element.value.trim()) {
+                    missingFields.push(field.name);
+                }
+            });
+        }
+        
         // 如果有未填寫的欄位，提示使用者
         if (missingFields.length > 0) {
             alert(`以下欄位為空，請填寫後再匯出：\n${missingFields.join('、')}`);
