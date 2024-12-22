@@ -140,6 +140,7 @@ body {
 }
 
 .header-group {
+    position: relative;
     display: flex;
     align-items: left;
     justify-content: flex-start;
@@ -730,19 +731,27 @@ input[type="checkbox"]:hover {
 
 .popup {
     position: absolute;
+    top: calc(100% + 5px);
+    left: 0;
     background: #fff;
     border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     z-index: 1000;
     max-height: 200px;
+    max-width: 400px;
     overflow-y: auto;
-    width: 95.5%;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .popup-item {
     padding: 8px;
     cursor: pointer;
+    transition: background-color 0.2s ease;
 }
 
-.popup-item:hover {
-    background: #f0f0f0;
+.popup-item:hover,
+.popup-item.highlight {
+    background: #e2edfbdc;
 }
