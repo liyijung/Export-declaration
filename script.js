@@ -4170,10 +4170,16 @@ function validateDclDocType() {
         const rows = document.querySelectorAll("#item-container .item-row");
         let allCondition1 = false;
         let allCondition2 = false;
+        let missingOrgImpDclNo = false;
 
         rows.forEach(item => {
             const stMtdValue = item.querySelector(".ST_MTD")?.value.trim();
             const isItemChecked = item.querySelector(".ITEM_NO")?.checked;
+            const orgImpDclNo = item.querySelector(".ORG_IMP_DCL_NO")?.value.trim();
+
+            if (!orgImpDclNo && !isItemChecked) {
+                missingOrgImpDclNo = true; // 檢查是否有空的 ORG_IMP_DCL_NO
+            }
             if (stMtdCondition1.includes(stMtdValue) && !isItemChecked) {
                 allCondition1 = true; // 有符合條件1的項目且未勾選
             }
@@ -4182,6 +4188,9 @@ function validateDclDocType() {
             }
         });
 
+        if (missingOrgImpDclNo) {
+            validationErrors.add("B8 需核銷，原進口報單號碼 及 原進口報單項次 不可為空");
+        }
         if (allCondition1 && allCondition2) {
             validationErrors.add("B8 及 G5 不得合併申報，必須拆分或以 B9 申報（B9 項次在前）");
         } else if (allCondition1 && !allCondition2) {
@@ -4218,6 +4227,41 @@ function validateDclDocType() {
                 }
             }
         });
+    }
+
+    // 檢查 D5 或 F5 的條件
+    if (["D5", "F5"].includes(dclDocType)) {
+        const rows = document.querySelectorAll("#item-container .item-row");
+        let missingOrgDclNo = false;
+
+        // 欄位檢查
+        const facBanId = document.querySelector("#FAC_BAN_ID")?.value.trim();
+        const facBondedId = document.querySelector("#FAC_BONDED_ID")?.value.trim();
+        const inBondedBan = document.querySelector("#IN_BONDED_BAN")?.value.trim();
+        const inBondedCode = document.querySelector("#IN_BONDED_CODE")?.value.trim();
+        
+        // 檢查是否有空的欄位，分兩組檢查
+        const missingGroup1Fields = !facBanId || !facBondedId;
+        const missingGroup2Fields = !inBondedBan || !inBondedCode;
+
+        rows.forEach(item => {
+            const isItemChecked = item.querySelector(".ITEM_NO")?.checked;
+            const orgDclNo = item.querySelector(".ORG_DCL_NO")?.value.trim();
+
+            if (!orgDclNo && !isItemChecked) {
+                missingOrgDclNo = true; // 檢查是否有空的 ORG_DCL_NO
+            }
+        });
+
+        if (missingOrgDclNo) {
+            validationErrors.add("D5 及 F5 需核銷，原進倉報單號碼 及 原進倉報單項次 不可為空");
+        }
+        if (missingGroup1Fields) {
+            validationErrors.add("出倉保稅倉庫統一編號 及 出倉保稅倉庫代碼 不可為空");
+        }
+        if (missingGroup2Fields) {
+            validationErrors.add("進倉保稅倉庫統一編號 及 進倉保稅倉庫代碼 不可為空");
+        }
     }
 
     // 若有任何錯誤，集中提示
