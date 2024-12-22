@@ -104,15 +104,14 @@
             <div class="header-group">
                 <label for="TO_CODE">目的地(代碼)</label>
                 <input type="text" id="TO_CODE" name="TO_CODE" 
-                    oninput="filterAlphanumeric(this)"
                     placeholder="範例：HKHKG、CNSZX、KRICN、SGSIN(英文代碼)">
+                <div id="code-popup" class="popup hidden"></div>
             </div>
             <div class="header-group">
                 <label for="TO_DESC">目的地(名稱)</label>
                 <input type="text" id="TO_DESC" name="TO_DESC" 
-                    oninput="searchDestinations(this.value)"
-                    placeholder="(英文名稱，可關鍵字查詢)" aria-describedby="destination-popup">
-                    <div id="destination-popup" class="popup hidden" role="listbox"></div>
+                    placeholder="(英文名稱，可關鍵字查詢)">
+                <div id="destination-popup" class="popup hidden"></div>
             </div>
         </div>
         <hr>
