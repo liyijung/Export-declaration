@@ -4490,3 +4490,73 @@ function showPopup(content) {
 
 // 綁定輸入框事件
 document.getElementById('SHPR_BAN_ID').addEventListener('input', thingsToNote);
+
+let destinationData = [];
+
+// 載入 CSV 資料
+fetch('destinations.csv')
+    .then(response => response.text())
+    .then(data => {
+        destinationData = data.split('\n').slice(1).map(row => {
+            const [code, name] = row.split(',');
+            return { code: code.trim(), name: name.trim() };
+        });
+    })
+    .catch(err => console.error('Error loading destinations.csv:', err));
+
+function searchDestinations(keyword) {
+    const popup = document.getElementById('destination-popup');
+    if (!keyword) {
+        popup.classList.add('hidden');
+        return;
+    }
+
+    // 篩選匹配資料
+    const results = destinationData.filter(item => item.name.toLowerCase().includes(keyword.toLowerCase()));
+    if (results.length === 0) {
+        popup.classList.add('hidden');
+        return;
+    }
+
+    // 顯示彈跳框內容
+    popup.innerHTML = results.map((item) => 
+        `<div class="popup-item" data-code="${item.code}" data-name="${item.name}">
+            ${item.name} (${item.code})
+        </div>`
+    ).join('');
+    popup.classList.remove('hidden');
+}
+
+// 綁定事件委派到整個彈跳框
+document.getElementById('destination-popup').addEventListener('mousedown', function(event) {
+    const item = event.target.closest('.popup-item');
+    if (item) {
+        selectDestination(item); // 選取資料
+    }
+});
+
+// 選取後填充資料的函式
+function selectDestination(item) {
+    // 取得選取的資料
+    const destinationCode = item.getAttribute('data-code');
+    const destinationName = item.getAttribute('data-name');
+
+    // 填入欄位
+    document.getElementById('TO_CODE').value = destinationCode;
+    document.getElementById('TO_DESC').value = destinationName;
+
+    // 隱藏彈跳框
+    document.getElementById('destination-popup').classList.add('hidden');
+}
+
+// 監控輸入事件
+document.getElementById('TO_DESC').addEventListener('input', function(event) {
+    searchDestinations(event.target.value);
+});
+
+// 避免點擊後彈跳框內容被清空
+document.getElementById('TO_DESC').addEventListener('blur', function(event) {
+    setTimeout(() => {
+        document.getElementById('destination-popup').classList.add('hidden');
+    }, 200); // 適當延遲確保點擊事件完成
+});
