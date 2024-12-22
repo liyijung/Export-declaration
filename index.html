@@ -108,8 +108,9 @@
             </div>
             <div class="header-group">
                 <label for="TO_DESC">目的地(名稱)</label>
-                <input type="text" id="TO_DESC" name="TO_DESC" tabindex="-1"
-                placeholder="(英文名稱)">
+                <input type="text" id="TO_DESC" name="TO_DESC" oninput="searchDestinations(this.value)"
+                placeholder="(英文名稱，可關鍵字查詢)">
+                <div id="destination-popup" class="popup hidden"></div>
             </div>
         </div>
         <hr>
