@@ -3071,7 +3071,6 @@ document.addEventListener('DOMContentLoaded', function () {
             { id: 'SHPR_BAN_ID', name: '出口人統一編號' },
             { id: 'SHPR_C_NAME', name: '出口人中文名稱' },
             { id: 'SHPR_C_ADDR', name: '出口人中文地址' },
-            { id: 'CNEE_E_NAME', name: '買方中/英名稱' },
             { id: 'CNEE_COUNTRY_CODE', name: '買方國家代碼' },
             { id: 'TO_CODE', name: '目的地(代碼)' },
             { id: 'TO_DESC', name: '目的地(名稱)' },
