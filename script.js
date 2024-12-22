@@ -363,7 +363,7 @@ function searchData(showErrorMessage = false) {
             }
         });
     }
-    thingsToNote(); // 注意事項
+    thingsToNote(); // 出口備註
 }
 
 // 即時帶入資料，不顯示錯誤訊息
@@ -1500,7 +1500,7 @@ function handleFile(event) {
         });
 
         handleCheck(); // 長期委任字號
-        thingsToNote(); // 注意事項
+        thingsToNote(); // 出口備註
         
         // 檢查REMARKS欄位來勾選對應選項
         headerData.forEach(row => {
@@ -1949,7 +1949,7 @@ function importXML(event) {
             });
 
             handleCheck(); // 長期委任字號
-            thingsToNote(); // 注意事項
+            thingsToNote(); // 出口備註
             
             // 解析項次資料
             const items = xmlDoc.getElementsByTagName("detail")[0].getElementsByTagName("items");
