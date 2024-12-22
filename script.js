@@ -399,17 +399,22 @@ function searchPopup(inputValue, type) {
     const popupId = type === 'code' ? 'code-popup' : 'destination-popup';
     const popup = document.getElementById(popupId);
 
+    // 輸入時清空相關欄位
+    if (type === 'code') {
+        document.getElementById('TO_DESC').value = ''; // 清空 TO_DESC
+    } else {
+        document.getElementById('TO_CODE').value = ''; // 清空 TO_CODE
+    }
+    
     if (!inputValue) {
         popup.classList.add('hidden');
         selectedIndex = -1;
         return;
     }
 
-    // 根據類型篩選資料，對 `TO_CODE` 使用 startsWith 篩選
+    // 根據類型篩選資料
     const results = destinationData.filter(item =>
-        type === 'code'
-            ? item.code.toLowerCase().startsWith(inputValue.toLowerCase()) // 開頭匹配
-            : item.name.toLowerCase().includes(inputValue.toLowerCase())   // 名稱部分匹配
+        (type === 'code' ? item.code : item.name).toLowerCase().includes(inputValue.toLowerCase())
     );
 
     if (results.length === 0) {
@@ -436,6 +441,7 @@ function selectPopupItem(item, type) {
     const destinationCode = item.getAttribute('data-code');
     const destinationName = item.getAttribute('data-name');
 
+    // 根據選取更新相關欄位
     document.getElementById('TO_CODE').value = destinationCode;
     document.getElementById('TO_DESC').value = destinationName;
 
