@@ -731,18 +731,17 @@ input[type="checkbox"]:hover {
 
 .popup {
     position: absolute;
-    top: calc(100% + 5px);
-    left: 0;
     background: #fff;
     border: 1px solid #ccc;
-    border-radius: 4px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     z-index: 1000;
     max-height: 200px;
-    max-width: 400px;
     overflow-y: auto;
-    width: 100%;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
     box-sizing: border-box;
+    width: 100%;
+    left: 0;
+    top: calc(100% + 5px); /* 與輸入框之間增加 5px 的距離 */
 }
 
 .popup-item {
@@ -753,5 +752,5 @@ input[type="checkbox"]:hover {
 
 .popup-item:hover,
 .popup-item.highlight {
-    background: #e2edfbdc;
+    background: #e6f7ff;
 }
