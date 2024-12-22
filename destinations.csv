@@ -14117,7 +14117,6 @@ CNCHH,Chengcheng
 CNCHI,Chizhou Pt
 CNCHN,Chang、an
 CNCHO,Chang on
-CNCHQ,Chongqing Pt
 CNCHS,Chuanshan
 CNCHU,Chaohu
 CNCHW,Jiuquan
@@ -14152,7 +14151,6 @@ CNCOZ,Chaozhou
 CNCPG,Changping
 CNCPI,Changpingzhan
 CNCQD,Chongqingdongzhan
-CNCQI,Chongqing
 CNCSD,Changshadongzhan
 CNCSH,Chashan
 CNCSJ,Changshou
@@ -14377,7 +14375,6 @@ CNGGN,Gongan
 CNGGS,Guangshui
 CNGGU,Gongguan
 CNGGY,Gongyi
-CNGGZ,Guangzhou
 CNGHI,Guanghai
 CNGHN,Guanghan
 CNGIR,Gyirong
@@ -14424,7 +14421,6 @@ CNGYS,Guangyuan Panlong Apt
 CNGYU,Gaoyou
 CNGZC,Guangzhouchuanchang
 CNGZE,Guzhen
-CNGZG,Guangzhou Pt
 CNGZH,Guzhen
 CNGZU,Guizhou
 CNHAD,Haiyang
@@ -14437,7 +14433,6 @@ CNHAQ,Huangqi/Nanhai
 CNHAS,Heshan
 CNHAT,Haitang/Shekou
 CNHAY,Haiyang
-CNHAZ,Hangzhou
 CNHBG,Harbin Pt
 CNHBI,Huaibei
 CNHBU,Huangbu
@@ -14474,7 +14469,6 @@ CNHGU,Huanghua
 CNHGW,Hongwan
 CNHHA,Huanghua
 CNHHH,Hohhot
-CNHHT,Haitian Terminal/Xiamen
 CNHHU,Heshun
 CNHIA,Huai'an
 CNHID,Huidong Pt
@@ -14901,8 +14895,6 @@ CNNAS,Nan‘an
 CNNAT,Natong
 CNNAY,Nanyuan
 CNNBA,Nanbian
-CNNBG,Ningbo Pt
-CNNBO,NINGBO
 CNNCA,Nicha
 CNNCH,Nanchang
 CNNDE,Ningde
@@ -14921,9 +14913,7 @@ CNNIA,Ning、an
 CNNIG,Nanning Pt
 CNNIN,Ninghai
 CNNJG,Nanjing
-CNNJI,Nanjing
 CNNJK,Nanjiangkou
-CNNKG,Nanjing
 CNNKL,Niuguling
 CNNLG,Nanling
 CNNMI,Ningming
@@ -15110,7 +15100,6 @@ CNSFH,Suifenhegongluzhan/Suifenhe
 CNSGA,Songgang
 CNSGD,Shengdong
 CNSGG,Suijiang
-CNSGH,Shanghai
 CNSGI,Shangsi
 CNSGJ,Songjiang
 CNSGN,Shouguang
@@ -15209,13 +15198,11 @@ CNSTZ,Shatuozi
 CNSUB,Shuibu
 CNSUD,Shunde
 CNSUG,Suigang
-CNSUH,Suzhou
 CNSUI,Suigang Huangpu
 CNSUQ,Suqian
 CNSUW,Sunwu
 CNSUX,Suixi
 CNSUY,Shuyang
-CNSUZ,Suzhou
 CNSWA,Swatow = Shantou
 CNSWE,Shanwei
 CNSWI,Shiwei
@@ -15234,7 +15221,6 @@ CNSYM,Simao
 CNSYN,Shiyan
 CNSYX,Sanya
 CNSZA,Sanzao
-CNSZG,Suzhou Pt
 CNSZH,Suzhou
 CNSZI,Shihezi
 CNSZK,Songzikou
@@ -15288,7 +15274,6 @@ CNTME,Tumen
 CNTNA,Jinan
 CNTNC,Lintao
 CNTNG,Tongjia
-CNTNJ,Tianjin
 CNTNO,Tanggou
 CNTNP,Tianpeng
 CNTOG,Tongcheng
@@ -15391,7 +15376,6 @@ CNWUZ,Wuzhou
 CNWXA,Wuxuan
 CNWXI,Wuxian
 CNWXP,Wuxue Pt
-CNWXS,Wuxi
 CNWYK,Weiyuankou
 CNWYN,Wengyuan
 CNWYP,Wuyapao
@@ -15400,7 +15384,6 @@ CNWZH,Wanzhou
 CNWZO,Wenzhou
 CNXAB,Xinfeng
 CNXAG,Xianguojilugang
-CNXAM,Xiamen
 CNXAN,Xinan
 CNXAO,Xiaolan
 CNXAS,Xiashan
@@ -15462,8 +15445,6 @@ CNXLN,Xinglin
 CNXLS,Xiliangshan
 CNXLU,Xiluzhen
 CNXLZ,Xiaolizhuang
-CNXMG,Xiamen Pt
-CNXMH,Xiamen Haicang
 CNXML,Liuwudian
 CNXMN,Amoy = Xiamen
 CNXNA,Xinsha
@@ -15479,7 +15460,6 @@ CNXNY,Xinyuan
 CNXNZ,Xinzhou
 CNXOT,Xiaotang
 CNXPI,Xingping
-CNXSA,Canton = Guangzhou
 CNXSB,Xishuangbanna
 CNXSH,Xinshi
 CNXSI,Xiangshui
@@ -15503,7 +15483,6 @@ CNXWI,Xuanwei
 CNXXG,Xingxiang
 CNXXI,Xinchang
 CNXXN,Xixiang
-CNXXY,Xiangyu Terminal/Xiamen
 CNXYA,Xianyang
 CNXYG,Xiuying
 CNXYI,Xinying
