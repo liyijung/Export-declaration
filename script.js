@@ -2535,7 +2535,7 @@ function calculateAmount(event) {
     }
 }
 
-// 計算各單位的數量總計
+// 數量核算
 function calculateQuantities() {
     const items = document.querySelectorAll('#item-container .item-row');
     if (items.length === 0) {
@@ -2618,7 +2618,7 @@ function updateItemAmounts() {
     });
 }
 
-// 計算所有行的金額
+// 金額核算
 function calculateAmounts() {
     const decimalPlacesInput = document.getElementById('decimal-places');
     let decimalPlaces = parseInt(decimalPlacesInput.value);
@@ -2752,7 +2752,11 @@ function calculateWeight() {
     totalCalculatedWeight = parseFloat(totalCalculatedWeight.toFixed(6));
 
     // 顯示最終加總的重量
-    alert(`報單表頭的總淨重為：${totalNetWeight}\n各項次的淨重加總為：${totalCalculatedWeight}`);
+    if (totalNetWeight === totalCalculatedWeight) {
+        alert(`報單表頭的總淨重為：${totalNetWeight}【正確】\n各項次的淨重加總為：${totalCalculatedWeight}`);
+    } else if (totalNetWeight !== totalCalculatedWeight) {
+        alert(`報單表頭的總淨重為：${totalNetWeight}【錯誤！】\n各項次的淨重加總為：${totalCalculatedWeight}`);
+    }
 }
 
 // 攤重
@@ -2903,6 +2907,12 @@ function spreadWeight() {
         }, 0).toFixed(6)
     );
     alert(`報單表頭的總淨重為：${totalNetWeight}\n各項次的淨重加總為：${adjustedTotalWeight}`);
+}
+
+function calculate() {
+    calculateQuantities(); //數量核算
+    calculateAmounts(); // 金額核算
+    calculateWeight(); // 重量核算
 }
 
 // 更新DOC_OTR_DESC的值，勾選時加入描述，取消勾選時移除描述
@@ -3634,6 +3644,7 @@ document.addEventListener('DOMContentLoaded', function () {
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+        calculate();
     }
 
     // 為輸出XML按鈕添加事件監聽器
