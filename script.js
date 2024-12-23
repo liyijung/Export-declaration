@@ -383,7 +383,10 @@ fetch('destinations.csv')
             skipEmptyLines: true,
             complete: function(results) {
                 results.data.forEach(item => {
-                    destinations[item["目的地代碼"]] = item["目的地名稱"];
+                    destinations[item["目的地代碼"]] = {
+                        name: item["目的地名稱"],
+                        chinese: item["中文"]
+                    };
                 });
             }
         });
@@ -404,17 +407,21 @@ document.getElementById('TO_DESC').addEventListener('input', function () {
         return;
     }
 
-    // 篩選匹配的目的地名稱
-    const matches = Object.entries(destinations).filter(([code, name]) =>
-        name.toLowerCase().includes(input) || code.toLowerCase().includes(input)
+    // 篩選匹配的目的地名稱、代碼或中文
+    const matches = Object.entries(destinations).filter(([code, { name, chinese }]) =>
+        (name && name.toLowerCase().includes(input)) || 
+        (code && code.toLowerCase().includes(input)) || 
+        (chinese && chinese.includes(input))
     );
 
     // 如果有匹配結果，顯示下拉選單
     if (matches.length > 0) {
         resultsDiv.style.display = 'block';
-        matches.forEach(([code, name], index) => {
+        matches.forEach(([code, { name, chinese }], index) => {
             const optionDiv = document.createElement('div');
-            optionDiv.innerHTML = `<strong>${code}</strong> - ${name}`; // 結果框中顯示代碼和名稱
+            optionDiv.innerHTML = `
+                <strong>${code}</strong> - ${name || ''} ${chinese || ''}
+            `.trim(); // 結果框中顯示代碼、名稱和中文
             optionDiv.dataset.code = code;
             optionDiv.dataset.index = index;
 
@@ -435,11 +442,11 @@ document.getElementById('TO_DESC').addEventListener('input', function () {
     }
 });
 
-// 當用戶輸入目的地代碼時，自動填入名稱
+// 當用戶輸入目的地代碼時，自動填入名稱和中文
 document.getElementById('TO_CODE').addEventListener('input', function () {
     let code = this.value.toUpperCase();
     if (destinations[code]) {
-        document.getElementById('TO_DESC').value = destinations[code]; // 填入名稱
+        document.getElementById('TO_DESC').value = destinations[code].name || ''; // 填入名稱
     } else {
         document.getElementById('TO_DESC').value = ''; // 清空名稱欄位
     }
