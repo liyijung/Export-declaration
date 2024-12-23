@@ -397,13 +397,19 @@ document.getElementById('TO_DESC').addEventListener('input', function () {
     resultsDiv.innerHTML = ''; // 清空現有結果
     activeIndex = -1; // 重置選中索引
 
+    // 如果輸入為空，不執行篩選，直接隱藏結果框
+    if (!input) {
+        resultsDiv.style.display = 'none';
+        return;
+    }
+
     // 篩選匹配的目的地名稱
     const matches = Object.entries(destinations).filter(([code, name]) =>
         name.toLowerCase().includes(input) || code.toLowerCase().includes(input)
     );
 
     // 如果有匹配結果，顯示下拉選單
-    if (matches.length > 0 && input !== '') {
+    if (matches.length > 0) {
         resultsDiv.style.display = 'block';
         matches.forEach(([code, name], index) => {
             const optionDiv = document.createElement('div');
@@ -467,6 +473,14 @@ document.getElementById('TO_DESC').addEventListener('blur', function () {
     setTimeout(() => { // 延遲隱藏，確保點擊選項有效
         document.getElementById('search-results').style.display = 'none';
     }, 200);
+});
+
+// 當輸入框獲得焦點時，顯示篩選結果框（如果有匹配內容）
+document.getElementById('TO_DESC').addEventListener('focus', function () {
+    const resultsDiv = document.getElementById('search-results');
+    if (resultsDiv.innerHTML.trim() !== '') {
+        resultsDiv.style.display = 'block';
+    }
 });
 
 // 更新當前選中項的樣式
