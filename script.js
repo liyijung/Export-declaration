@@ -391,7 +391,7 @@ fetch('destinations.csv')
 let activeIndex = -1; // 記錄當前選中的索引
 
 // 動態篩選並顯示結果
-document.getElementById('TO_DESC').addEventListener('input', function() {
+document.getElementById('TO_DESC').addEventListener('input', function () {
     const input = this.value.toLowerCase();
     const resultsDiv = document.getElementById('search-results');
     resultsDiv.innerHTML = ''; // 清空現有結果
@@ -413,8 +413,8 @@ document.getElementById('TO_DESC').addEventListener('input', function() {
 
             // 點擊選項時填入對應值
             optionDiv.addEventListener('click', function () {
-                document.getElementById('TO_DESC').value = name; // 僅填入名稱
                 document.getElementById('TO_CODE').value = code; // 填入代碼
+                document.getElementById('TO_CODE').dispatchEvent(new Event('input')); // 觸發 TO_CODE 的輸入事件
                 resultsDiv.style.display = 'none'; // 隱藏下拉框
             });
 
@@ -426,25 +426,12 @@ document.getElementById('TO_DESC').addEventListener('input', function() {
 });
 
 // 當用戶輸入目的地代碼時，自動填入名稱
-document.getElementById('TO_CODE').addEventListener('input', function() {
+document.getElementById('TO_CODE').addEventListener('input', function () {
     let code = this.value.toUpperCase();
     if (destinations[code]) {
-        document.getElementById('TO_DESC').value = destinations[code];
+        document.getElementById('TO_DESC').value = destinations[code]; // 填入名稱
     } else {
-        document.getElementById('TO_DESC').value = '';
-    }
-});
-
-// 當用戶選擇目的地名稱時，自動填入對應代碼
-document.getElementById('TO_DESC').addEventListener('input', function() {
-    const input = this.value;
-    const datalist = document.getElementById('destinationsList');
-    const option = Array.from(datalist.options).find(opt => opt.value === input);
-
-    if (option) {
-        document.getElementById('TO_CODE').value = option.dataset.code; // 填入目的地代碼
-    } else {
-        document.getElementById('TO_CODE').value = ''; // 清空代碼欄位
+        document.getElementById('TO_DESC').value = ''; // 清空名稱欄位
     }
 });
 
@@ -467,8 +454,8 @@ document.getElementById('TO_DESC').addEventListener('keydown', function (event) 
         } else if (event.key === 'Enter' && activeIndex >= 0) {
             // 選中當前選項
             const selectedOption = options[activeIndex];
-            document.getElementById('TO_DESC').value = selectedOption.textContent.split(" - ")[1]; // 僅填入名稱
             document.getElementById('TO_CODE').value = selectedOption.dataset.code; // 填入代碼
+            document.getElementById('TO_CODE').dispatchEvent(new Event('input')); // 觸發 TO_CODE 的輸入事件
             resultsDiv.style.display = 'none'; // 隱藏下拉框
             event.preventDefault(); // 阻止默認行為
         }
@@ -480,14 +467,6 @@ document.getElementById('TO_DESC').addEventListener('blur', function () {
     setTimeout(() => { // 延遲隱藏，確保點擊選項有效
         document.getElementById('search-results').style.display = 'none';
     }, 200);
-});
-
-// 當輸入框獲得焦點時，顯示篩選結果框（如果有匹配內容）
-document.getElementById('TO_DESC').addEventListener('focus', function () {
-    const resultsDiv = document.getElementById('search-results');
-    if (resultsDiv.innerHTML.trim() !== '') {
-        resultsDiv.style.display = 'block';
-    }
 });
 
 // 更新當前選中項的樣式
