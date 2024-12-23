@@ -444,46 +444,11 @@ document.getElementById('TO_CODE').addEventListener('input', function () {
     }
 });
 
-// 上下鍵移動和 Enter 選擇
-document.getElementById('TO_DESC').addEventListener('keydown', function (event) {
-    const resultsDiv = document.getElementById('search-results');
-    const options = resultsDiv.querySelectorAll('div');
-
-    if (options.length > 0) {
-        if (event.key === 'ArrowDown') {
-            // 移動到下一個選項
-            activeIndex = (activeIndex + 1) % options.length;
-            updateActiveOption(options);
-            event.preventDefault(); // 阻止默認行為
-        } else if (event.key === 'ArrowUp') {
-            // 移動到上一個選項
-            activeIndex = (activeIndex - 1 + options.length) % options.length;
-            updateActiveOption(options);
-            event.preventDefault(); // 阻止默認行為
-        } else if (event.key === 'Enter' && activeIndex >= 0) {
-            // 選中當前選項
-            const selectedOption = options[activeIndex];
-            document.getElementById('TO_CODE').value = selectedOption.dataset.code; // 填入代碼
-            document.getElementById('TO_CODE').dispatchEvent(new Event('input')); // 觸發 TO_CODE 的輸入事件
-            resultsDiv.style.display = 'none'; // 隱藏下拉框
-            event.preventDefault(); // 阻止默認行為
-        }
-    }
-});
-
 // 當輸入框失去焦點時隱藏篩選結果框
 document.getElementById('TO_DESC').addEventListener('blur', function () {
     setTimeout(() => { // 延遲隱藏，確保點擊選項有效
         document.getElementById('search-results').style.display = 'none';
     }, 300); // 延遲 300 毫秒
-});
-
-// 當輸入框獲得焦點時，顯示篩選結果框（如果有匹配內容）
-document.getElementById('TO_DESC').addEventListener('focus', function () {
-    const resultsDiv = document.getElementById('search-results');
-    if (resultsDiv.innerHTML.trim() !== '') {
-        resultsDiv.style.display = 'block';
-    }
 });
 
 // 更新當前選中項的樣式
