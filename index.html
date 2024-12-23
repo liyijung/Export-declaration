@@ -101,17 +101,16 @@
                 <input type="text" id="BUYER_E_ADDR" name="BUYER_E_ADDR" tabindex="-1"
                 placeholder="(買方為台灣營業公司需填列)">
             </div>
-            <div class="header-group">
+            <div class="header-group" style="position: relative;">
                 <label for="TO_CODE">目的地(代碼)</label>
                 <input type="text" id="TO_CODE" name="TO_CODE" 
                     placeholder="範例：HKHKG、CNSZX、KRICN、SGSIN(英文代碼)">
-                <div id="code-popup" class="popup hidden"></div>
             </div>
-            <div class="header-group">
+            <div class="header-group" style="position: relative;">
                 <label for="TO_DESC">目的地(名稱)</label>
-                <input type="text" id="TO_DESC" name="TO_DESC" 
+                <input type="text" id="TO_DESC" name="TO_DESC" tabindex="-1"
                     placeholder="(英文名稱，可關鍵字查詢)">
-                <div id="destination-popup" class="popup hidden"></div>
+                <div id="search-results" class="search-results"></div>
             </div>
         </div>
         <hr>
