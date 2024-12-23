@@ -370,11 +370,10 @@ document.getElementById('SHPR_BAN_ID').addEventListener('input', function() {
     searchData(false); // 不顯示錯誤訊息，只帶入資料
 });
 
-let destinationData = [];
-let selectedIndex = -1; // 通用索引
-let popupItems = []; // 通用彈跳框選項
+// 儲存目的地數據
+let destinations = {};
 
-// 載入 CSV 資料並解析
+// 讀取 CSV 文件並解析
 fetch('destinations.csv')
     .then(response => response.text())
     .then(data => {
@@ -382,149 +381,125 @@ fetch('destinations.csv')
             header: true,
             skipEmptyLines: true,
             complete: function(results) {
-                destinationData = results.data
-                    .filter(item => item["目的地代碼"] && item["目的地名稱"])
-                    .map(item => ({
-                        code: item["目的地代碼"].trim(),
-                        name: item["目的地名稱"].trim()
-                    }));
+                results.data.forEach(item => {
+                    destinations[item["目的地代碼"]] = item["目的地名稱"];
+                });
             }
         });
-    })
-    .catch(err => console.error('Error loading destinations.csv:', err));
+    });
 
-// 搜尋目的地代碼並顯示彈跳框
-function searchPopup(inputValue, type) {
-    const popupId = type === 'code' ? 'code-popup' : 'destination-popup';
-    const popup = document.getElementById(popupId);
+let activeIndex = -1; // 記錄當前選中的索引
 
-    // 輸入時清空相關欄位
-    if (type === 'code') {
-        document.getElementById('TO_DESC').value = ''; // 清空 TO_DESC
-    } else {
-        document.getElementById('TO_CODE').value = ''; // 清空 TO_CODE
-    }
+// 動態篩選並顯示結果
+document.getElementById('TO_DESC').addEventListener('input', function() {
+    const input = this.value.toLowerCase();
+    const resultsDiv = document.getElementById('search-results');
+    resultsDiv.innerHTML = ''; // 清空現有結果
+    activeIndex = -1; // 重置選中索引
 
-    if (!inputValue) {
-        popup.classList.add('hidden');
-        selectedIndex = -1;
-        return;
-    }
-
-    // 根據類型篩選資料
-    const results = destinationData.filter(item =>
-        type === 'code'
-            ? item.code.toLowerCase().startsWith(inputValue.toLowerCase()) // 開頭匹配
-            : item.name.toLowerCase().includes(inputValue.toLowerCase())   // 名稱部分匹配
+    // 篩選匹配的目的地名稱
+    const matches = Object.entries(destinations).filter(([code, name]) =>
+        name.toLowerCase().includes(input) || code.toLowerCase().includes(input)
     );
 
-    if (results.length === 0) {
-        popup.classList.add('hidden');
-        selectedIndex = -1;
-        return;
+    // 如果有匹配結果，顯示下拉選單
+    if (matches.length > 0 && input !== '') {
+        resultsDiv.style.display = 'block';
+        matches.forEach(([code, name], index) => {
+            const optionDiv = document.createElement('div');
+            optionDiv.innerHTML = `<strong>${code}</strong> - ${name}`; // 結果框中顯示代碼和名稱
+            optionDiv.dataset.code = code;
+            optionDiv.dataset.index = index;
+
+            // 點擊選項時填入對應值
+            optionDiv.addEventListener('click', function () {
+                document.getElementById('TO_DESC').value = name; // 僅填入名稱
+                document.getElementById('TO_CODE').value = code; // 填入代碼
+                resultsDiv.style.display = 'none'; // 隱藏下拉框
+            });
+
+            resultsDiv.appendChild(optionDiv);
+        });
+    } else {
+        resultsDiv.style.display = 'none'; // 沒有匹配時隱藏
     }
+});
 
-    // 更新彈跳框內容
-    popup.innerHTML = results.map((item, index) =>
-        `<div class="popup-item" data-index="${index}" data-code="${item.code}" data-name="${item.name}">
-            ${type === 'code' ? `${item.code} (${item.name})` : `${item.name} (${item.code})`}
-        </div>`
-    ).join('');
-
-    // 顯示彈跳框
-    popup.classList.remove('hidden');
-    popupItems = Array.from(document.querySelectorAll(`#${popupId} .popup-item`));
-    selectedIndex = -1;
-}
-
-// 通用選取函式
-function selectPopupItem(item, type) {
-    const destinationCode = item.getAttribute('data-code');
-    const destinationName = item.getAttribute('data-name');
-
-    // 根據選取更新相關欄位
-    document.getElementById('TO_CODE').value = destinationCode;
-    document.getElementById('TO_DESC').value = destinationName;
-
-    const popupId = type === 'code' ? 'code-popup' : 'destination-popup';
-    document.getElementById(popupId).classList.add('hidden');
-    selectedIndex = -1;
-}
-
-// 通用鍵盤事件處理
-function handlePopupKeydown(event, type) {
-    const popupId = type === 'code' ? 'code-popup' : 'destination-popup';
-    const popup = document.getElementById(popupId);
-
-    if (popup.classList.contains('hidden') || popupItems.length === 0) return;
-
-    if (event.key === 'ArrowDown') {
-        event.preventDefault();
-        if (selectedIndex < popupItems.length - 1) {
-            selectedIndex++;
-            updatePopupHighlight();
-        }
-    } else if (event.key === 'ArrowUp') {
-        event.preventDefault();
-        if (selectedIndex > 0) {
-            selectedIndex--;
-            updatePopupHighlight();
-        }
-    } else if (event.key === 'Enter') {
-        event.preventDefault();
-        if (selectedIndex >= 0 && selectedIndex < popupItems.length) {
-            selectPopupItem(popupItems[selectedIndex], type);
-        }
-    } else if (event.key === 'Escape') {
-        popup.classList.add('hidden');
-        selectedIndex = -1;
+// 當用戶輸入目的地代碼時，自動填入名稱
+document.getElementById('TO_CODE').addEventListener('input', function() {
+    let code = this.value.toUpperCase();
+    if (destinations[code]) {
+        document.getElementById('TO_DESC').value = destinations[code];
+    } else {
+        document.getElementById('TO_DESC').value = '';
     }
-}
+});
 
-// 通用高亮更新
-function updatePopupHighlight() {
-    popupItems.forEach((item, index) => {
-        if (index === selectedIndex) {
-            item.classList.add('highlight');
-            item.scrollIntoView({ block: 'nearest' });
+// 當用戶選擇目的地名稱時，自動填入對應代碼
+document.getElementById('TO_DESC').addEventListener('input', function() {
+    const input = this.value;
+    const datalist = document.getElementById('destinationsList');
+    const option = Array.from(datalist.options).find(opt => opt.value === input);
+
+    if (option) {
+        document.getElementById('TO_CODE').value = option.dataset.code; // 填入目的地代碼
+    } else {
+        document.getElementById('TO_CODE').value = ''; // 清空代碼欄位
+    }
+});
+
+// 上下鍵移動和 Enter 選擇
+document.getElementById('TO_DESC').addEventListener('keydown', function (event) {
+    const resultsDiv = document.getElementById('search-results');
+    const options = resultsDiv.querySelectorAll('div');
+
+    if (options.length > 0) {
+        if (event.key === 'ArrowDown') {
+            // 移動到下一個選項
+            activeIndex = (activeIndex + 1) % options.length;
+            updateActiveOption(options);
+            event.preventDefault(); // 阻止默認行為
+        } else if (event.key === 'ArrowUp') {
+            // 移動到上一個選項
+            activeIndex = (activeIndex - 1 + options.length) % options.length;
+            updateActiveOption(options);
+            event.preventDefault(); // 阻止默認行為
+        } else if (event.key === 'Enter' && activeIndex >= 0) {
+            // 選中當前選項
+            const selectedOption = options[activeIndex];
+            document.getElementById('TO_DESC').value = selectedOption.textContent.split(" - ")[1]; // 僅填入名稱
+            document.getElementById('TO_CODE').value = selectedOption.dataset.code; // 填入代碼
+            resultsDiv.style.display = 'none'; // 隱藏下拉框
+            event.preventDefault(); // 阻止默認行為
+        }
+    }
+});
+
+// 當輸入框失去焦點時隱藏篩選結果框
+document.getElementById('TO_DESC').addEventListener('blur', function () {
+    setTimeout(() => { // 延遲隱藏，確保點擊選項有效
+        document.getElementById('search-results').style.display = 'none';
+    }, 200);
+});
+
+// 當輸入框獲得焦點時，顯示篩選結果框（如果有匹配內容）
+document.getElementById('TO_DESC').addEventListener('focus', function () {
+    const resultsDiv = document.getElementById('search-results');
+    if (resultsDiv.innerHTML.trim() !== '') {
+        resultsDiv.style.display = 'block';
+    }
+});
+
+// 更新當前選中項的樣式
+function updateActiveOption(options) {
+    options.forEach((option, index) => {
+        if (index === activeIndex) {
+            option.style.backgroundColor = '#f0f0f0'; // 高亮當前選中項
         } else {
-            item.classList.remove('highlight');
+            option.style.backgroundColor = ''; // 恢復其他項
         }
     });
 }
-
-// 綁定 `TO_CODE` 的事件
-document.getElementById('TO_CODE').addEventListener('input', function(event) {
-    searchPopup(event.target.value, 'code');
-});
-document.getElementById('TO_CODE').addEventListener('keydown', function(event) {
-    handlePopupKeydown(event, 'code');
-});
-document.getElementById('TO_CODE').addEventListener('blur', function() {
-    setTimeout(() => document.getElementById('code-popup').classList.add('hidden'), 150);
-});
-
-// 綁定 `TO_DESC` 的事件
-document.getElementById('TO_DESC').addEventListener('input', function(event) {
-    searchPopup(event.target.value, 'name');
-});
-document.getElementById('TO_DESC').addEventListener('keydown', function(event) {
-    handlePopupKeydown(event, 'name');
-});
-document.getElementById('TO_DESC').addEventListener('blur', function() {
-    setTimeout(() => document.getElementById('destination-popup').classList.add('hidden'), 150);
-});
-
-// 綁定點擊事件
-['code-popup', 'destination-popup'].forEach(popupId => {
-    document.getElementById(popupId).addEventListener('mousedown', function(event) {
-        const item = event.target.closest('.popup-item');
-        if (item) {
-            const type = popupId === 'code-popup' ? 'code' : 'name';
-            selectPopupItem(item, type);
-        }
-    });
-});
 
 // 初始化拖動功能
 document.addEventListener('DOMContentLoaded', (event) => {
@@ -3790,7 +3765,6 @@ document.addEventListener('DOMContentLoaded', function () {
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
-        // calculate(); 核算
     }
 
     // 為輸出XML按鈕添加事件監聽器
