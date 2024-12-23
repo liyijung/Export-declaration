@@ -419,11 +419,14 @@ document.getElementById('TO_DESC').addEventListener('input', function () {
 
             // 點擊選項時填入對應值
             optionDiv.addEventListener('click', function () {
+                const code = this.dataset.code;
                 document.getElementById('TO_CODE').value = code; // 填入代碼
                 document.getElementById('TO_CODE').dispatchEvent(new Event('input')); // 觸發 TO_CODE 的輸入事件
-                resultsDiv.style.display = 'none'; // 隱藏下拉框
+                setTimeout(() => {
+                    resultsDiv.style.display = 'none'; // 隱藏下拉框
+                }, 100); // 確保操作完成後隱藏
             });
-
+            
             resultsDiv.appendChild(optionDiv);
         });
     } else {
@@ -472,7 +475,7 @@ document.getElementById('TO_DESC').addEventListener('keydown', function (event) 
 document.getElementById('TO_DESC').addEventListener('blur', function () {
     setTimeout(() => { // 延遲隱藏，確保點擊選項有效
         document.getElementById('search-results').style.display = 'none';
-    }, 200);
+    }, 300); // 延遲 300 毫秒
 });
 
 // 當輸入框獲得焦點時，顯示篩選結果框（如果有匹配內容）
