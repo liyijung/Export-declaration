@@ -749,3 +749,13 @@ input[type="checkbox"]:hover {
 .search-results div:hover {
     background-color: #f0f0f0;
 }
+
+.highlighted {
+    background-color: yellow; /* 背景色黃色 */
+    color: black; /* 確保文字可讀性 */
+}
+
+.header-group:focus-within label {
+    color: black;
+    font-weight: bold; /* 可選：加粗文字 */
+}
