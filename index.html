@@ -488,9 +488,9 @@
                 </datalist>
             </div>
             <div class="header-group">
-                <label for="CCC_CODE">稅則</label>
-                <input type="text" id="CCC_CODE" class="CCC_CODE" 
-                    placeholder="可輸入關鍵字按Enter查詢後選取(台灣稅則－共11碼，前6碼國際通用)" onkeydown="handleCCCCodeEnter(event, this)">
+                <label for="CCC_CODE" id="CCC_CODE_LABEL">稅則</label>
+                <input type="text" id="CCC_CODE" class="CCC_CODE"
+                    placeholder="可輸入關鍵字按Enter查詢後選取(台灣稅則－共11碼，前6碼國際通用)">
             </div>
             <div class="header-group">
                 <label for="ST_MTD">統計方式</label>
@@ -516,7 +516,8 @@
             <div class="header-group">
                 <label for="ORG_IMP_DCL_NO">原進口報單號碼</label>
                 <input type="text" id="ORG_IMP_DCL_NO" class="ORG_IMP_DCL_NO"
-                placeholder="範例：CX  13709IPORT(中間為兩位空格) 或 CXDA13709IPORT(共14碼)">
+                placeholder="範例：CX  13709IPORT(中間為兩位空格) 或 CXDA13709IPORT(共14碼)"
+                oninput="updateTaxCodeHighlight()">
             </div>
             <div class="header-group">
                 <label for="ORG_IMP_DCL_NO_ITEM">原進口報單項次</label>
@@ -557,7 +558,8 @@
             <div class="header-group">
                 <label for="ORG_DCL_NO">原進倉報單號碼</label>
                 <input type="text" id="ORG_DCL_NO" class="ORG_DCL_NO"
-                placeholder="範例：CX  13709IPORT(中間為兩位空格) 或 CXDA13709IPORT(共14碼)">
+                placeholder="範例：CX  13709IPORT(中間為兩位空格) 或 CXDA13709IPORT(共14碼)"
+                oninput="updateTaxCodeHighlight()">
             </div>
             <div class="header-group">
                 <label for="ORG_DCL_NO_ITEM">原進倉報單項次</label>
