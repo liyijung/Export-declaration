@@ -4561,3 +4561,39 @@ function showPopup(content) {
 
 // 綁定輸入框事件
 document.getElementById('SHPR_BAN_ID').addEventListener('input', thingsToNote);
+
+function updateTaxCodeHighlight() {
+    const orgImpDclNo = document.getElementById("ORG_IMP_DCL_NO").value.trim();
+    const orgDclNo = document.getElementById("ORG_DCL_NO").value.trim();
+    const cccCodeField = document.getElementById("CCC_CODE");
+    const cccCodeLabel = document.getElementById("CCC_CODE_LABEL");
+
+    if (orgImpDclNo !== "" || orgDclNo !== "") {
+        // 當其中一個欄位有值時，稅則欄位高亮
+        cccCodeField.classList.add("highlighted");
+        cccCodeLabel.classList.add("highlighted");
+    } else {
+        // 當兩個欄位都無值時，移除高亮
+        cccCodeField.classList.remove("highlighted");
+        cccCodeLabel.classList.remove("highlighted");
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    // 選取所有的 label 元素
+    const labels = document.querySelectorAll('label');
+
+    labels.forEach(label => {
+        // 當滑鼠移到 label 上時改變顏色
+        label.addEventListener('mouseover', () => {
+            label.style.color = 'black';
+            label.style.fontWeight = 'bold'; // 可選：文字加粗
+        });
+
+        // 當滑鼠移開時恢復原來樣式
+        label.addEventListener('mouseout', () => {
+            label.style.color = ''; // 恢復默認顏色
+            label.style.fontWeight = ''; // 恢復默認粗細
+        });
+    });
+});
