@@ -750,12 +750,17 @@ input[type="checkbox"]:hover {
     background-color: #f0f0f0;
 }
 
-.highlighted {
-    background-color: yellow; /* 背景色黃色 */
-    color: black; /* 確保文字可讀性 */
-}
-
 .header-group:focus-within label {
     color: black;
     font-weight: bold; /* 可選：加粗文字 */
+}
+
+/* 取消 autofill 反色 */
+input:-webkit-autofill,
+textarea:-webkit-autofill,
+select:-webkit-autofill {
+    background-color: transparent !important; /* 背景色透明 */
+    box-shadow: 0 0 0px 1000px white inset !important; /* 覆蓋 autofill 背景 */
+    -webkit-text-fill-color: inherit !important; /* 保持文字顏色 */
+    transition: background-color 5000s ease-in-out 0s; /* 防止閃爍 */
 }
