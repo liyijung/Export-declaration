@@ -2980,6 +2980,15 @@ function spreadWeight() {
     alert(`報單表頭的總淨重為：${totalNetWeight}\n各項次的淨重加總為：${adjustedTotalWeight}`);
 }
 
+// 定義快捷鍵監聽
+document.addEventListener("keydown", function(event) {
+    // 檢查是否按下 Alt + Q 或 Alt + q
+    if (event.altKey && (event.key === 'Q' || event.key === 'q')) {
+        event.preventDefault(); // 防止預設行為
+        calculate(); // 呼叫計算函數
+    }
+});
+
 function calculate() {
     calculateQuantities(); //數量核算
     calculateAmounts(); // 金額核算
