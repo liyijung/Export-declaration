@@ -2656,7 +2656,7 @@ function calculateQuantities() {
         if (stTotalQuantity > 0) {
             hasStUnitQuantities = true;
         }
-        stUnitQuantitiesString += `\n${parseFloat(stTotalQuantity.toFixed(6))} ${unit}`;
+        stUnitQuantitiesString += `\n(${parseFloat(stTotalQuantity.toFixed(6))} ${unit})`;
     }
 
     // 顯示數量總計
