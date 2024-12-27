@@ -2610,7 +2610,6 @@ function calculateAmount(event) {
 function calculateQuantities() {
     const items = document.querySelectorAll('#item-container .item-row');
     if (items.length === 0) {
-        alert('請先新增至少一個項次');
         return;
     }
 
@@ -2701,7 +2700,6 @@ function calculateAmounts() {
 
     const items = document.querySelectorAll('#item-container .item-row');
     if (items.length === 0) {
-        alert('請先新增至少一個項次');
         return;
     }
 
@@ -2800,13 +2798,11 @@ function calculateAmounts() {
 function calculateWeight() {
     const totalNetWeight = parseFloat(document.getElementById('DCL_NW').value);
     if (isNaN(totalNetWeight) || totalNetWeight <= 0) {
-        alert('請先填寫有效的總淨重');
         return;
     }
 
     const items = document.querySelectorAll('#item-container .item-row');
     if (items.length === 0) {
-        alert('請先新增至少一個項次');
         return;
     }
 
@@ -2990,6 +2986,26 @@ document.addEventListener("keydown", function(event) {
 });
 
 function calculate() {
+    let messages = []; // 用來儲存所有提示訊息
+
+    // 數量核算
+    const items = document.querySelectorAll('#item-container .item-row');
+    if (items.length === 0) {
+        messages.push('請先新增至少一個項次。');
+    }
+
+    // 總淨重檢查
+    const totalNetWeight = parseFloat(document.getElementById('DCL_NW').value);
+    if (isNaN(totalNetWeight) || totalNetWeight <= 0) {
+        messages.push('請先填寫有效的總淨重。');
+    }
+
+    // 如果有訊息，合併顯示
+    if (messages.length > 0) {
+        alert(messages.join('\n'));
+        return;
+    }
+
     calculateQuantities(); //數量核算
     calculateAmounts(); // 金額核算
     calculateWeight(); // 重量核算
