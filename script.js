@@ -470,7 +470,6 @@ function updateActiveOption(options) {
     });
 }
 
-// 初始化拖動功能
 document.addEventListener('DOMContentLoaded', (event) => {
     // 初始化拖動功能
     dragElement(document.getElementById("item-modal"), document.getElementById("item-modal-header"));
