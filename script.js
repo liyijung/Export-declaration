@@ -399,7 +399,6 @@ document.getElementById('TO_DESC').addEventListener('input', function () {
     const input = this.value.toLowerCase();
     const resultsDiv = document.getElementById('search-results');
     resultsDiv.innerHTML = ''; // 清空現有結果
-    activeIndex = -1; // 重置選中索引
 
     // 如果輸入為空，不執行篩選，直接隱藏結果框
     if (!input) {
@@ -423,7 +422,6 @@ document.getElementById('TO_DESC').addEventListener('input', function () {
                 <strong>${code}</strong> - ${name || ''} ${chinese || ''}
             `.trim(); // 結果框中顯示代碼、名稱和中文
             optionDiv.dataset.code = code;
-            optionDiv.dataset.index = index;
 
             // 點擊選項時填入對應值
             optionDiv.addEventListener('click', function () {
@@ -439,6 +437,26 @@ document.getElementById('TO_DESC').addEventListener('input', function () {
         });
     } else {
         resultsDiv.style.display = 'none'; // 沒有匹配時隱藏
+    }
+});
+
+// 監聽 Enter 鍵按下的邏輯
+document.getElementById('TO_DESC').addEventListener('keydown', function (e) {
+    const resultsDiv = document.getElementById('search-results');
+
+    if (e.key === 'Enter') {
+        e.preventDefault(); // 防止預設行為
+        const input = this.value.toLowerCase();
+
+        // 如果輸入框為空，不執行任何操作
+        if (!input) {
+            resultsDiv.style.display = 'none';
+            return;
+        }
+
+        // 手動觸發輸入事件，強制篩選和顯示下拉框
+        this.dispatchEvent(new Event('input'));
+        resultsDiv.style.display = 'block'; // 顯示結果框
     }
 });
 
