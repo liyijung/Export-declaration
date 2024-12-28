@@ -2781,7 +2781,7 @@ function calculateAmounts() {
         const description = row.querySelector('.DESCRIPTION').value.toUpperCase(); // 將描述轉為大寫
         keywords.forEach(keyword => {
             if (description.includes(keyword)) {
-                keywordAlerts.push(`➤ NO ${index + 1} 內含關鍵字 "${keyword}"，請確認是否為其他費用。`);
+                keywordAlerts.push(`\n➤ No. ${index + 1} 內含關鍵字 "${keyword}"，請確認是否為其他費用。`);
             }
         });
         calculateAmountsForRow(row, decimalPlaces);
