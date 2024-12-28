@@ -3,7 +3,7 @@ import json
 import os
 
 # 讀取 Excel 檔案
-file_path = r"C:\Users\Admin\OneDrive\桌面\海關進口稅則資料2024.xls"
+file_path = r"C:\Users\Admin\Desktop\海關進口稅則資料2024.xls"
 try:
     tax_data = pd.read_excel(file_path, dtype=str)
     print("Excel 資料成功讀取。")
