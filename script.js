@@ -4613,6 +4613,13 @@ function showPopup(content) {
     });
     popup.appendChild(closeButton);
 
+    // 添加鍵盤事件監聽
+    document.addEventListener('keydown', function escHandler(event) {
+        if (event.key === 'Escape') { // 檢查是否按下ESC鍵
+            closeButton.focus(); // 將焦點移至關閉按鈕
+        }
+    });
+    
     // 添加到頁面
     document.body.appendChild(popup);
     
