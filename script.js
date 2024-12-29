@@ -4599,9 +4599,6 @@ function showPopup(content) {
 
     // 添加到頁面
     document.body.appendChild(popup);
-
-    // 設定關閉按鈕為預設焦點
-    closeButton.focus();
     
     // 顯示彈跳框
     popup.style.display = 'block';
