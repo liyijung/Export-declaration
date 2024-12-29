@@ -54,6 +54,25 @@ window.onload = function() {
     document.getElementById("FILE_NO").focus();
 };
 
+document.addEventListener('DOMContentLoaded', () => {
+    // 選取所有的 label 元素
+    const labels = document.querySelectorAll('label');
+
+    labels.forEach(label => {
+        // 當滑鼠移到 label 上時改變顏色
+        label.addEventListener('mouseover', () => {
+            label.style.color = 'black';
+            label.style.fontWeight = 'bold'; // 可選：文字加粗
+        });
+
+        // 當滑鼠移開時恢復原來樣式
+        label.addEventListener('mouseout', () => {
+            label.style.color = ''; // 恢復默認顏色
+            label.style.fontWeight = ''; // 恢復默認粗細
+        });
+    });
+});
+
 // 【影片說明】
 function updateVideoLink() {
     var selector = document.getElementById("videoSelector");
@@ -4603,22 +4622,3 @@ function showPopup(content) {
     // 顯示彈跳框
     popup.style.display = 'block';
 }
-
-document.addEventListener('DOMContentLoaded', () => {
-    // 選取所有的 label 元素
-    const labels = document.querySelectorAll('label');
-
-    labels.forEach(label => {
-        // 當滑鼠移到 label 上時改變顏色
-        label.addEventListener('mouseover', () => {
-            label.style.color = 'black';
-            label.style.fontWeight = 'bold'; // 可選：文字加粗
-        });
-
-        // 當滑鼠移開時恢復原來樣式
-        label.addEventListener('mouseout', () => {
-            label.style.color = ''; // 恢復默認顏色
-            label.style.fontWeight = ''; // 恢復默認粗細
-        });
-    });
-});
