@@ -1724,9 +1724,9 @@ function handleFile(event) {
 
         itemsData.slice(1).forEach((row, index) => {
             const hasItemNo = row[0]; // 判斷項次是否有數據
-            const hasDescription = descriptionIndices.some(i => row[i]);
+            const allItemsEmpty = itemsData.slice(1).every(row => !row[0]); // 檢查項次是否完全空
 
-            if (hasItemNo) {
+            if (hasItemNo || allItemsEmpty) {
                 if (currentItem) {
                     currentItem.querySelector('.DESCRIPTION').value = currentDescription.trim();
                     itemContainer.appendChild(currentItem);
