@@ -887,6 +887,16 @@ document.addEventListener('keydown', function(event) {
     }
 });
 
+// 添加鍵盤事件監聽
+document.addEventListener('keydown', function escHandler(event) {
+    if (event.key === 'Escape') { // 檢查是否按下ESC鍵
+        const cancelButton = document.querySelector('.floating-buttons button[onclick="closeItemModal()"]'); // 選取取消按鈕
+        if (cancelButton) {
+            cancelButton.focus(); // 將焦點移至取消按鈕
+        }
+    }
+});
+
 // 計算彈跳框中的金額
 function calculateModalAmount() {
     const qty = document.getElementById('QTY').value || 0;
@@ -4615,8 +4625,12 @@ function showPopup(content) {
 
     // 添加鍵盤事件監聽
     document.addEventListener('keydown', function escHandler(event) {
-        if (event.key === 'Escape') { // 檢查是否按下ESC鍵
-            closeButton.focus(); // 將焦點移至關閉按鈕
+        // 檢查新增項次彈跳框是否未開啟
+        const itemModal = document.getElementById('item-modal');
+        if (itemModal && itemModal.style.display !== 'flex') {
+            if (event.key === 'Escape') { // 檢查是否按下ESC鍵
+                closeButton.focus(); // 將焦點移至關閉按鈕
+            }
         }
     });
     
