@@ -4548,12 +4548,6 @@ function closeExistingPopup() {
     }
 }
 
-document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-        closeExistingPopup();
-    }
-});
-
 function showPopup(content) {
     // 創建彈跳框元素
     const popup = document.createElement('div');
