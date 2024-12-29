@@ -4548,6 +4548,12 @@ function closeExistingPopup() {
     }
 }
 
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        closeExistingPopup();
+    }
+});
+
 function showPopup(content) {
     // 創建彈跳框元素
     const popup = document.createElement('div');
@@ -4610,9 +4616,6 @@ function showPopup(content) {
     closeButton.style.right = '10px';
     closeButton.addEventListener('click', () => {
         popup.remove();
-
-        // **在關閉彈跳框後將焦點移回 SHPR_BAN_ID 欄位**
-        document.getElementById('SHPR_BAN_ID').focus();
     });
     popup.appendChild(closeButton);
 
