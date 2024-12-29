@@ -443,11 +443,18 @@
     <!-- 新增項次彈跳框 -->
     <div id="item-modal" class="modal">
         <div class="modal-content">
+            <div class="floating-buttons">
+                <button id="rememberButton" onclick="rememberItemModalData()">記憶</button>
+                <button onclick="clearAllFields()">清空</button>
+                ｜                
+                <button onclick="saveItem()" title="快捷鍵 Alt + S">儲存</button>
+                <button onclick="closeItemModal()">取消</button>
+            </div>
             <div class="modal-header" id="item-modal-header">
                 <h2>新增項次</h2>
             </div>
             <div class="flex-group">
-                <input type="checkbox" id="ITEM_NO" name="HAS_MAJOR_NAME" onchange="toggleMajorName(event)">
+                <input type="checkbox" id="ITEM_NO" name="HAS_MAJOR_NAME" onchange="toggleMajorName(event)" tabindex="-1">
                 <label for="ITEM_NO">大品名註記(勾選大品名註記時，只需填寫品名)</label>
             </div>
             <div class="header-group">
@@ -607,13 +614,6 @@
                 <input type="text" id="ST_UM" class="ST_UM" readonly tabindex="-1"
                 placeholder="(由稅則統計數量單位自動帶入)">
             </div>           
-            <div class="floating-buttons">
-                <button id="rememberButton" onclick="rememberItemModalData()" tabindex="-1">記憶</button>
-                <button onclick="clearAllFields()" tabindex="-1">清空</button>
-                ｜                
-                <button onclick="saveItem()" title="快捷鍵 Alt + S" tabindex="-1">儲存</button>
-                <button onclick="closeItemModal()" tabindex="-1">取消</button>
-            </div>
         </div>
     </div>
 
