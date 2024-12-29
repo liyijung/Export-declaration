@@ -1722,11 +1722,11 @@ function handleFile(event) {
             "圓PIN": "8533900000",
         };
 
+        const allItemsEmpty = itemsData.slice(1).every(row => !row[0]); // 檢查項次是否完全空
         itemsData.slice(1).forEach((row, index) => {
             const hasItemNo = row[0]; // 判斷項次是否有數據
-            const allItemsEmpty = itemsData.slice(1).every(row => !row[0]); // 檢查項次是否完全空
 
-            if (hasItemNo || allItemsEmpty) {
+            if (hasItemNo || allItemsEmpty || itemsData[1] === row) {
                 if (currentItem) {
                     currentItem.querySelector('.DESCRIPTION').value = currentDescription.trim();
                     itemContainer.appendChild(currentItem);
