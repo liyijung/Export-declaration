@@ -4230,8 +4230,23 @@ function summarizeOrgCountry() {
 
 }
 
+// 添加錯誤樣式
+function setError(element, message) {
+    element.classList.add('error');
+    element.title = message; // 顯示提示訊息
+}
+
+// 清除錯誤樣式
+function clearErrors() {
+    document.querySelectorAll('.error').forEach(el => {
+        el.classList.remove('error');
+        el.removeAttribute('title');
+    });
+}
+
 // 檢查統計方式、生產國別、原進口報單、報單類別
 function validateDclDocType() {
+    clearErrors(); // 清除之前的錯誤標記
     const dclDocType = document.getElementById('DCL_DOC_TYPE').value.trim().toUpperCase();
     const stMtdCondition1 = ["02", "04", "05", "06", "2L", "2R", "7M", "1A", "94", "95"];
     const stMtdCondition2 = ["81", "82", "8B", "8C", "9N", "8A", "8D", "92", "99", "9M"];
@@ -4239,6 +4254,7 @@ function validateDclDocType() {
 
     // 檢查 G5 或 G3 的條件
     if (["G5", "G3"].includes(dclDocType)) {
+        let containsMandatoryOrgCountryTW = false; // 標記是否包含 ST_MTD 為 國貨出口統計方式 的項次
         let containsMandatoryOrgCountry = false; // 標記是否包含 ST_MTD 為 外貨復出口統計方式 的項次
         let hasEmptyOrgCountry = false; // 標記是否存在空的 ORG_COUNTRY
         let allCondition1 = true; // 是否所有統計方式都屬於條件 1
@@ -4265,36 +4281,44 @@ function validateDclDocType() {
             // 檢查條件 1：ST_MTD 為指定值且 ORG_COUNTRY 不為空或不為 TW，且 ORG_IMP_DCL_NO 不應有值
             if (stMtdCondition1.includes(stMtdValue) && !isItemChecked) {
                 totalCondition1 += docTotPValue; // 加總條件 1 的金額
+                containsMandatoryOrgCountryTW = true;
                 if (orgCountryValue && orgCountryValue.toUpperCase() !== "TW") {
                     validationErrors.add(
                         `國貨出口統計方式，生產國別應為空或 TW`
                     );
+                    setError(item.querySelector(".ST_MTD"), "國貨出口統計方式");
+                    setError(item.querySelector(".ORG_COUNTRY"), "生產國別應為空或 TW");
                 }
                 if (orgImpDclNo) {
                     validationErrors.add(
-                        `國貨出口統計方式，原進口報單號碼不應有值`
+                        `國貨出口統計方式，原進口報單號碼及項次不應有值`
                     );
+                    setError(item.querySelector(".ST_MTD"), "國貨出口統計方式");
+                    setError(item.querySelector(".ORG_IMP_DCL_NO"), "原進口報單號碼及項次不應有值");
+                    setError(item.querySelector(".ORG_IMP_DCL_NO_ITEM"), "原進口報單號碼及項次不應有值");
                 }
             }
     
             // 檢查條件 2：ST_MTD 為 外貨復出口統計方式 時
             if (stMtdCondition2.includes(stMtdValue) && !isItemChecked) {
                 totalCondition2 += docTotPValue; // 加總條件 2 的金額
-                containsMandatoryOrgCountry = true; // 標記需要檢查所有項次的 ORG_COUNTRY
+                containsMandatoryOrgCountry = true;
                 if (!orgCountryValue || orgCountryValue.trim() === "") {
-                    validationErrors.add(
-                        `外貨復出口統計方式，生產國別不可為空`
-                    );
+                    setError(item.querySelector(".ST_MTD"), "外貨復出口統計方式");
+                    setError(item.querySelector(".ORG_COUNTRY"), "生產國別不可為空");
                 } else if (orgCountryValue.toUpperCase() === "TW") {
                     if (!orgImpDclNo || orgImpDclNo.trim() === "") {
                         validationErrors.add(
-                            `外貨復出口統計方式且生產國別為 TW\n` +
-                            `原進口報單號碼 及 原進口報單項次 不可為空`
+                            `外貨復出口統計方式且生產國別為 TW，\n` +
+                            `原進口報單號碼及項次不可為空`
                         );
+                        setError(item.querySelector(".ST_MTD"), "外貨復出口統計方式");
+                        setError(item.querySelector(".ORG_COUNTRY"), "且生產國別為 TW");
+                        setError(item.querySelector(".ORG_IMP_DCL_NO"), "原進口報單號碼及項次不可為空");
+                        setError(item.querySelector(".ORG_IMP_DCL_NO_ITEM"), "原進口報單號碼及項次不可為空");
                     }
                 }
             }
-    
             // 標記是否存在空的 ORG_COUNTRY
             if ((!orgCountryValue || orgCountryValue.trim() === "") && !isItemChecked) {
                 hasEmptyOrgCountry = true;
@@ -4302,8 +4326,10 @@ function validateDclDocType() {
         });
     
         // 檢查條件 3：若有 ST_MTD 為 外貨復出口統計方式，則所有項次的 ORG_COUNTRY 不可為空
-        if (containsMandatoryOrgCountry && hasEmptyOrgCountry) {
-            validationErrors.add("國洋貨合併申報，生產國別必填（國貨請填 TW ）");
+        if (containsMandatoryOrgCountry && containsMandatoryOrgCountryTW && hasEmptyOrgCountry) {
+            validationErrors.add("國洋貨合併申報，生產國別不可為空（國貨請填 TW ）");
+        } else if (containsMandatoryOrgCountry && hasEmptyOrgCountry) {
+            validationErrors.add(`外貨復出口統計方式，生產國別不可為空`);
         }
     
         // 檢查條件 4：報單類別與統計方式是否相符
