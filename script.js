@@ -2886,11 +2886,19 @@ function spreadWeight() {
         return;
     }
 
-    const decimalPlacesInput = document.getElementById('decimal-places-weight');
-    let decimalPlaces = parseInt(decimalPlacesInput.value);
+    // 詢問使用者輸入小數位數
+    let decimalPlacesInput = prompt('請輸入重量小數位數 (0-6，預設為2)：', '2');
 
-    // 確保小數點位數最小為0，並預設為2
-    if (isNaN(decimalPlaces) || decimalPlaces < 0) {
+    // 如果按下取消鍵則終止
+    if (decimalPlacesInput === null) {
+        return;
+    }
+
+    // 嘗試將輸入轉為整數
+    let decimalPlaces = parseInt(decimalPlacesInput, 10);
+
+    // 確保輸入有效，預設為2，範圍為0-6
+    if (isNaN(decimalPlaces) || decimalPlaces < 0 || decimalPlaces > 6) {
         decimalPlaces = 2;
     }
 
@@ -2924,11 +2932,6 @@ function spreadWeight() {
 
     if (totalQuantity <= 0) {
         alert('未鎖定的數量總和必須大於零');
-        return;
-    }
-
-    // 確認是否進行分配
-    if (!confirm('確定要分配淨重嗎？')) {
         return;
     }
 
