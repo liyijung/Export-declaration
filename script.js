@@ -4328,9 +4328,12 @@ function validateDclDocType() {
         // 檢查條件 3：若有 ST_MTD 為 外貨復出口統計方式，則所有項次的 ORG_COUNTRY 不可為空
         if (containsMandatoryOrgCountry && containsMandatoryOrgCountryTW && hasEmptyOrgCountry) {
             rows.forEach(item => {
-                const orgCountryValue = item.querySelector(".ORG_COUNTRY")?.value.trim();
-                if (!orgCountryValue || orgCountryValue.trim() === "") {
-                    setError(item.querySelector(".ORG_COUNTRY"), "生產國別不可為空");
+                const isItemChecked = item.querySelector(".ITEM_NO")?.checked;
+                if (!isItemChecked) {
+                    const orgCountryValue = item.querySelector(".ORG_COUNTRY")?.value.trim();
+                    if (!orgCountryValue || orgCountryValue.trim() === "") {
+                        setError(item.querySelector(".ORG_COUNTRY"), "生產國別不可為空");
+                    }
                 }
             });
             validationErrors.add("國洋貨合併申報，生產國別不可為空（國貨請填 TW ）");
