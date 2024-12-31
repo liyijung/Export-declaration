@@ -768,3 +768,60 @@ select:-webkit-autofill {
 .error {
     background-color: #ffeb3b; /* 黃色背景 */
 }
+
+/* 外層容器樣式 */
+.container {
+    display: flex;
+    align-items: center;
+    gap: 20px; /* 控制 add-buttons 和 shortcut-help-block 間距 */
+}
+
+/* 快捷鍵說明獨立區塊 */
+.shortcut-help-block {
+    position: relative;
+    padding: 2px 2px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    white-space: nowrap; /* 防止文字換行 */
+    margin-bottom: 2px; /* 增加下方間距 */
+}
+
+/* 快捷鍵彈跳框樣式 */
+.shortcut-help-modal {
+    display: none;
+    position: absolute;
+    top: 30px; /* 向下偏移 */
+    left: 0;
+    background: white;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    width: 350px;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+/* 滑鼠移入時顯示彈跳框 */
+.shortcut-help-block:hover .shortcut-help-modal {
+    display: block;
+}
+
+/* 標題樣式 */
+.shortcut-help-modal h3 {
+    margin-top: 0;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+}
+
+/* 快捷鍵清單樣式 */
+.shortcut-help-modal ul {
+    padding-left: 20px;
+    margin: 0;
+    list-style-type: disc;
+}
