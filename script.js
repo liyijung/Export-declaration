@@ -4468,7 +4468,7 @@ const excelFilePath = './出口長委登記表.xlsx';
 function fetchAndParseExcel(callback) {
     fetch(excelFilePath)
         .then(response => {
-            if (!response.ok) throw new Error('無法讀取 Excel 檔案');
+            if (!response.ok) throw new Error('無法讀取出口長委登記表');
             return response.arrayBuffer();
         })
         .then(data => {
@@ -4478,8 +4478,8 @@ function fetchAndParseExcel(callback) {
             callback(rows);
         })
         .catch(error => {
-            console.error('讀取 Excel 檔案時發生錯誤:', error);
-            alert('讀取 Excel 檔案失敗');
+            console.error('讀取出口長委登記表時發生錯誤:', error);
+            alert('讀取出口長委登記表失敗');
         });
 }
 
@@ -4537,7 +4537,7 @@ const thingsToNoteExcelFilePath = './thingsToNote.xlsx';
 function thingsToNoteExcel(callback) {
     fetch(thingsToNoteExcelFilePath)
         .then(response => {
-            if (!response.ok) throw new Error('無法讀取 Excel 檔案');
+            if (!response.ok) throw new Error('無法讀取出口備註');
             return response.arrayBuffer();
         })
         .then(data => {
@@ -4547,8 +4547,8 @@ function thingsToNoteExcel(callback) {
             callback(rows);
         })
         .catch(error => {
-            console.error('讀取 Excel 檔案時發生錯誤:', error);
-            alert('讀取 Excel 檔案失敗');
+            console.error('讀取出口備註時發生錯誤:', error);
+            alert('讀取出口備註失敗');
         });
 }
 
