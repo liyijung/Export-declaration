@@ -321,13 +321,36 @@
                 <!--<button id="calculate-weight-btn" style="color: #005feec5;" onclick="calculateWeight()">重量核算</button>-->
                 <button id="spread-weight-btn" onclick="spreadWeight()">攤重</button>
                 <button id="calculate-amounts-btn" style="color: #005feec5;" onclick="calculate()" title="快捷鍵 Alt + Q">核算</button>
-                <input type="number" id="decimal-places" placeholder="金額小數位" min="0" max="6" style="width: 60px; font-size: 12px;">                
+                <input type="number" id="decimal-places" placeholder="金額小數位" min="0" max="6" style="width: 60px; font-size: 12px;">
             </div>
-            <div class="add-buttons">
-                <input type="checkbox" id="toggle-fix-top" onclick="toggleFixTop()">
-                <label for="toggle-fix-top">固定欄位標題</label>
-                <input type="checkbox" id="toggle-width" onclick="toggleWidth()">
-                <label for="toggle-width">固定頁面寬度</label>
+            <div class="container">
+                <div class="add-buttons">
+                    <input type="checkbox" id="toggle-fix-top" onclick="toggleFixTop()">
+                    <label for="toggle-fix-top">固定欄位標題</label>
+                    <input type="checkbox" id="toggle-width" onclick="toggleWidth()">
+                    <label for="toggle-width">固定頁面寬度</label>
+                </div>
+                <!-- 快捷鍵說明獨立區塊 -->
+                <div id="shortcut-help-block" class="shortcut-help-block">
+                    快捷鍵說明
+                    <!-- 快捷鍵說明彈跳框 -->
+                    <div id="shortcut-help-modal" class="shortcut-help-modal">
+                        <h3>快捷鍵說明</h3>
+                        <ul>
+                            <li>Ctrl + 左/右方向鍵：切換標籤頁</li>
+                            <li>Ctrl + 鼠標捲軸：放大縮小頁面</li>
+                            <li>Alt + A：開啟新增項次彈跳框</li>
+                            <li>Alt + S：儲存新增項次（彈跳框內）</li>
+                            <li>Alt + S：新增項次 - 橫屏（彈跳框內最後顯示的畫面內容）</li>
+                            <li>Alt + W：切換展開／折疊全部品名</li>
+                            <li>Alt + Q：核算</li>
+                            <li>Alt + 左/右方向鍵：頁面左右捲動</li>
+                            <li>Page Up/Down：頁面上下捲動</li>
+                            <li>Win + 左/右方向鍵：頁面靠左、靠右</li>
+                            <li>Win + 上/下方向鍵：頁面全屏或取消全屏</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
             <div class="item-row item-header">
                 <div class="form-group fix item-no item-no-header" onclick="toggleAllItems()">
