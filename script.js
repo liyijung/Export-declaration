@@ -189,18 +189,18 @@ function smoothScrollBy(deltaX, deltaY, duration = 200) {
     requestAnimationFrame(step);
 }
 
-// 處理 Alt+PageUp、Alt+PageDown、PageUp 和 PageDown 的捲動
+// 處理 Alt+ArrowLeft、Alt+ArrowRight、PageUp 和 PageDown 的捲動
 function handlePageScroll(event) {
     const scrollHorizontalAmount = window.innerWidth * 0.85; // 水平捲動距離
     const scrollVerticalAmount = window.innerHeight * 0.75; // 垂直捲動距離
     const duration = 150; // 設定更快的捲動速度（時間以毫秒為單位）
 
-    if (event.altKey && event.key === 'PageUp') {
-        // Alt+PageUp 向左捲動
+    if (event.altKey && event.key === 'ArrowLeft') {
+        // Alt+ArrowLeft 向左捲動
         smoothScrollBy(-scrollHorizontalAmount, 0, duration);
         event.preventDefault(); // 防止預設行為
-    } else if (event.altKey && event.key === 'PageDown') {
-        // Alt+PageDown 向右捲動
+    } else if (event.altKey && event.key === 'ArrowRight') {
+        // Alt+ArrowRight 向右捲動
         smoothScrollBy(scrollHorizontalAmount, 0, duration);
         event.preventDefault(); // 防止預設行為
     } else if (!event.altKey && event.key === 'PageUp') {
@@ -229,6 +229,20 @@ function restrictAltKeyCombos(event) {
 
 // 監聽鍵盤按下事件
 document.addEventListener('keydown', restrictAltKeyCombos);
+
+// 獲取文字區塊與彈跳框元素
+const shortcutHelpBlock = document.getElementById('shortcut-help-block');
+const shortcutHelpModal = document.getElementById('shortcut-help-modal');
+
+// 滑鼠移入時顯示快捷鍵說明
+shortcutHelpBlock.addEventListener('mouseenter', () => {
+    shortcutHelpModal.style.display = 'block';
+});
+
+// 滑鼠移出時隱藏快捷鍵說明
+shortcutHelpBlock.addEventListener('mouseleave', () => {
+    shortcutHelpModal.style.display = 'none';
+});
 
 // 切換所有項次編號的反色
 document.addEventListener('DOMContentLoaded', function() {
