@@ -779,7 +779,7 @@ select:-webkit-autofill {
 /* 快捷鍵說明獨立區塊 */
 .shortcut-help-block {
     position: relative;
-    cursor: pointer;
+    cursor: help; /* 問號指標 */
     font-size: 13px; /* 與彈跳框文字大小一致 */
     color: #005feec5; /* 藍色文字，與彈跳框一致 */
     white-space: nowrap; /* 防止文字換行 */
