@@ -792,25 +792,26 @@ select:-webkit-autofill {
 
 /* 快捷鍵彈跳框樣式 */
 .shortcut-help-modal {
-    display: none;
-    position: absolute;
-    top: 30px;
-    left: 0;
+    display: none; /* 初始狀態隱藏 */
+    position: fixed; /* 固定在視窗中 */
+    top: 50%; /* 垂直居中 */
+    left: 50%; /* 水平居中 */
+    transform: translate(-50%, -50%); /* 偏移自身寬高一半實現精確居中 */
     background: #fdfdfd; /* 純白背景 */
     border: 1px solid #d3d3d3; /* 淺灰色邊框 */
     padding: 10px;
     border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* 輕微陰影 */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 輕微陰影 */
     z-index: 1000;
     width: 350px;
-    font-size: 13px; /* 與獨立區塊文字大小一致 */
+    font-size: 13px;
     line-height: 1.6;
     color: #005feec5; /* 藍色文字 */
 }
 
 /* 滑鼠移入時顯示彈跳框 */
 .shortcut-help-block:hover .shortcut-help-modal {
-    display: block;
+    display: block; /* 顯示彈跳框 */
 }
 
 /* 標題樣式 */
