@@ -779,31 +779,33 @@ select:-webkit-autofill {
 /* 快捷鍵說明獨立區塊 */
 .shortcut-help-block {
     position: relative;
-    padding: 2px 2px;
-    background-color: #f0f0f0;
-    border: 1px solid #ccc;
-    border-radius: 5px;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 13px; /* 與彈跳框文字大小一致 */
+    color: #005feec5; /* 藍色文字，與彈跳框一致 */
     white-space: nowrap; /* 防止文字換行 */
-    margin-bottom: 2px; /* 增加下方間距 */
+    background-color: #fdfdfd; /* 純白背景，與彈跳框一致 */
+    padding: 2px; /* 添加內部填充 */
+    border-radius: 5px; /* 圓角與彈跳框一致 */
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2); /* 添加輕微陰影 */
+    margin-bottom: 2px;
 }
 
 /* 快捷鍵彈跳框樣式 */
 .shortcut-help-modal {
     display: none;
     position: absolute;
-    top: 30px; /* 向下偏移 */
+    top: 30px;
     left: 0;
-    background: white;
-    border: 1px solid #ccc;
+    background: #fdfdfd; /* 純白背景 */
+    border: 1px solid #d3d3d3; /* 淺灰色邊框 */
     padding: 10px;
     border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* 輕微陰影 */
     z-index: 1000;
     width: 350px;
-    font-size: 13px;
+    font-size: 13px; /* 與獨立區塊文字大小一致 */
     line-height: 1.6;
+    color: #005feec5; /* 藍色文字 */
 }
 
 /* 滑鼠移入時顯示彈跳框 */
@@ -817,6 +819,7 @@ select:-webkit-autofill {
     font-size: 14px;
     font-weight: bold;
     text-align: center;
+    color: #005feec5; /* 藍色文字 */
 }
 
 /* 快捷鍵清單樣式 */
@@ -824,4 +827,12 @@ select:-webkit-autofill {
     padding-left: 20px;
     margin: 0;
     list-style-type: disc;
+    color: #005feec5; /* 藍色文字 */
+}
+
+/* 快捷鍵項目樣式 */
+.shortcut-help-modal li {
+    margin-bottom: 5px;
+    color: #005feec5; /* 藍色文字 */
+    font-size: 13px; /* 保持與彈跳框內容一致的字體大小 */
 }
