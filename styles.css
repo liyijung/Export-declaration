@@ -650,6 +650,7 @@ input[type="checkbox"]:hover {
 }
 
 .reminder-message-red {
+    display: flex;
     color: rgba(255, 0, 0, 0.634); /* 設置字體顏色，與現有的內聯樣式相同 */
     font-size: 16px; /* 設置字體大小 */
     font-weight: bold; /* 設置文字加粗 */
@@ -663,6 +664,7 @@ input[type="checkbox"]:hover {
 }
 
 .reminder-message-blue {
+    display: flex;
     color: rgba(0, 0, 255, 0.634); /* 將字體顏色設為藍色 */
     font-size: 16px; /* 設置字體大小 */
     font-weight: bold; /* 設置文字加粗 */
