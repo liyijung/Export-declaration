@@ -803,7 +803,7 @@ select:-webkit-autofill {
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 輕微陰影 */
     z-index: 1000;
-    width: 350px;
+    width: 360px;
     font-size: 13px;
     line-height: 1.6;
     color: #005feec5; /* 藍色文字 */
