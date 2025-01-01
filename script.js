@@ -1003,7 +1003,6 @@ function rememberItemModalData() {
         WIDE_UM: document.getElementById('WIDE_UM').value,
         LENGT_: document.getElementById('LENGT_').value,
         LENGTH_UM: document.getElementById('LENGTH_UM').value,
-        ST_QTY: document.getElementById('ST_QTY').value,
         ST_UM: document.getElementById('ST_UM').value
     };
 
