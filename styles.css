@@ -651,9 +651,7 @@ input[type="checkbox"]:hover {
 
 .reminder-message {
     display: flex;
-    align-items:flex-start;
-    justify-content: flex-start;
-    font-size: 16px; /* 設置字體大小 */
+    font-size: 1rem; /* 設置字體大小 */
     font-weight: bold; /* 設置文字加粗 */
     padding: 10px; /* 添加內部邊距 */
     border-radius: 5px; /* 使背景邊角圓滑 */
