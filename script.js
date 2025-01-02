@@ -2762,6 +2762,17 @@ function calculateAmounts() {
         return;
     }
 
+    // 遍歷每個項次，先計算 DOC_TOT_P = QTY * DOC_UNIT_P
+    items.forEach((row) => {
+        const qty = parseFloat(row.querySelector('.QTY').value) || 0; // 數量
+        const unitPrice = parseFloat(row.querySelector('.DOC_UNIT_P').value) || 0; // 單價
+        const totalPriceField = row.querySelector('.DOC_TOT_P'); // 總金額欄位
+
+        // 計算總金額並更新欄位
+        const totalPrice = qty * unitPrice;
+        totalPriceField.value = totalPrice.toFixed(decimalPlaces); // 更新欄位值，保留指定小數位數
+    });
+    
     // 計算各項次金額的加總
     let totalItemsAmount = Array.from(items).reduce((sum, item) => {
         const amount = parseFloat(item.querySelector('.DOC_TOT_P').value);
