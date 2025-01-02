@@ -671,6 +671,14 @@ input[type="checkbox"]:hover {
     border: 1px solid #add8e6; /* 為訊息區域添加淺藍色邊框 */
 }
 
+/* 手機橫屏模式，保持字體大小不變 */
+@media screen and (max-width: 768px) and (orientation: landscape) {
+    #header .reminder-message,
+    #bonded .reminder-message {
+        font-size: 16px; /* 確保橫屏模式字體大小不變 */
+    }
+}
+
 .vertical-text {
     writing-mode: vertical-rl; /* 垂直排列文字 */
     padding: 0px 3.5px 0px 0px; /* 調整間距 */
