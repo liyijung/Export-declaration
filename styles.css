@@ -3,6 +3,7 @@ body {
     padding: 0;
     font-family: 'Source Han Sans TC', sans-serif;
     margin-bottom: 55px;
+    font-size: 100%; /* 確保字體比例正常 */
 }
 
 .tabs-wrapper {
