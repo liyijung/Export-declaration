@@ -142,7 +142,6 @@ body {
 .header-group {
     position: relative;
     display: flex;
-    align-items: flex-start;
     justify-content: flex-start;
     margin-top: 5px;
     margin-bottom: 5px;
@@ -170,10 +169,6 @@ body {
 
 #bonded .header-group label {
     width: 170px;
-}
-
-#bonded .header-group {
-    display: flex;
 }
 
 .form-group .remove-item {
