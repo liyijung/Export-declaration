@@ -2665,8 +2665,22 @@ function calculateAmount(event) {
     }
 }
 
+function updateAllTariffs() {
+    const items = document.querySelectorAll('#item-container .item-row');
+    items.forEach(row => {
+        const cccCodeElement = row.querySelector('.CCC_CODE');
+        if (cccCodeElement && cccCodeElement.value.trim() !== '') {
+            const keyword = cccCodeElement.value.trim().replace(/[.\-\s]/g, ''); // 清理代碼格式
+            updateTariff(cccCodeElement, keyword); // 執行更新
+        }
+    });
+}
+
 // 數量核算
 function calculateQuantities() {
+    // 在執行計算前先更新所有稅則
+    updateAllTariffs();
+
     const items = document.querySelectorAll('#item-container .item-row');
     if (items.length === 0) {
         return;
