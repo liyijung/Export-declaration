@@ -121,7 +121,7 @@ async function exportToPDF() {
         
         // 添加二維條碼
         const barcodeCanvas = document.createElement('canvas');
-        JsBarcode(barcodeCanvas, 'CX 13696', {
+        JsBarcode(barcodeCanvas, 'CX 14696', {
             format: 'CODE128',
             width: 3,           // 調整寬度，讓條碼變長（默認為 2）
             height: 40,         // 可以適當調低高度來強調長度
