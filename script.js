@@ -4469,7 +4469,7 @@ function validateDclDocType() {
             // 檢查其他項次中是否有統計方式為 9E，但保稅貨物註記不為 YB 或 CN
             if (stMtdValue === "9E") {
                 const bondNoteValue = item.querySelector(".BOND_NOTE")?.value.trim();
-                if (bondNoteValue !== "YB" || bondNoteValue !== "CN") {
+                if (bondNoteValue !== "YB" && bondNoteValue !== "CN") {
                     validationErrors.add(`統計方式為 9E，保稅貨物註記須為 YB 或 CN`);
                 }
             }
