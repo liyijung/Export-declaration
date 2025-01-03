@@ -4451,7 +4451,7 @@ function validateDclDocType() {
                 if (!isItemChecked) {
                     if (!stMtdCondition1.includes(stMtdValue)) {
                         if (stMtdValue !== "53" && stMtdValue !== "9E") {
-                            validationErrors.add("B9 報單第一個項次，須為國貨統計方式");
+                            validationErrors.add("B9 報單第一個項次，應為國貨統計方式");
                         }
                     }
                     firstValueChecked = true; // 標記已檢查第一個有值的項次
@@ -4462,7 +4462,7 @@ function validateDclDocType() {
             if (stMtdValue === "53") {
                 const bondNoteValue = item.querySelector(".BOND_NOTE")?.value.trim();
                 if (bondNoteValue !== "NB") {
-                    validationErrors.add(`統計方式為 53，保稅貨物註記須為 NB`);
+                    validationErrors.add(`統計方式為 53，保稅貨物註記應為 NB`);
                 }
             }
 
@@ -4470,7 +4470,7 @@ function validateDclDocType() {
             if (stMtdValue === "9E") {
                 const bondNoteValue = item.querySelector(".BOND_NOTE")?.value.trim();
                 if (bondNoteValue !== "YB" && bondNoteValue !== "CN") {
-                    validationErrors.add(`統計方式為 9E，保稅貨物註記須為 YB 或 CN`);
+                    validationErrors.add(`統計方式為 9E，保稅貨物註記應為 YB 或 CN`);
                 }
             }
         });
