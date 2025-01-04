@@ -3083,32 +3083,6 @@ function applySpreadWeight() {
     closeSpreadWeightModal(); // 關閉彈跳框
 }
 
-// 將範圍字串轉換為數字陣列
-function parseRanges(rangeInput) {
-    try {
-        let ranges = [];
-        const parts = rangeInput.split(",");
-        parts.forEach(part => {
-            if (part.includes("-")) {
-                const [start, end] = part.split("-").map(num => parseInt(num.trim(), 10));
-                if (!isNaN(start) && !isNaN(end)) {
-                    for (let i = start; i <= end; i++) {
-                        ranges.push(i);
-                    }
-                }
-            } else {
-                const num = parseInt(part.trim(), 10);
-                if (!isNaN(num)) {
-                    ranges.push(num);
-                }
-            }
-        });
-        return ranges;
-    } catch (error) {
-        return null;
-    }
-}
-
 // 計算總重量的輔助函數
 function calculateTotalWeight(items) {
     return items.reduce((sum, item) => {
