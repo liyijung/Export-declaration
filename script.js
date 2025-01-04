@@ -3001,11 +3001,11 @@ function enableModalDrag() {
         // 獲取彈跳框當前位置
         const rect = modal.getBoundingClientRect();
 
-        // 記錄滑鼠與彈跳框的相對位置
-        startX = event.clientX;
-        startY = event.clientY;
-        initialLeft = rect.left;
-        initialTop = rect.top;
+        // 記錄滑鼠與彈跳框的相對位置，考慮捲軸偏移
+        startX = event.clientX + window.scrollX;
+        startY = event.clientY + window.scrollY;
+        initialLeft = rect.left + window.scrollX;
+        initialTop = rect.top + window.scrollY;
 
         // 顯示透明遮罩
         overlay.style.display = "block";
@@ -3016,9 +3016,11 @@ function enableModalDrag() {
 
     document.addEventListener("mousemove", (event) => {
         if (isDragging) {
-            // 計算新的位置
-            const deltaX = event.clientX - startX;
-            const deltaY = event.clientY - startY;
+            // 計算新的位置，考慮捲軸偏移
+            const currentX = event.clientX + window.scrollX;
+            const currentY = event.clientY + window.scrollY;
+            const deltaX = currentX - startX;
+            const deltaY = currentY - startY;
 
             modal.style.left = initialLeft + deltaX + "px";
             modal.style.top = initialTop + deltaY + "px";
@@ -3197,7 +3199,7 @@ function spreadWeightSpecific(ranges, specificWeight, weightDecimalPlaces, lockA
     let totalQuantity = 0; // 未鎖定項次的總數量
     let validItems = []; // 可分配重量的項次
     let lockedWeight = 0; // 已鎖定的總重量
-    const minWeight = Math.pow(10, -weightDecimalPlaces); // 最小分配重量，例如 1 位小數為 0.1，2 位小數為 0.01
+    const minWeight = Math.pow(10, -weightDecimalPlaces); // 最小分配重量
 
     // 檢查範圍內的項次
     items.forEach((item, index) => {
@@ -3211,7 +3213,7 @@ function spreadWeightSpecific(ranges, specificWeight, weightDecimalPlaces, lockA
             }
             netWeight = 0;
         }
-        
+                
         const itemNo = index + 1; // 假設項次從1開始
         if (ranges.includes(itemNo)) {
             const checkbox = item.querySelector('.ISCALC_WT');
@@ -3219,7 +3221,7 @@ function spreadWeightSpecific(ranges, specificWeight, weightDecimalPlaces, lockA
             const quantity = parseFloat(item.querySelector('.QTY').value);
 
             if (!isNaN(netWeight) && checkbox && checkbox.checked) {
-                // 如果項次已鎖定，累加到已鎖定的總重量
+                // 已鎖定項次的重量加總
                 lockedWeight += netWeight;
             } else if (!isNaN(quantity) && quantity > 0) {
                 // 未鎖定項次，加入到可分配列表
@@ -3233,7 +3235,7 @@ function spreadWeightSpecific(ranges, specificWeight, weightDecimalPlaces, lockA
     let remainingWeight = specificWeight - lockedWeight;
 
     if (remainingWeight <= 0) {
-        alert(`攤重失敗！\n已鎖定項次的重量加總 (${parseFloat(lockedWeight.toFixed(6))}) 超過指定項次總重量 (${specificWeight})`);
+        alert(`攤重失敗！\n已鎖定項次的重量加總 (${lockedWeight.toFixed(weightDecimalPlaces)}) 超過指定項次總重量 (${specificWeight})`);
         return;
     }
 
@@ -3242,34 +3244,36 @@ function spreadWeightSpecific(ranges, specificWeight, weightDecimalPlaces, lockA
         return;
     }
 
-    // 按比例分配剩餘重量到未鎖定的項次，先分配最小重量
+    // 計算每個單位的重量
+    const weightPerUnit = remainingWeight / totalQuantity;
+
+    // 分配重量到未鎖定的項次
+    let distributedWeights = [];
     validItems.forEach(item => {
-        const netWtElement = items[item.index].querySelector('.NET_WT');
-        let netWeight = parseFloat(((item.quantity / totalQuantity) * remainingWeight).toFixed(weightDecimalPlaces));
-
-        if (netWeight < minWeight) {
-            netWeight = minWeight; // 分配最小重量
-        }
-
-        netWtElement.value = netWeight.toFixed(weightDecimalPlaces);
-        remainingWeight -= netWeight; // 扣除已分配重量
+        let weight = parseFloat((item.quantity * weightPerUnit).toFixed(weightDecimalPlaces));
+        weight = Math.max(weight, minWeight); // 確保重量不小於最小分配值
+        distributedWeights.push({ index: item.index, netWeight: weight });
     });
 
-    // 確保實際分配總重量等於指定總重量
-    const allocatedTotalWeight = validItems.reduce((sum, item) => {
-        const netWeight = parseFloat(items[item.index].querySelector('.NET_WT').value);
-        return sum + (isNaN(netWeight) ? 0 : netWeight);
-    }, 0);
+    // 計算分配後的實際加總重量
+    const allocatedTotalWeight = distributedWeights.reduce((sum, item) => sum + item.netWeight, 0);
 
+    // 調整誤差值
     let discrepancy = specificWeight - lockedWeight - allocatedTotalWeight;
-
     if (Math.abs(discrepancy) > 0) {
-        // 將差額調整到最後一個未鎖定的項次
-        const lastItem = validItems[validItems.length - 1];
-        const lastNetWtElement = items[lastItem.index].querySelector('.NET_WT');
-        const adjustedWeight = parseFloat(lastNetWtElement.value) + discrepancy;
-        lastNetWtElement.value = adjustedWeight.toFixed(weightDecimalPlaces);
+        const largestItem = distributedWeights.reduce((prev, current) => {
+            return (prev.netWeight > current.netWeight) ? prev : current;
+        });
+
+        const netWtElement = items[largestItem.index].querySelector('.NET_WT');
+        netWtElement.value = (parseFloat(netWtElement.value) + discrepancy).toFixed(weightDecimalPlaces);
     }
+
+    // 更新 DOM
+    distributedWeights.forEach(item => {
+        const netWtElement = items[item.index].querySelector('.NET_WT');
+        netWtElement.value = item.netWeight.toFixed(weightDecimalPlaces);
+    });
 
     // 是否鎖定攤重後的項次
     if (lockAfterDistribution) {
@@ -3278,6 +3282,26 @@ function spreadWeightSpecific(ranges, specificWeight, weightDecimalPlaces, lockA
             if (lockCheckbox) lockCheckbox.checked = true;
         });
     }
+
+    // 確保最終加總等於指定重量（僅限指定範圍）
+    let finalTotalWeight = validItems.reduce((sum, item) => {
+        const netWeight = parseFloat(items[item.index].querySelector('.NET_WT').value);
+        return sum + (isNaN(netWeight) ? 0 : netWeight);
+    }, lockedWeight);
+
+    discrepancy = specificWeight - finalTotalWeight;
+
+    if (Math.abs(discrepancy) > 0) {
+        // 找出指定範圍內未鎖定的最大重量項次
+        const largestItem = distributedWeights.reduce((prev, current) => {
+            return (prev.netWeight > current.netWeight) ? prev : current;
+        });
+
+        const netWtElement = items[largestItem.index].querySelector('.NET_WT');
+        netWtElement.value = (parseFloat(netWtElement.value) + discrepancy).toFixed(weightDecimalPlaces);
+    }
+
+    alert(`分配完成！指定項次總重量：${parseFloat(specificWeight.toFixed(6))}`);
 }
 
 // 將範圍字串轉換為數字陣列
