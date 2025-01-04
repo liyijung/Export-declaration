@@ -3227,6 +3227,17 @@ function spreadWeightSpecific(ranges, specificWeight, weightDecimalPlaces, lockA
 
     // 檢查範圍內的項次
     items.forEach((item, index) => {
+        const checkbox = item.querySelector('.ISCALC_WT');
+        let netWeight = parseFloat(item.querySelector('.NET_WT').value);
+
+        // 如果值無效或為零，重置為零並取消選中
+        if (!netWeight || isNaN(netWeight)) {
+            if (checkbox && checkbox.checked) {
+                checkbox.checked = false;
+            }
+            netWeight = 0;
+        }
+        
         const itemNo = index + 1; // 假設項次從1開始
         if (ranges.includes(itemNo)) {
             const checkbox = item.querySelector('.ISCALC_WT');
