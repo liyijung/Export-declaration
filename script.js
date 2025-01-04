@@ -2910,8 +2910,215 @@ function calculateWeight() {
     }
 }
 
-// 攤重
-function spreadWeight() {
+// 開啟彈跳框
+function openSpreadWeightModal() {
+    const modal = document.getElementById("spread-weight-modal");
+    modal.style.display = "block";
+
+    // 初始化模式切換事件
+    document.getElementById("spread-mode").addEventListener("change", function () {
+        const specificOptions = document.getElementById("specific-options");
+        if (this.value === "2") {
+            specificOptions.style.display = "block";
+        } else {
+            specificOptions.style.display = "none";
+        }
+    });
+
+    // 啟用拖動
+    enableModalDrag();
+
+    // 焦點自動設置到確認按鈕
+    const confirmButton = document.getElementById("confirm-button");
+    confirmButton.focus();
+
+    // 啟用焦點循環
+    trapFocus(modal);
+}
+
+// 關閉彈跳框
+function closeSpreadWeightModal() {
+    const modal = document.getElementById("spread-weight-modal");
+
+    // 重置字段為初始值
+    document.getElementById("spread-mode").value = "1"; // 重置模式為全部項次攤重
+    document.getElementById("specific-options").style.display = "none"; // 隱藏指定範圍選項
+
+    // 隱藏彈跳框
+    modal.style.display = "none";
+
+    // 移除焦點循環監聽
+    document.removeEventListener("keydown", focusHandler);
+}
+
+// 監聽器變量
+let focusHandler = null;
+
+// 啟用焦點循環
+function trapFocus(modal) {
+    const focusableElements = modal.querySelectorAll(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    );
+    const firstElement = focusableElements[0];
+    const lastElement = focusableElements[focusableElements.length - 1];
+
+    focusHandler = function (event) {
+        if (event.key === "Tab") {
+            if (event.shiftKey) {
+                // 按 Shift + Tab 時
+                if (document.activeElement === firstElement) {
+                    event.preventDefault();
+                    lastElement.focus(); // 跳回最後一個元素
+                }
+            } else {
+                // 按 Tab 時
+                if (document.activeElement === lastElement) {
+                    event.preventDefault();
+                    firstElement.focus(); // 跳回第一個元素
+                }
+            }
+        }
+    };
+
+    document.addEventListener("keydown", focusHandler);
+}
+
+// 啟用彈跳框拖動功能
+function enableModalDrag() {
+    const modal = document.getElementById("spread-weight-modal");
+    const header = document.getElementById("modal-header");
+    const overlay = document.getElementById("drag-overlay");
+
+    let isDragging = false;
+    let startX = 0;
+    let startY = 0;
+    let initialLeft = 0;
+    let initialTop = 0;
+
+    header.addEventListener("mousedown", (event) => {
+        isDragging = true;
+
+        // 獲取彈跳框當前位置
+        const rect = modal.getBoundingClientRect();
+
+        // 記錄滑鼠與彈跳框的相對位置
+        startX = event.clientX;
+        startY = event.clientY;
+        initialLeft = rect.left;
+        initialTop = rect.top;
+
+        // 顯示透明遮罩
+        overlay.style.display = "block";
+
+        // 禁止文字選擇
+        document.body.style.userSelect = "none";
+    });
+
+    document.addEventListener("mousemove", (event) => {
+        if (isDragging) {
+            // 計算新的位置
+            const deltaX = event.clientX - startX;
+            const deltaY = event.clientY - startY;
+
+            modal.style.left = initialLeft + deltaX + "px";
+            modal.style.top = initialTop + deltaY + "px";
+            modal.style.transform = "none"; // 移動後取消初始的 transform
+        }
+    });
+
+    document.addEventListener("mouseup", () => {
+        if (isDragging) {
+            isDragging = false;
+
+            // 隱藏透明遮罩
+            overlay.style.display = "none";
+
+            // 恢復文字選擇
+            document.body.style.userSelect = "auto";
+        }
+    });
+}
+
+// 套用攤重
+function applySpreadWeight() {
+    const mode = document.getElementById("spread-mode").value; // 獲取模式
+    const weightDecimalPlaces = parseInt(document.getElementById("weight-decimal-places").value, 10); // 獲取小數位數
+
+    if (isNaN(weightDecimalPlaces) || weightDecimalPlaces < 0 || weightDecimalPlaces > 6) {
+        alert("請輸入有效的小數位數 (0-6)");
+        return;
+    }
+
+    if (mode === "2") {
+        // 指定項次攤重模式
+        const specificWeight = parseFloat(document.getElementById("specific-weight").value); // 獲取指定總重量
+        const rangeInput = document.getElementById("specific-range").value; // 獲取指定範圍
+
+        // 獲取「攤重後是否鎖定」選項
+        const lockAfterDistribution = document.querySelector('input[name="lock-after-distribution"]:checked').value === "yes";
+
+        if (isNaN(specificWeight) || specificWeight <= 0) {
+            alert("請輸入有效的攤重總重量");
+            return;
+        }
+
+        if (!rangeInput) {
+            alert("請輸入有效的項次範圍");
+            return;
+        }
+
+        // 使用 parseRanges 函數解析範圍
+        const ranges = parseRanges(rangeInput);
+        if (!ranges || ranges.length === 0) {
+            alert("請輸入有效的項次範圍");
+            return;
+        }
+
+        spreadWeightSpecific(ranges, specificWeight, weightDecimalPlaces, lockAfterDistribution);
+    } else {
+        // 默認全部項次攤重
+        spreadWeightDefault(weightDecimalPlaces); // 執行全部項次攤重
+    }
+
+    closeSpreadWeightModal(); // 關閉彈跳框
+}
+
+// 將範圍字串轉換為數字陣列
+function parseRanges(rangeInput) {
+    try {
+        let ranges = [];
+        const parts = rangeInput.split(",");
+        parts.forEach(part => {
+            if (part.includes("-")) {
+                const [start, end] = part.split("-").map(num => parseInt(num.trim(), 10));
+                if (!isNaN(start) && !isNaN(end)) {
+                    for (let i = start; i <= end; i++) {
+                        ranges.push(i);
+                    }
+                }
+            } else {
+                const num = parseInt(part.trim(), 10);
+                if (!isNaN(num)) {
+                    ranges.push(num);
+                }
+            }
+        });
+        return ranges;
+    } catch (error) {
+        return null;
+    }
+}
+
+// 計算總重量的輔助函數
+function calculateTotalWeight(items) {
+    return items.reduce((sum, item) => {
+        const netWeight = parseFloat(item.querySelector('.NET_WT').value);
+        return sum + (isNaN(netWeight) ? 0 : netWeight);
+    }, 0);
+}
+
+// 默認全部項次攤重
+function spreadWeightDefault(weightDecimalPlaces) {
     const totalNetWeight = parseFloat(document.getElementById('DCL_NW').value);
     if (isNaN(totalNetWeight) || totalNetWeight <= 0) {
         alert('請先填寫有效的總淨重');
@@ -2924,23 +3131,8 @@ function spreadWeight() {
         return;
     }
 
-    // 詢問使用者輸入小數位數
-    let decimalPlacesInput = prompt('請輸入重量小數位數 (0-6，預設為2)：', '2');
-
-    // 如果按下取消鍵則終止
-    if (decimalPlacesInput === null) {
-        return;
-    }
-
-    // 嘗試將輸入轉為整數
-    let decimalPlaces = parseInt(decimalPlacesInput, 10);
-
-    // 確保輸入有效，預設為2，範圍為0-6
-    if (isNaN(decimalPlaces) || decimalPlaces < 0 || decimalPlaces > 6) {
-        decimalPlaces = 2;
-    }
-
     let fixedWeights = [];
+    let lockedWeightTotal = 0; // 已鎖定項次的總重量
     let remainingNetWeight = totalNetWeight;
     let totalQuantity = 0;
 
@@ -2948,18 +3140,18 @@ function spreadWeight() {
     items.forEach((item, index) => {
         const checkbox = item.querySelector('.ISCALC_WT');
         let netWeight = parseFloat(item.querySelector('.NET_WT').value);
-    
-        // 如果 .NET_WT 欄位為空或為零，則取消 checkbox 選中
+
+        // 如果值無效或為零，重置為零並取消選中
         if (!netWeight || isNaN(netWeight)) {
             if (checkbox && checkbox.checked) {
-                checkbox.checked = false; // 取消勾選
+                checkbox.checked = false;
             }
-            netWeight = 0; // 設為零以避免NaN
+            netWeight = 0;
         }
-    
+
         if (checkbox && checkbox.checked) {
             fixedWeights.push({ index, netWeight });
-            remainingNetWeight -= netWeight;
+            lockedWeightTotal += netWeight; // 累加已鎖定項次的重量
         } else {
             const quantity = parseFloat(item.querySelector('.QTY').value);
             if (!isNaN(quantity)) {
@@ -2968,99 +3160,173 @@ function spreadWeight() {
         }
     });
 
+    // 檢查已鎖定的總重量是否超過總淨重
+    if (lockedWeightTotal > totalNetWeight) {
+        alert(`攤重失敗：\n已鎖定項次的重量加總 (${parseFloat(lockedWeightTotal.toFixed(6))}) 超過總淨重 (${parseFloat(totalNetWeight.toFixed(6))})`);
+        return;
+    }
+
+    remainingNetWeight -= lockedWeightTotal;
+
     if (totalQuantity <= 0) {
         alert('未鎖定的數量總和必須大於零');
         return;
     }
 
-    // 將剩餘淨重按比例分配到未固定的項次
-    let distributedWeights = [];
-    const minWeight = Math.pow(10, -decimalPlaces); // 確保最小值不為0
+    // 分配剩餘重量
+    const distributedWeights = [];
+    const minWeight = Math.pow(10, -weightDecimalPlaces);
     items.forEach((item, index) => {
         if (!fixedWeights.some(fixed => fixed.index === index)) {
             const quantity = parseFloat(item.querySelector('.QTY').value);
             if (!isNaN(quantity) && quantity > 0) {
-                let netWeight = parseFloat(((quantity / totalQuantity) * remainingNetWeight).toFixed(decimalPlaces));
-                if (netWeight <= 0) {
-                    netWeight = minWeight; // 確保最小值不為0
-                }
+                let netWeight = parseFloat(((quantity / totalQuantity) * remainingNetWeight).toFixed(weightDecimalPlaces));
+                if (netWeight <= 0) netWeight = minWeight;
                 distributedWeights.push({ index, netWeight });
             }
         }
     });
 
-    // 將分配的重量應用到每個項次
+    // 應用分配的重量
     distributedWeights.forEach(item => {
         const netWtElement = items[item.index].querySelector('.NET_WT');
-        netWtElement.value = item.netWeight.toFixed(decimalPlaces);
+        netWtElement.value = item.netWeight.toFixed(weightDecimalPlaces);
     });
 
-    // 確保固定重量項次的值不變
+    // 確保固定項次的值不變
     fixedWeights.forEach(fixed => {
         const netWtElement = items[fixed.index].querySelector('.NET_WT');
         netWtElement.value = fixed.netWeight;
     });
 
-    // 最後調整確保分配重量總和等於總淨重
-    let finalTotalWeight = Array.from(items).reduce((sum, item) => {
-        const netWeight = parseFloat(item.querySelector('.NET_WT').value);
+    // 確保重量總和等於總淨重
+    let finalTotalWeight = calculateTotalWeight(Array.from(items));
+    let discrepancy = totalNetWeight - finalTotalWeight;
+
+    if (Math.abs(discrepancy) > 0) {
+        const largestItem = distributedWeights.reduce((prev, current) => {
+            return (prev.netWeight > current.netWeight) ? prev : current;
+        });
+
+        const netWtElement = items[largestItem.index].querySelector('.NET_WT');
+        netWtElement.value = (parseFloat(netWtElement.value) + discrepancy).toFixed(weightDecimalPlaces);
+    }
+
+    // 最終結果
+    finalTotalWeight = calculateTotalWeight(Array.from(items));
+    alert(`報單表頭的總淨重為：${totalNetWeight}\n各項次的淨重加總為：${parseFloat(finalTotalWeight.toFixed(weightDecimalPlaces))}`);
+}
+
+// 指定項次攤重
+function spreadWeightSpecific(ranges, specificWeight, weightDecimalPlaces, lockAfterDistribution) {
+    const items = document.querySelectorAll('#item-container .item-row');
+    let totalQuantity = 0; // 未鎖定項次的總數量
+    let validItems = []; // 可分配重量的項次
+    let lockedWeight = 0; // 已鎖定的總重量
+    const minWeight = Math.pow(10, -weightDecimalPlaces); // 最小分配重量，例如 1 位小數為 0.1，2 位小數為 0.01
+
+    // 檢查範圍內的項次
+    items.forEach((item, index) => {
+        const itemNo = index + 1; // 假設項次從1開始
+        if (ranges.includes(itemNo)) {
+            const checkbox = item.querySelector('.ISCALC_WT');
+            const netWeight = parseFloat(item.querySelector('.NET_WT').value);
+            const quantity = parseFloat(item.querySelector('.QTY').value);
+
+            if (!isNaN(netWeight) && checkbox && checkbox.checked) {
+                // 如果項次已鎖定，累加到已鎖定的總重量
+                lockedWeight += netWeight;
+            } else if (!isNaN(quantity) && quantity > 0) {
+                // 未鎖定項次，加入到可分配列表
+                validItems.push({ index, quantity });
+                totalQuantity += quantity;
+            }
+        }
+    });
+
+    // 計算剩餘重量
+    let remainingWeight = specificWeight - lockedWeight;
+
+    if (remainingWeight <= 0) {
+        alert(`指定的總重量 (${specificWeight}) 已完全分配給鎖定項次。\n鎖定總重量：${parseFloat(lockedWeight.toFixed(6))}\n無剩餘重量可分配。`);
+        return;
+    }
+
+    if (totalQuantity <= 0) {
+        alert("指定的範圍內無有效的未鎖定項次。");
+        return;
+    }
+
+    // 按比例分配剩餘重量到未鎖定的項次，先分配最小重量
+    validItems.forEach(item => {
+        const netWtElement = items[item.index].querySelector('.NET_WT');
+        let netWeight = parseFloat(((item.quantity / totalQuantity) * remainingWeight).toFixed(weightDecimalPlaces));
+
+        if (netWeight < minWeight) {
+            netWeight = minWeight; // 分配最小重量
+        }
+
+        netWtElement.value = netWeight.toFixed(weightDecimalPlaces);
+        remainingWeight -= netWeight; // 扣除已分配重量
+    });
+
+    // 確保實際分配總重量等於指定總重量
+    const allocatedTotalWeight = validItems.reduce((sum, item) => {
+        const netWeight = parseFloat(items[item.index].querySelector('.NET_WT').value);
         return sum + (isNaN(netWeight) ? 0 : netWeight);
     }, 0);
 
-    let finalDiscrepancy = totalNetWeight - finalTotalWeight;
+    let discrepancy = specificWeight - lockedWeight - allocatedTotalWeight;
 
-    if (finalDiscrepancy !== 0) {
-        // 找到數量值最大的未鎖定項次
-        let maxQuantityItems = [];
-        let maxQuantity = -Infinity;
+    if (Math.abs(discrepancy) > 0) {
+        // 將差額調整到最後一個未鎖定的項次
+        const lastItem = validItems[validItems.length - 1];
+        const lastNetWtElement = items[lastItem.index].querySelector('.NET_WT');
+        const adjustedWeight = parseFloat(lastNetWtElement.value) + discrepancy;
+        lastNetWtElement.value = adjustedWeight.toFixed(weightDecimalPlaces);
+    }
 
-        items.forEach((item, index) => {
-            const quantity = parseFloat(item.querySelector('.QTY').value);
-            const checkbox = item.querySelector('.ISCALC_WT');
-            if (quantity >= maxQuantity && (!checkbox || !checkbox.checked)) {
-                if (quantity > maxQuantity) {
-                    maxQuantityItems = [{ item, quantity }];
-                    maxQuantity = quantity;
-                } else {
-                    maxQuantityItems.push({ item, quantity });
+    // 是否鎖定攤重後的項次
+    if (lockAfterDistribution) {
+        validItems.forEach(item => {
+            const lockCheckbox = items[item.index].querySelector('.ISCALC_WT');
+            if (lockCheckbox) lockCheckbox.checked = true;
+        });
+    }
+
+    // 最終分配結果
+    const finalTotalWeight = validItems.reduce((sum, item) => {
+        const netWeight = parseFloat(items[item.index].querySelector('.NET_WT').value);
+        return sum + (isNaN(netWeight) ? 0 : netWeight);
+    }, lockedWeight);
+
+    alert(`指定項次的總重量為：${specificWeight}\n鎖定總重量：${parseFloat(lockedWeight.toFixed(6))}\n實際分配總重量：${finalTotalWeight.toFixed(weightDecimalPlaces)}`);
+}
+
+// 將範圍字串轉換為數字陣列
+function parseRanges(rangeInput) {
+    try {
+        let ranges = [];
+        const parts = rangeInput.split(",");
+        parts.forEach(part => {
+            if (part.includes("-")) {
+                const [start, end] = part.split("-").map(num => parseInt(num.trim(), 10));
+                if (!isNaN(start) && !isNaN(end)) {
+                    for (let i = start; i <= end; i++) {
+                        ranges.push(i);
+                    }
+                }
+            } else {
+                const num = parseInt(part.trim(), 10);
+                if (!isNaN(num)) {
+                    ranges.push(num);
                 }
             }
         });
-
-        if (maxQuantityItems.length > 0) {
-            let totalMaxQuantity = maxQuantityItems.reduce((sum, item) => sum + item.quantity, 0);
-            maxQuantityItems.forEach(itemData => {
-                const netWtElement = itemData.item.querySelector('.NET_WT');
-                const adjustment = (itemData.quantity / totalMaxQuantity) * finalDiscrepancy;
-                const adjustedWeight = parseFloat(netWtElement.value) + adjustment;
-                netWtElement.value = adjustedWeight.toFixed(decimalPlaces);
-            });
-        }
-
-        // 再次計算總重量，確保最終總和正確
-        finalTotalWeight = Array.from(items).reduce((sum, item) => {
-            const netWeight = parseFloat(item.querySelector('.NET_WT').value);
-            return sum + (isNaN(netWeight) ? 0 : netWeight);
-        }, 0);
-
-        finalDiscrepancy = totalNetWeight - finalTotalWeight;
-
-        if (finalDiscrepancy !== 0) {
-            const largestItem = maxQuantityItems.reduce((prev, current) => (prev.quantity > current.quantity ? prev : current));
-            const netWtElement = largestItem.item.querySelector('.NET_WT');
-            const adjustedWeight = parseFloat(netWtElement.value) + finalDiscrepancy;
-            netWtElement.value = adjustedWeight.toFixed(decimalPlaces);
-        }
+        return ranges;
+    } catch (error) {
+        return null;
     }
-
-    // 顯示最終加總的重量
-    const adjustedTotalWeight = parseFloat(
-        Array.from(items).reduce((sum, item) => {
-            const netWeight = parseFloat(item.querySelector('.NET_WT').value);
-            return sum + (isNaN(netWeight) ? 0 : netWeight);
-        }, 0).toFixed(6)
-    );
-    alert(`報單表頭的總淨重為：${totalNetWeight}\n各項次的淨重加總為：${adjustedTotalWeight}`);
 }
 
 // 定義快捷鍵監聽
