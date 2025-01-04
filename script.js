@@ -3162,7 +3162,7 @@ function spreadWeightDefault(weightDecimalPlaces) {
 
     // 檢查已鎖定的總重量是否超過總淨重
     if (lockedWeightTotal > totalNetWeight) {
-        alert(`攤重失敗：\n已鎖定項次的重量加總 (${parseFloat(lockedWeightTotal.toFixed(6))}) 超過總淨重 (${parseFloat(totalNetWeight.toFixed(6))})`);
+        alert(`攤重失敗！\n已鎖定項次的重量加總 (${parseFloat(lockedWeightTotal.toFixed(6))}) 超過總淨重 (${parseFloat(totalNetWeight.toFixed(6))})`);
         return;
     }
 
@@ -3248,7 +3248,7 @@ function spreadWeightSpecific(ranges, specificWeight, weightDecimalPlaces, lockA
     let remainingWeight = specificWeight - lockedWeight;
 
     if (remainingWeight <= 0) {
-        alert(`指定的總重量 (${specificWeight}) 已完全分配給鎖定項次。\n鎖定總重量：${parseFloat(lockedWeight.toFixed(6))}\n無剩餘重量可分配。`);
+        alert(`攤重失敗！\n已鎖定項次的重量加總 (${parseFloat(lockedWeight.toFixed(6))}) 超過指定項次總重量 (${specificWeight})`);
         return;
     }
 
@@ -3293,14 +3293,6 @@ function spreadWeightSpecific(ranges, specificWeight, weightDecimalPlaces, lockA
             if (lockCheckbox) lockCheckbox.checked = true;
         });
     }
-
-    // 最終分配結果
-    const finalTotalWeight = validItems.reduce((sum, item) => {
-        const netWeight = parseFloat(items[item.index].querySelector('.NET_WT').value);
-        return sum + (isNaN(netWeight) ? 0 : netWeight);
-    }, lockedWeight);
-
-    alert(`指定項次的總重量為：${specificWeight}\n鎖定總重量：${parseFloat(lockedWeight.toFixed(6))}\n實際分配總重量：${finalTotalWeight.toFixed(weightDecimalPlaces)}`);
 }
 
 // 將範圍字串轉換為數字陣列
