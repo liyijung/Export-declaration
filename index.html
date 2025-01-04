@@ -317,10 +317,68 @@
                 <button onclick="openAdjustOrderModal()">調整項次順序</button>
                 <button onclick="openToggleFieldsModal()">顯示隱藏欄位</button>
                 <button id="toggle-all-btn" onclick="toggleAllTextareas()" title="快捷鍵 Alt + W">展開全部品名</button>
-                <!--<button id="calculate-quantities-btn" style="color: #005feec5;" onclick="calculateQuantities()">數量核算</button>-->
-                <!--<button id="calculate-amounts-btn" style="color: #005feec5;" onclick="calculateAmounts()">金額核算</button>-->
-                <!--<button id="calculate-weight-btn" style="color: #005feec5;" onclick="calculateWeight()">重量核算</button>-->
-                <button id="spread-weight-btn" onclick="spreadWeight()">攤重</button>
+
+                <!-- 攤重按鈕 -->
+                <button id="spread-weight-btn" onclick="openSpreadWeightModal()">攤重</button>
+
+                <!-- 攤重設定彈跳框 -->
+                <div id="spread-weight-modal" 
+                    style="display: none; position: absolute; top: 20%; left: 50%; transform: translate(-50%, -20%); padding: 20px; background: white; border: 1px solid #ccc; z-index: 1000; cursor: move; border-radius: 8px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);">
+                    <div id="modal-header" style="cursor: move; padding: 5px; background: #f0f0f0; border-bottom: 1px solid #ccc; position: relative;">
+                        <h3 style="margin: 0;">攤重設定</h3>
+                    </div>
+                    <br>
+                    <form id="spread-weight-form">
+                        <label>
+                            選擇模式：
+                            <select id="spread-mode">
+                                <option value="1">全部項次攤重</option>
+                                <option value="2">指定項次攤重</option>
+                            </select>
+                            <br><br>
+                        </label>
+                        <div id="specific-options" style="display: none;">
+                            <label>
+                                指定項次No. (例如: 3,5-7)：<br>
+                                <input type="text" id="specific-range">
+                            </label>
+                            <br><br>
+                            <label>
+                                指定項次總重量：<br>
+                                <input type="number" id="specific-weight">
+                            </label>
+                            <br><br>
+                            <label>
+                                攤重後是否鎖定：
+                                <div style="margin-top: 5px;">
+                                    <label style="margin-right: 10px;">
+                                        <input type="radio" name="lock-after-distribution" value="yes" checked>
+                                        是
+                                    </label>
+                                    <label>
+                                        <input type="radio" name="lock-after-distribution" value="no">
+                                        否
+                                    </label>
+                                </div>
+                            </label>
+                            <br>
+                        </div>
+                        <label>
+                            重量小數位 (0-6)：
+                            <input type="number" id="weight-decimal-places" value="2" min="0" max="6">
+                        </label>
+                        <div style="text-align: right; margin-top: 20px;">
+                            <!-- 確認按鈕 -->
+                            <button type="button" onclick="applySpreadWeight()" id="confirm-button">確認</button>
+                            <!-- 取消按鈕 -->
+                            <button type="button" onclick="closeSpreadWeightModal()">取消</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- 透明遮罩 -->
+                <div id="drag-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: transparent; z-index: 999;"></div>
+
                 <button id="calculate-amounts-btn" style="color: #005feec5;" onclick="calculate()" title="快捷鍵 Alt + Q">核算</button>
                 <input type="number" id="decimal-places" placeholder="金額小數位" min="0" max="6" style="width: 60px; font-size: 12px;">
             </div>
