@@ -846,7 +846,7 @@ select:-webkit-autofill {
     width: 200px; /* 固定寬度 */
     max-width: 90%; /* 最大寬度，防止超出畫面 */
     padding: 20px;
-    background: rgb(247, 249, 253);
+    background: rgb(239, 244, 254);
     border: 1px solid #ccc;
     z-index: 1001;
     cursor: move;
