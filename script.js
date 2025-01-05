@@ -2929,10 +2929,6 @@ function openSpreadWeightModal() {
 function closeSpreadWeightModal() {
     const modal = document.getElementById("spread-weight-modal");
 
-    // 重置字段
-    document.getElementById("spread-mode").value = "1";
-    document.getElementById("specific-options").style.display = "none";
-
     // 隱藏彈跳框
     modal.style.display = "none";
 
