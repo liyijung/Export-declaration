@@ -2911,10 +2911,11 @@ function calculateWeight() {
 }
 
 // 開啟彈跳框
-function openSpreadWeightModal(mode = 1) {
+function openSpreadWeightModal(mode = "1") {
     const modal = document.getElementById("spread-weight-modal");
     const confirmButton = document.getElementById("confirm-button");
     const spreadMode = document.getElementById("spread-mode");
+    const specificRange = document.getElementById("specific-range");
 
     // 設定模式
     spreadMode.value = mode;
@@ -2924,8 +2925,12 @@ function openSpreadWeightModal(mode = 1) {
     // 顯示彈跳框
     modal.style.display = "block";
 
-    // 焦點設置到確認按鈕
-    confirmButton.focus();
+    // 焦點設置根據模式
+    if (mode === "1") {
+        confirmButton.focus(); // 焦點設置到確認按鈕
+    } else if (mode === "2") {
+        specificRange.focus(); // 焦點設置到指定範圍的輸入框
+    }
 
     // 啟用焦點循環
     trapFocus(modal);
