@@ -2340,7 +2340,7 @@ function toggleAllTextareas() {
     });
 
     // 更新按鈕文本根據行數
-    const buttonText = newRows === 1 ? '展開全部至 5 行' : (newRows === 5 ? '展開全部至 10 行' : '折疊全部至 1 行');
+    const buttonText = newRows === 1 ? '展開全部品名' : (newRows === 5 ? '展開全部至 10 行' : '折疊全部至 1 行');
     document.getElementById('toggle-all-btn').textContent = buttonText;
 }
 
