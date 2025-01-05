@@ -2995,6 +2995,9 @@ function enableModalDrag() {
         offsetX = event.clientX - modal.offsetLeft;
         offsetY = event.clientY - modal.offsetTop;
 
+        // 禁用文字選取
+        document.body.style.userSelect = "none";
+
         document.addEventListener("mousemove", moveModal);
         document.addEventListener("mouseup", stopDrag);
     });
@@ -3008,6 +3011,10 @@ function enableModalDrag() {
 
     function stopDrag() {
         isDragging = false;
+
+        // 恢復文字選取
+        document.body.style.userSelect = "";
+        
         document.removeEventListener("mousemove", moveModal);
         document.removeEventListener("mouseup", stopDrag);
     }
