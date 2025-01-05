@@ -520,22 +520,21 @@ function initializeDimensionListeners(itemRow) {
 function updateArea(stqty, stum, wide, wideum, lengt, lengthum) {
     if (stum && stum.value === 'MTK') {
         let wideV = 0, lengtV = 0;
-
-        // 轉換寬度單位
-        if (wideum.value === 'MTR') wideV = parseFloat(wide.value) || 0;
-        if (wideum.value === 'YRD') wideV = (parseFloat(wide.value) || 0) * 0.9144;
-        if (wideum.value === 'INC') wideV = (parseFloat(wide.value) || 0) * 0.0254;
-
-        // 轉換長度單位
-        if (lengthum.value === 'MTR') lengtV = parseFloat(lengt.value) || 0;
-        if (lengthum.value === 'YRD') lengtV = (parseFloat(lengt.value) || 0) * 0.9144;
-        if (lengthum.value === 'INC') lengtV = (parseFloat(lengt.value) || 0) * 0.0254;
-
-        // 計算面積並四捨五入到小數點第 2 位
-        if (wideV > 0 && lengtV > 0) {
-            stqty.value = (wideV * lengtV).toFixed(2);
-        } else {
-            stqty.value = ''; // 如果數據不完整則清空 stqty
+        if (wide.value && wideum.value && lengt.value && lengthum.value) {
+            // 轉換寬度單位
+            if (wideum.value === 'MTR') wideV = parseFloat(wide.value) || 0;
+            if (wideum.value === 'YRD') wideV = (parseFloat(wide.value) || 0) * 0.9144;
+            if (wideum.value === 'INC') wideV = (parseFloat(wide.value) || 0) * 0.0254;
+    
+            // 轉換長度單位
+            if (lengthum.value === 'MTR') lengtV = parseFloat(lengt.value) || 0;
+            if (lengthum.value === 'YRD') lengtV = (parseFloat(lengt.value) || 0) * 0.9144;
+            if (lengthum.value === 'INC') lengtV = (parseFloat(lengt.value) || 0) * 0.0254;
+    
+            // 計算面積並四捨五入到小數點第 2 位
+            if (wideV > 0 && lengtV > 0) {
+                stqty.value = (wideV * lengtV).toFixed(2);
+            }
         }
     }
 }
