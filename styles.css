@@ -879,6 +879,6 @@ select:-webkit-autofill {
 
 #modal-header div {
     display: flex;
-    gap: 10px;
+    gap: 5px;
     margin-left: auto; /* 按鈕靠右 */
 }
