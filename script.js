@@ -2913,23 +2913,12 @@ function calculateWeight() {
 // 開啟彈跳框
 function openSpreadWeightModal() {
     const modal = document.getElementById("spread-weight-modal");
+    const confirmButton = document.getElementById("confirm-button");
+
+    // 顯示彈跳框
     modal.style.display = "block";
 
-    // 初始化模式切換事件
-    document.getElementById("spread-mode").addEventListener("change", function () {
-        const specificOptions = document.getElementById("specific-options");
-        if (this.value === "2") {
-            specificOptions.style.display = "block";
-        } else {
-            specificOptions.style.display = "none";
-        }
-    });
-
-    // 啟用拖動
-    enableModalDrag();
-
-    // 焦點自動設置到確認按鈕
-    const confirmButton = document.getElementById("confirm-button");
+    // 焦點設置到確認按鈕
     confirmButton.focus();
 
     // 啟用焦點循環
@@ -2940,19 +2929,34 @@ function openSpreadWeightModal() {
 function closeSpreadWeightModal() {
     const modal = document.getElementById("spread-weight-modal");
 
-    // 重置字段為初始值
-    document.getElementById("spread-mode").value = "1"; // 重置模式為全部項次攤重
-    document.getElementById("specific-options").style.display = "none"; // 隱藏指定範圍選項
+    // 重置字段
+    document.getElementById("spread-mode").value = "1";
+    document.getElementById("specific-options").style.display = "none";
 
     // 隱藏彈跳框
     modal.style.display = "none";
 
-    // 移除焦點循環監聽
+    // 停止焦點循環
     document.removeEventListener("keydown", focusHandler);
 }
 
-// 監聽器變量
-let focusHandler = null;
+// 初始化事件（只執行一次）
+document.addEventListener("DOMContentLoaded", function () {
+    const spreadMode = document.getElementById("spread-mode");
+
+    // 模式切換事件
+    spreadMode.addEventListener("change", function () {
+        const specificOptions = document.getElementById("specific-options");
+        if (this.value === "2") {
+            specificOptions.style.display = "block";
+        } else {
+            specificOptions.style.display = "none";
+        }
+    });
+
+    // 啟用拖動功能
+    enableModalDrag();
+});
 
 // 啟用焦點循環
 function trapFocus(modal) {
@@ -2962,20 +2966,14 @@ function trapFocus(modal) {
     const firstElement = focusableElements[0];
     const lastElement = focusableElements[focusableElements.length - 1];
 
-    focusHandler = function (event) {
+    const focusHandler = (event) => {
         if (event.key === "Tab") {
-            if (event.shiftKey) {
-                // 按 Shift + Tab 時
-                if (document.activeElement === firstElement) {
-                    event.preventDefault();
-                    lastElement.focus(); // 跳回最後一個元素
-                }
-            } else {
-                // 按 Tab 時
-                if (document.activeElement === lastElement) {
-                    event.preventDefault();
-                    firstElement.focus(); // 跳回第一個元素
-                }
+            if (event.shiftKey && document.activeElement === firstElement) {
+                lastElement.focus();
+                event.preventDefault();
+            } else if (!event.shiftKey && document.activeElement === lastElement) {
+                firstElement.focus();
+                event.preventDefault();
             }
         }
     };
@@ -2986,59 +2984,33 @@ function trapFocus(modal) {
 // 啟用彈跳框拖動功能
 function enableModalDrag() {
     const modal = document.getElementById("spread-weight-modal");
-    const header = document.getElementById("modal-header");
-    const overlay = document.getElementById("drag-overlay");
+    const header = modal.querySelector("#modal-header");
 
+    let offsetX = 0;
+    let offsetY = 0;
     let isDragging = false;
-    let startX = 0;
-    let startY = 0;
-    let initialLeft = 0;
-    let initialTop = 0;
 
     header.addEventListener("mousedown", (event) => {
         isDragging = true;
+        offsetX = event.clientX - modal.offsetLeft;
+        offsetY = event.clientY - modal.offsetTop;
 
-        // 獲取彈跳框當前位置
-        const rect = modal.getBoundingClientRect();
-
-        // 記錄滑鼠與彈跳框的相對位置，考慮捲軸偏移
-        startX = event.clientX + window.scrollX;
-        startY = event.clientY + window.scrollY;
-        initialLeft = rect.left + window.scrollX;
-        initialTop = rect.top + window.scrollY;
-
-        // 顯示透明遮罩
-        overlay.style.display = "block";
-
-        // 禁止文字選擇
-        document.body.style.userSelect = "none";
+        document.addEventListener("mousemove", moveModal);
+        document.addEventListener("mouseup", stopDrag);
     });
 
-    document.addEventListener("mousemove", (event) => {
+    function moveModal(event) {
         if (isDragging) {
-            // 計算新的位置，考慮捲軸偏移
-            const currentX = event.clientX + window.scrollX;
-            const currentY = event.clientY + window.scrollY;
-            const deltaX = currentX - startX;
-            const deltaY = currentY - startY;
-
-            modal.style.left = initialLeft + deltaX + "px";
-            modal.style.top = initialTop + deltaY + "px";
-            modal.style.transform = "none"; // 移動後取消初始的 transform
+            modal.style.left = `${event.clientX - offsetX}px`;
+            modal.style.top = `${event.clientY - offsetY}px`;
         }
-    });
+    }
 
-    document.addEventListener("mouseup", () => {
-        if (isDragging) {
-            isDragging = false;
-
-            // 隱藏透明遮罩
-            overlay.style.display = "none";
-
-            // 恢復文字選擇
-            document.body.style.userSelect = "auto";
-        }
-    });
+    function stopDrag() {
+        isDragging = false;
+        document.removeEventListener("mousemove", moveModal);
+        document.removeEventListener("mouseup", stopDrag);
+    }
 }
 
 // 套用攤重
