@@ -3935,6 +3935,34 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
 
+        // 若單位為 PCE、PCS 或 EAC，檢查數量是否為整數
+        for (let item of document.querySelectorAll("#item-container .item-row")) {
+            let invalidItemFields = [];
+
+            // 獲取數量和單位欄位
+            let qtyElement = item.querySelector('.QTY');
+            let docUmElement = item.querySelector('.DOC_UM');
+
+            if (qtyElement && docUmElement) {
+                let rawQtyValue = qtyElement.value.trim(); // 原始數量值
+                let parsedQtyValue = parseFloat(rawQtyValue); // 將數量值轉換為浮點數
+                let docUmValue = docUmElement.value.trim().toUpperCase();
+
+                // 若單位為 PCE、PCS 或 EAC，檢查數量是否為整數
+                if (['PCE', 'PCS', 'EAC'].includes(docUmValue)) {
+                    // 檢查數值是否為整數
+                    if (!Number.isInteger(parsedQtyValue)) {
+                        invalidItemFields.push(`數量 " ${rawQtyValue} " (單位為 ${docUmValue} 時，數量必須為整數)`);
+                    }
+                }
+            }
+
+            if (invalidItemFields.length > 0) {
+                alert(`以下欄位的格式錯誤：\n${invalidItemFields.join('、')}`);
+                return; // 中止匯出過程
+            }
+        }
+        
         // 若 validateDclDocType 發現錯誤，則直接返回，中止後續程式碼
         if (!validateDclDocType()) {
             return;
