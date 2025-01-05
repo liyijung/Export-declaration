@@ -2911,9 +2911,15 @@ function calculateWeight() {
 }
 
 // 開啟彈跳框
-function openSpreadWeightModal() {
+function openSpreadWeightModal(mode) {
     const modal = document.getElementById("spread-weight-modal");
     const confirmButton = document.getElementById("confirm-button");
+    const spreadMode = document.getElementById("spread-mode");
+
+    // 設定模式
+    spreadMode.value = mode;
+    const specificOptions = document.getElementById("specific-options");
+    specificOptions.style.display = mode === "2" ? "block" : "none";
 
     // 顯示彈跳框
     modal.style.display = "block";
@@ -2952,6 +2958,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // 啟用拖動功能
     enableModalDrag();
+
+    // 快捷鍵事件
+    document.addEventListener("keydown", function (event) {
+        if (event.altKey && event.key === "1") {
+            // Alt+1 開啟全部項次模式
+            openSpreadWeightModal("1");
+            event.preventDefault();
+        } else if (event.altKey && event.key === "2") {
+            // Alt+2 開啟指定項次模式
+            openSpreadWeightModal("2");
+            event.preventDefault();
+        }
+    });
 });
 
 // 啟用焦點循環
