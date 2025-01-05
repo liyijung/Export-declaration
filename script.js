@@ -2289,10 +2289,14 @@ function initializeFieldVisibility() {
                     formGroup.classList.add('hidden');
                 }
 
-                // 如果 ST_UM 欄位的值為 "MTK"，且 DOC_UM 的值不是 "MTK" 時，自動顯示 WIDE, WIDE_UM, LENGT_, LENGTH_UM 欄位
+                // 如果 ST_UM 欄位的值為 "MTK"，且 DOC_UM 的值不是 "MTK"，並且 ST_QTY 為空時，自動顯示 WIDE, WIDE_UM, LENGT_, LENGTH_UM 欄位
                 if (field === 'ST_UM' && fieldElement.value && fieldElement.value.trim() === 'MTK') {
                     const docUmField = document.querySelector(`#item-container .DOC_UM`);
-                    if (docUmField && docUmField.value.trim() !== 'MTK') {
+                    const stQtyField = document.querySelector(`#item-container .ST_QTY`);
+                    if (
+                        docUmField && docUmField.value.trim() !== 'MTK' && 
+                        stQtyField && (!stQtyField.value || stQtyField.value.trim() === '')
+                    ) {
                         ['WIDE', 'WIDE_UM', 'LENGT_', 'LENGTH_UM'].forEach(relatedField => {
                             document.querySelectorAll(`.${relatedField}`).forEach(relatedFieldElement => {
                                 const relatedFormGroup = relatedFieldElement.closest('.form-group');
