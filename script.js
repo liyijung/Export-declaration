@@ -861,18 +861,6 @@ function openItemModal() {
     document.getElementById('QTY').addEventListener('input', calculateModalAmount);
     document.getElementById('DOC_UNIT_P').addEventListener('input', calculateModalAmount);
 
-    // 監聽數量和單價輸入框的鍵盤事件，禁止方向鍵調整數字
-    document.getElementById('QTY').addEventListener('keydown', preventArrowKeyAdjustment);
-    document.getElementById('DOC_UNIT_P').addEventListener('keydown', preventArrowKeyAdjustment);
-    document.getElementById('NET_WT').addEventListener('keydown', preventArrowKeyAdjustment);
-    document.getElementById('ORG_IMP_DCL_NO_ITEM').addEventListener('keydown', preventArrowKeyAdjustment);
-    document.getElementById('CERT_NO_ITEM').addEventListener('keydown', preventArrowKeyAdjustment);
-    document.getElementById('ORG_DCL_NO_ITEM').addEventListener('keydown', preventArrowKeyAdjustment);
-    document.getElementById('EXP_SEQ_NO').addEventListener('keydown', preventArrowKeyAdjustment);
-    document.getElementById('WIDE').addEventListener('keydown', preventArrowKeyAdjustment);
-    document.getElementById('LENGT_').addEventListener('keydown', preventArrowKeyAdjustment);
-    document.getElementById('ST_QTY').addEventListener('keydown', preventArrowKeyAdjustment);
-    
     // 設定光標到特定的輸入欄位
     const firstInputField = document.getElementById('DESCRIPTION');
     if (firstInputField) {
@@ -925,13 +913,6 @@ function calculateModalAmount() {
 
     const amount = qty * unitPrice;
     document.getElementById('DOC_TOT_P').value = (amount === 0) ? '' : new Decimal(amount).toDecimalPlaces(10, Decimal.ROUND_UP).toFixed(decimalPlaces);
-}
-
-// 函數禁止方向鍵調整數字
-function preventArrowKeyAdjustment(event) {
-    if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
-        event.preventDefault();
-    }
 }
 
 // 複製選定的項次內容
@@ -5009,3 +4990,31 @@ function showPopup(content) {
     // 顯示彈跳框
     popup.style.display = 'block';
 }
+
+// 防止使用方向鍵和滾輪調整數字
+function preventArrowKeyAdjustment(event) {
+    if (event.key === "ArrowUp" || event.key === "ArrowDown") {
+        event.preventDefault();
+    }
+}
+
+function preventMouseWheelAdjustment(event) {
+    event.preventDefault();
+}
+
+// 使用事件代理處理所有 type="number" 的輸入框
+document.addEventListener('keydown', function(event) {
+    const target = event.target;
+
+    if (target.tagName === 'INPUT' && target.type === 'number') {
+        preventArrowKeyAdjustment(event);
+    }
+});
+
+document.addEventListener('wheel', function(event) {
+    const target = event.target;
+
+    if (target.tagName === 'INPUT' && target.type === 'number') {
+        preventMouseWheelAdjustment(event);
+    }
+}, { passive: false }); // 使用 { passive: false } 以便可以調用 preventDefault
