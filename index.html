@@ -331,14 +331,14 @@ Alt + 2 指定項次">攤重</button>
                             <!-- 確認按鈕 -->
                             <button onclick="applySpreadWeight()" id="confirm-button" title="快捷鍵 Alt + Enter">確定</button>
                             <!-- 取消按鈕 -->
-                            <button onclick="closeSpreadWeightModal()" title="快捷鍵 Esc">取消</button>
+                            <button onclick="closeSpreadWeightModal()" tabindex="-1" title="快捷鍵 Esc">取消</button>
                         </div>
                     </div>
                     <br>
                     <form id="spread-weight-form">
                         <label>
                             選擇模式：
-                            <select id="spread-mode">
+                            <select id="spread-mode" tabindex="-1" >
                                 <option value="1">全部項次</option>
                                 <option value="2">指定項次</option>
                             </select>
