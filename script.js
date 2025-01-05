@@ -2911,7 +2911,7 @@ function calculateWeight() {
 }
 
 // 開啟彈跳框
-function openSpreadWeightModal(mode) {
+function openSpreadWeightModal(mode = 1) {
     const modal = document.getElementById("spread-weight-modal");
     const confirmButton = document.getElementById("confirm-button");
     const spreadMode = document.getElementById("spread-mode");
