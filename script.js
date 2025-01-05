@@ -2974,6 +2974,20 @@ document.addEventListener("DOMContentLoaded", function () {
             // Alt+2 開啟指定項次模式
             openSpreadWeightModal("2");
             event.preventDefault();
+        } else if (event.altKey && event.key === "Enter") {
+            // Alt+Enter 確認
+            const modal = document.getElementById("spread-weight-modal");
+            if (modal && modal.style.display === "block") {
+                applySpreadWeight(); // 觸發確認邏輯
+                event.preventDefault(); // 防止預設行為
+            }
+        } else if (event.key === "Escape") {
+            // Esc 取消
+            const modal = document.getElementById("spread-weight-modal");
+            if (modal && modal.style.display === "block") {
+                closeSpreadWeightModal(); // 關閉模態框
+                event.preventDefault(); // 防止預設行為
+            }
         }
     });
 });
