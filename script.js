@@ -2916,7 +2916,7 @@ function openSpreadWeightModal(mode = "1") {
 
     // 焦點設置根據模式
     if (mode === "1") {
-        confirmButton.focus(); // 焦點設置到確認按鈕
+        confirmButton.focus(); // 焦點設置到確定按鈕
     } else if (mode === "2") {
         specificRange.focus(); // 焦點設置到指定範圍的輸入框
     }
@@ -2964,10 +2964,10 @@ document.addEventListener("DOMContentLoaded", function () {
             openSpreadWeightModal("2");
             event.preventDefault();
         } else if (event.altKey && event.key === "Enter") {
-            // Alt+Enter 確認
+            // Alt+Enter 確定
             const modal = document.getElementById("spread-weight-modal");
             if (modal && modal.style.display === "block") {
-                applySpreadWeight(); // 觸發確認邏輯
+                applySpreadWeight(); // 觸發確定邏輯
                 event.preventDefault(); // 防止預設行為
             }
         } else if (event.key === "Escape") {
@@ -3114,7 +3114,7 @@ function spreadWeightDefault(weightDecimalPlaces) {
     let remainingNetWeight = totalNetWeight;
     let totalQuantity = 0;
 
-    // 確定哪些項次是固定的
+    // 確認哪些項次是固定的
     items.forEach((item, index) => {
         const checkbox = item.querySelector('.ISCALC_WT');
         let netWeight = parseFloat(item.querySelector('.NET_WT').value);
