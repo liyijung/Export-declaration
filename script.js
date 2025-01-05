@@ -4991,30 +4991,24 @@ function showPopup(content) {
     popup.style.display = 'block';
 }
 
-// 防止使用方向鍵和滾輪調整數字
-function preventArrowKeyAdjustment(event) {
-    if (event.key === "ArrowUp" || event.key === "ArrowDown") {
-        event.preventDefault();
-    }
-}
-
-function preventMouseWheelAdjustment(event) {
-    event.preventDefault();
-}
-
 // 使用事件代理處理所有 type="number" 的輸入框
 document.addEventListener('keydown', function(event) {
     const target = event.target;
 
+    // 當目標是 type="number" 的輸入框，禁止調整數值
     if (target.tagName === 'INPUT' && target.type === 'number') {
-        preventArrowKeyAdjustment(event);
+        if (event.key === "ArrowUp" || event.key === "ArrowDown") {
+            event.preventDefault();
+        }
     }
 });
 
+// 防止數字輸入框的滾輪調整，但允許頁面滾動
 document.addEventListener('wheel', function(event) {
     const target = event.target;
 
-    if (target.tagName === 'INPUT' && target.type === 'number') {
-        preventMouseWheelAdjustment(event);
+    // 當目標是 type="number" 的輸入框且輸入框處於聚焦狀態時，禁止滾輪調整數值
+    if (target.tagName === 'INPUT' && target.type === 'number' && target === document.activeElement) {
+        event.preventDefault(); // 禁止滾輪調整數值
     }
 }, { passive: false }); // 使用 { passive: false } 以便可以調用 preventDefault
