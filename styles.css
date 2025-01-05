@@ -847,7 +847,7 @@ select:-webkit-autofill {
     max-width: 90%; /* 最大寬度，防止超出畫面 */
     margin: auto;
     padding: 20px;
-    background: rgb(243, 247, 255);
+    background: radial-gradient(ellipse, rgb(225, 236, 254), rgb(237, 243, 254));
     border: 1px solid #ccc;
     z-index: 1001;
     cursor: move;
