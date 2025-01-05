@@ -3299,8 +3299,6 @@ function spreadWeightSpecific(ranges, specificWeight, weightDecimalPlaces, lockA
         const netWtElement = items[largestItem.index].querySelector('.NET_WT');
         netWtElement.value = (parseFloat(netWtElement.value) + discrepancy).toFixed(weightDecimalPlaces);
     }
-
-    alert(`分配完成！指定項次總重量：${parseFloat(specificWeight.toFixed(6))}`);
 }
 
 // 將範圍字串轉換為數字陣列
