@@ -1335,9 +1335,9 @@ function openSpecifyFieldModal() {
     const specifyFieldModal = document.getElementById('specify-field-modal');
     specifyFieldModal.style.display = 'flex';
 
-    // 設置焦點到模式
-    const specifyMode = document.getElementById('specify-mode');
-    specifyMode.focus();
+    // 設置焦點
+    const itemNumbersInput = document.getElementById('specify-item-numbers');
+    itemNumbersInput.focus();
     
     // 允許點擊背後的頁面欄位
     specifyFieldModal.style.pointerEvents = 'none';
