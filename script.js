@@ -2905,9 +2905,15 @@ function openSpreadWeightModal(mode = "1") {
     const confirmButton = document.getElementById("confirm-button");
     const spreadMode = document.getElementById("spread-mode");
     const specificRange = document.getElementById("specific-range");
+    const specificWeight = document.getElementById("specific-weight");
 
     // 設定模式
     spreadMode.value = mode;
+
+    // 初始化 specific-range 和 specific-weight
+    specificRange.value = ""; // 清空指定範圍
+    specificWeight.value = ""; // 清空指定總重量
+    
     const specificOptions = document.getElementById("specific-options");
     specificOptions.style.display = mode === "2" ? "block" : "none";
 
