@@ -311,77 +311,79 @@
     <!--出口報單項次-->
     <div id="items" class="tab">
         <div id="header-container">
-            <div class="add-buttons">
-                <button onclick="openItemModal()" title="快捷鍵 Alt + A">新增項次(可複製)</button>
-                <button onclick="openSpecifyFieldModal()">指定填列欄位資料</button>
-                <button onclick="openAdjustOrderModal()">調整項次順序</button>
-                <button onclick="openToggleFieldsModal()">顯示隱藏欄位</button>
-                <button id="toggle-all-btn" onclick="toggleAllTextareas()" title="快捷鍵 Alt + W">展開全部品名</button>
+            <div class="container">
+                <div class="add-buttons">
+                    <button onclick="openItemModal()" title="快捷鍵 Alt + A">新增項次(可複製)</button>
+                    <button onclick="openSpecifyFieldModal()">指定填列欄位資料</button>
+                    <button onclick="openAdjustOrderModal()">調整項次順序</button>
+                    <button onclick="openToggleFieldsModal()">顯示隱藏欄位</button>
+                    <button id="toggle-all-btn" onclick="toggleAllTextareas()" title="快捷鍵 Alt + W">展開全部品名</button>
 
-                <!-- 攤重按鈕 -->
-                <button id="spread-weight-btn" onclick="openSpreadWeightModal()" title="快捷鍵
+                    <!-- 攤重按鈕 -->
+                    <button id="spread-weight-btn" onclick="openSpreadWeightModal()" title="快捷鍵
 Alt + 1 全部項次
 Alt + 2 指定項次">攤重</button>
-                
-                <!-- 攤重設定彈跳框 -->
-                <div id="spread-weight-modal">
-                    <div id="modal-header">
-                        <h3 style="margin: 0;">攤重</h3>
-                        <div style="gap: 5px;">
-                            <!-- 確認按鈕 -->
-                            <button onclick="applySpreadWeight()" id="confirm-button" title="快捷鍵 Alt + Enter">確定</button>
-                            <!-- 取消按鈕 -->
-                            <button onclick="closeSpreadWeightModal()" tabindex="-1" title="快捷鍵 Esc">取消</button>
+                    
+                    <!-- 攤重設定彈跳框 -->
+                    <div id="spread-weight-modal">
+                        <div id="modal-header">
+                            <h3 style="margin: 0;">攤重</h3>
+                            <div style="gap: 5px;">
+                                <!-- 確認按鈕 -->
+                                <button onclick="applySpreadWeight()" id="confirm-button" title="快捷鍵 Alt + Enter">確定</button>
+                                <!-- 取消按鈕 -->
+                                <button onclick="closeSpreadWeightModal()" tabindex="-1" title="快捷鍵 Esc">取消</button>
+                            </div>
                         </div>
+                        <br>
+                        <form id="spread-weight-form">
+                            <label>
+                                選擇模式：
+                                <select id="spread-mode" tabindex="-1" >
+                                    <option value="1">全部項次</option>
+                                    <option value="2">指定項次</option>
+                                </select>
+                                <br><br>
+                            </label>
+                            <div id="specific-options" style="display: none;">
+                                <label>
+                                    指定項次No. (例如: 3,5-7)<br>
+                                    <input type="text" id="specific-range">
+                                </label>
+                                <br><br>
+                                <label>
+                                    指定項次總重量：<br>
+                                    <input type="number" id="specific-weight" min="1">
+                                </label>
+                                <br><br>
+                                <label>
+                                    攤重後是否鎖定：
+                                    <div style="margin-top: 5px;">
+                                        <label style="margin-right: 10px;">
+                                            <input type="radio" name="lock-after-distribution" value="yes" checked>
+                                            是
+                                        </label>
+                                        <label>
+                                            <input type="radio" name="lock-after-distribution" value="no">
+                                            否
+                                        </label>
+                                    </div>
+                                </label>
+                                <br>
+                            </div>
+                            <label>
+                                重量小數位 (0-6)：
+                                <input type="number" id="weight-decimal-places" value="2" min="0" max="6">
+                            </label>
+                        </form>
                     </div>
-                    <br>
-                    <form id="spread-weight-form">
-                        <label>
-                            選擇模式：
-                            <select id="spread-mode" tabindex="-1" >
-                                <option value="1">全部項次</option>
-                                <option value="2">指定項次</option>
-                            </select>
-                            <br><br>
-                        </label>
-                        <div id="specific-options" style="display: none;">
-                            <label>
-                                指定項次No. (例如: 3,5-7)<br>
-                                <input type="text" id="specific-range">
-                            </label>
-                            <br><br>
-                            <label>
-                                指定項次總重量：<br>
-                                <input type="number" id="specific-weight" min="1">
-                            </label>
-                            <br><br>
-                            <label>
-                                攤重後是否鎖定：
-                                <div style="margin-top: 5px;">
-                                    <label style="margin-right: 10px;">
-                                        <input type="radio" name="lock-after-distribution" value="yes" checked>
-                                        是
-                                    </label>
-                                    <label>
-                                        <input type="radio" name="lock-after-distribution" value="no">
-                                        否
-                                    </label>
-                                </div>
-                            </label>
-                            <br>
-                        </div>
-                        <label>
-                            重量小數位 (0-6)：
-                            <input type="number" id="weight-decimal-places" value="2" min="0" max="6">
-                        </label>
-                    </form>
+
+                    <!-- 透明遮罩 -->
+                    <div id="drag-overlay"></div>
+
+                    <button id="calculate-amounts-btn" style="color: #005feec5;" onclick="calculate()" title="快捷鍵 Alt + Q">核算</button>
+                    <input type="number" id="decimal-places" placeholder="金額小數位" min="0" max="6" style="width: 60px; font-size: 12px;">
                 </div>
-
-                <!-- 透明遮罩 -->
-                <div id="drag-overlay"></div>
-
-                <button id="calculate-amounts-btn" style="color: #005feec5;" onclick="calculate()" title="快捷鍵 Alt + Q">核算</button>
-                <input type="number" id="decimal-places" placeholder="金額小數位" min="0" max="6" style="width: 60px; font-size: 12px;">
             </div>
             <div class="container">
                 <div class="add-buttons">
