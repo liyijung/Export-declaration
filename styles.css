@@ -89,6 +89,12 @@ body {
     transform: scale(0.97); /* 按下時縮小效果 */
 }
 
+.add-buttons {
+    position: sticky; /* 保持在滾動過程中固定 */
+    left: 0;
+    margin-right: 30px;
+}
+
 .add-buttons button,
 .add-buttons label {
     font-size: 16px;
@@ -776,7 +782,11 @@ select:-webkit-autofill {
 
 /* 快捷鍵說明獨立區塊 */
 .shortcut-help-block {
-    position: relative;
+    margin-left: auto; /* 將快捷鍵區塊推到最右側 */
+    display: inline-block; /* 確保它是內聯塊狀，適配內容 */
+    position: sticky;
+    right: 35px;
+    margin-bottom: 5px;
     cursor: help; /* 問號指標 */
     font-size: 12px; /* 與彈跳框文字大小一致 */
     color: #50648c;
@@ -785,7 +795,6 @@ select:-webkit-autofill {
     padding: 1px 3px; /* 上下內邊距1px，左右內邊距3px */
     border-radius: 5px; /* 圓角與彈跳框一致 */
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.3); /* 添加輕微陰影 */
-    margin-bottom: 5px;
 }
 
 /* 快捷鍵彈跳框樣式 */
