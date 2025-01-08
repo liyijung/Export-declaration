@@ -1728,6 +1728,7 @@ function handleFile(event) {
             "PIN": "8533900000",
             "排PIN": "8533900000",
             "圓PIN": "8533900000",
+            "THERMOSTAT": "9032100000",
         };
 
         const allItemsEmpty = itemsData.slice(1).every(row => !row[0]); // 檢查項次是否完全空
