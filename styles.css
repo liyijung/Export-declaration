@@ -92,7 +92,7 @@ body {
 .add-buttons {
     position: sticky; /* 保持在滾動過程中固定 */
     left: 0;
-    margin-right: 30px;
+    margin-right: 5%;
 }
 
 .add-buttons button,
@@ -541,7 +541,7 @@ th, td {
 
 /* 只應用於出口報單項次的標籤頁內容 */
 #items.fixed-width {
-    width: 1700px; /* 固定頁面的寬度 */
+    width: 200%; /* 固定頁面的寬度 */
     margin: 0 auto;
 }
 
