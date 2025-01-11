@@ -5062,3 +5062,18 @@ document.addEventListener('wheel', function(event) {
         event.preventDefault(); // 禁止滾輪調整數值
     }
 }, { passive: false }); // 使用 { passive: false } 以便可以調用 preventDefault
+
+const numberInputs = document.querySelectorAll('input[type="number"]');
+numberInputs.forEach((input) => {
+    input.addEventListener('keydown', function (event) {
+      // 禁止輸入 'e', 'E', '+', 和 '-'
+      if (['e', 'E', '+', '-'].includes(event.key)) {
+        event.preventDefault();
+      }
+    });
+
+    input.addEventListener('input', function () {
+      // 過濾非法字符 'e' 和 'E'
+      this.value = this.value.replace(/e|E/g, '');
+    });
+  });
