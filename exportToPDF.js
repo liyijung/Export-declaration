@@ -240,8 +240,8 @@ async function exportToPDF() {
         doc.text(formattedTotalFobPrice, totalFobPriceX, totalFobPriceY);
 
         // 當旬匯率日期區間
-        const startDate = '1140111'
-        const endDate = '1140120'
+        const { startDate, endDate } = await fetchDateRange();
+        console.log("匯率日期區間：", { startDate, endDate });
         
         if (exchangeRate && (Fymd >= startDate && Fymd <= endDate)) {
             // 在 x: 171, y: totalFobPriceTwY 顯示 "TWD"
@@ -900,3 +900,35 @@ async function exportToPDF() {
 
 // 為輸出PDF按鈕添加事件監聽器
 document.getElementById('export-to-pdf').addEventListener('click', exportToPDF);
+
+async function fetchDateRange() {
+    try {
+        const response = await fetch('gc331_current.json');
+        if (!response.ok) {
+            throw new Error('無法讀取 gc331_current.json');
+        }
+        const data = await response.json();
+
+        // 將西元年轉換為民國年
+        function convertToTaiwanDateFormat(dateStr) {
+            if (dateStr.length !== 8) {
+                throw new Error("日期格式錯誤，應為 YYYYMMDD");
+            }
+            const year = parseInt(dateStr.substring(0, 4), 10); // 取出西元年
+            const monthDay = dateStr.substring(4);              // 取出 MMDD
+            const taiwanYear = year - 1911;                     // 民國年 = 西元年 - 1911
+            return taiwanYear.toString() + monthDay;            // 組合民國年與 MMDD
+        }
+
+        return {
+            startDate: convertToTaiwanDateFormat(data.start), // 動態讀取並轉換開始日期
+            endDate: convertToTaiwanDateFormat(data.end)      // 動態讀取並轉換結束日期
+        };
+    } catch (error) {
+        console.error('讀取日期區間時發生錯誤：', error);
+        return {
+            startDate: '0000000', // 默認值：民國年格式
+            endDate: '9999999'
+        };
+    }
+}
