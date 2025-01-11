@@ -2635,23 +2635,31 @@ document.querySelectorAll('.QTY, .DOC_UNIT_P').forEach(input => {
 // 定義 calculateAmount 函數
 function calculateAmount(event) {
     const row = event.target.closest('.item-row');
-    const qty = row.querySelector('.QTY').value || 0;
-    const unitPrice = row.querySelector('.DOC_UNIT_P').value || 0;
-    const decimalPlacesInput = document.getElementById('decimal-places');
-    let decimalPlaces = parseInt(decimalPlacesInput.value);
+    if (!row) return; // 防止無效的行操作
 
-    // 確保小數點位數最小為0，並預設為2
+    // 使用 Decimal.js 進行高精度運算
+    const qty = new Decimal(row.querySelector('.QTY').value || 0); // 數量
+    const unitPrice = new Decimal(row.querySelector('.DOC_UNIT_P').value || 0); // 單價
+    const decimalPlacesInput = document.getElementById('decimal-places');
+    let decimalPlaces = parseInt(decimalPlacesInput?.value, 10); // 使用安全解析
+
+    // 確保小數點位數最小為 0，並預設為 2
     if (isNaN(decimalPlaces) || decimalPlaces < 0) {
         decimalPlaces = 2;
     }
 
-    const totalPrice = qty * unitPrice;
+    // 計算總金額
+    const totalPrice = qty.mul(unitPrice);
     const totalPriceField = row.querySelector('.DOC_TOT_P');
-    
-    if (totalPrice === 0) {
-        totalPriceField.value = '';
+
+    // 根據總金額設定輸出值
+    if (totalPrice.isZero()) {
+        totalPriceField.value = ''; // 總金額為 0 時清空欄位
     } else {
-        totalPriceField.value = new Decimal(totalPrice).toDecimalPlaces(10, Decimal.ROUND_UP).toFixed(decimalPlaces);
+        // 使用 Decimal.js 確保精準處理
+        totalPriceField.value = totalPrice
+            .toDecimalPlaces(10, Decimal.ROUND_UP) // 保留 10 位精度，四捨五入
+            .toFixed(decimalPlaces); // 最終輸出指定小數位數
     }
 }
 
@@ -2768,13 +2776,16 @@ function calculateAmounts() {
 
     // 遍歷每個項次，先計算 DOC_TOT_P = QTY * DOC_UNIT_P
     items.forEach((row) => {
-        const qty = parseFloat(row.querySelector('.QTY').value) || 0; // 數量
-        const unitPrice = parseFloat(row.querySelector('.DOC_UNIT_P').value) || 0; // 單價
+        // 使用 Decimal 取得數值
+        const qty = new Decimal(row.querySelector('.QTY').value || 0); // 數量
+        const unitPrice = new Decimal(row.querySelector('.DOC_UNIT_P').value || 0); // 單價
         const totalPriceField = row.querySelector('.DOC_TOT_P'); // 總金額欄位
-
-        // 計算總金額並更新欄位
-        const totalPrice = qty * unitPrice;
-        totalPriceField.value = totalPrice.toFixed(decimalPlaces); // 更新欄位值，保留指定小數位數
+    
+        // 計算總金額，使用 Decimal 避免浮點數精度問題
+        const totalPrice = qty.mul(unitPrice);
+    
+        // 更新欄位值，保留指定小數位數
+        totalPriceField.value = totalPrice.toFixed(decimalPlaces);
     });
     
     // 計算各項次金額的加總
