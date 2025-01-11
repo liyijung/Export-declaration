@@ -5065,15 +5065,22 @@ document.addEventListener('wheel', function(event) {
 
 const numberInputs = document.querySelectorAll('input[type="number"]');
 numberInputs.forEach((input) => {
-    input.addEventListener('keydown', function (event) {
-      // 禁止輸入 'e', 'E', '+', 和 '-'
-      if (['e', 'E', '+', '-'].includes(event.key)) {
-        event.preventDefault();
-      }
-    });
-
-    input.addEventListener('input', function () {
-      // 過濾非法字符 'e' 和 'E'
-      this.value = this.value.replace(/e|E/g, '');
-    });
+  // 禁止鍵盤輸入 'e', 'E', '+', 和 '-'
+  input.addEventListener('keydown', function (event) {
+    const invalidKeys = ['e', 'E', '+', '-'];
+    if (invalidKeys.includes(event.key)) {
+      event.preventDefault();
+    }
   });
+
+  // 在輸入時過濾非法字符並允許小數點
+  input.addEventListener('input', function () {
+    // 只允許數字和小數點，並保留第一個小數點
+    const sanitizedValue = this.value
+      .replace(/[^0-9.]/g, '') // 移除非數字和小數點的字符
+      .replace(/(\..*)\./g, '$1'); // 保留第一個小數點
+    if (this.value !== sanitizedValue) {
+      this.value = sanitizedValue;
+    }
+  });
+});
