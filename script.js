@@ -4723,16 +4723,12 @@ function validateDclDocType() {
         const rows = document.querySelectorAll("#item-container .item-row");
         let allCondition1 = false;
         let allCondition2 = false;
-        let missingOrgImpDclNo = false;
 
         rows.forEach(item => {
             const stMtdValue = item.querySelector(".ST_MTD")?.value.trim();
             const isItemChecked = item.querySelector(".ITEM_NO")?.checked;
             const orgImpDclNo = item.querySelector(".ORG_IMP_DCL_NO")?.value.trim();
 
-            if (!orgImpDclNo && !isItemChecked) {
-                missingOrgImpDclNo = true; // 檢查是否有空的 ORG_IMP_DCL_NO
-            }
             if (stMtdCondition1.includes(stMtdValue) && !isItemChecked) {
                 allCondition1 = true; // 有符合條件1的項目且未勾選
             }
@@ -4741,9 +4737,6 @@ function validateDclDocType() {
             }
         });
 
-        if (missingOrgImpDclNo) {
-            validationErrors.add("B8 需核銷，原進口報單號碼 及 原進口報單項次 不可為空");
-        }
         if (allCondition1 && allCondition2) {
             validationErrors.add("B8 及 G5 不得合併申報，必須拆分或以 B9 申報（B9 項次在前）");
         } else if (allCondition1 && !allCondition2) {
