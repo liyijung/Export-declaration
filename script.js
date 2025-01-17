@@ -4938,9 +4938,17 @@ function thingsToNote() {
             const newContent = validEntries.join('\n');
             const finalContent = `${newContent}`;
 
-            // 將出口備註內容加到 REMARK1 欄位最前面
+            // 將出口備註內容加到 REMARK1 欄位最前面，避免重複
             if (remark1Element) {
-                remark1Element.value = `【出口備註】${finalContent}\n${remark1Element.value || ''}`;
+                // 取得目前 REMARK1 的內容
+                const currentContent = remark1Element.value.trim();
+            
+                // 檢查內容是否已包含欲加入的備註
+                const newEntry = `【出口備註】\n${finalContent}`;
+                if (!currentContent.includes(finalContent)) {
+                    // 若 REMARK1 未包含相同內容，才進行追加
+                    remark1Element.value = `${newEntry}\n${currentContent}`;
+                }
             }
 
             // 顯示彈跳框
