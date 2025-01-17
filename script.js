@@ -4919,6 +4919,7 @@ function thingsToNoteExcel(callback) {
 
 function thingsToNote() {
     const SHPR_BAN_ID = document.getElementById('SHPR_BAN_ID').value.trim();
+    const remark1Element = document.getElementById('REMARK1');
 
     thingsToNoteExcel(rows => {
         const validEntries = [];
@@ -4936,6 +4937,13 @@ function thingsToNote() {
             // 合併所有內容
             const newContent = validEntries.join('\n');
             const finalContent = `${newContent}`;
+
+            // 將出口備註內容加到 REMARK1 欄位最前面
+            if (remark1Element) {
+                remark1Element.value = `${finalContent}\n${remark1Element.value || ''}`;
+            }
+
+            // 顯示彈跳框
             closeExistingPopup();
             showPopup(finalContent);
         }
