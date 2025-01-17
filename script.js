@@ -4922,14 +4922,28 @@ function thingsToNote() {
     const remark1Element = document.getElementById('REMARK1');
 
     if (remark1Element) {
-        // 取得目前的內容，按行分割
-        const lines = remark1Element.value.split('\n');
-    
-        // 過濾每行內容，僅保留開頭為 "申請" 的行
-        const filteredLines = lines.filter(line => line.trim().startsWith('申請'));
-    
-        // 將過濾後的內容重新組合回文字框
-        remark1Element.value = filteredLines.join('\n');
+        try {
+            // 取得目前的內容，按行分割
+            const lines = remark1Element.value.split('\n');
+            
+            // 指定允許的字串
+            const allowedPrefixes = [
+                '申請沖退原料稅（E化退稅）',
+                '申請報單副本第三聯（沖退原料稅用聯）',
+                '申請報單副本第四聯（退內地稅用聯）',
+                '申請報單副本第五聯（出口證明用聯）'
+            ];
+            
+            // 過濾每行內容，只保留符合允許的行
+            const filteredLines = lines.filter(line => 
+                allowedPrefixes.some(prefix => line.trim().startsWith(prefix))
+            );
+            
+            // 將過濾後的內容重新組合回文字框
+            remark1Element.value = filteredLines.join('\n');
+        } catch (error) {
+            console.error('處理REMARKS內容時發生錯誤：', error);
+        }
     }
     
     thingsToNoteExcel(rows => {
