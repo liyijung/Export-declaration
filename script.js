@@ -4940,7 +4940,7 @@ function thingsToNote() {
 
             // 將出口備註內容加到 REMARK1 欄位最前面
             if (remark1Element) {
-                remark1Element.value = `${finalContent}\n${remark1Element.value || ''}`;
+                remark1Element.value = `【出口備註】${finalContent}\n${remark1Element.value || ''}`;
             }
 
             // 顯示彈跳框
