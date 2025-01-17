@@ -3437,7 +3437,7 @@ function updateRemark1() {
 
     const remark1Element = document.getElementById('REMARK1');
     const currentRemark = remark1Element.value.split('\n').filter(line => !line.startsWith('申請')).join('\n');
-    remark1Element.value = currentRemark + (currentRemark ? '\n' : '') + additionalDesc;
+    remark1Element.value = currentRemark.trim() + (currentRemark ? '\n' : '') + additionalDesc;
 }
 
 // 根據REMARK1欄位更新checkbox的狀態
@@ -4921,6 +4921,17 @@ function thingsToNote() {
     const SHPR_BAN_ID = document.getElementById('SHPR_BAN_ID').value.trim();
     const remark1Element = document.getElementById('REMARK1');
 
+    if (remark1Element) {
+        // 取得目前的內容，按行分割
+        const lines = remark1Element.value.split('\n');
+    
+        // 過濾每行內容，僅保留開頭為 "申請" 的行
+        const filteredLines = lines.filter(line => line.trim().startsWith('申請'));
+    
+        // 將過濾後的內容重新組合回文字框
+        remark1Element.value = filteredLines.join('\n');
+    }
+    
     thingsToNoteExcel(rows => {
         const validEntries = [];
 
@@ -4948,7 +4959,6 @@ function thingsToNote() {
                     return content
                         .split('\n') // 按行分割
                         .map(line => line.trim()) // 去除每行的多餘空白
-                        .filter(line => line !== '') // 過濾掉空白行
                         .join('\n'); // 重新合併為字串
                 };
 
