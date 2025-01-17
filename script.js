@@ -3437,7 +3437,7 @@ function updateRemark1() {
 
     const remark1Element = document.getElementById('REMARK1');
     const currentRemark = remark1Element.value.split('\n').filter(line => !line.startsWith('申請')).join('\n');
-    remark1Element.value = additionalDesc + (additionalDesc ? '\n' : '') + currentRemark;
+    remark1Element.value = currentRemark + (currentRemark ? '\n' : '') + additionalDesc;
 }
 
 // 根據REMARK1欄位更新checkbox的狀態
@@ -4942,10 +4942,22 @@ function thingsToNote() {
             if (remark1Element) {
                 // 取得目前 REMARK1 的內容
                 const currentContent = remark1Element.value.trim();
-            
+
+                // 標準化行內容以避免因格式問題產生重複
+                const normalizeContent = (content) => {
+                    return content
+                        .split('\n') // 按行分割
+                        .map(line => line.trim()) // 去除每行的多餘空白
+                        .filter(line => line !== '') // 過濾掉空白行
+                        .join('\n'); // 重新合併為字串
+                };
+
+                const normalizedFinalContent = normalizeContent(finalContent);
+                const normalizedCurrentContent = normalizeContent(currentContent);
+
                 // 檢查內容是否已包含欲加入的備註
-                const newEntry = `【出口備註】\n${finalContent}`;
-                if (!currentContent.includes(finalContent)) {
+                const newEntry = `【出口備註】\n${normalizedFinalContent}`;
+                if (!normalizedCurrentContent.includes(normalizedFinalContent)) {
                     // 若 REMARK1 未包含相同內容，才進行追加
                     remark1Element.value = `${newEntry}\n${currentContent}`;
                 }
