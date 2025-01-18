@@ -5116,3 +5116,24 @@ document.addEventListener('wheel', function(event) {
         event.preventDefault(); // 禁止滾輪調整數值
     }
 }, { passive: false }); // 使用 { passive: false } 以便可以調用 preventDefault
+
+// 禁止滑鼠拖動
+document.addEventListener('dragstart', function (event) {
+    event.preventDefault();
+});
+
+// 防止上一頁/下一頁
+window.addEventListener('popstate', function () {
+    history.pushState(null, '', location.href);
+});
+
+// 防止頁面刷新或跳轉
+window.addEventListener('beforeunload', function (event) {
+    event.preventDefault();
+    event.returnValue = ''; // 提示是否離開
+});
+
+// 初始化防止上一頁操作
+window.addEventListener('load', function () {
+    history.pushState(null, '', location.href);
+});
