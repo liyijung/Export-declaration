@@ -1536,7 +1536,6 @@ function clearField() {
 
 // 匯入Excel文件的功能
 function handleFile(event) {
-    searchData(false);
     clearField(); // 清空輸入框內容
     
     const file = event.target.files[0];
@@ -1619,6 +1618,7 @@ function handleFile(event) {
             }
         });
 
+        searchData(false); // 出口人統一編號搜尋
         handleCheck(); // 長期委任字號
         thingsToNote(); // 出口備註
         
@@ -2044,7 +2044,6 @@ function exportToExcel() {
 
 // 匯入XML文件的功能
 function importXML(event) {
-    searchData(false);
     clearField(); // 清空輸入框內容
     
     const file = event.target.files[0];
@@ -2071,6 +2070,7 @@ function importXML(event) {
                 }
             });
 
+            searchData(false); // 出口人統一編號搜尋
             handleCheck(); // 長期委任字號
             thingsToNote(); // 出口備註
             
