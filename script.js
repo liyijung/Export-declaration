@@ -365,6 +365,7 @@ function searchData(showErrorMessage = false) {
         document.getElementById('SHPR_E_NAME').value = '';
         document.getElementById('SHPR_C_ADDR').value = '';
         document.getElementById('SHPR_E_ADDR').value = '';
+        document.getElementById('SHPR_TEL').value = '';
         noDataMessage.style.display = 'none'; // 隱藏錯誤訊息
         return;
     }
@@ -384,6 +385,7 @@ function searchData(showErrorMessage = false) {
                     document.getElementById('SHPR_E_NAME').value = record['廠商英文名稱'] || '';
                     document.getElementById('SHPR_C_ADDR').value = record['中文營業地址'] || '';
                     document.getElementById('SHPR_E_ADDR').value = record['英文營業地址'] || '';
+                    document.getElementById('SHPR_TEL').value = record['電話號碼'] || '';
                     noDataMessage.style.display = 'none'; // 隱藏"查無資料"訊息
                 } else {
                     // 清空欄位
@@ -391,6 +393,7 @@ function searchData(showErrorMessage = false) {
                     document.getElementById('SHPR_E_NAME').value = '';
                     document.getElementById('SHPR_C_ADDR').value = '';
                     document.getElementById('SHPR_E_ADDR').value = '';
+                    document.getElementById('SHPR_TEL').value = '';
                     noDataMessage.style.display = 'inline'; // 顯示"查無資料"訊息
                 }
             }
@@ -1555,6 +1558,7 @@ function handleFile(event) {
             '出口人英文名稱': 'SHPR_E_NAME',
             '出口人中文地址': 'SHPR_C_ADDR',
             '出口人英文地址': 'SHPR_E_ADDR',
+            '出口人TEL': 'SHPR_TEL',
             '買方中文名稱': 'CNEE_C_NAME',
             '買方中/英名稱': 'CNEE_E_NAME',
             '買方中/英地址': 'CNEE_E_ADDR',
@@ -1850,6 +1854,7 @@ function exportToExcel() {
         ['出口人英文名稱', document.getElementById('SHPR_E_NAME').value],
         ['出口人中文地址', document.getElementById('SHPR_C_ADDR').value],
         ['出口人英文地址', document.getElementById('SHPR_E_ADDR').value],
+        ['出口人TEL', document.getElementById('SHPR_TEL').value],
         ['買方中文名稱', document.getElementById('CNEE_C_NAME').value],
         ['買方中/英名稱', document.getElementById('CNEE_E_NAME').value],
         ['買方中/英地址', document.getElementById('CNEE_E_ADDR').value],
@@ -3988,7 +3993,7 @@ document.addEventListener('DOMContentLoaded', function () {
         
         const headerFields = [
             'LOT_NO', 'SHPR_BAN_ID', 'SHPR_BONDED_ID', 
-            'SHPR_C_NAME', 'SHPR_E_NAME', 'SHPR_C_ADDR', 'SHPR_E_ADDR', 
+            'SHPR_C_NAME', 'SHPR_E_NAME', 'SHPR_C_ADDR', 'SHPR_E_ADDR', 'SHPR_TEL', 
             'CNEE_C_NAME', 'CNEE_E_NAME', 'CNEE_E_ADDR', 
             'CNEE_COUNTRY_CODE', 'CNEE_BAN_ID',
             'BUYER_E_NAME', 'BUYER_E_ADDR', 'TO_CODE', 'TO_DESC', 
@@ -4267,6 +4272,7 @@ function clearExistingData() {
     document.getElementById('SHPR_E_NAME').value = '';
     document.getElementById('SHPR_C_ADDR').value = '';
     document.getElementById('SHPR_E_ADDR').value = '';
+    document.getElementById('SHPR_TEL').value = '';
     document.getElementById('CNEE_C_NAME').value = '';
     document.getElementById('CNEE_E_NAME').value = '';
     document.getElementById('CNEE_E_ADDR').value = '';
