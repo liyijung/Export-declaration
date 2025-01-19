@@ -905,7 +905,7 @@ optgroup[label] {
 /* 分隔線的樣式 */
 option.separator {
     background-color: #f0f0f0;
-    color: #aaa;
-    text-align: center;
+    color: #7c7c7c;
     pointer-events: none; /* 禁止選中 */
+    margin-top: 10px;
 }
