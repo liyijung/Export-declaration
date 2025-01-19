@@ -881,7 +881,16 @@ Alt + 2 指定項次">攤重</button>
             <div class="header-group">
                 <label for="field-select">選擇欄位<br>(按住Ctrl或Shift可複選)</label>
                 <select id="field-select" multiple style="height: 605px;">
-                    <option>必填欄位</option>
+                    <optgroup label="必填欄位">
+                        <option value="DESCRIPTION">品名</option>
+                        <option value="QTY">數量</option>
+                        <option value="DOC_UM">單位</option>
+                        <option value="DOC_UNIT_P">單價</option>
+                        <option value="DOC_TOT_P">金額</option>
+                        <option value="TRADE_MARK">商標</option>
+                        <option value="CCC_CODE">稅則</option>
+                        <option value="ST_MTD">統計方式</option>
+                    </optgroup>
                     <option class="separator" disabled>──────────</option>
                     <option value="ORG_COUNTRY">生產國別</option>
                     <option value="ORG_IMP_DCL_NO">原進口報單號碼</option>
