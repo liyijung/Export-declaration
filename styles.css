@@ -401,7 +401,7 @@ h4 {
 
 #field-select {
     width: 100%;
-    height: 300px;
+    height: 600px;
     box-sizing: border-box;
     padding: 5px;
     border-radius: 5px;
@@ -890,4 +890,22 @@ select:-webkit-autofill {
     display: flex;
     gap: 5px;
     margin-left: auto; /* 按鈕靠右 */
+}
+
+/* 增加 optgroup 內的選項縮排 */
+optgroup option {
+    padding-left: 34px;
+}
+
+/* 隔離 optgroup 的標籤樣式 */
+optgroup[label] {
+    color: #333;
+}
+
+/* 分隔線的樣式 */
+option.separator {
+    background-color: #f0f0f0;
+    color: #aaa;
+    text-align: center;
+    pointer-events: none; /* 禁止選中 */
 }
