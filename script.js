@@ -1143,6 +1143,7 @@ function applyToggleFieldsToRow(row) {
 
     // 所有可能的欄位
     const allFields = [
+        'DESCRIPTION', 'QTY', 'DOC_UM', 'DOC_UNIT_P', 'DOC_TOT_P', 'TRADE_MARK', 'CCC_CODE', 'ST_MTD',
         'ORG_COUNTRY', 'ORG_IMP_DCL_NO', 
         'ORG_IMP_DCL_NO_ITEM', 'SELLER_ITEM_CODE', 'BOND_NOTE', 'GOODS_MODEL', 'GOODS_SPEC', 
         'CERT_NO', 'CERT_NO_ITEM', 'ORG_DCL_NO', 'ORG_DCL_NO_ITEM', 'EXP_NO', 'EXP_SEQ_NO', 
@@ -1205,10 +1206,12 @@ function closeToggleFieldsModal() {
     document.removeEventListener('keydown', handleEscKeyForToggleFieldsCancel);
 }
 
+// 顯示或隱藏欄位邏輯
 function applyToggleFields() {
     const selectedOptions = Array.from(document.getElementById('field-select').selectedOptions).map(option => option.value);
     
     const allFields = [
+        'DESCRIPTION', 'QTY', 'DOC_UM', 'DOC_UNIT_P', 'DOC_TOT_P', 'TRADE_MARK', 'CCC_CODE', 'ST_MTD',
         'ORG_COUNTRY', 'ORG_IMP_DCL_NO', 
         'ORG_IMP_DCL_NO_ITEM', 'SELLER_ITEM_CODE', 'BOND_NOTE', 'GOODS_MODEL', 'GOODS_SPEC', 
         'CERT_NO', 'CERT_NO_ITEM', 'ORG_DCL_NO', 'ORG_DCL_NO_ITEM', 'EXP_NO', 'EXP_SEQ_NO', 
@@ -1231,6 +1234,38 @@ function applyToggleFields() {
 
     closeToggleFieldsModal();
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    const fieldSelect = document.getElementById('field-select');
+
+    // 預設選中必填欄位
+    const defaultRequiredFields = [
+        'DESCRIPTION', 'QTY', 'DOC_UM', 'DOC_UNIT_P', 'DOC_TOT_P', 'TRADE_MARK', 'CCC_CODE', 'ST_MTD'
+    ];
+
+    // 預設選中這些欄位
+    defaultRequiredFields.forEach(fieldValue => {
+        const option = fieldSelect.querySelector(`option[value="${fieldValue}"]`);
+        if (option) {
+            option.selected = true;
+        }
+    });
+
+    // 應用顯示邏輯
+    applyToggleFields();
+
+    // 監聽 optgroup 點擊事件
+    fieldSelect.addEventListener('click', (event) => {
+        // 確保事件來源是 optgroup 的 label
+        if (event.target.tagName === 'OPTGROUP') {
+            const groupOptions = event.target.querySelectorAll('option');
+            const allSelected = Array.from(groupOptions).every(option => option.selected);
+
+            // 切換全選或取消全選
+            groupOptions.forEach(option => option.selected = !allSelected);
+        }
+    });
+});
 
 // 引入 Sortable.js 庫
 document.write('<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.14.0/Sortable.min.js"><\/script>');
@@ -2248,6 +2283,7 @@ function initializeFieldVisibility() {
     const selectedOptions = Array.from(document.getElementById('field-select').selectedOptions).map(option => option.value);
 
     const allFields = [
+        'DESCRIPTION', 'QTY', 'DOC_UM', 'DOC_UNIT_P', 'DOC_TOT_P', 'TRADE_MARK', 'CCC_CODE', 'ST_MTD',
         'ORG_COUNTRY', 'ORG_IMP_DCL_NO', 
         'ORG_IMP_DCL_NO_ITEM', 'SELLER_ITEM_CODE', 'BOND_NOTE', 'GOODS_MODEL', 'GOODS_SPEC', 
         'CERT_NO', 'CERT_NO_ITEM', 'ORG_DCL_NO', 'ORG_DCL_NO_ITEM', 'EXP_NO', 'EXP_SEQ_NO', 
