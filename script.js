@@ -1143,7 +1143,7 @@ function applyToggleFieldsToRow(row) {
 
     // 所有可能的欄位
     const allFields = [
-        'DESCRIPTION', 'QTY', 'DOC_UM', 'DOC_UNIT_P', 'DOC_TOT_P', 'TRADE_MARK', 'CCC_CODE', 'ST_MTD',
+        'DESCRIPTION', 'QTY', 'DOC_UM', 'DOC_UNIT_P', 'DOC_TOT_P', 'TRADE_MARK', 'CCC_CODE', 'ST_MTD', 'ISCALC_WT', 'NET_WT',
         'ORG_COUNTRY', 'ORG_IMP_DCL_NO', 
         'ORG_IMP_DCL_NO_ITEM', 'SELLER_ITEM_CODE', 'BOND_NOTE', 'GOODS_MODEL', 'GOODS_SPEC', 
         'CERT_NO', 'CERT_NO_ITEM', 'ORG_DCL_NO', 'ORG_DCL_NO_ITEM', 'EXP_NO', 'EXP_SEQ_NO', 
@@ -1211,7 +1211,7 @@ function applyToggleFields() {
     const selectedOptions = Array.from(document.getElementById('field-select').selectedOptions).map(option => option.value);
     
     const allFields = [
-        'DESCRIPTION', 'QTY', 'DOC_UM', 'DOC_UNIT_P', 'DOC_TOT_P', 'TRADE_MARK', 'CCC_CODE', 'ST_MTD',
+        'DESCRIPTION', 'QTY', 'DOC_UM', 'DOC_UNIT_P', 'DOC_TOT_P', 'TRADE_MARK', 'CCC_CODE', 'ST_MTD', 'ISCALC_WT', 'NET_WT',
         'ORG_COUNTRY', 'ORG_IMP_DCL_NO', 
         'ORG_IMP_DCL_NO_ITEM', 'SELLER_ITEM_CODE', 'BOND_NOTE', 'GOODS_MODEL', 'GOODS_SPEC', 
         'CERT_NO', 'CERT_NO_ITEM', 'ORG_DCL_NO', 'ORG_DCL_NO_ITEM', 'EXP_NO', 'EXP_SEQ_NO', 
@@ -1240,7 +1240,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 預設選中必填欄位
     const defaultRequiredFields = [
-        'DESCRIPTION', 'QTY', 'DOC_UM', 'DOC_UNIT_P', 'DOC_TOT_P', 'TRADE_MARK', 'CCC_CODE', 'ST_MTD'
+        'DESCRIPTION', 'QTY', 'DOC_UM', 'DOC_UNIT_P', 'DOC_TOT_P', 'TRADE_MARK', 'CCC_CODE', 'ST_MTD', 'ISCALC_WT', 'NET_WT',
     ];
 
     // 預設選中這些欄位
@@ -2283,7 +2283,7 @@ function initializeFieldVisibility() {
     const selectedOptions = Array.from(document.getElementById('field-select').selectedOptions).map(option => option.value);
 
     const allFields = [
-        'DESCRIPTION', 'QTY', 'DOC_UM', 'DOC_UNIT_P', 'DOC_TOT_P', 'TRADE_MARK', 'CCC_CODE', 'ST_MTD',
+        'DESCRIPTION', 'QTY', 'DOC_UM', 'DOC_UNIT_P', 'DOC_TOT_P', 'TRADE_MARK', 'CCC_CODE', 'ST_MTD', 'ISCALC_WT', 'NET_WT',
         'ORG_COUNTRY', 'ORG_IMP_DCL_NO', 
         'ORG_IMP_DCL_NO_ITEM', 'SELLER_ITEM_CODE', 'BOND_NOTE', 'GOODS_MODEL', 'GOODS_SPEC', 
         'CERT_NO', 'CERT_NO_ITEM', 'ORG_DCL_NO', 'ORG_DCL_NO_ITEM', 'EXP_NO', 'EXP_SEQ_NO', 
@@ -2486,10 +2486,10 @@ function createInputField(name, value, isVisible, iscalcWtValue) {
         if (name === 'NET_WT') {
             const isCalcChecked = iscalcWtValue === 'Y' ? 'checked' : ''; // 根據 ISCALC_WT 判斷是否勾選
             return `
-                <div class="form-group ${visibilityClass}" style="width: 20%; display: flex; align-items: center;">
+                <div class="form-group ${visibilityClass}" style="width: 20%; align-items: center;">
                     <input type="checkbox" class="ISCALC_WT" style="margin-left: 5px;" ${isCalcChecked} tabindex="-1">
                 </div>
-                <div class="form-group ${visibilityClass}" style="width: 60%; display: flex; align-items: center;">
+                <div class="form-group ${visibilityClass}" style="width: 60%; align-items: center;">
                     ${inputField}
                 </div>
             `;
