@@ -3409,6 +3409,7 @@ function calculate() {
     calculateQuantities(); //數量核算
     calculateAmounts(); // 金額核算
     calculateWeight(); // 重量核算
+    initializeFieldVisibility(); // 更新欄位顯示狀態
 }
 
 // 更新DOC_OTR_DESC的值，勾選時加入描述，取消勾選時移除描述
