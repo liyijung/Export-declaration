@@ -5138,7 +5138,7 @@ document.addEventListener('wheel', function(event) {
     }
 }, { passive: false }); // 使用 { passive: false } 以便可以調用 preventDefault
 
-// 當使用者按下「上一頁」或「下一頁」時，強制停留在當前頁面
-window.addEventListener('popstate', function () {
-    history.pushState(null, '', location.href);
+window.addEventListener('beforeunload', function (event) {
+    event.preventDefault();
+    event.returnValue = ''; // 必須設置，才能顯示提示框
 });
