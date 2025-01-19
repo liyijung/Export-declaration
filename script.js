@@ -1250,21 +1250,6 @@ document.addEventListener('DOMContentLoaded', () => {
             option.selected = true;
         }
     });
-
-    // 應用顯示邏輯
-    applyToggleFields();
-
-    // 監聽 optgroup 點擊事件
-    fieldSelect.addEventListener('click', (event) => {
-        // 確保事件來源是 optgroup 的 label
-        if (event.target.tagName === 'OPTGROUP') {
-            const groupOptions = event.target.querySelectorAll('option');
-            const allSelected = Array.from(groupOptions).every(option => option.selected);
-
-            // 切換全選或取消全選
-            groupOptions.forEach(option => option.selected = !allSelected);
-        }
-    });
 });
 
 // 引入 Sortable.js 庫
