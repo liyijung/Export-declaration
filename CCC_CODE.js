@@ -181,7 +181,6 @@ function searchTariff(inputElement, isModal = false) {
                         }
 
                         // 更新欄位顯示狀態
-                        initializeFieldVisibility(); // 確保根據新值更新顯示
                         closeTaxModal();
                         inputElement.focus(); // 選中項目後焦點返回輸入框
                         searchTariff(inputElement);
@@ -431,7 +430,6 @@ function updateFields(inputElement, item) {
         if (stum) stum.value = '';
     }
 
-    initializeFieldVisibility();
     initializeDimensionListeners(itemRow);
 }
 
