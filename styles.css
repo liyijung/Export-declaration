@@ -907,4 +907,5 @@ option.separator {
     background-color: #f0f0f0;
     color: #7c7c7c;
     pointer-events: none; /* 禁止選中 */
+    text-align: center;
 }
