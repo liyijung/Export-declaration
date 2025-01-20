@@ -1537,6 +1537,14 @@ function applyFieldData() {
         });
     }
 
+    const decimalPlacesInput = document.getElementById('decimal-places');
+    let decimalPlaces = parseInt(decimalPlacesInput.value);
+    
+    // 確保小數點位數最小為0，並預設為2
+    if (isNaN(decimalPlaces) || decimalPlaces < 0) {
+        decimalPlaces = 2;
+    }
+    
     // 檢查是否有更新QTY或DOC_UNIT_P欄位，若有則對所有更新的欄位執行金額計算
     if (hasUpdatedQtyOrUnitPrice) {
         items.forEach(item => {
