@@ -367,8 +367,8 @@ textarea {
 
 .delete-button {
     display: inline-block;
-    padding: 5px 10px;
-    font-size: 12px;
+    padding: 3px 6px;
+    font-size: 10px;
     font-weight: bold;
     color: #fff;
     background-color: #f37380;
@@ -381,6 +381,8 @@ textarea {
 
 .delete-button:hover {
     background-color: #c82333;
+    padding: 4px 8px;
+    font-size: 12px;
 }
 
 h4 {
