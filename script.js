@@ -1567,6 +1567,13 @@ function handleFile(event) {
     clearField(); // 清空輸入框內容
     
     const file = event.target.files[0];
+    
+    // 提取檔名中【】內的文字
+    const matchRemark = file.name.match(/【(.*?)】/);
+    const fileRemark = matchRemark ? matchRemark[1] : ''; // 若無則回傳空字串
+    document.getElementById('REMARK').value = fileRemark;
+
+    // 讀取 Excel 檔案
     const reader = new FileReader();
     reader.onload = function(event) {
         const data = new Uint8Array(event.target.result);
@@ -2054,15 +2061,25 @@ function exportToExcel() {
     // 文件名
     const fileName = document.getElementById('FILE_NO').value.trim() || '';
     const exporterName = document.getElementById('SHPR_C_NAME').value.trim() || '';
+    const remarkElement = document.getElementById('REMARK').value.trim() || '';
 
     // 下載 Excel 文件
     let exportFileName = '';
-    if (fileName && exporterName) {
+
+    if (fileName && exporterName && remarkElement) {
+        exportFileName = `${fileName}-${exporterName}【${remarkElement}】.xlsx`;
+    } else if (fileName && exporterName) {
         exportFileName = `${fileName}-${exporterName}.xlsx`;
+    } else if (fileName && remarkElement) {
+        exportFileName = `${fileName}【${remarkElement}】.xlsx`;
+    } else if (exporterName && remarkElement) {
+        exportFileName = `${exporterName}【${remarkElement}】.xlsx`;
     } else if (fileName) {
         exportFileName = `${fileName}.xlsx`;
     } else if (exporterName) {
         exportFileName = `${exporterName}.xlsx`;
+    } else if (remarkElement) {
+        exportFileName = `【${remarkElement}】.xlsx`;
     } else {
         exportFileName = 'export.xlsx';
     }
@@ -2081,6 +2098,11 @@ function importXML(event) {
         const match = file.name.match(/^\d+/);
         const fileNumber = match ? match[0] : ''; // 如果沒有匹配到，設為空字符串
         document.getElementById('FILE_NO').value = fileNumber;
+
+        // 提取【】內的文字
+        const matchRemark = file.name.match(/【(.*?)】/);
+        const fileRemark = matchRemark ? matchRemark[1] : ''; // 若無則回傳空字串
+        document.getElementById('REMARK').value = fileRemark;
 
         const reader = new FileReader();
         reader.onload = function(e) {
@@ -4179,18 +4201,16 @@ document.addEventListener('DOMContentLoaded', function () {
         });
         xmlContent += '</detail>\n</Root>';
 
-        const fileName = document.getElementById('FILE_NO').value.trim() || '';
-        const exporterName = document.getElementById('SHPR_C_NAME').value.trim() || '';
+        const fileName = document.getElementById('FILE_NO').value.trim();
+        const exporterName = document.getElementById('SHPR_C_NAME').value.trim();
+        const remarkElement = document.getElementById('REMARK').value.trim() || '';
 
         let fullFileName = '';
-        if (fileName && exporterName) {
-            fullFileName = `${fileName}-${exporterName}.xml`;
-        } else if (fileName) {
-            fullFileName = `${fileName}.xml`;
-        } else if (exporterName) {
-            fullFileName = `${exporterName}.xml`;
+
+        if (remarkElement) {
+            fullFileName = `${fileName}-${exporterName}【${remarkElement}】.xml`;
         } else {
-            fullFileName = 'export.xml';
+            fullFileName = `${fileName}-${exporterName}.xml`;
         }
 
         const blob = new Blob([xmlContent], { type: 'application/xml' });
