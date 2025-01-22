@@ -4661,7 +4661,7 @@ function clearErrors() {
 function validateDclDocType() {
     clearErrors(); // 清除之前的錯誤標記
     const dclDocType = document.getElementById('DCL_DOC_TYPE').value.trim().toUpperCase();
-    const stMtdCondition1 = ["02", "04", "05", "06", "2L", "2R", "7M", "1A", "94", "95"];
+    const stMtdCondition1 = ["02", "04", "06", "2L", "2R", "7M", "1A", "94", "95"];
     const stMtdCondition2 = ["81", "82", "8B", "8C", "9N", "8A", "8D", "92", "99", "9M"];
     let validationErrors = new Set(); // 使用 Set 儲存錯誤訊息，避免重複
 
