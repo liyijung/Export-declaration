@@ -888,10 +888,33 @@ async function exportToPDF() {
         // 最後在每頁添加頁碼
         addPageNumbers(doc, totalPages);
 
-        // 保存 PDF，文件名為 FILE_NO 的值
-        const fileName = document.getElementById('FILE_NO').value || 'export';
-        const exporterName = document.getElementById('SHPR_C_NAME').value || 'exporter';
-        doc.save(`${fileName}-${exporterName}.pdf`);
+        // 取得文件名的值
+        const fileName = document.getElementById('FILE_NO').value.trim() || '';
+        const exporterName = document.getElementById('SHPR_C_NAME').value.trim() || '';
+        const lotNo = document.getElementById('LOT_NO').value.trim() || '';
+
+        let exportFileName = '';
+
+        if (fileName && exporterName && lotNo) {
+            exportFileName = `${fileName}-${exporterName}-${lotNo}.pdf`;
+        } else if (fileName && exporterName) {
+            exportFileName = `${fileName}-${exporterName}.pdf`;
+        } else if (fileName && lotNo) {
+            exportFileName = `${fileName}-${lotNo}.pdf`;
+        } else if (exporterName && lotNo) {
+            exportFileName = `${exporterName}-${lotNo}.pdf`;
+        } else if (fileName) {
+            exportFileName = `${fileName}.pdf`;
+        } else if (exporterName) {
+            exportFileName = `${exporterName}.pdf`;
+        } else if (lotNo) {
+            exportFileName = `-${lotNo}.pdf`;
+        } else {
+            exportFileName = 'export.pdf';
+        }
+
+        // 保存 PDF
+        doc.save(exportFileName);
     } catch (error) {
         console.error("生成PDF時出現錯誤：", error);
     } finally {
