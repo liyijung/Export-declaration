@@ -5171,3 +5171,26 @@ window.addEventListener('beforeunload', function (event) {
     event.preventDefault();
     event.returnValue = ''; // 必須設置，才能顯示提示框
 });
+
+let lastFocusedElement = null;
+
+// 事件委派，監聽所有輸入框、按鈕的 focus 和 blur 事件
+document.addEventListener('focusin', function (event) {
+    if (event.target.matches('input, textarea, select, button')) {
+        // 移除先前的反色效果
+        if (lastFocusedElement && lastFocusedElement !== event.target) {
+            lastFocusedElement.classList.remove('highlighted-element');
+        }
+        
+        // 為新獲得焦點的元素添加反色
+        event.target.classList.add('highlighted-element');
+        lastFocusedElement = event.target;
+    }
+});
+
+document.addEventListener('focusout', function (event) {
+    if (event.target.matches('input, textarea, select, button')) {
+        // 當元素失去焦點後，保持反色，直到新的元素獲得焦點時才移除
+        event.target.classList.add('highlighted-element');
+    }
+});
