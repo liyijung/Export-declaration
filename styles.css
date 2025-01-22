@@ -911,3 +911,17 @@ option.separator {
     pointer-events: none; /* 禁止選中 */
     text-align: center;
 }
+
+/* 當前獲得焦點的元素反色 */
+.highlighted-element {
+    border: 2px solid #005feec5 !important; /* 焦點邊框 */
+}
+
+/* 通用樣式，適用於輸入框和按鈕 */
+input:focus, 
+textarea:focus, 
+select:focus, 
+button:focus {
+    outline: none; /* 移除預設的瀏覽器外框 */
+    border: 2px solid #005feec5 !important; /* 獲得焦點時的藍色邊框 */
+}
