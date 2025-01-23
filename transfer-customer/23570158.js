@@ -254,8 +254,8 @@ function importCustomer23570158(event) {
         document.getElementById('SHPR_E_NAME').value = 'LEE BOU INTERNATIONAL CO., LTD.';
         document.getElementById('SHPR_C_ADDR').value = '彰化縣和美鎮竹園里彰新路4段291-1號';
         document.getElementById('SHPR_E_ADDR').value = 'No. 291-1, Sec. 4, Zhangxin Rd., Zhuyuan Vil., Hemei Township, Changhua County 50847, Taiwan (R.O.C.)';
+        document.getElementById('SHPR_TEL').value = '04-7364480';
         document.getElementById('CNEE_E_NAME').value = e9;
-        // document.getElementById('CNEE_E_ADDR').value = e10;
         document.getElementById('CNEE_COUNTRY_CODE').value = cneeCountryCode;
         document.getElementById('TO_CODE').value = toCode;
         document.getElementById('TO_DESC').value = toDesc;
