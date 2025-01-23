@@ -2018,7 +2018,7 @@ function exportToExcel() {
         for (let col = 0; col <= 1; col++) { // A 欄 (0) 到 B 欄 (1)
             const cellRef = XLSX.utils.encode_cell({ r: row, c: col });
             if (headerWorksheet[cellRef]) {
-                headerWorksheet[cellRef].z = '@'; // 文字格式
+                headerWorksheet[cellRef].t = 's'; // 文字格式
             }
         }
     }
@@ -2044,12 +2044,7 @@ function exportToExcel() {
                 itemsWorksheet[cellRef] = { t: 's', v: '' }; // 設置為空的文字單元格
             }
 
-            // 如果欄位是 D, F, G, K 則設置為通用格式，否則設置為文字格式
-            if (generalCols.includes(col)) {
-                itemsWorksheet[cellRef].z = 'General'; // 通用格式
-            } else {
-                itemsWorksheet[cellRef].z = '@'; // 文字格式
-            }
+            itemsWorksheet[cellRef].t = 's'; // 文字格式
         }
     }
     
