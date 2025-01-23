@@ -1952,7 +1952,8 @@ function exportToExcel() {
     itemsData[0] = [...fixedColumns, ...dynamicColumns, ...remainingColumns]; // 合併所有欄位
 
     // 處理每一項的數據
-    document.querySelectorAll("#item-container .item-row").forEach((item, index) => {
+    const itemRows = document.querySelectorAll("#item-container .item-row");
+    itemRows.forEach((item, index) => {
         const isChecked = item.querySelector('.ITEM_NO').checked;
     
         // 根據條件決定是否增加計數器
@@ -2018,35 +2019,29 @@ function exportToExcel() {
         for (let col = 0; col <= 1; col++) { // A 欄 (0) 到 B 欄 (1)
             const cellRef = XLSX.utils.encode_cell({ r: row, c: col });
             if (headerWorksheet[cellRef]) {
-                headerWorksheet[cellRef].t = 's'; // 文字格式
+                headerWorksheet[cellRef].t = 's'; // 設定文字格式
+                headerWorksheet[cellRef].z = '@'; // 確保顯示為文字
             }
         }
     }
-
-    // 設置報單項次 A 欄至 AD 欄為文字格式，並針對 D, F, G, K 欄設置為通用格式
-    const generalCols = [3, 5, 6, 10]; // D(3), F(5), G(6), K(10)
 
     // 取得工作表範圍
     const range = XLSX.utils.decode_range(itemsWorksheet['!ref']);
 
-    // 更新範圍以涵蓋 A 到 AD 欄
-    range.e.c = Math.max(range.e.c, 29);
-
     // 更新工作表範圍
     itemsWorksheet['!ref'] = XLSX.utils.encode_range(range);
 
+    let cellRefs = [];
     for (let row = range.s.r; row <= range.e.r; row++) {
-        for (let col = 0; col <= 29; col++) { // A 欄 (0) 到 AD 欄 (29)
-            const cellRef = XLSX.utils.encode_cell({ r: row, c: col });
-            
-            // 如果單元格不存在，創建一個空單元格
-            if (!itemsWorksheet[cellRef]) {
-                itemsWorksheet[cellRef] = { t: 's', v: '' }; // 設置為空的文字單元格
-            }
-
-            itemsWorksheet[cellRef].t = 's'; // 文字格式
+        for (let col = range.s.c; col <= range.e.c; col++) {
+            cellRefs.push(XLSX.utils.encode_cell({ r: row, c: col }));
         }
     }
+    cellRefs.forEach(cellRef => {
+        itemsWorksheet[cellRef] = itemsWorksheet[cellRef] || { t: 's', v: '' };
+        itemsWorksheet[cellRef].t = 's';
+        itemsWorksheet[cellRef].z = '@';
+    });
     
     // 創建工作簿並添加工作表
     const workbook = XLSX.utils.book_new();
