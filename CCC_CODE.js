@@ -245,7 +245,9 @@ function searchTariff(inputElement, isModal = false) {
                 
                     td.addEventListener('mouseover', function(event) {
                         const regInfo = getRegInfo(regCode, importRegData, '輸入規定');
-                        showTooltip(event, regInfo);
+                        if (regInfo) {
+                            showTooltip(event, regInfo);
+                        }
                     });
                 
                     td.addEventListener('mouseout', hideTooltip);
@@ -257,7 +259,9 @@ function searchTariff(inputElement, isModal = false) {
                 
                     td.addEventListener('mouseover', function(event) {
                         const regInfo = getRegInfo(regCode, exportRegData, '輸出規定');
-                        showTooltip(event, regInfo);
+                        if (regInfo) {
+                            showTooltip(event, regInfo);
+                        }
                     });
                 
                     td.addEventListener('mouseout', hideTooltip);
@@ -621,7 +625,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function getRegInfo(regCode, regData, type) {
     if (!regCode) {
-        return `<strong>${type}:</strong> 無`;
+        return '';  // 若無規定則返回空白
     }
 
     // 以空格分隔多個代號
