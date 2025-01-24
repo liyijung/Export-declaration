@@ -5249,6 +5249,7 @@ document.addEventListener('DOMContentLoaded', () => {
         clearBtn.style.height = '20px';
         clearBtn.style.fontSize = '12px';
         clearBtn.style.color = 'black';
+        clearBtn.style.backgroundColor = '#dedede';  // 預設淺灰色
         clearBtn.style.border = 'none';
         clearBtn.style.borderRadius = '50%';
         clearBtn.style.cursor = 'pointer';
