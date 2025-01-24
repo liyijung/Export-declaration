@@ -5184,3 +5184,37 @@ document.addEventListener('focusout', function (event) {
         event.target.classList.add('highlighted-element');
     }
 });
+
+// 必填欄位-動態移除 style="background: #ffffff00;"
+document.getElementById('CNEE_COUNTRY_CODE').addEventListener('input', function () {
+    let countryCode = this.value.toUpperCase().trim();
+    let fieldsToUpdate = ['CNEE_BAN_ID', 'BUYER_E_NAME', 'BUYER_E_ADDR'];
+
+    if (countryCode === 'TW') {
+        fieldsToUpdate.forEach(fieldId => {
+            document.querySelector(`label[for="${fieldId}"]`).removeAttribute('style');
+        });
+    } else {
+        fieldsToUpdate.forEach(fieldId => {
+            document.querySelector(`label[for="${fieldId}"]`).setAttribute('style', 'background: #ffffff00;');
+        });
+    }
+});
+
+// 不得填列欄位-動態新增 style="background: #ffffff00;"
+document.getElementById('TERMS_SALES').addEventListener('input', function () {
+    let tradeTerm = this.value.toUpperCase().trim();
+    let freightField = document.querySelector('label[for="FRT_AMT"]');
+    let insuranceField = document.querySelector('label[for="INS_AMT"]');
+    let subtractField = document.querySelector('label[for="SUBTRACT_AMT"]');
+
+    if (tradeTerm === 'EXW') {
+        freightField.setAttribute('style', 'background: #ffffff00;');
+        insuranceField.setAttribute('style', 'background: #ffffff00;');
+        subtractField.setAttribute('style', 'background: #ffffff00;');
+    } else {
+        freightField.removeAttribute('style');
+        insuranceField.removeAttribute('style');
+        subtractField.removeAttribute('style');
+    }
+});
