@@ -56,11 +56,9 @@ function parseCSVToObject(csvData) {
         if (values && values.length >= 3) {
             let code = values[0].trim();
             let zhDesc = values[1].trim().replace(/^"|"$/g, '').replace(/""/g, '"');  // 去除頭尾引號並處理內部雙引號
-            let enDesc = values[2].trim().replace(/^"|"$/g, '').replace(/""/g, '"');  // 去除頭尾引號並處理內部雙引號
 
             result[code] = {
                 '規定中文說明': zhDesc || '',
-                '規定英文說明': enDesc || ''
             };
         }
     });
@@ -635,9 +633,8 @@ function getRegInfo(regCode, regData, type) {
     codes.forEach(code => {
         if (regData[code]) {
             descriptions.push(
-                `<strong>代號: ${code}</strong><br>
-                 中文: ${regData[code]['規定中文說明']}<br>
-                 英文: ${regData[code]['規定英文說明']}`
+                `代號: ${code}<br>
+                 說明: ${regData[code]['規定中文說明']}`
             );
         }
     });
