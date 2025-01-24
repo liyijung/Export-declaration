@@ -5241,16 +5241,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // 建立清除按鈕
         const clearBtn = document.createElement('button');
-        clearBtn.innerHTML = '×';
+        clearBtn.innerHTML = 'X';
         clearBtn.setAttribute('type', 'button');  // 防止觸發表單提交
         clearBtn.setAttribute('tabindex', '-1');  // 避免 TAB 鍵聚焦
         clearBtn.style.position = 'absolute';
         clearBtn.style.width = '20px';
         clearBtn.style.height = '20px';
-        clearBtn.style.fontSize = '18px';
-        clearBtn.style.fontWeight = 'bold';
-        clearBtn.style.color = 'white';
-        clearBtn.style.backgroundColor = '#ccc';
+        clearBtn.style.fontSize = '12px';
+        clearBtn.style.color = 'black';
         clearBtn.style.border = 'none';
         clearBtn.style.borderRadius = '50%';
         clearBtn.style.cursor = 'pointer';
