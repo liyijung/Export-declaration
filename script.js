@@ -1656,6 +1656,10 @@ function handleFile(event) {
         searchData(false); // 出口人統一編號搜尋
         handleCheck(); // 長期委任字號
         thingsToNote(); // 出口備註
+
+        // 執行必填與不得填列欄位的檢查邏輯
+        document.getElementById('CNEE_COUNTRY_CODE').dispatchEvent(new Event('input'));
+        document.getElementById('TERMS_SALES').dispatchEvent(new Event('input'));
         
         // 檢查REMARKS欄位來勾選對應選項
         headerData.forEach(row => {
@@ -2113,7 +2117,11 @@ function importXML(event) {
             searchData(false); // 出口人統一編號搜尋
             handleCheck(); // 長期委任字號
             thingsToNote(); // 出口備註
-            
+
+            // 執行必填與不得填列欄位的檢查邏輯
+            document.getElementById('CNEE_COUNTRY_CODE').dispatchEvent(new Event('input'));
+            document.getElementById('TERMS_SALES').dispatchEvent(new Event('input'));
+
             // 解析項次資料
             const items = xmlDoc.getElementsByTagName("detail")[0].getElementsByTagName("items");
             const itemContainer = document.getElementById('item-container');
