@@ -16,6 +16,58 @@ fetch('./tax_data.json')
     })
     .catch(error => console.error('Error loading tax data:', error));
 
+let importRegData = {};
+let exportRegData = {};
+
+// 讀取輸入規定對應表
+fetch('./Reg/IReg.csv')
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.text();
+    })
+    .then(data => {
+        importRegData = parseCSVToObject(data);
+        console.log('輸入規定數據已加載:', importRegData);
+    })
+    .catch(error => console.error('載入 IReg.csv 錯誤:', error));
+
+// 讀取輸出規定對應表
+fetch('./Reg/EReg.csv')
+    .then(response => response.text())
+    .then(data => {
+        exportRegData = parseCSVToObject(data);
+        console.log('輸出規定數據已加載', exportRegData);
+    })
+    .catch(error => console.error('Error loading EReg.csv:', error));
+
+// 解析 CSV 轉換為物件
+function parseCSVToObject(csvData) {
+    const lines = csvData.split(/\r?\n/);
+    const result = {};
+
+    lines.forEach((line, index) => {
+        if (index === 0 || !line.trim()) return; // 跳過表頭或空行
+
+        // 使用正則表達式來解析包含逗號與雙引號的值
+        const values = line.match(/(".*?"|[^,]+)(?=\s*,|\s*$)/g);
+
+        if (values && values.length >= 3) {
+            let code = values[0].trim();
+            let zhDesc = values[1].trim().replace(/^"|"$/g, '').replace(/""/g, '"');  // 去除頭尾引號並處理內部雙引號
+            let enDesc = values[2].trim().replace(/^"|"$/g, '').replace(/""/g, '"');  // 去除頭尾引號並處理內部雙引號
+
+            result[code] = {
+                '規定中文說明': zhDesc || '',
+                '規定英文說明': enDesc || ''
+            };
+        }
+    });
+
+    return result;
+}
+    
 function searchTariff(inputElement, isModal = false) {
     let keyword = inputElement.value.toLowerCase();
     keyword = keyword.replace(/[.\-\s]/g, ''); // 移除 '.'、'-' 以及所有的空格
@@ -186,6 +238,31 @@ function searchTariff(inputElement, isModal = false) {
                         searchTariff(inputElement);
                     });
                 }
+
+                if (header === '輸入規定') {
+                    const regCode = item['輸入規定'] ? item['輸入規定'].trim() : '';
+                    td.textContent = regCode || '';
+                
+                    td.addEventListener('mouseover', function(event) {
+                        const regInfo = getRegInfo(regCode, importRegData, '輸入規定');
+                        showTooltip(event, regInfo);
+                    });
+                
+                    td.addEventListener('mouseout', hideTooltip);
+                }
+                
+                if (header === '輸出規定') {
+                    const regCode = item['輸出規定'] ? item['輸出規定'].trim() : '';
+                    td.textContent = regCode || '';
+                
+                    td.addEventListener('mouseover', function(event) {
+                        const regInfo = getRegInfo(regCode, exportRegData, '輸出規定');
+                        showTooltip(event, regInfo);
+                    });
+                
+                    td.addEventListener('mouseout', hideTooltip);
+                }
+                
                 row.appendChild(td);
             });
             row.dataset.index = index;
@@ -541,3 +618,59 @@ function updateArea(stqty, stum, wide, wideum, lengt, lengthum) {
 document.addEventListener('DOMContentLoaded', () => {
     initializeCCCCodeInputs();
 });
+
+function getRegInfo(regCode, regData, type) {
+    if (!regCode) {
+        return `<strong>${type}:</strong> 無`;
+    }
+
+    // 以空格分隔多個代號
+    const codes = regCode.split(/\s+/);
+    let descriptions = [];
+
+    codes.forEach(code => {
+        if (regData[code]) {
+            descriptions.push(
+                `<strong>代號: ${code}</strong><br>
+                 中文: ${regData[code]['規定中文說明']}<br>
+                 英文: ${regData[code]['規定英文說明']}`
+            );
+        }
+    });
+
+    return descriptions.length > 0 ? descriptions.join('<hr>') : ''; // 無結果則返回空
+}
+
+function showTooltip(event, content) {
+    let tooltip = document.getElementById('tooltip');
+    if (!tooltip) {
+        tooltip = document.createElement('div');
+        tooltip.id = 'tooltip';
+        tooltip.style.position = 'fixed'; // 固定位置
+        tooltip.style.top = '10px'; // 固定於畫面頂端
+        tooltip.style.left = '50%'; // 水平置中
+        tooltip.style.transform = 'translateX(-50%)';
+        tooltip.style.backgroundColor = 'rgba(0, 0, 0, 0.85)';
+        tooltip.style.color = '#fff';
+        tooltip.style.padding = '15px';
+        tooltip.style.borderRadius = '5px';
+        tooltip.style.fontSize = '14px';
+        tooltip.style.maxWidth = '80%';
+        tooltip.style.wordWrap = 'break-word';
+        tooltip.style.textAlign = 'left';
+        tooltip.style.zIndex = '9999';
+        tooltip.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)';
+        document.body.appendChild(tooltip);
+    }
+
+    tooltip.innerHTML = content;
+    tooltip.style.display = 'block';
+}
+
+// 隱藏彈跳框
+function hideTooltip() {
+    const tooltip = document.getElementById('tooltip');
+    if (tooltip) {
+        tooltip.style.display = 'none';
+    }
+}
