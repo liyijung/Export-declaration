@@ -5226,3 +5226,80 @@ document.getElementById('TERMS_SALES').addEventListener('input', function () {
         subtractField.removeAttribute('style');
     }
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('input[type="text"], input[type="number"], textarea').forEach(input => {
+        // 排除特定輸入框不顯示清除按鈕
+        if (input.id === 'decimal-places' || 
+            input.id === 'weight-decimal-places' || 
+            input.id === 'specific-range' || 
+            input.id === 'specific-weight') {
+            return;
+        }
+        
+        input.style.position = 'relative';
+
+        // 建立清除按鈕
+        const clearBtn = document.createElement('button');
+        clearBtn.innerHTML = '×';
+        clearBtn.setAttribute('type', 'button');  // 防止觸發表單提交
+        clearBtn.setAttribute('tabindex', '-1');  // 避免 TAB 鍵聚焦
+        clearBtn.style.position = 'absolute';
+        clearBtn.style.width = '20px';
+        clearBtn.style.height = '20px';
+        clearBtn.style.fontSize = '18px';
+        clearBtn.style.fontWeight = 'bold';
+        clearBtn.style.color = 'white';
+        clearBtn.style.backgroundColor = '#ccc';
+        clearBtn.style.border = 'none';
+        clearBtn.style.borderRadius = '50%';
+        clearBtn.style.cursor = 'pointer';
+        clearBtn.style.display = 'none';
+        clearBtn.style.padding = '0';
+
+        // 插入清除按鈕到輸入框的父容器內
+        input.parentNode.insertBefore(clearBtn, input.nextSibling);
+
+        // 設定按鈕位置（在輸入框內右側）
+        const positionButton = () => {
+            const inputStyle = window.getComputedStyle(input);
+            const paddingRight = parseInt(inputStyle.paddingRight) || 0;
+            const borderRight = parseInt(inputStyle.borderRightWidth) || 0;
+            clearBtn.style.right = `${paddingRight + borderRight + 5}px`;
+            clearBtn.style.top = `${input.offsetTop + (input.offsetHeight / 2) - (clearBtn.offsetHeight / 2)}px`;
+            clearBtn.style.left = `${input.offsetLeft + input.offsetWidth - clearBtn.offsetWidth - paddingRight - borderRight - 20}px`;
+        };
+
+        positionButton();
+        window.addEventListener('resize', positionButton);
+        window.addEventListener('scroll', positionButton);
+
+        clearBtn.addEventListener('mousedown', (event) => {
+            event.preventDefault();  // 防止輸入框失去焦點
+        });
+        
+        // 事件處理：點擊清除按鈕
+        clearBtn.addEventListener('click', (event) => {
+            event.preventDefault();  // 阻止預設表單提交行為
+            input.value = '';
+            input.focus();
+            clearBtn.style.display = 'none';
+        });
+
+        // 事件處理：輸入框獲取焦點時顯示按鈕（無論是否有內容）
+        input.addEventListener('focus', () => {
+            clearBtn.style.display = 'block';
+            positionButton();
+        });
+
+        // 事件處理：輸入框內容改變時顯示或隱藏按鈕
+        input.addEventListener('input', () => {
+            clearBtn.style.display = input.value ? 'block' : 'none';
+        });
+
+        // 事件處理：輸入框失去焦點時隱藏按鈕
+        input.addEventListener('blur', () => {
+            clearBtn.style.display = 'none';
+        });
+    });
+});
