@@ -459,11 +459,15 @@ document.getElementById('TO_DESC').addEventListener('input', function () {
             `.trim(); // 結果框中顯示代碼、名稱和中文
             optionDiv.dataset.code = code;
 
-            // 點擊選項時填入對應值
+            // 點擊選項時填入對應值並將焦點移至 TO_CODE
             optionDiv.addEventListener('click', function () {
                 const code = this.dataset.code;
-                document.getElementById('TO_CODE').value = code; // 填入代碼
-                document.getElementById('TO_CODE').dispatchEvent(new Event('input')); // 觸發 TO_CODE 的輸入事件
+                const toCodeInput = document.getElementById('TO_CODE');
+
+                toCodeInput.value = code; // 填入代碼
+                toCodeInput.dispatchEvent(new Event('input')); // 觸發 TO_CODE 的輸入事件
+                toCodeInput.focus(); // 將焦點移至 TO_CODE
+
                 setTimeout(() => {
                     resultsDiv.style.display = 'none'; // 隱藏下拉框
                 }, 100); // 確保操作完成後隱藏
