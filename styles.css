@@ -107,7 +107,7 @@ body {
     margin-left: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
     border-radius: 5px;
-    border: 1px solid #ccc;
+    border: 2px solid #ccc;
     cursor: pointer;
     background: linear-gradient(to bottom, #f0f0f0, #c2d6f8);
 }
@@ -115,7 +115,6 @@ body {
 .add-buttons button:hover {
     background-color: #97b3eb;
     color: #333;
-    transform: scale(1.05); /* 微放大效果 */
 }
 
 .item-header {
@@ -412,22 +411,6 @@ h4 {
     border-radius: 5px;
     border: 1px solid #ccc;
     overflow-y: auto;
-}
-
-input,
-textarea,
-select {
-    border: 1px solid #ccc;
-    font-size: 16px;
-    border-radius: 4px;
-    padding: 2px;
-    font-family: 'Source Han Sans TC', sans-serif; /* 確保字型一致 */
-}
-
-input:focus,
-textarea:focus {
-    border-color: #bbb;
-    outline: none;
 }
 
 .header-group input {
@@ -927,4 +910,14 @@ select:focus,
 button:focus {
     outline: none; /* 移除預設的瀏覽器外框 */
     border: 2px solid #005feec5 !important; /* 獲得焦點時的藍色邊框 */
+}
+
+input,
+textarea,
+select,
+button {
+    border: 2px solid #e5e5e5;
+    font-size: 16px;
+    border-radius: 4px;
+    font-family: 'Source Han Sans TC', sans-serif; /* 確保字型一致 */
 }
