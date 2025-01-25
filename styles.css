@@ -366,7 +366,8 @@ textarea {
     margin-right: 20px;
 }
 
-.delete-button {
+.delete-button,
+.delete-item-btn {
     display: inline-block;
     padding: 3px 6px;
     font-size: 10px;
@@ -380,7 +381,8 @@ textarea {
     cursor: pointer;
 }
 
-.delete-button:hover {
+.delete-button:hover,
+.delete-item-btn:disabled {
     background-color: #c82333;
     padding: 4px 8px;
     font-size: 12px;
