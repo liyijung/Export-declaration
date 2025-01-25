@@ -2267,7 +2267,7 @@ function createItemRow(data) {
         ${createInputField('LENGTH_UM', replaceValue('LENGTH_UM', data.LENGTH_UM), fieldsToShow.LENGTH_UM)}
         ${createInputField('ST_QTY', data.ST_QTY, fieldsToShow.ST_QTY)}
         ${createInputField('ST_UM', replaceValue('ST_UM', data.ST_UM), fieldsToShow.ST_UM)}
-        <div class="form-group fix">
+        <div class="form-group fix" style="margin-left: 5px;">
             <button class="delete-button" onclick="removeItem(this)" tabindex="-1">Ｘ</button>
         </div>
     `;
