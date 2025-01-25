@@ -2236,7 +2236,7 @@ function createItemRow(data) {
         <div class="form-group fix">
             <input type="checkbox" class="ITEM_NO" style="margin-left: 10px;" tabindex="-1" ${isChecked ? 'checked' : ''}>
         </div>
-        <div class="form-group fix item-number" style="width: 3%;">
+        <div class="form-group fix item-number">
             <label>${itemNumber}</label>
         </div>
         ${createTextareaField('DESCRIPTION', data.DESCRIPTION.trim())}
