@@ -124,6 +124,10 @@ body {
     border: 1px solid #97b3eb;
 }
 
+.item-row.item-header label{
+    font-size: 12px;
+}
+
 .form-group {
     display: flex;
     flex-direction: column;
