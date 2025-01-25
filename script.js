@@ -434,10 +434,13 @@ let activeIndex = -1; // 記錄當前選中的索引
 document.getElementById('TO_DESC').addEventListener('input', function () {
     const input = this.value.toLowerCase();
     const resultsDiv = document.getElementById('search-results');
+    const toCodeInput = document.getElementById('TO_CODE');
+
     resultsDiv.innerHTML = ''; // 清空現有結果
 
     // 如果輸入為空，不執行篩選，直接隱藏結果框
     if (!input) {
+        toCodeInput.value = '';  // 清空 TO_CODE
         resultsDiv.style.display = 'none';
         return;
     }
