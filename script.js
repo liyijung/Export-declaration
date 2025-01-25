@@ -5304,5 +5304,14 @@ document.addEventListener('DOMContentLoaded', () => {
         input.addEventListener('blur', () => {
             clearBtn.style.display = 'none';
         });
+
+        // 設定滑鼠移入與移出時的背景顏色變化
+        clearBtn.addEventListener('mouseenter', () => {
+            clearBtn.style.backgroundColor = '#f5c2c2';
+        });
+
+        clearBtn.addEventListener('mouseleave', () => {
+            clearBtn.style.backgroundColor = '#e6e6e6';
+        });
     });
 });
