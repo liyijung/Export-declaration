@@ -2234,7 +2234,7 @@ function createItemRow(data) {
             <label>${itemCount + 1}</label>
         </div>
         <div class="form-group fix">
-            <input type="checkbox" class="ITEM_NO" style="margin-left: 5px;" tabindex="-1" ${isChecked ? 'checked' : ''}>
+            <input type="checkbox" class="ITEM_NO" style="margin-left: 10px;" tabindex="-1" ${isChecked ? 'checked' : ''}>
         </div>
         <div class="form-group fix item-number" style="width: 3%;">
             <label>${itemNumber}</label>
