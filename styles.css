@@ -150,8 +150,8 @@ body {
     position: relative;
     display: flex;
     justify-content: flex-start;
-    margin-top: 3px;
-    margin-bottom: 3px;
+    margin-top: 5px;
+    margin-bottom: 5px;
     font-weight: bold;
     color: #50648c;
 }
