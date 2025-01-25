@@ -366,6 +366,7 @@ textarea {
     margin-right: 20px;
 }
 
+/* 刪除按鈕的基本樣式 */
 .delete-button,
 .delete-item-btn {
     display: inline-block;
@@ -373,7 +374,7 @@ textarea {
     font-size: 10px;
     font-weight: bold;
     color: #fff;
-    background-color: #f37380;
+    background-color: #f37380; /* 原始背景顏色 */
     border: none;
     border-radius: 5px;
     text-align: center;
@@ -381,11 +382,10 @@ textarea {
     cursor: pointer;
 }
 
+/* 滑鼠懸停時的效果 */
 .delete-button:hover,
-.delete-item-btn:disabled {
-    background-color: #c82333;
-    padding: 4px 8px;
-    font-size: 12px;
+.delete-item-btn:hover {
+    background-color: #c82333; /* 懸停時顏色加深 */
 }
 
 h4 {
