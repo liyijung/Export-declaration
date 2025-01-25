@@ -923,7 +923,7 @@ select{
     font-size: 16px;
     border-radius: 4px;
     font-family: 'Source Han Sans TC', sans-serif; /* 確保字型一致 */
-    padding: 0; /* 內邊距設為0 */
+    padding: 0 2px; /* 上下0px，左右2px */
 }
 
 button {
