@@ -5287,6 +5287,17 @@ document.addEventListener('DOMContentLoaded', () => {
             input.value = '';
             input.focus();
             clearBtn.style.display = 'none';
+
+            // 當按下清除按鈕時執行
+            if (input.id === 'SHPR_BAN_ID') {
+                searchData();
+            }
+            if (input.id === 'TO_CODE') {
+                document.getElementById('TO_DESC').value = '';
+            }
+            if (input.id === 'TO_DESC') {
+                document.getElementById('TO_CODE').value = '';
+            }
         });
 
         // 事件處理：輸入框獲取焦點時顯示按鈕（無論是否有內容）
