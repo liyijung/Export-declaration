@@ -328,7 +328,8 @@ body {
 
 .item-row .form-group.fix {
     flex: none;
-    width: 50px;
+    width: 3%;
+    text-align: center;
 }
 
 .form-group.fix {
