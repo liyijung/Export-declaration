@@ -549,6 +549,9 @@ th, td {
 .item-no-header {
     position: sticky;
     left: 0;
+    width: 40px !important;  /* 強制設定寬度 */
+    max-width: 40px !important; /* 限制最大寬度 */
+    min-width: 40px !important; /* 限制最小寬度 */    
     background-color: white; /* 確保背景色一致 */
     border-radius: 0 10px 10px 0; /* 右側圓角 */
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3); /* 右側陰影 */
