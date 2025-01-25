@@ -2664,6 +2664,68 @@ function initializeListeners() {
     });
 }
 
+// 綁定刪除按鈕事件，為刪除按鈕新增點擊事件
+document.querySelector(".delete-item-btn").addEventListener("click", () => {
+    const input = prompt("請輸入要刪除的 No. (例如: 3,5-7)");
+    if (input) {
+        deleteItemsByNo(input);
+    }
+});
+
+// 刪除 No. 對應的項目，支援單一或範圍
+function deleteItemsByNo(input) {
+    const ranges = input.split(',').map(item => item.trim());
+    const numbersToDelete = new Set();
+
+    ranges.forEach(range => {
+        if (range.includes('-')) {
+            // 處理範圍，例如 5-7
+            const [start, end] = range.split('-').map(Number);
+            if (!isNaN(start) && !isNaN(end) && start <= end) {
+                for (let i = start; i <= end; i++) {
+                    numbersToDelete.add(i);
+                }
+            } else {
+                alert(`無效範圍: ${range}`);
+                return;
+            }
+        } else {
+            // 處理單一數值，例如 3
+            const num = Number(range);
+            if (!isNaN(num)) {
+                numbersToDelete.add(num);
+            } else {
+                alert(`無效數值: ${range}`);
+                return;
+            }
+        }
+    });
+
+    deleteItems(numbersToDelete);
+}
+
+// 根據 No. 值刪除對應的項目
+function deleteItems(numbersToDelete) {
+    const items = document.querySelectorAll("#item-container .item-row");
+    let found = false;
+
+    items.forEach(item => {
+        const noLabel = item.querySelector('.item-no label');
+        const noValue = Number(noLabel.textContent);
+
+        if (numbersToDelete.has(noValue)) {
+            item.remove();
+            found = true;
+        }
+    });
+
+    if (found) {
+        renumberItems();
+    } else {
+        alert("未找到指定的 No.");
+    }
+}
+
 // 重新編號所有項次
 function renumberItems() {
     let itemCount = 0; // 用於 NO 編號
