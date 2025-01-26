@@ -1195,21 +1195,33 @@ function removeItem(element) {
 // 開啟顯示隱藏欄位彈跳框
 function openToggleFieldsModal() {
     const toggleFieldsModal = document.getElementById('toggle-fields-modal');
+    
+    // 顯示彈跳框，並確保使用 flex 顯示
     toggleFieldsModal.style.display = 'flex';
 
-    // 監聽 ESC 鍵，表示取消
-    document.addEventListener('keydown', handleEscKeyForToggleFieldsCancel);
+    // 設置焦點至欄位選擇框
+    const fieldSelect = document.getElementById("field-select");
+    if (fieldSelect) {
+        fieldSelect.focus();
+    }
+
+    // 監聽 ESC 鍵取消事件，避免多次綁定
+    document.addEventListener('keydown', handleEscKeyForToggleFieldsCancel, { once: true });
 }
 
+// 處理 ESC 鍵盤事件
 function handleEscKeyForToggleFieldsCancel(event) {
     if (event.key === 'Escape') {
         closeToggleFieldsModal();
     }
 }
 
+// 關閉顯示隱藏欄位彈跳框
 function closeToggleFieldsModal() {
     const toggleFieldsModal = document.getElementById('toggle-fields-modal');
     toggleFieldsModal.style.display = 'none';
+
+    // 解除 ESC 鍵的事件監聽，防止記憶體洩漏
     document.removeEventListener('keydown', handleEscKeyForToggleFieldsCancel);
 }
 
