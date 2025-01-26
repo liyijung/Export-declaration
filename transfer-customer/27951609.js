@@ -134,6 +134,7 @@ function importCustomer27951609(event) {
             initializeListeners();
             renumberItems(); // 重新編號所有項次
             updateFieldVisibility(); // 更新欄位顯示
+            handleCheck(); // 長期委任字號
         };
 
         // 使用 readAsArrayBuffer 讀取檔案以便 TextDecoder 使用
