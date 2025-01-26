@@ -5224,6 +5224,51 @@ function showPopup(content) {
     popup.style.display = 'block';
 }
 
+function updateFieldStyle(fieldId, removeStyle) {
+    // 根據條件，新增或移除指定欄位的背景樣式
+    let label = document.querySelector(`label[for="${fieldId}"]`);
+    if (label) {
+        removeStyle ? label.removeAttribute('style') : label.setAttribute('style', 'background: #ffffff00;');
+    }
+}
+
+function handleCountryCodeInput(inputId, relatedFields, requiredCountry) {
+    // 當輸入特定國家代碼時，調整相關欄位的樣式
+    document.getElementById(inputId).addEventListener('input', function () {
+        let countryCode = this.value.toUpperCase().trim(); // 轉換為大寫並去除空白
+        relatedFields.forEach(field => {
+            updateFieldStyle(field, countryCode === requiredCountry);
+        });
+    });
+}
+
+function handleTradeTerms(inputId) {
+    // 根據輸入的貿易條件，動態調整運費、保險費、應加費用及應減費用欄位的樣式
+    document.getElementById(inputId).addEventListener('input', function () {
+        let tradeTerm = this.value.toUpperCase().trim(); // 轉換為大寫並去除空白
+        let fieldActions = {
+            'EXW': { freight: false, insurance: false, add: true, subtract: false },
+            'FOB': { freight: false, insurance: false, add: false, subtract: false },
+            'CFR': { freight: true, insurance: false, add: false, subtract: false },
+            'C&I': { freight: false, insurance: true, add: false, subtract: false },
+            'CIF': { freight: true, insurance: true, add: false, subtract: false },
+            'default': { freight: true, insurance: true, add: true, subtract: true }
+        };
+        
+        let config = fieldActions[tradeTerm] || fieldActions['default'];
+        updateFieldStyle('FRT_AMT', config.freight);  // 運費
+        updateFieldStyle('INS_AMT', config.insurance); // 保險費
+        updateFieldStyle('ADD_AMT', config.add); // 應加費用
+        updateFieldStyle('SUBTRACT_AMT', config.subtract); // 應減費用
+    });
+}
+
+// 啟用事件監聽，處理國家代碼的樣式變更
+handleCountryCodeInput('CNEE_COUNTRY_CODE', ['CNEE_BAN_ID', 'BUYER_E_NAME', 'BUYER_E_ADDR'], 'TW');
+
+// 啟用事件監聽，處理貿易條件的樣式變更
+handleTradeTerms('TERMS_SALES');
+
 // 使用事件代理處理所有 type="number" 的輸入框
 document.addEventListener('keydown', function(event) {
     const target = event.target;
@@ -5271,77 +5316,6 @@ document.addEventListener('focusout', function (event) {
     if (event.target.matches('input, textarea, select, button')) {
         // 當元素失去焦點後，保持反色，直到新的元素獲得焦點時才移除
         event.target.classList.add('highlighted-element');
-    }
-});
-
-// 必填欄位-動態移除 style="background: #ffffff00;"
-document.getElementById('CNEE_COUNTRY_CODE').addEventListener('input', function () {
-    let countryCode = this.value.toUpperCase().trim();
-    let fieldsToUpdate = ['CNEE_BAN_ID', 'BUYER_E_NAME', 'BUYER_E_ADDR'];
-
-    fieldsToUpdate.forEach(fieldId => {
-        let label = document.querySelector(`label[for="${fieldId}"]`);
-        if (label) {
-            if (countryCode === 'TW') {
-                label.removeAttribute('style');
-            } else {
-                label.setAttribute('style', 'background: #ffffff00;');
-            }
-        }
-    });
-});
-
-// 非必填欄位-動態新增 style="background: #ffffff00;"
-let termsSalesInput = document.getElementById('TERMS_SALES');
-let freightField = document.querySelector('label[for="FRT_AMT"]');
-let insuranceField = document.querySelector('label[for="INS_AMT"]');
-let addField = document.querySelector('label[for="ADD_AMT"]');
-let subtractField = document.querySelector('label[for="SUBTRACT_AMT"]');
-
-termsSalesInput.addEventListener('input', function () {
-    let tradeTerm = this.value.toUpperCase().trim();
-
-    const setStyle = (element, shouldRemove) => {
-        shouldRemove ? element.removeAttribute('style') : element.setAttribute('style', 'background: #ffffff00;');
-    };
-
-    switch (tradeTerm) {
-        case 'EXW':
-            setStyle(freightField, false);
-            setStyle(insuranceField, false);
-            setStyle(addField, true); // 應加費用
-            setStyle(subtractField, false);
-            break;
-        case 'FOB':
-            setStyle(freightField, false);
-            setStyle(insuranceField, false);
-            setStyle(addField, false);
-            setStyle(subtractField, false);
-            break;
-        case 'CFR':
-            setStyle(freightField, true); // 運費
-            setStyle(insuranceField, false);
-            setStyle(addField, false);
-            setStyle(subtractField, false);
-            break;
-        case 'C&I':
-            setStyle(freightField, false);
-            setStyle(insuranceField, true); // 保險費
-            setStyle(addField, false);
-            setStyle(subtractField, false);
-            break;
-        case 'CIF':
-            setStyle(freightField, true); // 運費
-            setStyle(insuranceField, true); // 保險費
-            setStyle(addField, false);
-            setStyle(subtractField, false);
-            break;
-        default:
-            setStyle(freightField, true); // 運費
-            setStyle(insuranceField, true); // 保險費
-            setStyle(addField, true); // 應加費用
-            setStyle(subtractField, true); // 應減費用
-            break;
     }
 });
 
