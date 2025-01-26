@@ -5267,32 +5267,63 @@ document.getElementById('CNEE_COUNTRY_CODE').addEventListener('input', function 
     let countryCode = this.value.toUpperCase().trim();
     let fieldsToUpdate = ['CNEE_BAN_ID', 'BUYER_E_NAME', 'BUYER_E_ADDR'];
 
-    if (countryCode === 'TW') {
-        fieldsToUpdate.forEach(fieldId => {
-            document.querySelector(`label[for="${fieldId}"]`).removeAttribute('style');
-        });
-    } else {
-        fieldsToUpdate.forEach(fieldId => {
-            document.querySelector(`label[for="${fieldId}"]`).setAttribute('style', 'background: #ffffff00;');
-        });
-    }
+    fieldsToUpdate.forEach(fieldId => {
+        let label = document.querySelector(`label[for="${fieldId}"]`);
+        if (label) {
+            if (countryCode === 'TW') {
+                label.removeAttribute('style');
+            } else {
+                label.setAttribute('style', 'background: #ffffff00;');
+            }
+        }
+    });
 });
 
-// 不得填列欄位-動態新增 style="background: #ffffff00;"
-document.getElementById('TERMS_SALES').addEventListener('input', function () {
-    let tradeTerm = this.value.toUpperCase().trim();
-    let freightField = document.querySelector('label[for="FRT_AMT"]');
-    let insuranceField = document.querySelector('label[for="INS_AMT"]');
-    let subtractField = document.querySelector('label[for="SUBTRACT_AMT"]');
+// 非必填欄位-動態新增 style="background: #ffffff00;"
+let termsSalesInput = document.getElementById('TERMS_SALES');
+let freightField = document.querySelector('label[for="FRT_AMT"]');
+let insuranceField = document.querySelector('label[for="INS_AMT"]');
+let addField = document.querySelector('label[for="ADD_AMT"]');
+let subtractField = document.querySelector('label[for="SUBTRACT_AMT"]');
 
-    if (tradeTerm === 'EXW') {
-        freightField.setAttribute('style', 'background: #ffffff00;');
-        insuranceField.setAttribute('style', 'background: #ffffff00;');
-        subtractField.setAttribute('style', 'background: #ffffff00;');
-    } else {
-        freightField.removeAttribute('style');
-        insuranceField.removeAttribute('style');
-        subtractField.removeAttribute('style');
+termsSalesInput.addEventListener('input', function () {
+    let tradeTerm = this.value.toUpperCase().trim();
+
+    const setStyle = (element, shouldRemove) => {
+        shouldRemove ? element.removeAttribute('style') : element.setAttribute('style', 'background: #ffffff00;');
+    };
+
+    switch (tradeTerm) {
+        case 'EXW':
+            setStyle(freightField, false);
+            setStyle(insuranceField, false);
+            setStyle(addField, true); // 應加費用
+            setStyle(subtractField, false);
+            break;
+        case 'FOB':
+            setStyle(freightField, false);
+            setStyle(insuranceField, false);
+            setStyle(addField, false);
+            setStyle(subtractField, false);
+            break;
+        case 'CFR':
+            setStyle(freightField, true); // 運費
+            setStyle(insuranceField, false);
+            setStyle(addField, false);
+            setStyle(subtractField, false);
+            break;
+        case 'C&I':
+            setStyle(freightField, false);
+            setStyle(insuranceField, true); // 保險費
+            setStyle(addField, false);
+            setStyle(subtractField, false);
+            break;
+        default:
+            setStyle(freightField, true); // 運費
+            setStyle(insuranceField, true); // 保險費
+            setStyle(addField, true); // 應加費用
+            setStyle(subtractField, true); // 應減費用
+            break;
     }
 });
 
@@ -5356,12 +5387,29 @@ document.addEventListener('DOMContentLoaded', () => {
             // 當按下清除按鈕時執行
             if (input.id === 'SHPR_BAN_ID') {
                 searchData();
-            }
-            if (input.id === 'TO_CODE') {
+            } else if (input.id === 'TO_CODE') {
                 document.getElementById('TO_DESC').value = '';
-            }
-            if (input.id === 'TO_DESC') {
+            } else if (input.id === 'TO_DESC') {
                 document.getElementById('TO_CODE').value = '';
+            } else if (input.id === 'CNEE_COUNTRY_CODE') {
+                let fieldsToClear = ['CNEE_BAN_ID', 'BUYER_E_NAME', 'BUYER_E_ADDR'];
+                fieldsToClear.forEach(fieldId => {
+                    let label = document.querySelector(`label[for="${fieldId}"]`);
+                    if (label) {
+                        // 設置背景樣式，恢復為非必填狀態
+                        label.setAttribute('style', 'background: #ffffff00;');
+                    }
+                });
+                document.getElementById('CNEE_COUNTRY_CODE').value = '';
+            } else if (input.id === 'TERMS_SALES') {
+                // 恢復欄位背景樣式
+                let fields = ['FRT_AMT', 'INS_AMT', 'ADD_AMT', 'SUBTRACT_AMT'];
+                fields.forEach(fieldId => {
+                    let label = document.querySelector(`label[for="${fieldId}"]`);
+                    if (label) {
+                        label.removeAttribute('style');
+                    }
+                });
             }
         });
 
