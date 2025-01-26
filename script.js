@@ -2518,10 +2518,10 @@ function createInputField(name, value, isVisible, iscalcWtValue) {
         if (name === 'NET_WT') {
             const isCalcChecked = iscalcWtValue === 'Y' ? 'checked' : ''; // 根據 ISCALC_WT 判斷是否勾選
             return `
-                <div class="form-group ${visibilityClass}" style="width: 24px;">
-                    <input type="checkbox" class="ISCALC_WT" style="margin-left: 5px;" ${isCalcChecked} tabindex="-1">
+                <div class="form-group ${visibilityClass}" style="width: 24px; text-align: center; margin-left: 5px;">
+                    <input type="checkbox" class="ISCALC_WT" ${isCalcChecked} tabindex="-1">
                 </div>
-                <div class="form-group ${visibilityClass}" style="width: 60%; align-items: center;">
+                <div class="form-group ${visibilityClass}" style="width: 60%;">
                     ${inputField}
                 </div>
             `;
