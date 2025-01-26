@@ -336,7 +336,7 @@ body {
     display: flex;
     justify-content: flex-end;
     text-align: right;
-    align-items: center; /* 垂直置中 */
+    align-items: start;
 }
 
 .item-row label,
