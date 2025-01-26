@@ -5330,6 +5330,12 @@ termsSalesInput.addEventListener('input', function () {
             setStyle(addField, false);
             setStyle(subtractField, false);
             break;
+        case 'CIF':
+            setStyle(freightField, true); // 運費
+            setStyle(insuranceField, true); // 保險費
+            setStyle(addField, false);
+            setStyle(subtractField, false);
+            break;
         default:
             setStyle(freightField, true); // 運費
             setStyle(insuranceField, true); // 保險費
