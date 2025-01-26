@@ -411,7 +411,6 @@ h4 {
     box-sizing: border-box;
     padding: 5px;
     border-radius: 5px;
-    border: 1px solid #ccc;
     overflow-y: auto;
 }
 
