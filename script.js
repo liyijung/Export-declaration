@@ -2246,7 +2246,7 @@ function createItemRow(data) {
             <label>${itemCount + 1}</label>
         </div>
         <div class="form-group fix">
-            <input type="checkbox" class="ITEM_NO" style="margin-left: 6px;" tabindex="-1" ${isChecked ? 'checked' : ''}>
+            <input type="checkbox" class="ITEM_NO" style="margin-left: 5px;" tabindex="-1" ${isChecked ? 'checked' : ''}>
         </div>
         <div class="form-group fix item-number">
             <label>${itemNumber}</label>
@@ -2518,8 +2518,8 @@ function createInputField(name, value, isVisible, iscalcWtValue) {
         if (name === 'NET_WT') {
             const isCalcChecked = iscalcWtValue === 'Y' ? 'checked' : ''; // 根據 ISCALC_WT 判斷是否勾選
             return `
-                <div class="form-group ${visibilityClass}" style="width: 25px;">
-                    <input type="checkbox" class="ISCALC_WT" style="margin-left: 6px;" ${isCalcChecked} tabindex="-1">
+                <div class="form-group ${visibilityClass}" style="width: 24px;">
+                    <input type="checkbox" class="ISCALC_WT" style="margin-left: 5px;" ${isCalcChecked} tabindex="-1">
                 </div>
                 <div class="form-group ${visibilityClass}" style="width: 60%; align-items: center;">
                     ${inputField}
