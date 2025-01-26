@@ -287,6 +287,8 @@ function importCustomer22099408(event) {
             initializeListeners();
             renumberItems(); // 重新編號所有項次
             updateFieldVisibility(); // 更新欄位顯示
+
+            handleCheck(); // 長期委任字號
         };
         reader.readAsText(file);
     }
