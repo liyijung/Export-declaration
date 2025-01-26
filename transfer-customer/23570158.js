@@ -520,6 +520,8 @@ function importCustomer23570158(event) {
         // 自動計算運費和保險費，並將結果帶入到欄位中
         calculateFreight();
         calculateInsurance();
+
+        handleCheck(); // 長期委任字號
     };
 
     reader.readAsArrayBuffer(file);
