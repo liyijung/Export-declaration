@@ -107,7 +107,7 @@ body {
     margin-left: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
     border-radius: 5px;
-    border: 2px solid #ccc;
+    border: 1px solid #ccc;
     cursor: pointer;
     background: linear-gradient(to bottom, #f0f0f0, #c2d6f8);
 }
