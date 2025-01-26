@@ -674,9 +674,12 @@ input[type="checkbox"]:hover {
 }
 
 .vertical-text {
-    writing-mode: vertical-rl; /* 垂直排列文字 */
-    padding: 0px 3.5px 0px 0px; /* 調整間距 */
-    align-items: flex-start; /* 讓文字靠上對齊 */
+    writing-mode: vertical-lr; /* 垂直排列，從上到下 */
+    text-orientation: upright; /* 文字直立方向 */
+    display: flex; /* 使用 Flexbox 以便調整對齊 */
+    justify-content: center; /* 水平置中 */
+    align-items: end; /* 垂直置中 */
+    width: 24px;
 }
 
 /* 靠左對齊 .video-link 區塊 */
