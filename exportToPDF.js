@@ -259,31 +259,12 @@ async function exportToPDF() {
         doc.text(document.getElementById('SHPR_E_NAME').value, 30, 71.5)
         doc.text(document.getElementById('SHPR_C_ADDR').value, 30, 76.5)
 
-        // AEO 編號對照表
-        const aeoMapping = {
-            "23218022": "TWAEO-103000025", // 矽格股份有限公司
-            "84149456": "TWAEO-104000026", // 矽格聯測股份有限公司
-            "27951609": "TWAEO-108000019", // 群聯電子股份有限公司竹南分公司
-            "11384708": "TWAEO-105000007", // 長春人造樹脂廠股份有限公司
-            "70848839": "TWAEO-104000014", // 日月光半導體製造股份有限公司中壢分公司
-            "22327466": "TWAEO-104000036", // 立端科技股份有限公司
-            "70647919": "TWAEO-100000038", // 台灣精銳科技股份有限公司
-            "86436593": "TWAEO-109000011", // 翔名科技股份有限公司
-            "89549184": "TWAEO-112000006", // 榮昌科技股份有限公司
-            "16130599": "TWAEO-99000007", // 友達光電股份有限公司桃園分公司
-            "84149786": "TWAEO-104000028", // 晶元光電股份有限公司
-            "97331723": "TWAEO-102000060", // 啟碁科技股份有限公司
-            "84149738": "TWAEO-100000006", // 友達光電股份有限公司
-            "23446187": "TWAEO-113000013", // 創見資訊股份有限公司
-            "59619900": "TWAEO-111000003", // 建大工業股份有限公司
-        };
-
-        // 查找 AEO 編號並顯示在 PDF 指定位置
+        // 取得 SHPR_BAN_ID 的值
         const shprBanId = document.getElementById('SHPR_BAN_ID').value;
-        const aeoNumber = aeoMapping[shprBanId] || ''; // 如果無對應則顯示 'NIL'
         
         // 顯示 AEO 編號
-        doc.text(aeoNumber, 175, 65.5);
+        const shprAeo = await getAeoNumber(shprBanId);  // 呼叫共用函數取得 AEO 編號
+        doc.text(shprAeo, 175, 65.5);
         
         // 買方中文名稱
         doc.text(document.getElementById('CNEE_C_NAME').value, 30, 83)
@@ -955,4 +936,37 @@ async function fetchDateRange() {
             endDate: '9999999'
         };
     }
+}
+
+let cachedAeoMapping = null;
+
+// 取得 AEO 對照表並快取
+async function getAeoMapping() {
+    if (cachedAeoMapping) return cachedAeoMapping;  // 若已有緩存，直接返回
+
+    try {
+        const response = await fetch('AEO_mapping.csv');
+        const csvText = await response.text();
+        const aeoData = Papa.parse(csvText, {
+            header: true,
+            skipEmptyLines: true
+        }).data;
+
+        const aeoMapping = {};
+        aeoData.forEach(row => {
+            aeoMapping[row['統一編號']] = row['AEO編號'];  // 儲存 AEO 編號
+        });
+
+        cachedAeoMapping = aeoMapping;  // 快取對照表
+        return aeoMapping;
+    } catch (error) {
+        console.error('載入 AEO 對照表時發生錯誤:', error);
+        return {};
+    }
+}
+
+// 取得 AEO 編號的通用函數
+async function getAeoNumber(shprBanId) {
+    const aeoMapping = await getAeoMapping();
+    return aeoMapping[shprBanId] || '';  // 若查不到則返回空字串
 }
