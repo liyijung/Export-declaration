@@ -679,7 +679,7 @@ input[type="checkbox"]:hover {
     text-orientation: upright; /* 文字直立方向 */
     display: flex; /* 使用 Flexbox 以便調整對齊 */
     justify-content: center; /* 水平置中 */
-    align-items: end; /* 垂直置中 */
+    align-items: center; /* 垂直置中 */
     width: 24px;
 }
 
