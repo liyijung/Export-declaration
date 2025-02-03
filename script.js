@@ -3669,7 +3669,7 @@ document.addEventListener('DOMContentLoaded', function () {
         console.log("COPY_QTY: " + copyQty.value);
     }
     
-    function exportToXML() {
+    async function exportToXML() {
         updateVariables(); // 在匯出XML之前更新變數
 
         const requiredFields = [
@@ -4161,29 +4161,8 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         xmlContent += `  <fields>\n    <field_name>PROC_NO</field_name>\n    <field_value>${procNo}</field_value>\n  </fields>\n`;
 
-        // AEO 編號對照表
-        const aeoMapping = {
-            "23218022": "TWAEO-103000025", // 矽格股份有限公司
-            "84149456": "TWAEO-104000026", // 矽格聯測股份有限公司
-            "27951609": "TWAEO-108000019", // 群聯電子股份有限公司竹南分公司
-            "11384708": "TWAEO-105000007", // 長春人造樹脂廠股份有限公司
-            "70848839": "TWAEO-104000014", // 日月光半導體製造股份有限公司中壢分公司
-            "22327466": "TWAEO-104000036", // 立端科技股份有限公司
-            "70647919": "TWAEO-100000038", // 台灣精銳科技股份有限公司
-            "86436593": "TWAEO-109000011", // 翔名科技股份有限公司
-            "89549184": "TWAEO-112000006", // 榮昌科技股份有限公司
-            "16130599": "TWAEO-99000007", // 友達光電股份有限公司桃園分公司
-            "84149786": "TWAEO-104000028", // 晶元光電股份有限公司
-            "97331723": "TWAEO-102000060", // 啟碁科技股份有限公司
-            "84149738": "TWAEO-100000006", // 友達光電股份有限公司
-            "23446187": "TWAEO-113000013", // 創見資訊股份有限公司
-            "59619900": "TWAEO-111000003", // 建大工業股份有限公司
-        };
-        
-        // 查找對應的 AEO 編號
-        const shprAeo = aeoMapping[shprBanId] || ''; // 若未找到，則設為空字串
-
         // 添加 SHPR_AEO 欄位
+        const shprAeo = await getAeoNumber(shprBanId);  // 呼叫共用函數
         xmlContent += `  <fields>\n    <field_name>SHPR_AEO</field_name>\n    <field_value>${shprAeo}</field_value>\n  </fields>\n`;
 
         headerFields.forEach(id => {
