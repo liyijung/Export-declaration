@@ -4149,16 +4149,27 @@ document.addEventListener('DOMContentLoaded', function () {
         ];
         let xmlContent = '<?xml version="1.0" encoding="UTF-8"?>\n<Root>\n  <sys_code>GICCDS</sys_code>\n<head>\n  <head_table_name>DOC_HEAD</head_table_name>\n';
 
+        // 取得製單人員輸入值，若為空則預設為 ''
+        let maker = document.getElementById('Maker') ? document.getElementById('Maker').value : '';
+
         // 取得 SHPR_BAN_ID 欄位的值
         const shprBanIdElement = document.getElementById('SHPR_BAN_ID');
         const shprBanId = shprBanIdElement ? shprBanIdElement.value.trim() : '';
 
-        // 將 PROC_NO 的值設置為 'X8CS'
-        let procNo = 'X8CS';
-        const excludedProcNoIds = ['23570158']; // 排除的 SHPR_BAN_ID 值清單
+        // 排除的 SHPR_BAN_ID 值清單
+        const excludedProcNoIds = ['23570158'];
+
+        // **設定 PROC_NO**
+        let procNo;
         if (excludedProcNoIds.includes(shprBanId)) {
-            procNo = ''; // 如果在排除列表中，清空 PROC_NO
+            // SHPR_BAN_ID 在排除列表內 → 使用 maker（使用者輸入值）
+            procNo = maker;
+        } else {
+            // SHPR_BAN_ID 不在排除列表內 → 若 maker 為空，則預設為 'X8CS'
+            procNo = maker || 'X8CS';
         }
+
+        // 添加 PROC_NO 欄位
         xmlContent += `  <fields>\n    <field_name>PROC_NO</field_name>\n    <field_value>${procNo}</field_value>\n  </fields>\n`;
 
         // 添加 SHPR_AEO 欄位
@@ -5304,7 +5315,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (input.id === 'decimal-places' || 
             input.id === 'weight-decimal-places' || 
             input.id === 'specific-range' || 
-            input.id === 'specific-weight') {
+            input.id === 'specific-weight' ||
+            input.id === 'Maker') {
             return;
         }
         
@@ -5411,4 +5423,19 @@ document.addEventListener('DOMContentLoaded', () => {
             clearBtn.style.backgroundColor = '#e6e6e6';
         });
     });
+});
+
+// 當頁面載入時，檢查 localStorage 是否有儲存的製單人員資料
+window.addEventListener('DOMContentLoaded', () => {
+    const savedMaker = localStorage.getItem('Maker');
+    if (savedMaker !== null) {
+        document.getElementById('Maker').value = savedMaker;
+    }
+});
+
+// 按下儲存按鈕時，將製單人員名稱儲存到 localStorage
+document.getElementById('saveMaker').addEventListener('click', () => {
+    const maker = document.getElementById('Maker').value;
+    localStorage.setItem('Maker', maker);
+    alert('製單人員已儲存！');
 });
