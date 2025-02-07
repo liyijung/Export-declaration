@@ -5121,6 +5121,13 @@ function thingsToNote() {
     });
 };
 
+document.addEventListener('keydown', function (event) {
+    if (event.altKey && event.key.toLowerCase() === 'r') { //忽略大小寫
+        event.preventDefault(); // 防止預設行為
+        thingsToNote();
+    }
+});
+
 function closeExistingPopup() {
     const existingPopup = document.querySelector('.popup');
     if (existingPopup) {
