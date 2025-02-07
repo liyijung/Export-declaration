@@ -4152,25 +4152,12 @@ document.addEventListener('DOMContentLoaded', function () {
         // 取得製單人員輸入值，若為空則預設為 ''
         let maker = document.getElementById('Maker') ? document.getElementById('Maker').value : '';
 
+        // 添加 PROC_NO 欄位
+        xmlContent += `  <fields>\n    <field_name>PROC_NO</field_name>\n    <field_value>${maker}</field_value>\n  </fields>\n`;
+
         // 取得 SHPR_BAN_ID 欄位的值
         const shprBanIdElement = document.getElementById('SHPR_BAN_ID');
         const shprBanId = shprBanIdElement ? shprBanIdElement.value.trim() : '';
-
-        // 排除的 SHPR_BAN_ID 值清單
-        const excludedProcNoIds = ['23570158'];
-
-        // **設定 PROC_NO**
-        let procNo;
-        if (excludedProcNoIds.includes(shprBanId)) {
-            // SHPR_BAN_ID 在排除列表內 → 使用 maker（使用者輸入值）
-            procNo = maker;
-        } else {
-            // SHPR_BAN_ID 不在排除列表內 → 若 maker 為空，則預設為 'X8CS'
-            procNo = maker || 'X8CS';
-        }
-
-        // 添加 PROC_NO 欄位
-        xmlContent += `  <fields>\n    <field_name>PROC_NO</field_name>\n    <field_value>${procNo}</field_value>\n  </fields>\n`;
 
         // 添加 SHPR_AEO 欄位
         const shprAeo = await getAeoNumber(shprBanId);  // 呼叫共用函數
