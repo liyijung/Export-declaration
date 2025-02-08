@@ -3699,6 +3699,22 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
 
+        // 統一處理 SHPR_E_NAME 和 SHPR_E_ADDR
+        function updateFieldIfEmpty(targetId, sourceId) {
+            let sourceElement = document.getElementById(sourceId);
+            let targetElement = document.getElementById(targetId);
+
+            if (sourceElement && targetElement) {
+                targetElement.value = targetElement.value?.trim() || sourceElement.value.trim();
+            }
+        }
+
+        // 更新 SHPR_E_NAME (若無值則使用 SHPR_C_NAME)
+        updateFieldIfEmpty('SHPR_E_NAME', 'SHPR_C_NAME');
+
+        // 更新 SHPR_E_ADDR (若無值則使用 SHPR_C_ADDR)
+        updateFieldIfEmpty('SHPR_E_ADDR', 'SHPR_C_ADDR');
+        
         // 單獨檢查 CNEE_C_NAME 和 CNEE_E_NAME
         let cneeCName = document.getElementById('CNEE_C_NAME');
         let cneeEName = document.getElementById('CNEE_E_NAME');
