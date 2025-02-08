@@ -18,6 +18,7 @@ fetch('./tax_data.json')
 
 let importRegData = {};
 let exportRegData = {};
+let taxRegData = {};
 
 // 讀取輸入規定對應表
 fetch('./Reg/IReg.csv')
@@ -40,7 +41,16 @@ fetch('./Reg/EReg.csv')
         exportRegData = parseCSVToObject(data);
         console.log('輸出規定數據已加載', exportRegData);
     })
-    .catch(error => console.error('Error loading EReg.csv:', error));
+    .catch(error => console.error('載入 EReg.csv 錯誤:', error));
+
+// 讀取稽徵規定對應表
+fetch('./Reg/TaxReg.csv')
+    .then(response => response.text())
+    .then(data => {
+        taxRegData = parseCSVToObject(data);
+        console.log('稽徵規定數據已加載:', taxRegData);
+    })
+    .catch(error => console.error('載入 TaxReg.csv 錯誤:', error));
 
 // 解析 CSV 轉換為物件
 function parseCSVToObject(csvData) {
@@ -262,6 +272,20 @@ function searchTariff(inputElement, isModal = false) {
                         }
                     });
                 
+                    td.addEventListener('mouseout', hideTooltip);
+                }
+                
+                if (header === '稽徵規定') {
+                    const regCode = item['稽徵規定'] ? item['稽徵規定'].trim() : '';
+                    td.textContent = regCode || '';
+
+                    td.addEventListener('mouseover', function(event) {
+                        const regInfo = getRegInfo(regCode, taxRegData, '稽徵規定');
+                        if (regInfo) {
+                            showTooltip(event, regInfo);
+                        }
+                    });
+
                     td.addEventListener('mouseout', hideTooltip);
                 }
                 
