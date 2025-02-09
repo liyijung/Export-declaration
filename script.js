@@ -1218,6 +1218,28 @@ function calculateAmountsForRow(row, decimalPlaces) {
     }
 }
 
+// 即時更新 ST_QTY
+function updateST_QTY(itemRow) {
+    const qty = itemRow.querySelector('.QTY');
+    const docum = itemRow.querySelector('.DOC_UM');
+    const stqty = itemRow.querySelector('.ST_QTY');
+    const stum = itemRow.querySelector('.ST_UM');
+
+    if (stum.value === docum.value) {
+        stqty.value = qty.value;
+    }
+}
+
+// 監聽所有 QTY 和 DOC_UM 欄位變更
+document.addEventListener('input', (event) => {
+    if (event.target.matches('.QTY, .DOC_UM')) {
+        const itemRow = event.target.closest('.item-row');
+        if (itemRow) {
+            updateST_QTY(itemRow);
+        }
+    }
+});
+
 // 刪除項次
 function removeItem(element) {
     const item = element.parentElement.parentElement;
@@ -2926,7 +2948,7 @@ function updateItemAmounts() {
 
     const items = document.querySelectorAll('#item-container .item-row');
     items.forEach((item) => {
-        // 呼叫 calculateAmountsForRow 函式進行金額計算
+        // 更新金額
         calculateAmountsForRow(item, decimalPlaces);
     });
 }
