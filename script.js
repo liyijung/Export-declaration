@@ -5445,6 +5445,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 });
             }
+
+            // 當清除幣別時，一併清除匯率
+            if (input.id === 'CURRENCY') {
+                document.getElementById('exchange-rate').value = '';
+            }
         });
 
         // 事件處理：輸入框獲取焦點時顯示按鈕（無論是否有內容）
