@@ -586,61 +586,6 @@ document.getElementById('calculate-insurance-button').addEventListener('click', 
 // 當按下計算應加費用按鈕時，觸發 calculateAdditional 函數
 document.getElementById('calculate-additional-button').addEventListener('click', calculateAdditional);
 
-// 從 gc331_current.json 檔案中獲取匯率數據
-async function fetchExchangeRates() {
-    try {
-        const response = await fetch('gc331_current.json');
-        if (!response.ok) {
-            throw new Error(`HTTP 錯誤！狀態碼：${response.status}，URL：${response.url}`);
-        }
-        const data = await response.json();
-        
-        // 轉換為 { "TWD": { buyValue: "1", sellValue: "1" }, ... } 格式
-        const exchangeRates = {};
-        if (data.items) {
-            data.items.forEach(item => {
-                exchangeRates[item.code] = {
-                    buyValue: item.buyValue,
-                    sellValue: item.sellValue
-                };
-            });
-        }
-        return exchangeRates;
-    } catch (error) {
-        console.error('獲取匯率數據時出錯:', error.message);
-        return {}; // 返回空物件，避免 `null` 造成 TypeError
-    }
-}
-
-async function lookupExchangeRate() {
-    const currencyInput = document.getElementById("CURRENCY");
-    const errorSpan = document.getElementById("currency-error");
-    const exchangeRateInput = document.getElementById("exchange-rate"); // 匯率欄位
-
-    // 取得輸入的幣別並轉換為大寫
-    const currencyCode = currencyInput.value.trim().toUpperCase();
-
-    // 只在輸入滿 3 碼時進行查找
-    if (currencyCode.length < 3) {
-        errorSpan.style.display = "none";
-        exchangeRateInput.value = ""; // 清空匯率欄位
-        return;
-    }
-
-    // 獲取匯率數據
-    const exchangeRates = await fetchExchangeRates();
-
-    // 檢查是否存在該幣別
-    if (exchangeRates[currencyCode]) {
-        const buyValue = exchangeRates[currencyCode].buyValue;
-        exchangeRateInput.value = buyValue; // 顯示買入價
-        errorSpan.style.display = "none";
-    } else {
-        exchangeRateInput.value = ""; // 清空匯率欄位
-        errorSpan.style.display = "inline";
-    }
-}
-
 function setupUpperCaseConversion(id) {
     const element = document.getElementById(id);
     if (element) {
@@ -5435,42 +5380,42 @@ document.addEventListener('DOMContentLoaded', () => {
             input.focus();
             clearBtn.style.display = 'none';
 
-            // 當按下清除按鈕時執行
-            if (input.id === 'SHPR_BAN_ID') {
-                searchData();
-            } else if (input.id === 'TO_CODE') {
-                document.getElementById('TO_DESC').value = '';
-            } else if (input.id === 'TO_DESC') {
-                document.getElementById('TO_CODE').value = '';
-            } else if (input.id === 'CNEE_COUNTRY_CODE') {
-                let fieldsToClear = ['CNEE_BAN_ID', 'BUYER_E_NAME', 'BUYER_E_ADDR'];
-                fieldsToClear.forEach(fieldId => {
-                    let label = document.querySelector(`label[for="${fieldId}"]`);
-                    if (label) {
-                        // 設置背景樣式，恢復為非必填狀態
-                        label.setAttribute('style', 'background: #ffffff00;');
+            switch (input.id) {
+                case 'SHPR_BAN_ID':
+                    searchData();
+                    break;
+                case 'TO_CODE':
+                    document.getElementById('TO_DESC').value = '';
+                    break;
+                case 'TO_DESC':
+                    document.getElementById('TO_CODE').value = '';
+                    break;
+                case 'CNEE_COUNTRY_CODE':
+                    let cneeFields = ['CNEE_BAN_ID', 'BUYER_E_NAME', 'BUYER_E_ADDR'];
+                    cneeFields.forEach(fieldId => {
+                        let label = document.querySelector(`label[for="${fieldId}"]`);
+                        if (label) {
+                            label.style.background = 'transparent'; // 恢復背景透明
+                        }
+                    });
+                    document.getElementById('CNEE_COUNTRY_CODE').value = '';
+                    break;
+                case 'TERMS_SALES':
+                    let termsFields = ['FRT_AMT', 'INS_AMT', 'ADD_AMT', 'SUBTRACT_AMT'];
+                    termsFields.forEach(fieldId => {
+                        let label = document.querySelector(`label[for="${fieldId}"]`);
+                        if (label) {
+                            label.style.background = ''; // 恢復預設背景
+                        }
+                    });
+                    break;
+                case 'CURRENCY':
+                    document.getElementById('exchange-rate').value = '';
+                    let currencyError = document.getElementById("currency-error");
+                    if (currencyError) {
+                        currencyError.style.display = "none";
                     }
-                });
-                document.getElementById('CNEE_COUNTRY_CODE').value = '';
-            } else if (input.id === 'TERMS_SALES') {
-                // 恢復欄位背景樣式
-                let fields = ['FRT_AMT', 'INS_AMT', 'ADD_AMT', 'SUBTRACT_AMT'];
-                fields.forEach(fieldId => {
-                    let label = document.querySelector(`label[for="${fieldId}"]`);
-                    if (label) {
-                        label.removeAttribute('style');
-                    }
-                });
-            }
-
-            // 當清除幣別時，一併清除匯率
-            if (input.id === 'CURRENCY') {
-                document.getElementById('exchange-rate').value = '';
-
-                const errorElement = document.getElementById("currency-error");
-                if (errorElement) {
-                    errorElement.style.display = "none";
-                }
+                    break;
             }
         });
 
