@@ -5366,6 +5366,7 @@ document.addEventListener('DOMContentLoaded', () => {
             input.id === 'weight-decimal-places' || 
             input.id === 'specific-range' || 
             input.id === 'specific-weight' ||
+            input.id === 'exchange-rate' ||
             input.id === 'Maker') {
             return;
         }
