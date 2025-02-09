@@ -90,30 +90,7 @@ async function exportToPDF() {
         const dclDocTypeText = optionElement ? optionElement.text : '';
         doc.text(`${dclDocTypeValue}${dclDocTypeText}`, 103, 10)
 
-        // 獲取今天的日期
-        var today = new Date();
-        var Tyear = today.getFullYear();
-        var Tmonth = String(today.getMonth() + 1).padStart(2, '0'); // 因為 getMonth() 返回的月份是從 0 開始的
-        var Tday = String(today.getDate()).padStart(2, '0');
-        var Tymd = (Tyear - 1911) + Tmonth + Tday; // 民國年格式
-
-        // 從 FILE_NO 中獲取年份、月份、日期
-        var yyymmdd = document.getElementById('FILE_NO').value;
-        var Fymd = '', CustomsDeclarationDate = '', yearPart = '';
-
-        // 如果有 FILE_NO，則解析其日期資訊，否則使用當前日期
-        if (yyymmdd) {
-            var year = yyymmdd.substring(0, 3);  // 民國年格式的前 3 位
-            var month = yyymmdd.substring(3, 5); // 第 4-5 位為月份
-            var day = yyymmdd.substring(5, 7);   // 第 6-7 位為日期
-            Fymd = year + month + day;
-            yearPart = yyymmdd.substring(1, 3);  // 第 2-3 位為年份
-            CustomsDeclarationDate = year + '/' + month + '/' + day; // 格式為 YYY/MM/DD
-        } else {
-            Fymd = Tymd;
-            yearPart = Tymd.substring(1, 3);     // 使用當前年份（民國年）的第 2-3 位
-            CustomsDeclarationDate = (Tyear - 1911) + '/' + Tmonth + '/' + Tday; // 當前日期格式
-        }
+        var { Fymd, yearPart, CustomsDeclarationDate } = getCustomsDeclarationDate();
 
         // 報單號碼
         var OrderNumber = 'CX/  /' + yearPart + '/696/';
@@ -969,3 +946,103 @@ async function getAeoNumber(shprBanId) {
     const aeoMapping = await getAeoMapping();
     return aeoMapping[shprBanId] || '';  // 若查不到則返回空字串
 }
+
+// 全域變數：快取匯率數據，避免頻繁請求
+let cachedExchangeRates = null;
+
+// 從 gc331_current.json 檔案中獲取匯率數據（使用快取）
+async function fetchExchangeRates() {
+    if (cachedExchangeRates) {
+        return cachedExchangeRates; // 若已有快取則直接返回
+    }
+
+    try {
+        const response = await fetch('gc331_current.json');
+        if (!response.ok) {
+            throw new Error(`HTTP 錯誤！狀態碼：${response.status}，URL：${response.url}`);
+        }
+        const data = await response.json();
+        
+        // 轉換為 { "TWD": { buyValue: "1", sellValue: "1" }, ... } 格式
+        const exchangeRates = {};
+        if (data.items) {
+            data.items.forEach(item => {
+                exchangeRates[item.code] = {
+                    buyValue: item.buyValue,
+                    sellValue: item.sellValue
+                };
+            });
+        }
+
+        cachedExchangeRates = exchangeRates; // 快取數據
+        return exchangeRates;
+    } catch (error) {
+        console.error('獲取匯率數據時出錯:', error.message);
+        return {}; // 返回空物件，避免 `null` 造成 TypeError
+    }
+}
+
+// 查找並更新匯率
+async function lookupExchangeRate() {
+    const currencyInput = document.getElementById("CURRENCY");
+    const errorSpan = document.getElementById("currency-error");
+    const exchangeRateInput = document.getElementById("exchange-rate"); // 匯率欄位
+
+    // 取得輸入的幣別並轉換為大寫
+    const currencyCode = currencyInput.value.trim().toUpperCase();
+
+    // 只在輸入滿 3 碼時進行查找
+    if (currencyCode.length < 3) {
+        errorSpan.style.display = "none";
+        exchangeRateInput.value = ""; // 清空匯率欄位
+        return;
+    }
+
+    // 獲取匯率數據
+    const exchangeRates = await fetchExchangeRates();
+
+    // 當旬匯率日期區間
+    var { Fymd, yearPart, CustomsDeclarationDate } = getCustomsDeclarationDate();
+    const { startDate, endDate } = await fetchDateRange();
+
+    // 檢查是否存在該幣別
+    if (exchangeRates[currencyCode] && (Fymd >= startDate && Fymd <= endDate)) {
+        const buyValue = exchangeRates[currencyCode].buyValue;
+        exchangeRateInput.value = buyValue; // 顯示買入價
+        errorSpan.style.display = "none";
+    } else if (Fymd < startDate || Fymd > endDate) {
+        exchangeRateInput.value = ""; // 清空匯率欄位
+        errorSpan.style.display = "none";
+    } else {
+        exchangeRateInput.value = ""; // 清空匯率欄位
+        errorSpan.style.display = "inline";
+    }
+}
+
+// 解析 FILE_NO 取得報關日期
+function getCustomsDeclarationDate() {
+    var today = new Date();
+    var Tyear = today.getFullYear();
+    var Tmonth = String(today.getMonth() + 1).padStart(2, '0'); // getMonth() 返回 0-11
+    var Tday = String(today.getDate()).padStart(2, '0');
+    var Tymd = (Tyear - 1911) + Tmonth + Tday; // 民國年格式 YYYMMDD
+    var defaultYearPart = Tymd.substring(1, 3); // 當前年份（民國年）的第 2-3 位
+    var defaultFormattedDate = (Tyear - 1911) + '/' + Tmonth + '/' + Tday; // YYY/MM/DD 格式
+
+    var fileNo = document.getElementById('FILE_NO').value;
+    if (!fileNo || fileNo.length < 7) {
+        return { Fymd: Tymd, yearPart: defaultYearPart, CustomsDeclarationDate: defaultFormattedDate };
+    }
+
+    var year = fileNo.substring(0, 3);  // 民國年格式前 3 位
+    var month = fileNo.substring(3, 5); // 第 4-5 位為月份
+    var day = fileNo.substring(5, 7);   // 第 6-7 位為日期
+    var yearPart = fileNo.substring(1, 3); // 第 2-3 位為年份
+    var CustomsDeclarationDate = year + '/' + month + '/' + day; // YYY/MM/DD
+
+    return { Fymd: year + month + day, yearPart: yearPart, CustomsDeclarationDate: CustomsDeclarationDate };
+}
+
+// 監聽事件
+document.getElementById("FILE_NO").addEventListener("blur", lookupExchangeRate);
+document.getElementById("CURRENCY").addEventListener("input", lookupExchangeRate);
