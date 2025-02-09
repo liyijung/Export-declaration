@@ -1713,6 +1713,7 @@ function handleFile(event) {
         });
 
         searchData(false); // 出口人統一編號搜尋
+        lookupExchangeRate(); // 當旬匯率
         handleCheck(); // 長期委任字號
         thingsToNote(); // 出口備註
 
@@ -2174,6 +2175,7 @@ function importXML(event) {
             });
 
             searchData(false); // 出口人統一編號搜尋
+            lookupExchangeRate(); // 當旬匯率
             handleCheck(); // 長期委任字號
             thingsToNote(); // 出口備註
 
