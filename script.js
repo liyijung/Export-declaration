@@ -593,10 +593,51 @@ async function fetchExchangeRates() {
         if (!response.ok) {
             throw new Error(`HTTP 錯誤！狀態碼：${response.status}，URL：${response.url}`);
         }
-        return await response.json();
+        const data = await response.json();
+        
+        // 轉換為 { "TWD": { buyValue: "1", sellValue: "1" }, ... } 格式
+        const exchangeRates = {};
+        if (data.items) {
+            data.items.forEach(item => {
+                exchangeRates[item.code] = {
+                    buyValue: item.buyValue,
+                    sellValue: item.sellValue
+                };
+            });
+        }
+        return exchangeRates;
     } catch (error) {
         console.error('獲取匯率數據時出錯:', error.message);
         return {}; // 返回空物件，避免 `null` 造成 TypeError
+    }
+}
+
+async function lookupExchangeRate() {
+    const currencyInput = document.getElementById("CURRENCY");
+    const errorSpan = document.getElementById("currency-error");
+    const exchangeRateInput = document.getElementById("exchange-rate"); // 匯率欄位
+
+    // 取得輸入的幣別並轉換為大寫
+    const currencyCode = currencyInput.value.trim().toUpperCase();
+
+    // 只在輸入滿 3 碼時進行查找
+    if (currencyCode.length < 3) {
+        errorSpan.style.display = "none";
+        exchangeRateInput.value = ""; // 清空匯率欄位
+        return;
+    }
+
+    // 獲取匯率數據
+    const exchangeRates = await fetchExchangeRates();
+
+    // 檢查是否存在該幣別
+    if (exchangeRates[currencyCode]) {
+        const buyValue = exchangeRates[currencyCode].buyValue;
+        exchangeRateInput.value = buyValue; // 顯示買入價
+        errorSpan.style.display = "none";
+    } else {
+        exchangeRateInput.value = ""; // 清空匯率欄位
+        errorSpan.style.display = "inline";
     }
 }
 
