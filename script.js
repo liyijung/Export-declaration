@@ -5451,6 +5451,11 @@ document.addEventListener('DOMContentLoaded', () => {
             // 當清除幣別時，一併清除匯率
             if (input.id === 'CURRENCY') {
                 document.getElementById('exchange-rate').value = '';
+
+                const errorElement = document.getElementById("currency-error");
+                if (errorElement) {
+                    errorElement.style.display = "none";
+                }
             }
         });
 
