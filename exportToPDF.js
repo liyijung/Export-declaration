@@ -172,8 +172,7 @@ async function exportToPDF() {
 
         // 獲取 CURRENCY 的值並查找對應的匯率
         const currency = document.getElementById('CURRENCY').value;
-        const exchangeRateItem = exchangeRates.items.find(item => item.code === currency);
-        const exchangeRate = exchangeRateItem ? exchangeRateItem.buyValue : 'NIL';
+        const exchangeRate = exchangeRates[currency] ? exchangeRates[currency].buyValue : 'NIL';
         
         // 檢查數值是否為 NIL
         const formattedFrtAmt = frtAmt !== 'NIL' ? frtAmt : 'NIL';
