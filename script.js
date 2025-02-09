@@ -587,18 +587,17 @@ document.getElementById('calculate-insurance-button').addEventListener('click', 
 document.getElementById('calculate-additional-button').addEventListener('click', calculateAdditional);
 
 // 從 gc331_current.json 檔案中獲取匯率數據
-function fetchExchangeRates() {
-    return fetch('gc331_current.json')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP 錯誤！狀態碼：${response.status}`);
-            }
-            return response.json();
-        })
-        .catch(error => {
-            console.error('獲取匯率數據時出錯:', error);
-            return null;
-        });
+async function fetchExchangeRates() {
+    try {
+        const response = await fetch('gc331_current.json');
+        if (!response.ok) {
+            throw new Error(`HTTP 錯誤！狀態碼：${response.status}，URL：${response.url}`);
+        }
+        return await response.json();
+    } catch (error) {
+        console.error('獲取匯率數據時出錯:', error.message);
+        return {}; // 返回空物件，避免 `null` 造成 TypeError
+    }
 }
 
 function setupUpperCaseConversion(id) {
