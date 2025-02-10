@@ -1510,6 +1510,24 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
+// 同步No.
+document.addEventListener("DOMContentLoaded", function () {
+    const specifyItemNumbers = document.getElementById("specify-item-numbers");
+    const targetItemNumbers = document.getElementById("target-item-numbers");
+
+    function syncInput(source, target) {
+        target.value = source.value;
+    }
+
+    specifyItemNumbers.addEventListener("input", function () {
+        syncInput(specifyItemNumbers, targetItemNumbers);
+    });
+
+    targetItemNumbers.addEventListener("input", function () {
+        syncInput(targetItemNumbers, specifyItemNumbers);
+    });
+});
+
 // 應用填列資料的函數
 function applyFieldData() {
     const mode = document.getElementById('specify-mode').value;
