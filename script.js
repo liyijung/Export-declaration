@@ -1456,6 +1456,14 @@ function checkFieldDisplay() {
         startNumberContainer.style.display = 'inline-block';
         specifyFieldValue.value = '';  // 清除填列內容的文字
         specifyFieldValue.style.display = 'none';  // 隱藏填列內容
+
+        // 設置焦點 specify-item-number (自定義填列內容-No.)
+        setTimeout(() => {
+            const itemNumbersInput = document.getElementById('specify-item-numbers');
+            if (itemNumbersInput) {
+                itemNumbersInput.focus();
+            }
+        }, 0);
     } else {
         startNumberContainer.style.display = 'none';
         specifyFieldValue.style.display = 'block';  // 顯示填列內容
