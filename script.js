@@ -1452,7 +1452,7 @@ function checkFieldDisplay() {
     const startNumberContainer = document.getElementById('start-number-container');
     const specifyFieldValue = document.getElementById('specify-field-value');
     specifyFieldValue.value = '';  // 清除填列內容的文字
-    
+
     if (fieldName === 'CERT_NO_ITEM') {
         startNumberContainer.style.display = 'inline-block';
         specifyFieldValue.style.display = 'none';  // 隱藏填列內容
@@ -1517,7 +1517,7 @@ function applyFieldData() {
     const itemContainer = document.getElementById('item-container');
     const items = itemContainer.querySelectorAll('.item-row');
     let hasUpdatedCCCCode = false; // 紀錄是否有更新CCC_CODE欄位
-    let hasUpdatedQtyOrUnitPrice = false; // 紀錄是否有更新QTY或DOC_UNIT_P欄位
+    let hasUpdatedQtyOrUnitPrice = false; // 紀錄是否有更新QTY、DOC_UM、DOC_UNIT_P欄位
 
     if (mode === 'custom') {
         const itemNumbers = document.getElementById('specify-item-numbers').value;
@@ -1557,8 +1557,8 @@ function applyFieldData() {
                         hasUpdatedCCCCode = true;
                     }
 
-                    // 紀錄是否更新了QTY或DOC_UNIT_P
-                    if (fieldName === 'QTY' || fieldName === 'DOC_UNIT_P') {
+                    // 紀錄是否更新了QTY、DOC_UM、DOC_UNIT_P
+                    if (fieldName === 'QTY' || fieldName === 'DOC_UM' || fieldName === 'DOC_UNIT_P') {
                         hasUpdatedQtyOrUnitPrice = true;
                     }
                 }
@@ -1601,8 +1601,8 @@ function applyFieldData() {
                         if (fieldName === 'CCC_CODE') {
                             hasUpdatedCCCCode = true;
                         }
-                        // 紀錄是否更新了QTY或DOC_UNIT_P
-                        if (fieldName === 'QTY' || fieldName === 'DOC_UNIT_P') {
+                        // 紀錄是否更新了QTY、DOC_UM、DOC_UNIT_P
+                        if (fieldName === 'QTY' || fieldName === 'DOC_UM' || fieldName === 'DOC_UNIT_P') {
                             hasUpdatedQtyOrUnitPrice = true;
                         }
                     });
@@ -1629,10 +1629,11 @@ function applyFieldData() {
         decimalPlaces = 2;
     }
     
-    // 檢查是否有更新QTY或DOC_UNIT_P欄位，若有則對所有更新的欄位執行金額計算
+    // 檢查是否有更新QTY、DOC_UM、DOC_UNIT_P欄位，若有則對所有更新的欄位執行金額計算及更新ST_QTY
     if (hasUpdatedQtyOrUnitPrice) {
         items.forEach(item => {
             calculateAmountsForRow(item, decimalPlaces);
+            updateST_QTY(item);
         });
     }
 
