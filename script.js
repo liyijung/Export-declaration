@@ -1377,18 +1377,22 @@ function openSpecifyFieldModal() {
     const specifyFieldModal = document.getElementById('specify-field-modal');
     specifyFieldModal.style.display = 'flex';
 
-    // 設置焦點
-    const itemNumbersInput = document.getElementById('specify-item-numbers');
+    // 設置焦點 source-item-number (從源項次複製內容-源項次)
+    const itemNumbersInput = document.getElementById('source-item-number');
     itemNumbersInput.focus();
     
     // 允許點擊背後的頁面欄位
     specifyFieldModal.style.pointerEvents = 'none';
     specifyFieldModal.children[0].style.pointerEvents = 'auto'; // 只允許彈跳框內部的第一個子元素接收點擊
 
+    // 檢查是否顯示 "起始編號" 或 "填列內容"
+    checkFieldDisplay();
+
     // 監聽 ESC 鍵，表示取消
     document.addEventListener('keydown', handleEscKeyForSpecifyFieldCancel);
 }
 
+// 處理 ESC 鍵關閉彈跳框
 function handleEscKeyForSpecifyFieldCancel(event) {
     if (event.key === 'Escape') {
         closeSpecifyFieldModal();
@@ -1398,8 +1402,14 @@ function handleEscKeyForSpecifyFieldCancel(event) {
 // 關閉指定填列欄位資料的彈跳框
 function closeSpecifyFieldModal() {
     const specifyFieldModal = document.getElementById('specify-field-modal');
-    specifyFieldModal.style.display = 'none';
+    specifyFieldModal.style.display = 'none'; // 隱藏彈跳框
+
+    // 移除 ESC 事件監聽
     document.removeEventListener('keydown', handleEscKeyForSpecifyFieldCancel);
+
+    // **重置模式為 'copy'**
+    document.getElementById('specify-mode').value = 'copy';
+    toggleSpecifyMode(); // 確保 UI 恢復成 copy-content
 }
 
 // 動態生成源項次下拉選單的選項
@@ -1425,14 +1435,21 @@ function toggleSpecifyMode() {
     } else {
         customContent.style.display = 'block';
         copyContent.style.display = 'none';
+
+        // 設置焦點 specify-field-value (自定義填列內容-填列內容)
+        setTimeout(() => {
+            const itemNumbersInput = document.getElementById('specify-field-value');
+            if (itemNumbersInput) {
+                itemNumbersInput.focus();
+            }
+        }, 0);
     }
 }
 
 // 當指定的欄位變更時檢查是否顯示起始編號輸入框和填列內容
-document.getElementById('specify-field-name').addEventListener('change', function () {
+function checkFieldDisplay() {
     const fieldName = document.getElementById('specify-field-name').value;
     const startNumberContainer = document.getElementById('start-number-container');
-    const customContent = document.getElementById('custom-content');
     const specifyFieldValue = document.getElementById('specify-field-value');
 
     if (fieldName === 'CERT_NO_ITEM') {
@@ -1443,6 +1460,46 @@ document.getElementById('specify-field-name').addEventListener('change', functio
         startNumberContainer.style.display = 'none';
         specifyFieldValue.style.display = 'block';  // 顯示填列內容
     }
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    // 設定一般預設模式為 'copy'
+    document.getElementById('specify-mode').value = 'copy';
+    toggleSpecifyMode(); // 觸發切換模式，確保預設顯示 copy-content
+    
+    document.querySelectorAll('.item-header .form-group').forEach(header => {
+        header.addEventListener('click', function () {
+            // 取得 `specify-field-name` 下拉選單
+            const specifyFieldName = document.getElementById('specify-field-name');
+            if (!specifyFieldName) return;
+
+            // **取得當前表頭的所有 class**
+            let selectedField = null;
+            this.classList.forEach(className => {
+                // 檢查 `specify-field-name` 下拉選單是否包含該 class
+                for (let i = 0; i < specifyFieldName.options.length; i++) {
+                    if (specifyFieldName.options[i].value === className.toUpperCase()) {
+                        selectedField = className.toUpperCase();
+                        break;
+                    }
+                }
+                if (selectedField) return;
+            });
+
+            // **如果沒有對應欄位，不開啟彈跳框**
+            if (!selectedField) return;
+
+            // 設定彈跳框的欄位名稱
+            specifyFieldName.value = selectedField;
+
+            // **點擊表頭時，將模式切換為 'custom'**
+            document.getElementById('specify-mode').value = 'custom';
+            toggleSpecifyMode(); // 觸發模式切換
+
+            // 開啟彈跳框
+            openSpecifyFieldModal();
+        });
+    });
 });
 
 // 應用填列資料的函數
