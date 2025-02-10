@@ -1470,7 +1470,20 @@ function checkFieldDisplay() {
     }
 
     // 動態調整 rows 屬性
-    specifyFieldValue.rows = (fieldName === 'DESCRIPTION') ? 5 : 1;
+    if (fieldName === 'DESCRIPTION') {
+        specifyFieldValue.rows = 5;
+        specifyFieldValue.removeEventListener('keydown', preventEnterKey); // 允許換行
+    } else {
+        specifyFieldValue.rows = 1;
+        specifyFieldValue.addEventListener('keydown', preventEnterKey); // 阻止換行
+    }
+}
+
+// 阻止 textarea 按 Enter 鍵換行
+function preventEnterKey(event) {
+    if (event.key === 'Enter') {
+        event.preventDefault();
+    }
 }
 
 document.addEventListener('DOMContentLoaded', function () {
