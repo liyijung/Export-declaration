@@ -1451,10 +1451,10 @@ function checkFieldDisplay() {
     const fieldName = document.getElementById('specify-field-name').value;
     const startNumberContainer = document.getElementById('start-number-container');
     const specifyFieldValue = document.getElementById('specify-field-value');
-
+    specifyFieldValue.value = '';  // 清除填列內容的文字
+    
     if (fieldName === 'CERT_NO_ITEM') {
         startNumberContainer.style.display = 'inline-block';
-        specifyFieldValue.value = '';  // 清除填列內容的文字
         specifyFieldValue.style.display = 'none';  // 隱藏填列內容
 
         // 設置焦點 specify-item-number (自定義填列內容-No.)
