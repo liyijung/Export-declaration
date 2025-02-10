@@ -1468,6 +1468,9 @@ function checkFieldDisplay() {
         startNumberContainer.style.display = 'none';
         specifyFieldValue.style.display = 'block';  // 顯示填列內容
     }
+
+    // 動態調整 rows 屬性
+    specifyFieldValue.rows = (fieldName === 'DESCRIPTION') ? 5 : 1;
 }
 
 document.addEventListener('DOMContentLoaded', function () {
