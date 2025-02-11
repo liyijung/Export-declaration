@@ -1698,6 +1698,33 @@ function clearField() {
     }
 }
 
+// 彈跳框內循環 Tab
+document.addEventListener("DOMContentLoaded", function () {
+    const modal = document.getElementById("specify-field-modal");
+    
+    modal.addEventListener("keydown", function (event) {
+        if (event.key === "Tab") {
+            let focusableElements = modal.querySelectorAll('input, select, textarea, button');
+            focusableElements = Array.prototype.slice.call(focusableElements);
+            
+            const firstElement = focusableElements[0];
+            const lastElement = focusableElements[focusableElements.length - 1];
+
+            if (event.shiftKey) { // Shift + Tab
+                if (document.activeElement === firstElement) {
+                    lastElement.focus();
+                    event.preventDefault();
+                }
+            } else { // Tab
+                if (document.activeElement === lastElement) {
+                    firstElement.focus();
+                    event.preventDefault();
+                }
+            }
+        }
+    });
+});
+
 // 匯入Excel文件的功能
 function handleFile(event) {
     clearField(); // 清空輸入框內容
