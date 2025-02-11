@@ -1553,10 +1553,27 @@ function applyFieldData() {
     let hasUpdatedCCCCode = false; // 紀錄是否有更新CCC_CODE欄位
     let hasUpdatedQtyOrUnitPrice = false; // 紀錄是否有更新QTY、DOC_UM、DOC_UNIT_P欄位
 
+    // 需要強制轉為大寫的欄位
+    const upperCaseFields = [
+        "DOC_UM", "ST_MTD", "ORG_COUNTRY", "ORG_IMP_DCL_NO", "BOND_NOTE", 
+        "CERT_NO", "ORG_DCL_NO", "EXP_NO", "WIDE_UM", "LENGTH_UM"
+    ];
+
     if (mode === 'custom') {
         const itemNumbers = document.getElementById('specify-item-numbers').value;
         const fieldName = document.getElementById('specify-field-name').value;
-        const fieldValue = document.getElementById('specify-field-value').value;
+        let fieldValue = document.getElementById('specify-field-value').value;
+
+        // 排除 DESCRIPTION 欄位的 trim
+        if (fieldName !== 'DESCRIPTION') {
+            fieldValue = fieldValue.trim();
+        }
+
+        // 如果欄位在指定的 upperCaseFields 清單內，則轉換為大寫
+        if (upperCaseFields.includes(fieldName)) {
+            fieldValue = fieldValue.toUpperCase();
+        }
+
         const startNumber = parseInt(document.getElementById('start-number').value, 10); // 起始編號
         let currentNumber = startNumber; // 當前編號
 
@@ -1592,7 +1609,7 @@ function applyFieldData() {
                     }
 
                     // 紀錄是否更新了QTY、DOC_UM、DOC_UNIT_P
-                    if (fieldName === 'QTY' || fieldName === 'DOC_UM' || fieldName === 'DOC_UNIT_P') {
+                    if (["QTY", "DOC_UM", "DOC_UNIT_P"].includes(fieldName)) {
                         hasUpdatedQtyOrUnitPrice = true;
                     }
                 }
