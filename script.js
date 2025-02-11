@@ -5489,7 +5489,7 @@ document.addEventListener('DOMContentLoaded', () => {
         clearBtn.style.width = '20px';
         clearBtn.style.height = '20px';
         clearBtn.style.fontSize = '12px';
-        clearBtn.style.color = 'black';
+        clearBtn.style.color = 'gray';
         clearBtn.style.backgroundColor = '#e6e6e6';
         clearBtn.style.border = 'none';
         clearBtn.style.borderRadius = '50%';
@@ -5587,7 +5587,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         clearBtn.addEventListener('mouseleave', () => {
-            clearBtn.style.color = 'black';
+            clearBtn.style.color = 'gray';
             clearBtn.style.backgroundColor = '#e6e6e6';
         });
     });
