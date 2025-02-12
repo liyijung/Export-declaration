@@ -1948,7 +1948,11 @@ function handleFile(event) {
                     currentItem.querySelector('.DESCRIPTION').value = currentDescription.trim();
                     itemContainer.appendChild(currentItem);
                 }
-                const description = descriptionIndices.map(i => String(row[i] || '')).filter(Boolean).join('\n');
+                const description = descriptionIndices
+                    .map(i => String(row[i] || '').trim()) // 去除前後空格
+                    .filter(Boolean)
+                    .join('\n');
+
                 currentDescription = description;
 
                 let cccCode = String(row[descriptionIndices[descriptionIndices.length - 1] + 6] || '').trim();
@@ -2628,9 +2632,10 @@ function addTextarea() {
 
 // 創建輸入域
 function createInputField(name, value, isVisible, iscalcWtValue) {
+    let originalValue = value; // 儲存原始值，確保在錯誤時可讀取
     try {
         const visibilityClass = isVisible ? '' : 'hidden';
-        const numberFields = ['QTY', 'DOC_UNIT_P', 'NET_WT', 'ORG_IMP_DCL_NO_ITEM', 'CERT_NO_ITEM', 'ORG_DCL_NO_ITEM', 'EXP_SEQ_NO', 'WIDE', 'LENGT_', 'ST_QTY'];
+        const numberFields = ['QTY', 'DOC_UNIT_P', 'DOC_TOT_P', 'NET_WT', 'ORG_IMP_DCL_NO_ITEM', 'CERT_NO_ITEM', 'ORG_DCL_NO_ITEM', 'EXP_SEQ_NO', 'WIDE', 'LENGT_', 'ST_QTY'];
         const upperCaseFields = ['LOT_NO', 'SHPR_BONDED_ID', 'CNEE_COUNTRY_CODE', 'TO_CODE', 'DOC_CTN_UM', 'DCL_DOC_TYPE', 'TERMS_SALES', 'CURRENCY', 'DOC_UM', 'ST_MTD', 'ORG_COUNTRY', 'ORG_IMP_DCL_NO', 'BOND_NOTE', 'CERT_NO', 'ORG_DCL_NO', 'EXP_NO', 'WIDE_UM', 'LENGTH_UM', 'ST_UM'];
         const inputType = numberFields.includes(name) ? 'number' : 'text';
         const onInputAttribute = numberFields.includes(name) ? 'oninput="calculateAmount(event); validateNumberInput(event)"' : '';
@@ -2641,6 +2646,12 @@ function createInputField(name, value, isVisible, iscalcWtValue) {
         const onKeyDownAttribute = 'onkeydown="handleInputKeyDown(event, this)"';
         const onInputUpperCaseAttribute = upperCaseFields.includes(name) ? 'oninput="this.value = this.value.toUpperCase()"' : '';
     
+        // 如果欄位是 `number`，移除非數字及小數點的字符
+        if (numberFields.includes(name) && value !== undefined && value !== null) {
+            value = String(value).replace(/[^\d.]/g, ''); // 移除非數字及小數點的字符
+            value = parseFloat(value); // 轉換為數字
+        }
+
         // 格式化 ORG_IMP_DCL_NO 和 ORG_DCL_NO 的值
         if (['ORG_IMP_DCL_NO', 'ORG_DCL_NO'].includes(name) && value) {
             // 先移除所有空格和斜線
@@ -2747,7 +2758,7 @@ function createInputField(name, value, isVisible, iscalcWtValue) {
         };
 
         const fieldLabel = fieldLabels[name] || name; // 若無對應中文名稱，顯示原始名稱
-        alert(`[ ${fieldLabel} ] 欄位錯誤，請檢查檔案後再重新匯入。`);
+        alert(`[ ${fieldLabel} ] 欄位錯誤，值: ${originalValue || '無值'}，請檢查檔案後再重新匯入。`);
         throw error; // 中斷執行
     }
 }
