@@ -361,6 +361,7 @@ function searchData(showErrorMessage = false) {
 
     // 如果輸入不滿 8 碼，清空資料並隱藏錯誤訊息，不進行匹配操作
     if (searchCode.length < 8) {
+        document.getElementById('DCL_DOC_EXAM').value = '';
         document.getElementById('SHPR_C_NAME').value = '';
         document.getElementById('SHPR_E_NAME').value = '';
         document.getElementById('SHPR_C_ADDR').value = '';
@@ -368,6 +369,19 @@ function searchData(showErrorMessage = false) {
         document.getElementById('SHPR_TEL').value = '';
         noDataMessage.style.display = 'none'; // 隱藏錯誤訊息
         return;
+    }
+
+    //賣方驗證號碼
+    const dclDocExamInput = document.getElementById('DCL_DOC_EXAM');
+
+    if (/^\d{8}$/.test(searchCode)) {
+        // 8碼數字
+        dclDocExamInput.value = '58';
+    } else if (/^[A-Za-z]\d{9}$/.test(searchCode)) {
+        // 1碼英文+9碼數字
+        dclDocExamInput.value = '174';
+    } else {
+        dclDocExamInput.value = ''; // 格式不符則清空
     }
 
     const fileToSearch = getMatchingFile(searchCode);
@@ -402,9 +416,9 @@ function searchData(showErrorMessage = false) {
     thingsToNote(); // 出口備註
 }
 
-// 即時帶入資料，不顯示錯誤訊息
+// 出口人統一編號搜尋
 document.getElementById('SHPR_BAN_ID').addEventListener('input', function() {
-    searchData(false); // 不顯示錯誤訊息，只帶入資料
+    searchData(false);
 });
 
 // 儲存目的地數據
@@ -4298,7 +4312,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         
         const headerFields = [
-            'LOT_NO', 'SHPR_BAN_ID', 'SHPR_BONDED_ID', 
+            'LOT_NO', 'SHPR_BAN_ID', 'DCL_DOC_EXAM', 'SHPR_BONDED_ID', 
             'SHPR_C_NAME', 'SHPR_E_NAME', 'SHPR_C_ADDR', 'SHPR_E_ADDR', 'SHPR_TEL', 
             'CNEE_C_NAME', 'CNEE_E_NAME', 'CNEE_E_ADDR', 
             'CNEE_COUNTRY_CODE', 'CNEE_BAN_ID',
