@@ -53,6 +53,10 @@
                 <span id="noDataMessage" style="color: rgba(255, 0, 0, 0.634); display: none; margin-left: 4px; margin-right: 4px; margin-top: 4px;">查無資料</span>
                 <button type="button" title="出口備註" onclick="searchData()" tabindex="-1">搜尋</button>
             </div>
+            <div class="header-group hidden">
+                <label for="DCL_DOC_EXAM">賣方驗證號碼</label>
+                <input type="text" id="DCL_DOC_EXAM" name="DCL_DOC_EXAM">
+            </div>            
             <div class="header-group">
                 <label for="SHPR_BONDED_ID">海關監管編號</label>
                 <input type="text" id="SHPR_BONDED_ID" name="SHPR_BONDED_ID" oninput="filterAlphanumeric(this)"
