@@ -250,6 +250,7 @@ function importCustomer23570158(event) {
 
         // 將資料填入對應的欄位
         document.getElementById('SHPR_BAN_ID').value = '23570158';
+        document.getElementById('DCL_DOC_EXAM').value = '58';
         document.getElementById('SHPR_C_NAME').value = '利保國際股份有限公司';
         document.getElementById('SHPR_E_NAME').value = 'LEE BOU INTERNATIONAL CO., LTD.';
         document.getElementById('SHPR_C_ADDR').value = '彰化縣和美鎮竹園里彰新路4段291-1號';
