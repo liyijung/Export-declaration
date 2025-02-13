@@ -421,6 +421,46 @@ document.getElementById('SHPR_BAN_ID').addEventListener('input', function() {
     searchData(false);
 });
 
+// 收貨人統一編號
+function generateBuyerBan() {
+    const buyerENameInput = document.getElementById('BUYER_E_NAME');
+    if (!buyerENameInput) return ''; // 若欄位不存在則回傳空字串
+
+    let buyerEName = buyerENameInput.value.trim();
+    const words = buyerEName.match(/[a-zA-Z]+/g) || [];
+    let result = '';
+
+    if (words.length >= 3) {
+        for (let i = 0; i < 3; i++) {
+            const word = words[i];
+            if (word.length === 1) {
+                result += word[0].toUpperCase(); // 單字只有1碼，取一次
+            } else {
+                result += word[0].toUpperCase() + word[word.length - 1].toUpperCase();
+            }
+        }
+    } else if (words.length > 0) {
+        words.forEach(word => {
+            if (word.length === 1) {
+                result += word[0].toUpperCase(); // 單字只有1碼，取一次
+            } else {
+                result += word[0].toUpperCase() + word[word.length - 1].toUpperCase();
+            }
+        });
+    } else {
+        result = buyerEName.slice(0, 6).toUpperCase();
+    }
+
+    return result;
+}
+
+document.getElementById('BUYER_E_NAME')?.addEventListener('input', function() {
+    const buyerBanInput = document.getElementById('BUYER_BAN');
+    if (buyerBanInput) {
+        buyerBanInput.value = generateBuyerBan();
+    }
+});
+
 // 儲存目的地數據
 let destinations = {};
 
@@ -1709,6 +1749,11 @@ function clearField() {
     const cneeCNameInput = document.getElementById('CNEE_C_NAME');
     if (cneeCNameInput) {
         cneeCNameInput.value = ''; // 清空輸入框內容
+    }
+
+    const buyerBanInput = document.getElementById('BUYER_BAN');
+    if (buyerBanInput) {
+        buyerBanInput.value = ''; // 清空輸入框內容
     }
 }
 
@@ -4316,7 +4361,7 @@ document.addEventListener('DOMContentLoaded', function () {
             'SHPR_C_NAME', 'SHPR_E_NAME', 'SHPR_C_ADDR', 'SHPR_E_ADDR', 'SHPR_TEL', 
             'CNEE_C_NAME', 'CNEE_E_NAME', 'CNEE_E_ADDR', 
             'CNEE_COUNTRY_CODE', 'CNEE_BAN_ID',
-            'BUYER_E_NAME', 'BUYER_E_ADDR', 'TO_CODE', 'TO_DESC', 
+            'BUYER_BAN', 'BUYER_E_NAME', 'BUYER_E_ADDR', 'TO_CODE', 'TO_DESC', 
             'TOT_CTN', 'DOC_CTN_UM', 'CTN_DESC', 'DCL_GW', 'DCL_NW', 
             'DCL_DOC_TYPE', 'TERMS_SALES', 'CURRENCY', 'CAL_IP_TOT_ITEM_AMT', 
             'FRT_AMT', 'INS_AMT', 'ADD_AMT', 'SUBTRACT_AMT', 
@@ -5553,6 +5598,9 @@ document.addEventListener('DOMContentLoaded', () => {
             switch (input.id) {
                 case 'SHPR_BAN_ID':
                     searchData();
+                    break;
+                case 'BUYER_E_NAME':
+                    document.getElementById('BUYER_BAN').value = '';
                     break;
                 case 'TO_CODE':
                     document.getElementById('TO_DESC').value = '';
