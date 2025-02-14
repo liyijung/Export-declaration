@@ -1224,8 +1224,12 @@ function updateST_QTY(itemRow) {
     const stqty = itemRow.querySelector('.ST_QTY');
     const stum = itemRow.querySelector('.ST_UM');
 
-    if (stum.value === docum.value) {
+    if (qty.value === '') {
+        stqty.value = '';  // 如果數量為空，則清空 ST_QTY
+    } else if (stum.value === docum.value) {
         stqty.value = qty.value;
+    } else if (docum.value === 'KPC' && stum.value === 'PCE') {
+        stqty.value = qty.value * 1000;
     }
 }
 
