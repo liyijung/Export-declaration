@@ -328,7 +328,7 @@ function importCustomer23570158(event) {
             }
 
             // 處理 CERT_NO，如果內含 "不申請ECFA" 或 "不做ECFA"，則設置為空
-            var certNo = iValue || '';
+            var certNo = String(iValue || '');
             if (certNo.includes('不申請ECFA') || certNo.includes('不做ECFA') || certNo.includes('*') || certNo.includes('以下')) {
                 certNo = '';
             }
@@ -342,7 +342,7 @@ function importCustomer23570158(event) {
             }
 
             // 檢查 I 列 或 J 列是否為 "以下有LOGO"
-            if (iValue.includes('以下有LOGO') || jValue.includes('以下有LOGO')) {
+            if (String(iValue).includes('以下有LOGO') || String(jValue).includes('以下有LOGO')) {
                 useFigForTrademark = true; // 後續的項次 TRADE_MARK 設為 "FIG"
             }
 
@@ -463,19 +463,28 @@ function importCustomer23570158(event) {
             }
 
             // 構造 itemData 對象傳遞給 createItemRow 函數
+            var stMtd = '02'; // 預設值
+            if (String(sheetData[i][7]).trim() === 'FOC-04') {
+                stMtd = '04';
+            }
+
+            var qty = parseFloat(sheetData[i][4]) || 0;
+            var docUnitP = parseFloat(sheetData[i][6]) || 0;
+            var docTotP = (qty * docUnitP).toFixed(2);
+
             var itemData = {
                 DESCRIPTION: description,
                 QTY: sheetData[i][4] || '',
                 DOC_UM: sheetData[i][5] || '',
                 DOC_UNIT_P: sheetData[i][6] || '',
-                DOC_TOT_P: sheetData[i][7] || '',
+                DOC_TOT_P: docTotP,
                 GOODS_MODEL: goodsModel,
                 GOODS_SPEC: goodsSpec,
                 CERT_NO: certNo,
                 CERT_NO_ITEM: certNoItem,
                 TRADE_MARK: tradeMark,
                 CCC_CODE: cccCode,
-                ST_MTD: '02',
+                ST_MTD: stMtd,
                 NET_WT: netWeight || '',      // 淨重，並限制為兩位小數
                 WIDE: wideValue || '',        // 設置提取到的寬度，只有符合條件時才會有值
                 WIDE_UM: wideUm || '',        // 設置提取到的寬度單位，只有符合條件時才會有值
