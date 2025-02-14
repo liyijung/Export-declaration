@@ -1869,9 +1869,19 @@ function handleFile(event) {
                     }
 
                     // 去除千分號的欄位處理
-                    const fieldsToRemoveSeparators = ['TOT_CTN', 'DCL_GW', 'DCL_NW', 'CAL_IP_TOT_ITEM_AMT', 'FRT_AMT', 'INS_AMT', 'ADD_AMT', 'SUBTRACT_AMT'];
+                    const fieldsToRemoveSeparators = [
+                        'TOT_CTN', 'DCL_GW', 'DCL_NW', 'CAL_IP_TOT_ITEM_AMT', 'FRT_AMT', 'INS_AMT', 'ADD_AMT', 'SUBTRACT_AMT'
+                    ];
                     if (fieldsToRemoveSeparators.includes(id)) {
                         value = removeThousandsSeparator(value);
+                    }
+
+                    // 需要轉換大寫的所有欄位 ID
+                    const fieldIds = [
+                        "LOT_NO", "SHPR_BAN_ID", "SHPR_BONDED_ID", "CNEE_COUNTRY_CODE", "TO_CODE", "DOC_CTN_UM","DCL_DOC_TYPE", "TERMS_SALES", "CURRENCY"
+                    ];
+                    if (fieldIds.includes(id)) {
+                        value = value.toUpperCase();
                     }
 
                     element.value = value;
