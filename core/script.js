@@ -1221,7 +1221,7 @@ function updateST_QTY(itemRow) {
     const stqty = itemRow.querySelector('.ST_QTY');
     const stum = itemRow.querySelector('.ST_UM');
 
-    if (qty.value === '') {
+    if (qty.value === '' && stum.value !== 'MTK') {
         stqty.value = '';  // 如果數量為空，則清空 ST_QTY
     } else if (stum.value === docum.value) {
         stqty.value = qty.value;
