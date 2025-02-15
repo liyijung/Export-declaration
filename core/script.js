@@ -1220,6 +1220,8 @@ function updateST_QTY(itemRow) {
     const docum = itemRow.querySelector('.DOC_UM');
     const stqty = itemRow.querySelector('.ST_QTY');
     const stum = itemRow.querySelector('.ST_UM');
+    const length = itemRow.querySelector('.LENGT_');
+    const lengthUm = itemRow.querySelector('.LENGTH_UM');    
 
     if (qty.value === '' && stum.value !== 'MTK') {
         stqty.value = '';  // 如果數量為空，則清空 ST_QTY
@@ -1227,6 +1229,11 @@ function updateST_QTY(itemRow) {
         stqty.value = qty.value;
     } else if (docum.value === 'KPC' && stum.value === 'PCE') {
         stqty.value = qty.value * 1000;
+    }
+
+    if (stum.value === 'MTK' && stqty.value === '' && ['INC', 'YRD', 'MTR'].includes(docum.value)) {
+        if (length) length.value = qty.value;
+        if (lengthUm) lengthUm.value = docum.value;
     }
 }
 
