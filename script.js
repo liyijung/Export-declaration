@@ -1,6 +1,3 @@
-let itemCount = 0; // 初始化項次計數
-let fileContent = null; // 儲存上傳文件的內容
-
 // 切換報單表頭與報單項次的tab
 document.addEventListener('keydown', function(event) {
     if (event.ctrlKey && (event.key === 'ArrowLeft' || event.key === 'ArrowRight')) {
@@ -1329,9 +1326,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// 引入 Sortable.js 庫
-document.write('<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.14.0/Sortable.min.js"><\/script>');
-
 // 開啟調整順序的彈跳框
 function openAdjustOrderModal() {
     const itemContainer = document.getElementById('item-container');
@@ -2464,6 +2458,8 @@ function createItemRow(data) {
         itemNumber = getNextItemNumber(); // 獲取當前的編號
     }
 
+    let itemCount = 0; // 初始化項次計數
+    
     row.innerHTML = `
         <div class="form-group fix item-no item-no-header" onclick="toggleSelect(this)">
             <label>${itemCount + 1}</label>
