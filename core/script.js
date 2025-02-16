@@ -1456,6 +1456,12 @@ function closeSpecifyFieldModal() {
     const specifyFieldModal = document.getElementById('specify-field-modal');
     specifyFieldModal.style.display = 'none'; // 隱藏彈跳框
 
+    // 清除原欄位輸入框的文字
+    const originalFieldInput = document.getElementById('original-field-input');
+    if (originalFieldInput) {
+        originalFieldInput.value = '';
+    }
+
     // 移除 ESC 事件監聽
     document.removeEventListener('keydown', handleEscKeyForSpecifyFieldCancel);
 
@@ -1596,10 +1602,40 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
+// 是否顯示「條件：原欄位」輸入框
+document.getElementById('overwrite-option').addEventListener('change', function() {
+    const originalFieldContainer = document.getElementById('original-field-container');
+    const label = document.getElementById('original-field-label');
+    
+    if (this.value === 'matchCondition' || this.value === 'notMatchCondition') {
+        originalFieldContainer.style.display = 'block';
+        
+        if (this.value === 'matchCondition') {
+            // 選符合條件時，label 顯示「條件：原欄位 =」
+            label.textContent = '條件：原欄位 = ';
+        } else if (this.value === 'notMatchCondition') {
+            // 選不符合條件時，label 顯示「條件：原欄位 <>」
+            label.textContent = '條件：原欄位 <> ';
+        }
+    } else {
+        originalFieldContainer.style.display = 'none';
+    }
+});
+
 // 應用填列資料的函數
 function applyFieldData() {
     const mode = document.getElementById('specify-mode').value;
     const overwriteOption = document.getElementById('overwrite-option').value;
+    
+    // 當覆蓋選項為「符合條件」或「不符合條件」時，檢查原欄位輸入框是否有值
+    if (overwriteOption === 'matchCondition' || overwriteOption === 'notMatchCondition') {
+        const originalField = document.getElementById('original-field-input').value.trim();
+        if (originalField === '') {
+            alert('請輸入「條件：原欄位」的值');
+            return; // 中止執行
+        }
+    }
+
     const itemContainer = document.getElementById('item-container');
     const items = itemContainer.querySelectorAll('.item-row');
     let hasUpdatedCCCCode = false; // 紀錄是否有更新CCC_CODE欄位
@@ -1610,6 +1646,12 @@ function applyFieldData() {
         "DOC_UM", "ST_MTD", "ORG_COUNTRY", "ORG_IMP_DCL_NO", "BOND_NOTE", 
         "CERT_NO", "ORG_DCL_NO", "EXP_NO", "WIDE_UM", "LENGTH_UM"
     ];
+
+    // 讀取原欄位內容（僅在符合條件、不符合條件時使用）
+    let originalField = '';
+    if (overwriteOption === 'matchCondition' || overwriteOption === 'notMatchCondition') {
+        originalField = document.getElementById('original-field-input').value;
+    }
 
     if (mode === 'custom') {
         const itemNumbers = document.getElementById('specify-item-numbers').value;
@@ -1647,7 +1689,15 @@ function applyFieldData() {
             if (index >= 0 && index < items.length) {
                 const item = items[index];
                 const fieldElement = item.querySelector(`.${fieldName}`);
-                if (overwriteOption === 'all' || (overwriteOption === 'empty' && !fieldElement.value) || (overwriteOption === 'specified' && fieldElement.value)) {
+
+                // 判斷覆蓋條件
+                if (
+                    overwriteOption === 'all' ||
+                    (overwriteOption === 'empty' && !fieldElement.value) ||
+                    (overwriteOption === 'specified' && fieldElement.value) ||
+                    (overwriteOption === 'matchCondition' && fieldElement.value.includes(originalField)) ||
+                    (overwriteOption === 'notMatchCondition' && !fieldElement.value.includes(originalField))
+                ) {
                     // 如果選擇的是產證序號，則填入指定的編號
                     if (fieldName === 'CERT_NO_ITEM') {
                         fieldElement.value = `${currentNumber}`; // 填入指定的編號
@@ -1697,7 +1747,14 @@ function applyFieldData() {
                         const sourceFieldElement = sourceItem.querySelector(`.${fieldName}`);
                         const targetFieldElement = targetItem.querySelector(`.${fieldName}`);
 
-                        if (overwriteOption === 'all' || (overwriteOption === 'empty' && !targetFieldElement.value) || (overwriteOption === 'specified' && targetFieldElement.value)) {
+                        // 判斷覆蓋條件
+                        if (
+                            overwriteOption === 'all' ||
+                            (overwriteOption === 'empty' && !targetFieldElement.value) ||
+                            (overwriteOption === 'specified' && targetFieldElement.value) ||
+                            (overwriteOption === 'matchCondition' && targetFieldElement.value.includes(originalField)) ||
+                            (overwriteOption === 'notMatchCondition' && !targetFieldElement.value.includes(originalField))
+                        ) {
                             targetFieldElement.value = sourceFieldElement.value;
                         }
                         // 紀錄是否更新了CCC_CODE
@@ -1705,7 +1762,7 @@ function applyFieldData() {
                             hasUpdatedCCCCode = true;
                         }
                         // 紀錄是否更新了QTY、DOC_UM、DOC_UNIT_P
-                        if (fieldName === 'QTY' || fieldName === 'DOC_UM' || fieldName === 'DOC_UNIT_P') {
+                        if (["QTY", "DOC_UM", "DOC_UNIT_P"].includes(fieldName)) {
                             hasUpdatedQtyOrUnitPrice = true;
                         }
                     });
