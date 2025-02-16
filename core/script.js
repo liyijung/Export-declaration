@@ -1622,6 +1622,8 @@ document.getElementById('overwrite-option').addEventListener('change', function(
     }
 });
 
+document.getElementById('specify-field-name').addEventListener('change', checkFieldDisplay);
+
 // 應用填列資料的函數
 function applyFieldData() {
     const mode = document.getElementById('specify-mode').value;
