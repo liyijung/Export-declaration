@@ -1584,24 +1584,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-// 同步No.
-document.addEventListener("DOMContentLoaded", function () {
-    const specifyItemNumbers = document.getElementById("specify-item-numbers");
-    const targetItemNumbers = document.getElementById("target-item-numbers");
-
-    function syncInput(source, target) {
-        target.value = source.value;
-    }
-
-    specifyItemNumbers.addEventListener("input", function () {
-        syncInput(specifyItemNumbers, targetItemNumbers);
-    });
-
-    targetItemNumbers.addEventListener("input", function () {
-        syncInput(targetItemNumbers, specifyItemNumbers);
-    });
-});
-
 // 是否顯示「條件：原欄位」輸入框
 document.getElementById('overwrite-option').addEventListener('change', function() {
     const originalFieldContainer = document.getElementById('original-field-container');
@@ -1656,7 +1638,7 @@ function applyFieldData() {
     }
 
     if (mode === 'custom') {
-        const itemNumbers = document.getElementById('specify-item-numbers').value;
+        const itemNumbers = document.getElementById('specify-item-numbers').value.trim();
         const fieldName = document.getElementById('specify-field-name').value;
         let fieldValue = document.getElementById('specify-field-value').value;
 
@@ -1673,23 +1655,42 @@ function applyFieldData() {
         const startNumber = parseInt(document.getElementById('start-number').value, 10); // 起始編號
         let currentNumber = startNumber; // 當前編號
 
-        const ranges = itemNumbers.split(',').map(range => range.trim());
         let indices = [];
 
-        ranges.forEach(range => {
-            if (range.includes('-')) {
-                const [start, end] = range.split('-').map(Number);
-                for (let i = start; i <= end; i++) {
-                    indices.push(i - 1);
-                }
-            } else {
-                indices.push(Number(range) - 1);
+        // 如果 specify-item-numbers 為空，則表示全部項次
+        if (itemNumbers.trim() === "") {
+            for (let i = 0; i < items.length; i++) {
+                indices.push(i);
             }
-        });
+        } else {
+            const ranges = itemNumbers.split(',').map(range => range.trim());
+            ranges.forEach(range => {
+                if (range.includes('-')) {
+                    const [start, end] = range.split('-').map(Number);
+                    for (let i = start; i <= end; i++) {
+                        indices.push(i - 1);
+                    }
+                } else {
+                    indices.push(Number(range) - 1);
+                }
+            });
+        }
 
         indices.forEach(index => {
             if (index >= 0 && index < items.length) {
                 const item = items[index];
+
+                // 檢查此列的 item-number 欄位
+                const itemNumberElem = item.querySelector('.item-number label');
+                if (itemNumberElem && itemNumberElem.textContent.trim() === "*") {
+                    // 若 item-number 為 "*"，則清空該列指定欄位的值，並略過更新
+                    const fieldElement = item.querySelector(`.${fieldName}`);
+                    if (fieldElement) {
+                        fieldElement.value = "";
+                    }
+                    return; // 跳過此列後續更新
+                }
+
                 const fieldElement = item.querySelector(`.${fieldName}`);
 
                 // 判斷覆蓋條件
@@ -1722,29 +1723,49 @@ function applyFieldData() {
     } else if (mode === 'copy') {
         const sourceItemNumber = document.getElementById('source-item-number').value;
         const fieldNames = Array.from(document.getElementById('specify-field-names-copy').selectedOptions).map(option => option.value);
-        const targetItemNumbers = document.getElementById('target-item-numbers').value;
+        const targetItemNumbers = document.getElementById('target-item-numbers').value.trim();
         const sourceIndex = parseInt(sourceItemNumber, 10) - 1;
 
-        const ranges = targetItemNumbers.split(',').map(range => range.trim());
         let targetIndices = [];
 
-        ranges.forEach(range => {
-            if (range.includes('-')) {
-                const [start, end] = range.split('-').map(Number);
-                for (let i = start; i <= end; i++) {
-                    targetIndices.push(i - 1);
-                }
-            } else {
-                targetIndices.push(Number(range) - 1);
+        // 如果 target-item-numbers 為空，表示全部項次
+        if (targetItemNumbers === "") {
+            for (let i = 0; i < items.length; i++) {
+                targetIndices.push(i);
             }
-        });
-
+        } else {
+            const ranges = targetItemNumbers.split(',').map(range => range.trim());
+            ranges.forEach(range => {
+                if (range.includes('-')) {
+                    const [start, end] = range.split('-').map(Number);
+                    for (let i = start; i <= end; i++) {
+                        targetIndices.push(i - 1);
+                    }
+                } else {
+                    targetIndices.push(Number(range) - 1);
+                }
+            });
+        }
+        
         if (sourceIndex >= 0 && sourceIndex < items.length) {
             const sourceItem = items[sourceIndex];
 
             targetIndices.forEach(index => {
                 if (index >= 0 && index < items.length) {
                     const targetItem = items[index];
+                    // 檢查此列的 item-number 欄位
+                    const itemNumberElem = targetItem.querySelector('.item-number label');
+                    if (itemNumberElem && itemNumberElem.textContent.trim() === "*") {
+                        // 若 item-number 為 "*"，則清空該列所有相關欄位，並略過更新此列
+                        fieldNames.forEach(fieldName => {
+                            const targetFieldElement = targetItem.querySelector(`.${fieldName}`);
+                            if (targetFieldElement) {
+                                targetFieldElement.value = "";
+                            }
+                        });
+                        return; // 跳過此列後續更新
+                    }
+
                     fieldNames.forEach(fieldName => {
                         const sourceFieldElement = sourceItem.querySelector(`.${fieldName}`);
                         const targetFieldElement = targetItem.querySelector(`.${fieldName}`);
