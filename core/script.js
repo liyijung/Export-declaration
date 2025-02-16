@@ -1685,7 +1685,7 @@ function applyFieldData() {
                 if (itemNumberElem && itemNumberElem.textContent.trim() === "*") {
                     // 若 item-number 為 "*"，則清空該列指定欄位的值，並略過更新
                     const fieldElement = item.querySelector(`.${fieldName}`);
-                    if (fieldElement) {
+                    if (fieldElement && fieldName !== 'DESCRIPTION') {
                         fieldElement.value = "";
                     }
                     return; // 跳過此列後續更新
@@ -1759,7 +1759,7 @@ function applyFieldData() {
                         // 若 item-number 為 "*"，則清空該列所有相關欄位，並略過更新此列
                         fieldNames.forEach(fieldName => {
                             const targetFieldElement = targetItem.querySelector(`.${fieldName}`);
-                            if (targetFieldElement) {
+                            if (targetFieldElement && fieldName !== 'DESCRIPTION') {
                                 targetFieldElement.value = "";
                             }
                         });
