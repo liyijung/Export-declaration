@@ -1485,14 +1485,28 @@ function toggleSpecifyMode() {
     const specifyMode = document.getElementById('specify-mode').value;
     const customContent = document.getElementById('custom-content');
     const copyContent = document.getElementById('copy-content');
-    
+    const overwriteOption = document.getElementById('overwrite-option');
+    const fieldName = document.getElementById('specify-field-name').value;
+
+    const optionsToHide = overwriteOption.querySelectorAll('option[value="matchCondition"], option[value="notMatchCondition"]');
+
     if (specifyMode === 'copy') {
         customContent.style.display = 'none';
         copyContent.style.display = 'block';
         populateSourceItemDropdown();
+
+        // 隱藏「符合條件」及「不符合條件」選項
+        optionsToHide.forEach(option => option.style.display = 'none');
     } else {
         customContent.style.display = 'block';
         copyContent.style.display = 'none';
+
+        if (fieldName === 'DESCRIPTION') {
+            optionsToHide.forEach(option => option.style.display = 'none');
+        } else {
+            // 顯示「符合條件」及「不符合條件」選項
+            optionsToHide.forEach(option => option.style.display = 'block');
+        }
 
         // 設置焦點 specify-field-value (自定義填列內容-填列內容)
         setTimeout(() => {
@@ -1604,6 +1618,7 @@ document.getElementById('overwrite-option').addEventListener('change', function(
     }
 });
 
+document.getElementById('specify-field-name').addEventListener('change', toggleSpecifyMode);
 document.getElementById('specify-field-name').addEventListener('change', checkFieldDisplay);
 
 // 應用填列資料的函數
