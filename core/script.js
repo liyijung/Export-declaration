@@ -1611,7 +1611,7 @@ document.getElementById('overwrite-option').addEventListener('change', function(
             label.textContent = '條件：原欄位 = ';
         } else if (this.value === 'notMatchCondition') {
             // 選不符合條件時，label 顯示「條件：原欄位 <>」
-            label.textContent = '條件：原欄位 <> ';
+            label.textContent = '條件：原欄位 ≠ ';
         }
     } else {
         originalFieldContainer.style.display = 'none';
