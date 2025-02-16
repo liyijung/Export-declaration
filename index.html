@@ -890,7 +890,14 @@ Alt + 2 指定項次">攤重</button>
                     <option value="all">全部覆蓋</option>
                     <option value="empty">覆蓋未填列之項次</option>
                     <option value="specified">覆蓋已填列之項次</option>
+                    <option value="matchCondition">符合條件</option>
+                    <option value="notMatchCondition">不符合條件</option>
                 </select>
+            </div>
+            <!-- 當選擇「符合條件」或「不符合條件」時，顯示原欄位輸入框 -->
+            <div class="header-group" id="original-field-container" style="display: none;">
+                <label for="original-field-input" id="original-field-label">條件：原欄位 = </label>
+                <input type="text" id="original-field-input">
             </div>
             <div class="floating-buttons">
                 <button onclick="applyFieldData()">儲存</button>
