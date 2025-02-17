@@ -1836,7 +1836,6 @@ function applyFieldData() {
     }
 
     closeSpecifyFieldModal();
-    initializeFieldVisibility();
 }
 
 function clearField() {
