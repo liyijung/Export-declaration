@@ -4460,6 +4460,32 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!validateDclDocType()) {
             return;
         }
+
+        // 買方及收方名稱及地址欄位不可全數字
+        const nonNumericFields = [
+            { id: 'CNEE_C_NAME', name: '買方中文名稱' },
+            { id: 'CNEE_E_NAME', name: '買方中/英名稱' },
+            { id: 'CNEE_E_ADDR', name: '買方中/英地址' },
+            { id: 'BUYER_E_NAME', name: '收方名稱' },
+            { id: 'BUYER_E_ADDR', name: '收方地址' }
+        ];
+
+        let allDigitsErrors = [];
+        nonNumericFields.forEach(field => {
+            let element = document.getElementById(field.id);
+            if (element) {
+                let value = element.value.trim();
+                // 如果欄位有值且全部都是數字，則加入錯誤訊息
+                if (value && /^\d+$/.test(value)) {
+                    allDigitsErrors.push(field.name);
+                }
+            }
+        });
+
+        if (allDigitsErrors.length > 0) {
+            alert(`以下欄位不可全數字：\n${allDigitsErrors.join('、')}`);
+            return; // 中止匯出過程
+        }
         
         const headerFields = [
             'LOT_NO', 'SHPR_BAN_ID', 'DCL_DOC_EXAM', 'SHPR_BONDED_ID', 
