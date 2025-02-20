@@ -4596,12 +4596,12 @@ document.addEventListener('DOMContentLoaded', function () {
                         let remark1Value = remark1Element.value.trim();
                         let remarkValue = remarkElement ? remarkElement.value.trim() : '';
 
-                        // 先移除 `REMARK1` 內的 `【REMARK】xxx`
-                        remark1Value = remark1Value.replace(/【REMARK】[^\n]+(\n\n)?/, '').trim();
+                        // 先移除 `REMARK1` 內的 `【客服備註】xxx`
+                        remark1Value = remark1Value.replace(/【客服備註】[^\n]+(\n\n)?/, '').trim();
 
                         // 如果 `REMARK` 有值，則加到 `REMARK1` 最前面
                         if (remarkValue) {
-                            remark1Element.value = `【REMARK】${remarkValue}\n\n${remark1Value}`.trim();
+                            remark1Element.value = `【客服備註】${remarkValue}\n\n${remark1Value}`.trim();
                         } else {
                             // 如果 `REMARK` 為空，則 `REMARK1` 只保留原本內容
                             remark1Element.value = remark1Value;
