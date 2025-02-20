@@ -1465,7 +1465,7 @@ function closeSpecifyFieldModal() {
     // 移除 ESC 事件監聽
     document.removeEventListener('keydown', handleEscKeyForSpecifyFieldCancel);
 
-    // **重置模式為 'copy'**
+    // 重置模式為 'copy'
     document.getElementById('specify-mode').value = 'copy';
     toggleSpecifyMode(); // 確保 UI 恢復成 copy-content
 }
@@ -1569,7 +1569,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const specifyFieldName = document.getElementById('specify-field-name');
             if (!specifyFieldName) return;
 
-            // **取得當前表頭的所有 class**
+            // 取得當前表頭的所有 class
             let selectedField = null;
             this.classList.forEach(className => {
                 // 檢查 `specify-field-name` 下拉選單是否包含該 class
@@ -1582,13 +1582,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (selectedField) return;
             });
 
-            // **如果沒有對應欄位，不開啟彈跳框**
+            // 如果沒有對應欄位，不開啟彈跳框
             if (!selectedField) return;
 
             // 設定彈跳框的欄位名稱
             specifyFieldName.value = selectedField;
 
-            // **點擊表頭時，將模式切換為 'custom'**
+            // 點擊表頭時，將模式切換為 'custom'
             document.getElementById('specify-mode').value = 'custom';
             toggleSpecifyMode(); // 觸發模式切換
 
@@ -4577,6 +4577,43 @@ document.addEventListener('DOMContentLoaded', function () {
                         return;
                     }
                 }
+
+                // 處理 REMARK1，將 REMARK 加入最前面，然後加入 XML
+                if (id === 'REMARK1') {
+                    let remark1Element = document.getElementById('REMARK1');
+                    let remarkElement = document.getElementById('REMARK');
+
+                    // 如果 REMARK1 不存在，則動態創建
+                    if (!remark1Element) {
+                        console.warn("REMARK1 不存在，正在創建...");
+                        remark1Element = document.createElement("textarea");
+                        remark1Element.id = "REMARK1";
+                        remark1Element.style.display = "none"; // 不影響畫面
+                        document.body.appendChild(remark1Element);
+                    }
+
+                    if (remark1Element) {
+                        let remark1Value = remark1Element.value.trim();
+                        let remarkValue = remarkElement ? remarkElement.value.trim() : '';
+
+                        // 先移除 `REMARK1` 內的 `【REMARK】xxx`
+                        remark1Value = remark1Value.replace(/【REMARK】[^\n]+(\n\n)?/, '').trim();
+
+                        // 如果 `REMARK` 有值，則加到 `REMARK1` 最前面
+                        if (remarkValue) {
+                            remark1Element.value = `【REMARK】${remarkValue}\n\n${remark1Value}`.trim();
+                        } else {
+                            // 如果 `REMARK` 為空，則 `REMARK1` 只保留原本內容
+                            remark1Element.value = remark1Value;
+                        }
+                    }
+
+                    // 將 `REMARK1` 加入 XML
+                    let finalRemark1Value = escapeXml(remark1Element.value.trim());
+                    xmlContent += `  <fields>\n    <field_name>${id}</field_name>\n    <field_value>${finalRemark1Value}</field_value>\n  </fields>\n`;
+
+                    return; // 避免 `headerFields.forEach` 繼續處理 `REMARK1`
+                }
                 
                 // 將當前欄位加入 XML
                 xmlContent += `  <fields>\n    <field_name>${id}</field_name>\n    <field_value>${value}</field_value>\n  </fields>\n`;
@@ -5548,7 +5585,7 @@ function showPopup(content) {
     closeButton.addEventListener('click', () => {
         popup.remove();
 
-        // **在關閉彈跳框後將焦點移回 SHPR_BAN_ID 欄位**
+        // 在關閉彈跳框後將焦點移回 SHPR_BAN_ID 欄位
         document.getElementById('SHPR_BAN_ID').focus();
     });
     popup.appendChild(closeButton);
