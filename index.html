@@ -56,7 +56,7 @@
             <div class="header-group hidden">
                 <label for="DCL_DOC_EXAM">賣方驗證號碼</label>
                 <input type="text" id="DCL_DOC_EXAM" name="DCL_DOC_EXAM">
-            </div>            
+            </div>
             <div class="header-group">
                 <label for="SHPR_BONDED_ID">海關監管編號</label>
                 <input type="text" id="SHPR_BONDED_ID" name="SHPR_BONDED_ID" oninput="filterAlphanumeric(this)"
@@ -81,13 +81,21 @@
             <div class="header-group">
                 <label for="SHPR_TEL" style="background: #ffffff00;">出口人電話號碼</label>
                 <input type="text" id="SHPR_TEL" name="SHPR_TEL" tabindex="-1">
+            </div>
+            <div class="header-group hidden">
+                <label for="IMP_QUAL" style="background: #ffffff00;">進口資格</label>
+                <input type="text" id="IMP_QUAL" name="IMP_QUAL" tabindex="-1">
+            </div>
+            <div class="header-group hidden">
+                <label for="EXP_QUAL" style="background: #ffffff00;">出口資格</label>
+                <input type="text" id="EXP_QUAL" name="EXP_QUAL" tabindex="-1">
             </div>            
             <hr>
             <div class="header-group">
                 <label for="CNEE_C_NAME" style="background: #ffffff00;">買方中文名稱</label>
                 <input type="text" id="CNEE_C_NAME" name="CNEE_C_NAME" tabindex="-1"
                 placeholder="(非必填，若客戶要求名稱分開可填列)">
-            </div>            
+            </div>
             <div class="header-group">
                 <label for="CNEE_E_NAME">買方中/英名稱</label>
                 <input type="text" id="CNEE_E_NAME" name="CNEE_E_NAME">
@@ -106,7 +114,7 @@
                 <label for="CNEE_BAN_ID" style="background: #ffffff00;">買方統一編號</label>
                 <input type="text" id="CNEE_BAN_ID" name="CNEE_BAN_ID" oninput="filterAlphanumeric(this)" tabindex="-1"
                 placeholder="(非台灣營業公司此欄免填)" onkeydown="preventArrowKeyAdjustment(event)">
-            </div>            
+            </div>
             <hr>
             <div class="header-group hidden">
                 <label for="BUYER_BAN">收貨人統一編號</label>
@@ -172,7 +180,7 @@
                     <option value="B9">保稅廠產品出口</option>
                     <option value="D5">保稅倉貨物出口</option>
                     <option value="F5">自由港區貨物出口</option>
-                </datalist>            
+                </datalist>
             </div>
             <div class="header-group">
                 <label for="TERMS_SALES">貿易條件</label>
@@ -184,7 +192,7 @@
                     <option value="CFR">含運費</option>
                     <option value="C&I">含保險費</option>
                     <option value="CIF">含運費、保險費</option>
-                </datalist>              
+                </datalist>
             </div>
             <div class="header-group">
                 <label for="CURRENCY">幣別</label>
@@ -282,7 +290,7 @@
                 </select>
                 <button id="summarizeButton" data-tooltip="品名(發票號碼)、統計方式、生產國別、原進口報單，填列完成後再進行匯整" onclick="summarizeOrgCountry()">匯整產地及備註</button>
                 <button id="checkBtn">長期委任字號</button>
-            </div>            
+            </div>
             <div class="header-group hidden">
                 <label for="REMARK1">REMARKS</label>
                 <textarea id="REMARK1" name="REMARK1" rows="5"></textarea>
@@ -441,7 +449,7 @@ Alt + 2 指定項次">攤重</button>
                             <li>Alt + Q：核算</li>
                             <li>Alt + R：出口備註</li>
                             <li>Alt + 1：攤重 - 全部項次</li>
-                            <li>Alt + 2：攤重 - 指定項次</li>                            
+                            <li>Alt + 2：攤重 - 指定項次</li>    
                             <li>Alt + 左／右方向鍵：頁面左右捲動（固定頁面寬度時）</li>
                             <li>Alt + 上／下方向鍵：品名欄位移動</li>
                             <li>Home／End：移至頁面最上方／最下方</li>
@@ -568,7 +576,7 @@ Alt + 2 指定項次">攤重</button>
             <div class="floating-buttons">
                 <button id="rememberButton" onclick="rememberItemModalData()">記憶</button>
                 <button onclick="clearAllFields()">清空</button>
-                ｜                
+                ｜
                 <button onclick="saveItem()" title="快捷鍵 Alt + S">儲存</button>
                 <button onclick="closeItemModal()">取消</button>
             </div>
@@ -634,7 +642,7 @@ Alt + 2 指定項次">攤重</button>
             <div class="header-group">
                 <label for="NET_WT">淨重</label>
                 <input type="number" id="NET_WT" class="NET_WT" min="0">
-            </div>            
+            </div>
             <hr>
             <div class="header-group">洋貨復出口核銷欄位</div>
             <div class="header-group">
@@ -663,7 +671,7 @@ Alt + 2 指定項次">攤重</button>
                 <label for="BOND_NOTE">保稅貨物註記</label>
                 <input type="text" id="BOND_NOTE" class="BOND_NOTE"
                 placeholder="範例：YB(保品)、NB(非保品)">
-            </div>            
+            </div>
             <hr>
             <div class="header-group">ECFA產證欄位</div>
             <div class="header-group">
@@ -796,7 +804,7 @@ Alt + 2 指定項次">攤重</button>
                         <option value="TRADE_MARK">商標</option>
                         <option value="CCC_CODE">稅則</option>
                         <option value="ST_MTD">統計方式</option>
-                        <option value="NET_WT">淨重</option>                        
+                        <option value="NET_WT">淨重</option>
                         <option class="separator" disabled>洋貨復出口核銷欄位</option>
                         <option value="ORG_COUNTRY">生產國別</option>
                         <option value="ORG_IMP_DCL_NO">原進口報單號碼</option>
