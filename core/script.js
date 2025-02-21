@@ -397,7 +397,14 @@ function searchData(showErrorMessage = false) {
                     document.getElementById('SHPR_C_ADDR').value = record['中文營業地址'] || '';
                     document.getElementById('SHPR_E_ADDR').value = record['英文營業地址'] || '';
                     document.getElementById('SHPR_TEL').value = record['電話號碼'] || '';
+                    document.getElementById('IMP_QUAL').value = record['進口資格'] || '';
+                    document.getElementById('EXP_QUAL').value = record['出口資格'] || '';
                     noDataMessage.style.display = 'none'; // 隱藏"查無資料"訊息
+
+                    // 檢查是否為非營業中
+                    if (record['進口資格'] === '無' && record['出口資格'] === '無') {
+                        alert('該公司無進出口資格，請確認是否為非營業中。');
+                    }
                 } else {
                     // 清空欄位
                     document.getElementById('SHPR_C_NAME').value = '';
