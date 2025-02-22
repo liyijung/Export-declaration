@@ -1664,6 +1664,35 @@ function applyFieldData() {
         const fieldName = document.getElementById('specify-field-name').value;
         let fieldValue = document.getElementById('specify-field-value').value;
 
+        // 如果 specify-field-value 以 "=" 開頭，則複製指定欄位的值
+        let copyFieldName = null;
+        if (fieldValue.startsWith("=")) {
+            const labelText = fieldValue.substring(1).trim(); // 取得中文欄位名稱
+            copyFieldName = getOptionValueByLabel(labelText); // 轉換為對應的英文 value
+
+            if (!copyFieldName) {
+                console.warn("無法找到對應的欄位名稱:", labelText);
+            }
+        }
+
+        // 透過中文名稱查找對應的 option value
+        function getOptionValueByLabel(labelText) {
+            const selectElement = document.getElementById('specify-field-name');
+            if (!selectElement) {
+                console.error("找不到指定的下拉選單元素: #specify-field-name");
+                return null;
+            }
+
+            const options = selectElement.options;
+            for (let i = 0; i < options.length; i++) {
+                if (options[i].textContent.trim() === labelText.trim()) {
+                    return options[i].value; // 找到對應的 value
+                }
+            }
+            console.warn(`無法找到對應的欄位名稱: ${labelText}`);
+            return null; // 找不到對應的值時回傳 null
+        }
+
         // 排除 DESCRIPTION 欄位的 trim
         if (fieldName !== 'DESCRIPTION') {
             fieldValue = fieldValue.trim();
@@ -1714,6 +1743,14 @@ function applyFieldData() {
                 }
 
                 const fieldElement = item.querySelector(`.${fieldName}`);
+
+                // 若指定了複製欄位，則從該列對應欄位獲取值
+                if (copyFieldName) {
+                    const copyFieldElement = item.querySelector(`.${copyFieldName}`);
+                    if (copyFieldElement) {
+                        fieldValue = copyFieldElement.value; // 複製對應欄位的值
+                    }
+                }
 
                 // 判斷覆蓋條件
                 if (
