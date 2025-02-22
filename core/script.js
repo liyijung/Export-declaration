@@ -1230,7 +1230,7 @@ function updateST_QTY(itemRow) {
 
     if (qty.value === '' && stum.value !== 'MTK') {
         stqty.value = '';  // 如果數量為空，則清空 ST_QTY
-    } else if (stum.value === docum.value) {
+    } else if (stum.value === docum.value && stum.value !== '') {
         stqty.value = qty.value;
     } else if (docum.value === 'KPC' && stum.value === 'PCE') {
         stqty.value = qty.value * 1000;
