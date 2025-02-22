@@ -3847,6 +3847,9 @@ function calculate() {
     calculateAmounts(); // 金額核算
     calculateWeight(); // 重量核算
     initializeFieldVisibility(); // 更新欄位顯示狀態
+
+    // 更新核算狀態
+    document.getElementById("calculation-status").value = "已執行";
 }
 
 // 更新DOC_OTR_DESC的值，勾選時加入描述，取消勾選時移除描述
@@ -4493,7 +4496,13 @@ document.addEventListener('DOMContentLoaded', function () {
             alert(`以下欄位不可全數字：\n${allDigitsErrors.join('、')}`);
             return; // 中止匯出過程
         }
-        
+
+        // 取得核算狀態
+        if (document.getElementById('calculation-status')?.value.trim() !== "已執行") {
+            alert("請先執行核算後再匯出 XML！");
+            return;
+        }
+
         const headerFields = [
             'LOT_NO', 'SHPR_BAN_ID', 'DCL_DOC_EXAM', 'SHPR_BONDED_ID', 
             'SHPR_C_NAME', 'SHPR_E_NAME', 'SHPR_C_ADDR', 'SHPR_E_ADDR', 'SHPR_TEL', 
