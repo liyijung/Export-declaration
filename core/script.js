@@ -1005,8 +1005,13 @@ document.addEventListener("DOMContentLoaded", function () {
     const netWtInput = document.getElementById("NET_WT");
 
     function syncNetWeight() {
-        if (docUmInput.value.trim().toUpperCase() === "KGM") {
-            netWtInput.value = qtyInput.value;
+        const docUmValue = docUmInput.value.trim().toUpperCase();
+        const qtyValue = parseFloat(qtyInput.value) || 0;
+
+        if (docUmValue === "KGM") {
+            netWtInput.value = qtyValue;
+        } else if (docUmValue === "GRM") {
+            netWtInput.value = (qtyValue / 1000)
         }
     }
 
@@ -1262,10 +1267,12 @@ function updateNET_WT(itemRow) {
     const netwt = itemRow.querySelector('.NET_WT');
 
     const qtyValue = parseFloat(qty.value) || '';
-    const documValue = docum.value.trim();
+    const documValue = docum.value.trim().toUpperCase();
 
     if (documValue === 'KGM') {
         netwt.value = qtyValue;  // 當 DOC_UM 為 KGM，則 NET_WT = QTY
+    } else if (documValue === 'GRM') {
+        netwt.value = (qtyValue / 1000);  // 當 DOC_UM 為 GRM，則 NET_WT = QTY / 1000
     }
 }
 
