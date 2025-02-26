@@ -999,6 +999,24 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
+document.addEventListener("DOMContentLoaded", function () {
+    const qtyInput = document.getElementById("QTY");
+    const docUmInput = document.getElementById("DOC_UM");
+    const netWtInput = document.getElementById("NET_WT");
+
+    function syncNetWeight() {
+        if (docUmInput.value.trim().toUpperCase() === "KGM") {
+            netWtInput.value = qtyInput.value;
+        }
+    }
+
+    // 監聽 QTY 變化，當單位為 KGM 時同步更新 NET_WT
+    qtyInput.addEventListener("input", syncNetWeight);
+
+    // 監聽 DOC_UM 變化，當變更為 KGM 時立即同步 NET_WT
+    docUmInput.addEventListener("input", syncNetWeight);
+});
+
 // 記憶按鍵的功能
 function rememberItemModalData() {
     // 儲存當前彈跳框的內容到 localStorage
@@ -1237,12 +1255,27 @@ function updateST_QTY(itemRow) {
     }
 }
 
+// 即時更新 NET_WT
+function updateNET_WT(itemRow) {
+    const qty = itemRow.querySelector('.QTY');
+    const docum = itemRow.querySelector('.DOC_UM');
+    const netwt = itemRow.querySelector('.NET_WT');
+
+    const qtyValue = parseFloat(qty.value) || '';
+    const documValue = docum.value.trim();
+
+    if (documValue === 'KGM') {
+        netwt.value = qtyValue;  // 當 DOC_UM 為 KGM，則 NET_WT = QTY
+    }
+}
+
 // 監聽所有 QTY 和 DOC_UM 欄位變更
 document.addEventListener('input', (event) => {
     if (event.target.matches('.QTY, .DOC_UM')) {
         const itemRow = event.target.closest('.item-row');
         if (itemRow) {
             updateST_QTY(itemRow);
+            updateNET_WT(itemRow);
         }
     }
 });
@@ -1871,11 +1904,12 @@ function applyFieldData() {
         decimalPlaces = 2;
     }
     
-    // 檢查是否有更新QTY、DOC_UM、DOC_UNIT_P欄位，若有則對所有更新的欄位執行金額計算及更新ST_QTY
+    // 檢查是否有更新QTY、DOC_UM、DOC_UNIT_P欄位，若有則對所有更新的欄位執行金額計算及更新ST_QTY、NET_WT
     if (hasUpdatedQtyOrUnitPrice) {
         items.forEach(item => {
             calculateAmountsForRow(item, decimalPlaces);
             updateST_QTY(item);
+            updateNET_WT(item);
         });
     }
 
