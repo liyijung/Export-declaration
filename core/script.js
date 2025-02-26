@@ -1257,10 +1257,8 @@ function updateST_QTY(itemRow) {
         stqty.value = qty.value;
     } else if (docum.value === 'KPC' && stum.value === 'PCE') {
         stqty.value = qty.value * 1000;
-    } else if (docum.value === 'PCE' && stum.value === 'NPR') {
-        stqty.value = (qty.value / 2).toFixed(2);
-    } else if (docum.value === 'KPC' && stum.value === 'NPR') {
-        stqty.value = (qty.value * 1000 / 2).toFixed(2);
+    } else if (docum.value === 'NPR' && stum.value === 'PCE') {
+        stqty.value = (qty.value * 2).toFixed(2);
     } else if (docum.value === 'PCE' && stum.value === 'DZN') {
         stqty.value = (qty.value / 12).toFixed(2);
     } else if (docum.value === 'KPC' && stum.value === 'DZN') {
