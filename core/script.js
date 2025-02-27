@@ -5962,7 +5962,7 @@ document.addEventListener("DOMContentLoaded", function () {
             if (avgWeight > 70) {
                 iziToast.warning({
                     title: "注意",
-                    message: "單件超過70公斤，需轉一般倉通關",
+                    message: "單件超過70公斤，需一般倉通關",
                     position: "center",
                     timeout: 5000
                 });
