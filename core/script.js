@@ -5948,3 +5948,28 @@ document.getElementById('saveMaker').addEventListener('click', () => {
     localStorage.setItem('Maker', maker);
     alert('製單人員已儲存！');
 });
+
+document.addEventListener("DOMContentLoaded", function () {
+    const totCtnInput = document.getElementById("TOT_CTN");
+    const dclGwInput = document.getElementById("DCL_GW");
+
+    function checkWeightLimit() {
+        const totCtn = parseInt(totCtnInput.value, 10);
+        const dclGw = parseFloat(dclGwInput.value);
+
+        if (!isNaN(totCtn) && totCtn > 0 && !isNaN(dclGw)) {
+            const avgWeight = dclGw / totCtn;
+            if (avgWeight > 70) {
+                iziToast.warning({
+                    title: "注意",
+                    message: "單件超過70公斤，需轉一般倉通關",
+                    position: "center",
+                    timeout: 5000
+                });
+            }
+        }
+    }
+
+    totCtnInput.addEventListener("input", checkWeightLimit);
+    dclGwInput.addEventListener("input", checkWeightLimit);
+});
