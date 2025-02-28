@@ -167,6 +167,7 @@ function searchTariff(inputElement, isModal = false) {
                             wideum = itemRow.querySelector('.WIDE_UM');
                             lengt = itemRow.querySelector('.LENGT_');
                             lengthum = itemRow.querySelector('.LENGTH_UM');
+                            cccCode = itemRow.querySelector('.CCC_CODE');
                         } else {
                             // 選取彈跳框中的欄位
                             qty = document.getElementById('QTY');
@@ -178,6 +179,7 @@ function searchTariff(inputElement, isModal = false) {
                             wideum = document.getElementById('WIDE_UM');
                             lengt = document.getElementById('LENGT_');
                             lengthum = document.getElementById('LENGTH_UM');
+                            cccCode = document.getElementById('CCC_CODE');
                         }
 
                         // 填入數據
@@ -238,6 +240,33 @@ function searchTariff(inputElement, isModal = false) {
                             // 如果 '統計數量單位' 為空，將 ST_QTY 和 ST_UM 設置為空
                             if (stqty) stqty.value = '';
                             if (stum) stum.value = '';
+                        }
+
+                        if (cccCode) {
+                            let exportReg = item['輸出規定'] ? item['輸出規定'].trim() : '';
+                            let exportRegList = exportReg.split(/\s+/).filter(reg => reg); // 過濾掉空白項目
+                    
+                            // 取得目的地代碼（TO_CODE）
+                            const toCodeElement = document.getElementById("TO_CODE");
+                            const toCode = toCodeElement ? toCodeElement.value.trim().toUpperCase() : '';
+                            const toCodePrefix = toCode.slice(0, 2); // 取得前兩碼
+                    
+                            // 是否符合條件
+                            const conditionS01 = exportRegList.includes("S01") && toCodePrefix === "KP";
+                            const conditionS03 = exportRegList.includes("S03") && toCodePrefix === "IR";
+                            const conditionS04 = exportRegList.includes("S04") && toCodePrefix === "IR";
+                    
+                            // 若包含其他輸出規定 (不只是 S01、S03、S04)，也要高亮
+                            const hasOtherReg = exportRegList.some(reg => !["S01", "S03", "S04"].includes(reg));
+                    
+                            // 最終判斷是否高亮
+                            const shouldHighlight = exportRegList.length > 0 && (conditionS01 || conditionS03 || conditionS04 || hasOtherReg);
+                    
+                            if (shouldHighlight) {
+                                cccCode.classList.add("highlight-ccc");
+                            } else {
+                                cccCode.classList.remove("highlight-ccc");
+                            }
                         }
 
                         // 更新欄位顯示狀態
@@ -455,6 +484,7 @@ function updateFields(inputElement, item) {
         wideum = itemRow.querySelector('.WIDE_UM');
         lengt = itemRow.querySelector('.LENGT_');
         lengthum = itemRow.querySelector('.LENGTH_UM');
+        cccCode = itemRow.querySelector('.CCC_CODE');
     } else {
         // 選取彈跳框中的欄位
         qty = document.getElementById('QTY');
@@ -466,6 +496,7 @@ function updateFields(inputElement, item) {
         wideum = document.getElementById('WIDE_UM');
         lengt = document.getElementById('LENGT_');
         lengthum = document.getElementById('LENGTH_UM');
+        cccCode = document.getElementById('CCC_CODE');
     }
 
     // 填入數據
@@ -531,6 +562,33 @@ function updateFields(inputElement, item) {
         // 如果 '統計數量單位' 為空，將 ST_QTY 和 ST_UM 設置為空
         if (stqty) stqty.value = '';
         if (stum) stum.value = '';
+    }
+
+    if (cccCode) {
+        let exportReg = item['輸出規定'] ? item['輸出規定'].trim() : '';
+        let exportRegList = exportReg.split(/\s+/).filter(reg => reg); // 過濾掉空白項目
+
+        // 取得目的地代碼（TO_CODE）
+        const toCodeElement = document.getElementById("TO_CODE");
+        const toCode = toCodeElement ? toCodeElement.value.trim().toUpperCase() : '';
+        const toCodePrefix = toCode.slice(0, 2); // 取得前兩碼
+
+        // 是否符合條件
+        const conditionS01 = exportRegList.includes("S01") && toCodePrefix === "KP";
+        const conditionS03 = exportRegList.includes("S03") && toCodePrefix === "IR";
+        const conditionS04 = exportRegList.includes("S04") && toCodePrefix === "IR";
+
+        // 若包含其他輸出規定 (不只是 S01、S03、S04)，也要高亮
+        const hasOtherReg = exportRegList.some(reg => !["S01", "S03", "S04"].includes(reg));
+
+        // 最終判斷是否高亮
+        const shouldHighlight = exportRegList.length > 0 && (conditionS01 || conditionS03 || conditionS04 || hasOtherReg);
+
+        if (shouldHighlight) {
+            cccCode.classList.add("highlight-ccc");
+        } else {
+            cccCode.classList.remove("highlight-ccc");
+        }
     }
 
     initializeDimensionListeners(itemRow);
