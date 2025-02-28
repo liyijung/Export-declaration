@@ -1246,23 +1246,23 @@ function calculateAmountsForRow(row, decimalPlaces) {
 
 // 即時更新 ST_QTY
 function updateST_QTY(itemRow) {
-    const qty = itemRow.querySelector('.QTY');
-    const docum = itemRow.querySelector('.DOC_UM');
+    const qty = new Decimal(itemRow.querySelector('.QTY').value || 0);
+    const docum = itemRow.querySelector('.DOC_UM').value;
     const stqty = itemRow.querySelector('.ST_QTY');
-    const stum = itemRow.querySelector('.ST_UM');
+    const stum = itemRow.querySelector('.ST_UM').value;
 
-    if (qty.value === '' && stum.value !== 'MTK') {
+    if (qty.isZero() && stum !== 'MTK') {
         stqty.value = '';  // 如果數量為空，則清空 ST_QTY
-    } else if (stum.value === docum.value && stum.value !== '') {
-        stqty.value = qty.value;
-    } else if (docum.value === 'KPC' && stum.value === 'PCE') {
-        stqty.value = qty.value * 1000;
-    } else if (docum.value === 'NPR' && stum.value === 'PCE') {
-        stqty.value = (qty.value * 2).toFixed(2);
-    } else if (docum.value === 'PCE' && stum.value === 'DZN') {
-        stqty.value = (qty.value / 12).toFixed(2);
-    } else if (docum.value === 'KPC' && stum.value === 'DZN') {
-        stqty.value = (qty.value * 1000 / 12).toFixed(2);
+    } else if (stum === docum && stum !== '') {
+        stqty.value = qty.toString();
+    } else if (docum === 'KPC' && stum === 'PCE') {
+        stqty.value = qty.times(1000).toDecimalPlaces(2).toString();
+    } else if (docum === 'NPR' && stum === 'PCE') {
+        stqty.value = qty.times(2).toDecimalPlaces(2).toString();
+    } else if (docum === 'PCE' && stum === 'DZN') {
+        stqty.value = qty.div(12).toDecimalPlaces(2).toString();
+    } else if (docum === 'KPC' && stum === 'DZN') {
+        stqty.value = qty.times(1000).div(12).toDecimalPlaces(2).toString();
     }
 }
 
@@ -2731,14 +2731,14 @@ function initializeFieldVisibility() {
 
     allFields.forEach(field => {
         const fieldElements = document.querySelectorAll(`.item-header .${field}, #item-container .${field}`);
-        
+
         // 設置 ST_UM 欄位為只讀
         if (field === 'ST_UM') {
             fieldElements.forEach(fieldElement => {
                 fieldElement.setAttribute('readonly', true);
             });
         }
-        
+
         // 判斷該欄位在所有項次中是否有值
         let hasValue = false;
         document.querySelectorAll(`#item-container .${field}`).forEach(itemField => {
@@ -2756,38 +2756,68 @@ function initializeFieldVisibility() {
                 } else {
                     formGroup.classList.add('hidden');
                 }
+            }
+        });
+    });
 
-                // 如果 ST_UM 欄位的值為 "MTK"，且 DOC_UM 的值不是 "MTK"，並且 ST_QTY 為空時，自動顯示 WIDE, WIDE_UM, LENGT_, LENGTH_UM 欄位
-                if (field === 'ST_UM' && fieldElement.value && fieldElement.value.trim() === 'MTK') {
-                    const docUmField = document.querySelector(`#item-container .DOC_UM`);
-                    const stQtyField = document.querySelector(`#item-container .ST_QTY`);
-                    if (
-                        docUmField && docUmField.value.trim() !== 'MTK' && 
-                        stQtyField && (!stQtyField.value || stQtyField.value.trim() === '')
-                    ) {
-                        ['WIDE', 'WIDE_UM', 'LENGT_', 'LENGTH_UM'].forEach(relatedField => {
-                            document.querySelectorAll(`.${relatedField}`).forEach(relatedFieldElement => {
-                                const relatedFormGroup = relatedFieldElement.closest('.form-group');
-                                if (relatedFormGroup) {
-                                    relatedFormGroup.classList.remove('hidden');
-                                }
-                            });
-                        });
-                    }
-                }
-                
-                // 如果 ST_UM 欄位有值時，自動顯示 ST_QTY，不論 ST_QTY 是否有值
-                if (field === 'ST_UM' && fieldElement.value && fieldElement.value.trim() !== '') {
-                    document.querySelectorAll('.ST_QTY').forEach(stQtyField => {
-                        const stQtyFormGroup = stQtyField.closest('.form-group');
-                        if (stQtyFormGroup) {
-                            stQtyFormGroup.classList.remove('hidden');
-                        }
-                    });
+    // 判斷 WIDE, WIDE_UM, LENGT_, LENGTH_UM 是否應該一起顯示
+    let shouldShowSizeFields = false;
+
+    // 當 ST_UM 為 MTK，且 DOC_UM 不是 MTK 且 ST_QTY 為空時，顯示布貨品欄位
+    document.querySelectorAll(`#item-container .ST_UM`).forEach(stUmField => {
+        if (stUmField.value && stUmField.value.trim() === 'MTK') {
+            const row = stUmField.closest('.item-row');
+            const docUmField = row.querySelector(`.DOC_UM`);
+            const stQtyField = row.querySelector(`.ST_QTY`);
+            
+            if (
+                docUmField && docUmField.value.trim() !== 'MTK' && 
+                stQtyField && (!stQtyField.value || stQtyField.value.trim() === '')
+            ) {
+                shouldShowSizeFields = true;
+            }
+        }
+    });
+
+    // 如果 WIDE, WIDE_UM, LENGT_, LENGTH_UM 任一欄有值，也顯示所有欄位
+    ['WIDE', 'WIDE_UM', 'LENGT_', 'LENGTH_UM'].forEach(field => {
+        document.querySelectorAll(`#item-container .${field}`).forEach(fieldElement => {
+            if (fieldElement.value && fieldElement.value.trim() !== '') {
+                shouldShowSizeFields = true;
+            }
+        });
+    });
+
+    // 同步顯示或隱藏 WIDE, WIDE_UM, LENGT_, LENGTH_UM（包含標題和項次欄位）
+    ['WIDE', 'WIDE_UM', 'LENGT_', 'LENGTH_UM'].forEach(field => {
+        document.querySelectorAll(`.item-header .${field}, #item-container .${field}`).forEach(fieldElement => {
+            const formGroup = fieldElement.closest('.form-group');
+            if (formGroup) {
+                if (shouldShowSizeFields) {
+                    formGroup.classList.remove('hidden');
+                } else {
+                    formGroup.classList.add('hidden');
                 }
             }
         });
     });
+
+    // 檢查是否有任何 ST_UM 欄位有值，若有則顯示 ST_QTY（包含標題和項次欄位）
+    let hasSTUMValue = false;
+    document.querySelectorAll(`#item-container .ST_UM`).forEach(stUmField => {
+        if (stUmField.value && stUmField.value.trim() !== '') {
+            hasSTUMValue = true;
+        }
+    });
+
+    if (hasSTUMValue) {
+        document.querySelectorAll(`.item-header .ST_QTY, #item-container .ST_QTY`).forEach(stQtyField => {
+            const stQtyFormGroup = stQtyField.closest('.form-group');
+            if (stQtyFormGroup) {
+                stQtyFormGroup.classList.remove('hidden');
+            }
+        });
+    }
 }
 
 // 當頁面初始化或更新時，調用 initializeFieldVisibility 以確保同步顯示
