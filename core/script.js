@@ -3820,7 +3820,7 @@ function spreadWeightSpecific(ranges, specificWeight, weightDecimalPlaces, lockA
     let distributedWeights = [];
     validItems.forEach(item => {
         let weight = parseFloat((item.quantity * weightPerUnit).toFixed(weightDecimalPlaces));
-        weight = weight <= 0 ? 0 : weight; // 確保重量不小於最小分配值
+        weight = weight <= 0 ? 0 : weight;
         distributedWeights.push({ index: item.index, netWeight: weight });
     });
 
