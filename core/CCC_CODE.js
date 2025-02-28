@@ -207,13 +207,13 @@ function searchTariff(inputElement, isModal = false) {
                                 } else if (docum.value === 'SHE' && item['統計數量單位'] === 'PCE') {
                                     stqty.value = qty.value;
                                 } else if (docum.value === 'NPR' && item['統計數量單位'] === 'PCE') {
-                                    stqty.value = qty.value * 2;
+                                    stqty.value = new Decimal(qty.value).times(2).toDecimalPlaces(2).toString();
                                 } else if (docum.value === 'KPC' && item['統計數量單位'] === 'PCE') {
-                                    stqty.value = qty.value * 1000;
+                                    stqty.value = new Decimal(qty.value).times(1000).toDecimalPlaces(2).toString();
                                 } else if (docum.value === 'PCE' && item['統計數量單位'] === 'DZN') {
-                                    stqty.value = (qty.value / 12).toFixed(2);
+                                    stqty.value = new Decimal(qty.value).div(12).toDecimalPlaces(2).toString();
                                 } else if (docum.value === 'KPC' && item['統計數量單位'] === 'DZN') {
-                                    stqty.value = (qty.value * 1000 / 12).toFixed(2);
+                                    stqty.value = new Decimal(qty.value).times(1000).div(12).toDecimalPlaces(2).toString();
                                 } else if (item['統計數量單位'] === 'KGM') {
                                     stqty.value = netwt.value;
                                 } else if (item['統計數量單位'] === 'MTK') {
@@ -495,13 +495,13 @@ function updateFields(inputElement, item) {
             } else if (docum.value === 'SHE' && item['統計數量單位'] === 'PCE') {
                 stqty.value = qty.value;
             } else if (docum.value === 'NPR' && item['統計數量單位'] === 'PCE') {
-                stqty.value = qty.value * 2;
+                stqty.value = new Decimal(qty.value).times(2).toDecimalPlaces(2).toString();
             } else if (docum.value === 'KPC' && item['統計數量單位'] === 'PCE') {
-                stqty.value = qty.value * 1000;
+                stqty.value = new Decimal(qty.value).times(1000).toDecimalPlaces(2).toString();
             } else if (docum.value === 'PCE' && item['統計數量單位'] === 'DZN') {
-                stqty.value = (qty.value / 12).toFixed(2);
+                stqty.value = new Decimal(qty.value).div(12).toDecimalPlaces(2).toString();
             } else if (docum.value === 'KPC' && item['統計數量單位'] === 'DZN') {
-                stqty.value = (qty.value * 1000 / 12).toFixed(2);
+                stqty.value = new Decimal(qty.value).times(1000).div(12).toDecimalPlaces(2).toString();
             } else if (item['統計數量單位'] === 'KGM') {
                 stqty.value = netwt.value;
             } else if (item['統計數量單位'] === 'MTK') {
