@@ -2274,6 +2274,7 @@ function handleFile(event) {
             currentItem.querySelector('.DESCRIPTION').value = currentDescription.trim();
             itemContainer.appendChild(currentItem);
         }
+        updateCneeCNameVisibility();
         initializeListeners();
         renumberItems();
     };
@@ -2562,6 +2563,7 @@ function importXML(event) {
                 itemContainer.appendChild(itemRow);
             });
 
+            updateCneeCNameVisibility();
             initializeListeners();
             renumberItems(); // 重新編號所有項次
             updateRemark1FromImport(); // 更新REMARK1欄位並勾選對應的checkbox
@@ -6000,10 +6002,16 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 document.addEventListener("DOMContentLoaded", function () {
+    setupCneeCNameWatcher();
+});
+
+// 初始化監聽 CNEE_C_NAME 欄位變化
+function setupCneeCNameWatcher() {
     const toggleLabel = document.getElementById("toggleCneeName");
     const cneeCNameGroup = document.getElementById("cnee_c_name_group");
-    const cneeENameLabel = document.getElementById("toggleCneeName");
     const cneeCNameInput = document.getElementById("CNEE_C_NAME");
+
+    if (!toggleLabel || !cneeCNameGroup || !cneeCNameInput) return;
 
     function updateVisibility() {
         if (cneeCNameInput.value.trim() !== "") {
@@ -6011,41 +6019,64 @@ document.addEventListener("DOMContentLoaded", function () {
         } else {
             cneeCNameGroup.classList.add("hidden");
         }
+        updateCneeLabelText(); // **確保標題同步變更**
     }
 
-    // 定期檢查 CNEE_C_NAME 是否有值，但在穩定後停止
-    let lastValue = cneeCNameInput.value.trim();
-    let checkCount = 0; // 記錄檢查次數
-    const maxChecks = 10; // 最多檢查 10 次 (5 秒)
-
-    const interval = setInterval(() => {
-        let currentValue = cneeCNameInput.value.trim();
-        if (currentValue !== lastValue) {
-            lastValue = currentValue;
-            updateVisibility();
-            checkCount = 0; // 有變化則重置計數器
+    function updateCneeLabelText() {
+        if (cneeCNameGroup.classList.contains("hidden")) {
+            toggleLabel.textContent = "買方中/英名稱";
         } else {
-            checkCount++;
+            toggleLabel.textContent = "買方英文名稱";
         }
+    }
 
-        // 若 5 秒內 (10 次) 都沒變化，則停止 setInterval()
-        if (checkCount >= maxChecks) {
-            clearInterval(interval);
-        }
-    }, 500); // 每 0.5 秒執行一次
+    // 監聽手動輸入變化
+    cneeCNameInput.addEventListener("input", updateVisibility);
+    cneeCNameInput.addEventListener("change", updateVisibility);
 
+    // **監聽 `value` 變更，即使是程式設定**
+    const observer = new MutationObserver(() => {
+        updateVisibility();
+        cneeCNameInput.dispatchEvent(new Event("input")); // 觸發 UI 更新
+    });
+
+    observer.observe(cneeCNameInput, { attributes: true, attributeFilter: ["value"] });
+
+    // **點擊切換按鈕**
     toggleLabel.addEventListener("click", function () {
         if (cneeCNameGroup.classList.contains("hidden")) {
             cneeCNameGroup.classList.remove("hidden");
-            cneeENameLabel.textContent = "買方英文名稱";
         } else {
             if (cneeCNameInput.value.trim() === "") {
                 cneeCNameGroup.classList.add("hidden");
-                cneeENameLabel.textContent = "買方中/英名稱";
             }
         }
+        updateCneeLabelText(); // **確保點擊按鈕時標題同步變更**
     });
 
-    // 初始化執行一次，確保正確顯示
+    // **初始化 UI**
     updateVisibility();
-});
+}
+
+// 匯入資料後，強制更新 CNEE_C_NAME 可見性 + 更新標題
+function updateCneeCNameVisibility() {
+    const cneeCNameInput = document.getElementById("CNEE_C_NAME");
+    if (cneeCNameInput) {
+        setTimeout(() => {
+            cneeCNameInput.dispatchEvent(new Event("input")); // 觸發 UI 更新
+            updateCneeLabelText(); // **確保標題也更新**
+        }, 50); // 確保匯入資料後 UI 更新
+    }
+}
+
+// 獨立函式：更新 `toggleLabel.textContent`
+function updateCneeLabelText() {
+   const toggleLabel = document.getElementById("toggleCneeName");
+   const cneeCNameGroup = document.getElementById("cnee_c_name_group");
+
+   if (toggleLabel && cneeCNameGroup) {
+       toggleLabel.textContent = cneeCNameGroup.classList.contains("hidden")
+           ? "買方中/英名稱"
+           : "買方英文名稱";
+   }
+}
