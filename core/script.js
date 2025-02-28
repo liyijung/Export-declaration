@@ -5747,6 +5747,30 @@ function handleTradeTerms(inputId) {
     });
 }
 
+function monitorCountryCodeChange() {
+    const countryCodeInput = document.getElementById("CNEE_COUNTRY_CODE");
+    const cneeBanIdInput = document.getElementById("CNEE_BAN_ID");
+    const buyerENameInput = document.getElementById("BUYER_E_NAME");
+    const buyerEAddrInput = document.getElementById("BUYER_E_ADDR");
+
+    function updateFieldsVisibility() {
+        const isTW = countryCodeInput.value.trim().toUpperCase() === "TW";
+        const action = isTW ? "remove" : "add";
+
+        cneeBanIdInput.closest(".header-group").classList[action]("hidden");
+        buyerENameInput.closest(".header-group").classList[action]("hidden");
+        buyerEAddrInput.closest(".header-group").classList[action]("hidden");
+    }
+
+    countryCodeInput.addEventListener("input", updateFieldsVisibility);
+
+    // 初始化執行一次，以確保正確顯示/隱藏欄位
+    updateFieldsVisibility();
+}
+
+// 監聽 DOM 加載後執行
+document.addEventListener("DOMContentLoaded", monitorCountryCodeChange);
+
 // 啟用事件監聽，處理國家代碼的樣式變更
 handleCountryCodeInput('CNEE_COUNTRY_CODE', ['CNEE_BAN_ID', 'BUYER_E_NAME', 'BUYER_E_ADDR'], 'TW');
 
@@ -5877,6 +5901,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     document.getElementById('TO_CODE').value = '';
                     break;
                 case 'CNEE_COUNTRY_CODE':
+                    monitorCountryCodeChange();
                     let cneeFields = ['CNEE_BAN_ID', 'BUYER_E_NAME', 'BUYER_E_ADDR'];
                     cneeFields.forEach(fieldId => {
                         let label = document.querySelector(`label[for="${fieldId}"]`);
