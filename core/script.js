@@ -5998,3 +5998,54 @@ document.addEventListener("DOMContentLoaded", function () {
     totCtnInput.addEventListener("input", checkWeightLimit);
     dclGwInput.addEventListener("input", checkWeightLimit);
 });
+
+document.addEventListener("DOMContentLoaded", function () {
+    const toggleLabel = document.getElementById("toggleCneeName");
+    const cneeCNameGroup = document.getElementById("cnee_c_name_group");
+    const cneeENameLabel = document.getElementById("toggleCneeName");
+    const cneeCNameInput = document.getElementById("CNEE_C_NAME");
+
+    function updateVisibility() {
+        if (cneeCNameInput.value.trim() !== "") {
+            cneeCNameGroup.classList.remove("hidden");
+        } else {
+            cneeCNameGroup.classList.add("hidden");
+        }
+    }
+
+    // 定期檢查 CNEE_C_NAME 是否有值，但在穩定後停止
+    let lastValue = cneeCNameInput.value.trim();
+    let checkCount = 0; // 記錄檢查次數
+    const maxChecks = 10; // 最多檢查 10 次 (5 秒)
+
+    const interval = setInterval(() => {
+        let currentValue = cneeCNameInput.value.trim();
+        if (currentValue !== lastValue) {
+            lastValue = currentValue;
+            updateVisibility();
+            checkCount = 0; // 有變化則重置計數器
+        } else {
+            checkCount++;
+        }
+
+        // 若 5 秒內 (10 次) 都沒變化，則停止 setInterval()
+        if (checkCount >= maxChecks) {
+            clearInterval(interval);
+        }
+    }, 500); // 每 0.5 秒執行一次
+
+    toggleLabel.addEventListener("click", function () {
+        if (cneeCNameGroup.classList.contains("hidden")) {
+            cneeCNameGroup.classList.remove("hidden");
+            cneeENameLabel.textContent = "買方英文名稱";
+        } else {
+            if (cneeCNameInput.value.trim() === "") {
+                cneeCNameGroup.classList.add("hidden");
+                cneeENameLabel.textContent = "買方中/英名稱";
+            }
+        }
+    });
+
+    // 初始化執行一次，確保正確顯示
+    updateVisibility();
+});
