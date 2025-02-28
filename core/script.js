@@ -3676,18 +3676,6 @@ function spreadWeightDefault(weightDecimalPlaces) {
         return;
     }
 
-    let itemCount = items.length;
-    let minWeight = Math.pow(10, -weightDecimalPlaces);
-    let requiredMinWeight = itemCount * minWeight;
-    let originalDecimalPlaces = weightDecimalPlaces;
-
-    // 如果 項次數 * 最小值 > 總淨重，則增加小數位數，最多增加 6 位
-    while (requiredMinWeight > totalNetWeight && weightDecimalPlaces < 6 && weightDecimalPlaces - originalDecimalPlaces < 6) {
-        weightDecimalPlaces++; // 每次增加 1 位
-        minWeight = Math.pow(10, -weightDecimalPlaces); // 更新最小分配重量
-        requiredMinWeight = itemCount * minWeight; // 重新計算所需最小總重量
-    }
-
     let fixedWeights = [];
     let lockedWeightTotal = 0; // 已鎖定項次的總重量
     let remainingNetWeight = totalNetWeight;
@@ -3724,7 +3712,7 @@ function spreadWeightDefault(weightDecimalPlaces) {
     }
 
     remainingNetWeight -= lockedWeightTotal;
-    
+
     if (totalQuantity <= 0) {
         alert('未鎖定的數量總和必須大於零');
         return;
@@ -3732,6 +3720,7 @@ function spreadWeightDefault(weightDecimalPlaces) {
 
     // 分配剩餘重量
     const distributedWeights = [];
+    const minWeight = Math.pow(10, -weightDecimalPlaces);
     items.forEach((item, index) => {
         if (!fixedWeights.some(fixed => fixed.index === index)) {
             const quantity = parseFloat(item.querySelector('.QTY').value);
@@ -3765,19 +3754,12 @@ function spreadWeightDefault(weightDecimalPlaces) {
         });
 
         const netWtElement = items[largestItem.index].querySelector('.NET_WT');
-        let adjustedWeight = parseFloat(netWtElement.value) + discrepancy;
-
-        // 確保不變成負數
-        netWtElement.value = adjustedWeight < 0 ? "" : adjustedWeight.toFixed(weightDecimalPlaces);
+        netWtElement.value = (parseFloat(netWtElement.value) + discrepancy).toFixed(weightDecimalPlaces);
     }
 
     // 最終結果
     finalTotalWeight = calculateTotalWeight(Array.from(items));
-    let message = `報單表頭的總淨重為：${totalNetWeight}\n各項次的淨重加總為：${parseFloat(finalTotalWeight.toFixed(weightDecimalPlaces))}`;
-    if (weightDecimalPlaces !== originalDecimalPlaces) {
-        message += `\n\n➤ 項次淨重最小值加總已超過總淨重，自動調整小數位數為 ${weightDecimalPlaces} 位`;
-    }
-    alert(message);
+    alert(`報單表頭的總淨重為：${totalNetWeight}\n各項次的淨重加總為：${parseFloat(finalTotalWeight.toFixed(weightDecimalPlaces))}`);
 }
 
 // 指定項次攤重
@@ -3786,8 +3768,7 @@ function spreadWeightSpecific(ranges, specificWeight, weightDecimalPlaces, lockA
     let totalQuantity = 0; // 未鎖定項次的總數量
     let validItems = []; // 可分配重量的項次
     let lockedWeight = 0; // 已鎖定的總重量
-    let originalDecimalPlaces = weightDecimalPlaces; // 記錄原始小數位數
-    let minWeight = Math.pow(10, -weightDecimalPlaces); // 最小分配重量
+    const minWeight = Math.pow(10, -weightDecimalPlaces); // 最小分配重量
 
     // 檢查範圍內的項次
     items.forEach((item, index) => {
@@ -3830,12 +3811,6 @@ function spreadWeightSpecific(ranges, specificWeight, weightDecimalPlaces, lockA
     if (totalQuantity <= 0) {
         alert("指定的範圍內無有效的未鎖定項次。");
         return;
-    }
-
-    // 如果 項次數 * 最小值 > 剩餘重量，則增加小數位數（最多增加 6 位）
-    while ((totalQuantity * minWeight) > remainingWeight && weightDecimalPlaces < 6 && (weightDecimalPlaces + 1 - originalDecimalPlaces) <= 4) {
-        weightDecimalPlaces++; // 每次增加 1 位
-        minWeight = Math.pow(10, -weightDecimalPlaces); // 更新最小分配重量
     }
 
     // 計算每個單位的重量
