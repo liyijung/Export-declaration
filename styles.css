@@ -938,3 +938,8 @@ button {
     border-radius: 4px;
     font-family: 'Source Han Sans TC', sans-serif; /* 確保字型一致 */
 }
+
+.highlight-ccc {
+    background-color: #ffeb3b !important; /* 黃色背景 */
+    color: #000 !important; /* 黑色字體 */
+}
