@@ -532,6 +532,13 @@ function importCustomer23570158(event) {
         calculateInsurance();
 
         handleCheck(); // 長期委任字號
+
+        // 清空布貨品欄位
+        document.querySelectorAll(`#item-container .WIDE, #item-container .WIDE_UM, #item-container .LENGT_, #item-container .LENGTH_UM`)
+        .forEach(input => {
+            input.value = '';
+            input.dispatchEvent(new Event('input')); // 觸發 input 事件，確保相關監聽函式更新
+        });
     };
 
     reader.readAsArrayBuffer(file);
