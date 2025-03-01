@@ -264,6 +264,14 @@ function searchTariff(inputElement, isModal = false) {
                     
                             if (shouldHighlight) {
                                 cccCode.classList.add("highlight-ccc");
+
+                                iziToast.warning({
+                                    title: "注意",
+                                    message: "此稅則有輸出規定",
+                                    position: "center",
+                                    timeout: 3000,
+                                    backgroundColor: '#ffeb3b',
+                                });
                             } else {
                                 cccCode.classList.remove("highlight-ccc");
                             }
