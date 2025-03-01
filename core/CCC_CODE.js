@@ -4,6 +4,24 @@ function handleCCCCodeEnter(event, inputElement) {
         event.preventDefault();
         openTaxModal(inputElement); // 打開彈跳框
         searchTariff(inputElement, true); // 查詢稅則數據
+    
+        // 延遲檢查 `highlight-ccc` 是否已套用
+        setTimeout(() => {
+            if (inputElement.classList.contains("highlight-ccc") && !isWarningToastVisible) {
+                isWarningToastVisible = true; // 避免重複觸發
+
+                iziToast.warning({
+                    title: "注意",
+                    message: "稅則有輸出規定",
+                    position: "topRight",
+                    timeout: 3000,
+                    backgroundColor: '#ffeb3b',
+                    onClosing: function() {
+                        isWarningToastVisible = false; // 當 `iziToast` 關閉時，允許新的 `iziToast`
+                    }
+                });
+            }
+        }, 100); // 延遲確保 `highlight-ccc` 樣式已經套用
     }
 }
 
@@ -268,14 +286,6 @@ function searchTariff(inputElement, isModal = false) {
                     
                             if (shouldHighlight) {
                                 cccCode.classList.add("highlight-ccc");
-
-                                iziToast.warning({
-                                    title: "注意",
-                                    message: "此稅則有輸出規定",
-                                    position: "center",
-                                    timeout: 3000,
-                                    backgroundColor: '#ffeb3b',
-                                });
                             } else {
                                 cccCode.classList.remove("highlight-ccc");
                             }
@@ -445,10 +455,29 @@ window.addEventListener('click', function(event) {
 });
 
 // 處理 CCC_CODE 欄位輸入事件，即時查詢稅則數據
+let isWarningToastVisible = false; // 控制 `iziToast.warning` 是否已經顯示
 function handleCCCCodeInput(event, inputElement) {
     let keyword = inputElement.value.toLowerCase().replace(/[.\-\s]/g, ''); // 移除 '.'、'-' 以及所有的空格
     if (keyword) {
         updateTariff(inputElement, keyword); // 查詢稅則數據並即時更新
+        
+        // 檢查輸出規定，決定是否顯示警告
+        setTimeout(() => {
+            if (inputElement.classList.contains("highlight-ccc") && !isWarningToastVisible) {
+                isWarningToastVisible = true; // 標記為正在顯示
+
+                iziToast.warning({
+                    title: "注意",
+                    message: "稅則有輸出規定",
+                    position: "center",
+                    timeout: 3000,
+                    backgroundColor: '#ffeb3b',
+                    onClosing: function() {
+                        isWarningToastVisible = false; // 當 `iziToast` 關閉時，允許新的 `iziToast`
+                    }
+                });
+            }
+        }, 100); // 延遲確保 `highlight-ccc` 樣式已經套用
     } else {
         clearFields(inputElement); // 當輸入為空時清空欄位
     }
