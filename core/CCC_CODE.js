@@ -1,5 +1,6 @@
 // 處理 CCC_CODE 欄位按 Enter 鍵的功能
 function handleCCCCodeEnter(event, inputElement) {
+    if (!inputElement || !inputElement.value.trim()) return; // 確保 inputElement 存在且有值
     if (event.key === 'Enter') {
         event.preventDefault();
         openTaxModal(inputElement); // 打開彈跳框
