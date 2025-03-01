@@ -6026,7 +6026,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     title: "注意",
                     message: "單件超過70公斤，需一般倉通關",
                     position: "center",
-                    timeout: 5000
+                    timeout: 4000,
+                    backgroundColor: '#ffeb3b',
                 });
             }
         }
