@@ -473,7 +473,7 @@ function handleCCCCodeInput(event, inputElement) {
                     iziToast.warning({
                         title: "注意",
                         message: "稅則有輸出規定",
-                        position: "center",
+                        position: "topRight",
                         timeout: 3000,
                         backgroundColor: '#ffeb3b',
                         onClosing: function() {
