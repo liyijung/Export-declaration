@@ -940,6 +940,5 @@ button {
 }
 
 .highlight-ccc {
-    background-color: #ffeb3b !important; /* 黃色背景 */
-    color: #000 !important; /* 黑色字體 */
+    background-color: #ffeb3b; /* 黃色背景 */
 }
