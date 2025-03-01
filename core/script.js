@@ -861,7 +861,12 @@ function openItemModal() {
     document.getElementById('DOC_UNIT_P').value = savedItemData.DOC_UNIT_P || '';
     document.getElementById('DOC_TOT_P').value = savedItemData.DOC_TOT_P || '';
     document.getElementById('TRADE_MARK').value = savedItemData.TRADE_MARK || '';
-    document.getElementById('CCC_CODE').value = savedItemData.CCC_CODE || '';
+
+    // 移除 CCC_CODE 高亮
+    const cccCodeInput = document.getElementById('CCC_CODE');
+    cccCodeInput.value = savedItemData.CCC_CODE || '';
+    cccCodeInput.classList.remove("highlight-ccc"); // 移除高亮
+
     document.getElementById('ST_MTD').value = savedItemData.ST_MTD || '';
     document.getElementById('NET_WT').value = savedItemData.NET_WT || '';        
     document.getElementById('ORG_COUNTRY').value = savedItemData.ORG_COUNTRY || '';
