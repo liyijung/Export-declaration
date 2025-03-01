@@ -255,12 +255,16 @@ function searchTariff(inputElement, isModal = false) {
                             const conditionS01 = exportRegList.includes("S01") && toCodePrefix === "KP";
                             const conditionS03 = exportRegList.includes("S03") && toCodePrefix === "IR";
                             const conditionS04 = exportRegList.includes("S04") && toCodePrefix === "IR";
+                            const condition445 = exportRegList.includes("445") && toCodePrefix === "JP";
+                            const condition446 = exportRegList.includes("446") && toCodePrefix === "JP";
+                            const condition447 = exportRegList.includes("447") && toCodePrefix === "JP";
                     
-                            // 若包含其他輸出規定 (不只是 S01、S03、S04)，也要高亮
-                            const hasOtherReg = exportRegList.some(reg => !["S01", "S03", "S04"].includes(reg));
+                            // 若包含其他輸出規定 (不只是 S01、S03、S04、445、446、447)，也要高亮
+                            const hasOtherReg = exportRegList.some(reg => !["S01", "S03", "S04", "445", "446", "447"].includes(reg));
                     
                             // 最終判斷是否高亮
-                            const shouldHighlight = exportRegList.length > 0 && (conditionS01 || conditionS03 || conditionS04 || hasOtherReg);
+                            const shouldHighlight = exportRegList.length > 0 && 
+                            (conditionS01 || conditionS03 || conditionS04 || condition445 || condition446 || condition447 || hasOtherReg);
                     
                             if (shouldHighlight) {
                                 cccCode.classList.add("highlight-ccc");
@@ -585,12 +589,16 @@ function updateFields(inputElement, item) {
         const conditionS01 = exportRegList.includes("S01") && toCodePrefix === "KP";
         const conditionS03 = exportRegList.includes("S03") && toCodePrefix === "IR";
         const conditionS04 = exportRegList.includes("S04") && toCodePrefix === "IR";
+        const condition445 = exportRegList.includes("445") && toCodePrefix === "JP";
+        const condition446 = exportRegList.includes("446") && toCodePrefix === "JP";
+        const condition447 = exportRegList.includes("447") && toCodePrefix === "JP";
 
-        // 若包含其他輸出規定 (不只是 S01、S03、S04)，也要高亮
-        const hasOtherReg = exportRegList.some(reg => !["S01", "S03", "S04"].includes(reg));
+        // 若包含其他輸出規定 (不只是 S01、S03、S04、445、446、447)，也要高亮
+        const hasOtherReg = exportRegList.some(reg => !["S01", "S03", "S04", "445", "446", "447"].includes(reg));
 
         // 最終判斷是否高亮
-        const shouldHighlight = exportRegList.length > 0 && (conditionS01 || conditionS03 || conditionS04 || hasOtherReg);
+        const shouldHighlight = exportRegList.length > 0 && 
+        (conditionS01 || conditionS03 || conditionS04 || condition445 || condition446 || condition447 || hasOtherReg);
 
         if (shouldHighlight) {
             cccCode.classList.add("highlight-ccc");
