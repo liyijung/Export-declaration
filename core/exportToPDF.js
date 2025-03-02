@@ -535,14 +535,14 @@ async function exportToPDF() {
 
             if (item.index === '*') {
                 const combinedDescription = descriptionText.join('\n');
-                const descriptionLines = doc.splitTextToSize(combinedDescription, 68);
+                const descriptionLines = doc.splitTextToSize(combinedDescription, 67);
                 descriptionLines.forEach(line => {
                     addUnderlinedText(doc, line, 14, descriptionTextY, lineHeight);
                     descriptionTextY += lineHeight;
                 });
             } else {
                 const combinedDescription = descriptionText.join('\n');
-                const descriptionLines = doc.splitTextToSize(combinedDescription, 68);
+                const descriptionLines = doc.splitTextToSize(combinedDescription, 67);
                 const statUnit = item.statUnit || ''; // 統計單位
 
                 // 根據統計數量和品名行數進行處理
