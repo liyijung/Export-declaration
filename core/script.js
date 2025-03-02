@@ -4045,7 +4045,7 @@ function updateRemark1FromImport() {
     updateRemark1(); // 確保REMARK1欄位值與checkbox狀態同步
 }
 
-// 添加事件監聽器
+// 匯出XML的功能(含檢查)
 document.addEventListener('DOMContentLoaded', function () {
     // 為 QTY 和 DOC_UNIT_P 輸入框添加事件監聽器
     document.querySelectorAll('.QTY, .DOC_UNIT_P').forEach(function (element) {
@@ -4123,7 +4123,6 @@ document.addEventListener('DOMContentLoaded', function () {
         console.log("COPY_QTY: " + copyQty.value);
     }
 
-    // 匯出XML的功能
     async function exportToXML() {
         updateVariables(); // 在匯出XML之前更新變數
 
@@ -4627,6 +4626,7 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
+        // 匯出XML(已完成檢查)
         const headerFields = [
             'LOT_NO', 'SHPR_BAN_ID', 'DCL_DOC_EXAM', 'SHPR_BONDED_ID', 
             'SHPR_C_NAME', 'SHPR_E_NAME', 'SHPR_C_ADDR', 'SHPR_E_ADDR', 'SHPR_TEL', 
