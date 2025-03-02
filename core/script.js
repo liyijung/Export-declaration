@@ -1973,7 +1973,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-// 匯入Excel文件的功能
+// 匯入Excel的功能
 function handleFile(event) {
     clearField(); // 清空輸入框內容
     
@@ -2310,6 +2310,7 @@ function checkRemarkOptions(remarks) {
     });
 }
 
+// 匯出Excel的功能
 function exportToExcel() {
     // 收集報單表頭數據
     const headerData = [
@@ -2508,7 +2509,7 @@ function exportToExcel() {
     XLSX.writeFile(workbook, exportFileName);
 }
 
-// 匯入XML文件的功能
+// 匯入XML的功能
 function importXML(event) {
     clearField(); // 清空輸入框內容
     
@@ -3497,7 +3498,7 @@ function calculateWeight() {
     }
 }
 
-// 開啟彈跳框
+// 開啟攤重彈跳框
 function openSpreadWeightModal(mode = "1") {
     const modal = document.getElementById("spread-weight-modal");
     const confirmButton = document.getElementById("confirm-button");
@@ -3529,7 +3530,7 @@ function openSpreadWeightModal(mode = "1") {
     trapFocus(modal);
 }
 
-// 關閉彈跳框
+// 關閉攤重彈跳框
 function closeSpreadWeightModal() {
     const modal = document.getElementById("spread-weight-modal");
 
@@ -3943,6 +3944,7 @@ document.addEventListener("keydown", function(event) {
     }
 });
 
+// 核算
 function calculate() {
     let messages = []; // 用來儲存所有提示訊息
 
@@ -4120,7 +4122,8 @@ document.addEventListener('DOMContentLoaded', function () {
         console.log("EXAM_TYPE: " + examType.value);
         console.log("COPY_QTY: " + copyQty.value);
     }
-    
+
+    // 匯出XML的功能
     async function exportToXML() {
         updateVariables(); // 在匯出XML之前更新變數
 
@@ -4819,7 +4822,7 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('export-to-xml').addEventListener('click', exportToXML);
 });
 
-// 讀取替換檔
+// 讀取替換檔(單位及稅則匹配)
 const csvUrl = 'replacements.csv';
 let replacements = {};
 Papa.parse(csvUrl, {
