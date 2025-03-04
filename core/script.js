@@ -3387,13 +3387,17 @@ function calculateAmounts() {
         decimalPlaces = 2;
     }
 
+    const exchangeRate = parseFloat(document.getElementById('exchange-rate').value) || 0;
+    const exchangeThreshold = exchangeRate > 0 ? Math.round((0.5 / exchangeRate) * 100) / 100 : 0;
+    const lowTotalPriceAlerts = []; // 存放低於門檻的提示
+
     const items = document.querySelectorAll('#item-container .item-row');
     if (items.length === 0) {
         return;
     }
 
     // 遍歷每個項次，先計算 DOC_TOT_P = QTY * DOC_UNIT_P
-    items.forEach((row) => {
+    items.forEach((row, index) => {
         // 使用 Decimal 取得數值
         const qty = new Decimal(row.querySelector('.QTY').value || 0); // 數量
         const unitPrice = new Decimal(row.querySelector('.DOC_UNIT_P').value || 0); // 單價
@@ -3404,6 +3408,14 @@ function calculateAmounts() {
     
         // 更新欄位值，保留指定小數位數
         totalPriceField.value = totalPrice.toFixed(decimalPlaces);
+
+        // 判斷 DOC_TOT_P 是否不足台幣 1 元
+        if (exchangeRate > 0 && totalPrice.lessThan(exchangeThreshold)) {
+            totalPriceField.style.backgroundColor = '#ffeb3b';
+            lowTotalPriceAlerts.push(`\n➤ No. ${index + 1} 項次金額 ${totalPrice.toFixed(decimalPlaces)} 不足台幣 1 元，請確認。`);
+        } else {
+            totalPriceField.style.backgroundColor = ''; // 清除背景色
+        }
     });
     
     // 計算各項次金額的加總
@@ -3491,7 +3503,7 @@ function calculateAmounts() {
     });
 
     // 合併顯示計算結果提示與關鍵字提示
-    const combinedAlerts = [calculationAlerts, ...keywordAlerts].join('\n');
+    const combinedAlerts = [calculationAlerts, ...keywordAlerts, ...lowTotalPriceAlerts].join('\n');
     if (combinedAlerts) {
         alert(combinedAlerts);
     }
