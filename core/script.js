@@ -893,14 +893,9 @@ function openItemModal() {
     document.getElementById('DOC_UNIT_P').value = savedItemData.DOC_UNIT_P || '';
     document.getElementById('DOC_TOT_P').value = savedItemData.DOC_TOT_P || '';
     document.getElementById('TRADE_MARK').value = savedItemData.TRADE_MARK || '';
-
-    // 移除 CCC_CODE 高亮
-    const cccCodeInput = document.getElementById('CCC_CODE');
-    cccCodeInput.value = savedItemData.CCC_CODE || '';
-    cccCodeInput.classList.remove("highlight-ccc"); // 移除高亮
-
+    document.getElementById('CCC_CODE').value = savedItemData.CCC_CODE || '';
     document.getElementById('ST_MTD').value = savedItemData.ST_MTD || '';
-    document.getElementById('NET_WT').value = savedItemData.NET_WT || '';        
+    document.getElementById('NET_WT').value = savedItemData.NET_WT || '';
     document.getElementById('ORG_COUNTRY').value = savedItemData.ORG_COUNTRY || '';
     document.getElementById('ORG_IMP_DCL_NO').value = savedItemData.ORG_IMP_DCL_NO || '';
     document.getElementById('ORG_IMP_DCL_NO_ITEM').value = savedItemData.ORG_IMP_DCL_NO_ITEM || '';
@@ -1153,6 +1148,10 @@ function closeItemModal() {
     const itemModal = document.getElementById('item-modal');
     itemModal.style.display = 'none';
 
+    // 還原 CCC_CODE 背景
+    const cccCodeInput = document.getElementById('CCC_CODE');
+    cccCodeInput.classList.remove('highlight-ccc');
+    
     // 移除事件監聽器
     document.removeEventListener('keydown', handleEscKeyForCancel);
     document.removeEventListener('keydown', handleAltSForSave);
