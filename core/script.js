@@ -805,6 +805,38 @@ function calculateAdditional() {
     });
 }
 
+// 幣別異動 => 清空 運費、保險費、應加費用
+document.getElementById('CURRENCY').addEventListener('input', function () {
+    clearFreightInsuranceAdditional();
+});
+
+// 總毛重異動 => 清空 運費
+document.getElementById('DCL_GW').addEventListener('input', function () {
+    clearFreight();
+});
+
+// 總金額異動 => 清空 保險費
+document.getElementById('CAL_IP_TOT_ITEM_AMT').addEventListener('input', function () {
+    clearInsurance();
+});
+
+// 清空運費、保險費、應加費用
+function clearFreightInsuranceAdditional() {
+    document.getElementById('FRT_AMT').value = '';
+    document.getElementById('INS_AMT').value = '';
+    document.getElementById('ADD_AMT').value = '';
+}
+
+// 清空運費
+function clearFreight() {
+    document.getElementById('FRT_AMT').value = '';
+}
+
+// 清空保險費
+function clearInsurance() {
+    document.getElementById('INS_AMT').value = '';
+}
+
 // 標記及貨櫃號碼 MADE IN
 function fillText(text) {
     const textarea = document.getElementById('DOC_MARKS_DESC');
