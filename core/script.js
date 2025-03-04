@@ -3409,8 +3409,10 @@ function calculateAmounts() {
         // 更新欄位值，保留指定小數位數
         totalPriceField.value = totalPrice.toFixed(decimalPlaces);
 
+        const itemNumber = row.querySelector('.item-number label')?.innerText.trim();
+
         // 判斷 DOC_TOT_P 是否不足台幣 1 元
-        if (exchangeRate > 0 && totalPrice.lessThan(exchangeThreshold)) {
+        if (exchangeRate > 0 && totalPrice.lessThan(exchangeThreshold) && itemNumber !== '*') {
             totalPriceField.style.backgroundColor = '#ffeb3b';
             lowTotalPriceAlerts.push(`\n➤ No. ${index + 1} 項次金額 ${totalPrice.toFixed(decimalPlaces)} 不足台幣 1 元，請確認。`);
         } else {
