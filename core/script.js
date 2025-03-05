@@ -6109,7 +6109,7 @@ function checkTotalAmount() {
                 isWarningShown = true; // 設定旗標避免重複顯示
                 iziToast.warning({
                     title: '注意',
-                    message: `（未向國際貿易署登記出進口廠商資料者，<br>
+                    message: `（個人或未向國際貿易署登記出進口廠商資料者，<br>
                     出口金額限制美金兩萬以下，且通關必驗，<br>
                     若金額超過美金兩萬需檢附輸出許可證才可出口）`,
                     position: 'center',
