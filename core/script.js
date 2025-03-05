@@ -352,8 +352,11 @@ function getMatchingFile(searchCode) {
 
 const noDataMessage = document.getElementById('noDataMessage'); // 錯誤訊息元素
 
+let hasNoData = false; // 預設有資料
+
 // 查找資料並自動帶入表單
 function searchData(showErrorMessage = false) {
+    hasNoData = false; // 每次查詢前重置
     let searchCode = document.getElementById('SHPR_BAN_ID').value.trim();
 
     // 如果輸入不滿 8 碼，清空資料並隱藏錯誤訊息，不進行匹配操作
@@ -377,6 +380,7 @@ function searchData(showErrorMessage = false) {
     } else if (/^[A-Za-z]\d{9}$/.test(searchCode)) {
         // 1碼英文+9碼數字
         dclDocExamInput.value = '174';
+        hasNoData = true;
     } else {
         dclDocExamInput.value = ''; // 格式不符則清空
     }
@@ -391,6 +395,8 @@ function searchData(showErrorMessage = false) {
                 const record = results.data.find(row => row['統一編號'] === searchCode);
 
                 if (record) {
+                    hasNoData = false; // 有資料
+
                     // 填入資料並隱藏錯誤訊息
                     document.getElementById('SHPR_C_NAME').value = record['廠商中文名稱'] || '';
                     document.getElementById('SHPR_E_NAME').value = record['廠商英文名稱'] || '';
@@ -406,6 +412,8 @@ function searchData(showErrorMessage = false) {
                         alert('該公司無進出口資格，請確認是否為非營業中。');
                     }
                 } else {
+                    hasNoData = true; // 查無資料
+
                     // 清空欄位
                     document.getElementById('SHPR_C_NAME').value = '';
                     document.getElementById('SHPR_E_NAME').value = '';
@@ -6084,6 +6092,30 @@ document.addEventListener("DOMContentLoaded", function () {
     totCtnInput.addEventListener("input", checkWeightLimit);
     dclGwInput.addEventListener("input", checkWeightLimit);
 });
+
+function checkTotalAmount() {
+    const totalAmountInput = document.getElementById('CAL_IP_TOT_ITEM_AMT');
+    const totalAmount = parseFloat(totalAmountInput.value) || 0;
+    const exchangeRate = parseFloat(document.getElementById('exchange-rate').value) || 0;
+    const usdExchangeRate = parseFloat(document.getElementById('usd-exchange-rate').value) || 0;
+
+    if (totalAmount > 0 && exchangeRate > 0 && usdExchangeRate > 0) {
+        const totalAmountInUSD = (totalAmount * exchangeRate) / usdExchangeRate;
+
+        // 查無資料且超過 USD 20,000 則特別警告
+        if (hasNoData && totalAmountInUSD > 20000) {
+            iziToast.warning({
+                title: '注意',
+                message: `（未向國際貿易署登記出進口廠商資料者，<br>
+                出口金額限制美金兩萬以下，且通關必驗，<br>
+                若金額超過美金兩萬需檢附輸出許可證才可出口）`,
+                position: 'center',
+                timeout: 5000,
+                backgroundColor: '#ffeb3b',
+            });
+        }
+    }
+}
 
 document.addEventListener("DOMContentLoaded", function () {
     setupCneeCNameWatcher();
