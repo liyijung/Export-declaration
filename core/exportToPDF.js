@@ -987,6 +987,7 @@ async function lookupExchangeRate() {
     const currencyInput = document.getElementById("CURRENCY");
     const errorSpan = document.getElementById("currency-error");
     const exchangeRateInput = document.getElementById("exchange-rate"); // 匯率欄位
+    const usdExchangeRateInput = document.getElementById("usd-exchange-rate"); // 美金匯率欄位
 
     // 取得輸入的幣別並轉換為大寫
     const currencyCode = currencyInput.value.trim().toUpperCase();
@@ -1005,6 +1006,13 @@ async function lookupExchangeRate() {
     var { Fymd, yearPart, CustomsDeclarationDate } = getCustomsDeclarationDate();
     const { startDate, endDate } = await fetchDateRange();
 
+    // 先處理 USD 匯率（不論輸入什麼幣別都要顯示）
+    if (exchangeRates["USD"]) {
+        usdExchangeRateInput.value = exchangeRates["USD"].buyValue;
+    } else {
+        usdExchangeRateInput.value = "";
+    }
+    
     // 檢查是否存在該幣別
     if (exchangeRates[currencyCode] && (Fymd >= startDate && Fymd <= endDate)) {
         const buyValue = exchangeRates[currencyCode].buyValue;
