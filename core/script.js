@@ -6093,6 +6093,8 @@ document.addEventListener("DOMContentLoaded", function () {
     dclGwInput.addEventListener("input", checkWeightLimit);
 });
 
+let isWarningShown = false; // 在全域範圍宣告變數
+
 function checkTotalAmount() {
     const totalAmountInput = document.getElementById('CAL_IP_TOT_ITEM_AMT');
     const totalAmount = parseFloat(totalAmountInput.value) || 0;
@@ -6102,18 +6104,27 @@ function checkTotalAmount() {
     if (totalAmount > 0 && exchangeRate > 0 && usdExchangeRate > 0) {
         const totalAmountInUSD = (totalAmount * exchangeRate) / usdExchangeRate;
 
-        // 查無資料且超過 USD 20,000 則特別警告
         if (hasNoData && totalAmountInUSD > 20000) {
-            iziToast.warning({
-                title: '注意',
-                message: `（未向國際貿易署登記出進口廠商資料者，<br>
-                出口金額限制美金兩萬以下，且通關必驗，<br>
-                若金額超過美金兩萬需檢附輸出許可證才可出口）`,
-                position: 'center',
-                timeout: 5000,
-                backgroundColor: '#ffeb3b',
-            });
+            if (!isWarningShown) {
+                isWarningShown = true; // 設定旗標避免重複顯示
+                iziToast.warning({
+                    title: '注意',
+                    message: `（未向國際貿易署登記出進口廠商資料者，<br>
+                    出口金額限制美金兩萬以下，且通關必驗，<br>
+                    若金額超過美金兩萬需檢附輸出許可證才可出口）`,
+                    position: 'center',
+                    timeout: 5000,
+                    backgroundColor: '#ffeb3b',
+                    onClosed: function() {
+                        isWarningShown = false; // 當提示關閉後重置旗標
+                    }
+                });
+            }
+        } else {
+            isWarningShown = false; // 若金額沒超過兩萬或其他情況重置旗標
         }
+    } else {
+        isWarningShown = false; // 若條件不符合重置旗標
     }
 }
 
