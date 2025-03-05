@@ -197,9 +197,15 @@
             <div class="header-group">
                 <label for="CURRENCY">幣別</label>
                 <input type="text" id="CURRENCY" name="CURRENCY" style="flex: 4 1 0;"
-                placeholder="範例：TWD、USD、CNY、JPY、EUR(英文代碼)" oninput="filterAlphabets(this); lookupExchangeRate();">
+                placeholder="範例：TWD、USD、CNY、JPY、EUR(英文代碼)" oninput="filterAlphabets(this); lookupExchangeRate();"
+                onblur="checkTotalAmount();">
                 <input type="text" id="exchange-rate" name="exchange-rate" tabindex="-1"
                 readonly placeholder="當旬匯率" style="flex: 1 1 0; max-width: 80px; text-align: center; border: 2px solid #ccc;">
+
+                <input type="text" id="usd-exchange-rate" name="usd-exchange-rate" tabindex="-1"
+                readonly placeholder="美金匯率" 
+                style="flex: 1 1 0; max-width: 80px; text-align: center; border: 2px solid #ccc; margin-left: 4px; display: none;">
+
                 <span id="currency-error" style="color: rgba(255, 0, 0, 0.634); display: none; margin-top: 4px;">
                     幣別錯誤，請重新輸入
                 </span>
@@ -207,7 +213,9 @@
             <div class="header-group">
                 <label for="CAL_IP_TOT_ITEM_AMT">總金額</label>
                 <input type="number" id="CAL_IP_TOT_ITEM_AMT" name="CAL_IP_TOT_ITEM_AMT"
-                placeholder="(若為台幣總金額不可有小數點、EXW 總金額不含應加費用)" onkeydown="preventArrowKeyAdjustment(event)">
+                placeholder="(若為台幣總金額不可有小數點、EXW 總金額不含應加費用)"
+                onblur="checkTotalAmount();"
+                onkeydown="preventArrowKeyAdjustment(event)">
             </div>
             <hr>
             <div class="header-group">
