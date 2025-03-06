@@ -6207,3 +6207,68 @@ function updateCneeLabelText() {
            : "買方英文名稱";
    }
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    /**
+     * 檢查元素是否可見（排除 display: none、visibility: hidden、hidden 屬性、.hidden 類別）
+     * @param {HTMLElement} el - 欲檢查的元素
+     * @returns {boolean} - 是否可見
+     */
+    function isVisible(el) {
+        return (
+            el.offsetParent !== null &&
+            !el.hasAttribute("hidden") &&
+            !el.classList.contains("hidden") &&
+            getComputedStyle(el).visibility !== "hidden"
+        );
+    }
+
+    /**
+     * 套用 Alt + 上下鍵 切換功能至指定區塊
+     * @param {string} containerSelector - 區塊的 CSS 選擇器
+     */
+    function enableAltArrowNavigation(containerSelector) {
+        // 取得區塊內所有 input 與 textarea 欄位
+        const focusableElements = Array.from(
+            document.querySelectorAll(`${containerSelector} input, ${containerSelector} textarea`)
+        );
+
+        // 對每個欄位綁定 Alt + 上下鍵事件
+        focusableElements.forEach((el, index) => {
+            el.addEventListener("keydown", (e) => {
+                // Alt + ↑：跳到上一個可見欄位
+                if (e.altKey && e.key === "ArrowUp") {
+                    e.preventDefault();
+                    let prevIndex = index - 1;
+                    while (prevIndex >= 0) {
+                        if (isVisible(focusableElements[prevIndex])) {
+                            focusableElements[prevIndex].focus();
+                            break;
+                        }
+                        prevIndex--;
+                    }
+                }
+                // Alt + ↓：跳到下一個可見欄位
+                else if (e.altKey && e.key === "ArrowDown") {
+                    e.preventDefault();
+                    let nextIndex = index + 1;
+                    while (nextIndex < focusableElements.length) {
+                        if (isVisible(focusableElements[nextIndex])) {
+                            focusableElements[nextIndex].focus();
+                            break;
+                        }
+                        nextIndex++;
+                    }
+                }
+            });
+        });
+    }
+
+    // 套用於出口報單表頭
+    enableAltArrowNavigation("#header");
+
+    // 套用於新增項次彈跳框
+    enableAltArrowNavigation("#item-modal");
+
+});
