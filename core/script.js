@@ -852,7 +852,7 @@ function fillText(text) {
     textarea.focus(); // 將焦點設回欄位
 }
 
-// 標記及貨櫃號碼及其它申報事項展開/折疊
+// 標記及貨櫃號碼及其它申報事項展開/收合
 function toggleRows(textareaId, button) {
     const textarea = document.getElementById(textareaId);
     const currentRows = textarea.rows;
@@ -862,7 +862,7 @@ function toggleRows(textareaId, button) {
         button.textContent = "展開";
     } else if (currentRows === 10) {
         textarea.rows = 15;
-        button.textContent = "折疊";
+        button.textContent = "收合";
     } else {
         textarea.rows = 5;
         button.textContent = "展開";
@@ -1136,14 +1136,14 @@ function clearAllFields() {
     document.getElementById('COPY_ITEM').selectedIndex = 0;
 }
 
-// 彈跳框品名 展開/折疊
+// 彈跳框品名 展開/收合
 function toggleDescriptionRows() {
     const textarea = document.getElementById("DESCRIPTION");
     const button = event.target; // 取得觸發此事件的按鈕
 
     if (textarea.rows === 5) {
         textarea.rows = 10;
-        button.textContent = "折疊";
+        button.textContent = "收合";
     } else {
         textarea.rows = 5;
         button.textContent = "展開";
@@ -2871,7 +2871,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 let textareaCounter = 0;
-let allExpanded = false; // 用於跟蹤所有文本域的展開/折疊狀態
+let allExpanded = false; // 用於跟蹤所有文本域的展開/收合狀態
 
 // 創建文本域
 function createTextareaField(name, value) {
@@ -2898,7 +2898,7 @@ function toggleAllTextareas() {
     });
 
     // 更新按鈕文本根據行數
-    const buttonText = newRows === 1 ? '展開全部品名' : (newRows === 5 ? '展開全部至 10 行' : '折疊全部至 1 行');
+    const buttonText = newRows === 1 ? '展開全部品名' : (newRows === 5 ? '展開全部至 10 行' : '收合全部至 1 行');
     document.getElementById('toggle-all-btn').textContent = buttonText;
 }
 
