@@ -5313,6 +5313,61 @@ function validateDclDocType() {
     const stMtdCondition1 = ["02", "04", "06", "2L", "2R", "7M", "1A", "94", "95"];
     const stMtdCondition2 = ["81", "82", "8B", "8C", "9N", "8A", "8D", "92", "99", "9M"];
     let validationErrors = new Set(); // 使用 Set 儲存錯誤訊息，避免重複
+    let validationWarnings = new Set(); // 額外提示用
+
+    const stMtdGroups = {}; // 用來分組
+
+    const rows = document.querySelectorAll("#item-container .item-row");
+    rows.forEach(item => {
+        const stMtdValue = item.querySelector(".ST_MTD")?.value.trim().toUpperCase();
+        const isItemChecked = item.querySelector(".ITEM_NO")?.checked;
+        if (stMtdValue && !isItemChecked) {
+            const match = stMtdValue.match(/^(\d+)([A-Z]?)$/);
+            if (match) {
+                const numPart = parseInt(match[1], 10);
+                const letterPart = match[2] || "";
+                if (!stMtdGroups[letterPart]) {
+                    stMtdGroups[letterPart] = [];
+                }
+                stMtdGroups[letterPart].push(numPart);
+            }
+        }
+    });
+
+    // 檢查每個字母分組是否連號
+    Object.entries(stMtdGroups).forEach(([letter, numbers]) => {
+        if (numbers.length > 1) {
+            let tempSequence = [numbers[0]];
+            let resultSequences = [];
+    
+            for (let i = 1; i < numbers.length; i++) {
+                const current = numbers[i];
+                const prev = tempSequence[tempSequence.length - 1];
+    
+                if (current === prev || current === prev + 1) {
+                    if (current !== prev) {
+                        tempSequence.push(current);
+                    }
+                } else {
+                    if (tempSequence.length >= 2) {
+                        resultSequences.push([...tempSequence]);
+                    }
+                    tempSequence = [current];
+                }
+            }
+    
+            if (tempSequence.length >= 2) {
+                resultSequences.push([...tempSequence]);
+            }
+    
+            resultSequences.forEach(seq => {
+                const combinedValues = seq
+                    .map(n => (letter === "" ? n.toString().padStart(2, '0') : n.toString()) + letter)
+                    .join(", ");
+                validationWarnings.add(`※ 統計方式連號段落：${combinedValues}`);
+            });
+        }
+    });
 
     // 檢查 G5 或 G3 的條件
     if (["G5", "G3"].includes(dclDocType)) {
@@ -5526,9 +5581,16 @@ function validateDclDocType() {
     }
 
     // 若有任何錯誤，集中提示
-    if (validationErrors.size > 0) {
-        alert(Array.from(validationErrors).join("\n"));
-        return false; // 返回 false，表示有錯誤
+    if (validationErrors.size > 0 || validationWarnings.size > 0) {
+        const messages = [];
+        if (validationErrors.size > 0) {
+            messages.push("❌ 錯誤：\n" + Array.from(validationErrors).join("\n"));
+        }
+        if (validationWarnings.size > 0) {
+            messages.push("⚠️ 提示：\n" + Array.from(validationWarnings).join("\n"));
+        }
+        alert(messages.join("\n\n"));
+        return validationErrors.size === 0;
     }
 
     return true; // 返回 true，表示檢查通過
