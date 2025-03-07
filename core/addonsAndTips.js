@@ -962,6 +962,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         input.style.position = 'relative';
+        input.parentNode.style.position = 'relative';
 
         // 建立清除按鈕
         const clearBtn = document.createElement('button');
