@@ -990,7 +990,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const borderRight = parseInt(inputStyle.borderRightWidth) || 0;
             clearBtn.style.right = `${paddingRight + borderRight + 5}px`;
             clearBtn.style.top = `${input.offsetTop + (input.offsetHeight / 2) - (clearBtn.offsetHeight / 2)}px`;
-            clearBtn.style.left = `${input.offsetLeft + input.offsetWidth - clearBtn.offsetWidth - paddingRight - borderRight - 20}px`;
+
+            const hasDropdown = ['DCL_DOC_TYPE', 'TERMS_SALES', 'TRADE_MARK', 'ST_MTD'].includes(input.id);
+
+            if (hasDropdown) {
+                clearBtn.style.left = `${input.offsetLeft + input.offsetWidth - clearBtn.offsetWidth - paddingRight - borderRight - 20}px`;
+            } else {
+                clearBtn.style.left = `${input.offsetLeft + input.offsetWidth - clearBtn.offsetWidth - paddingRight - borderRight}px`;
+            }
         };
 
         positionButton();
