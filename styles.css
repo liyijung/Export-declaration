@@ -942,3 +942,18 @@ button {
 .highlight-ccc {
     background-color: #ffeb3b; /* 黃色背景 */
 }
+
+.input-error {
+    position: absolute;
+    right: 110px;
+    top: 5px;
+    color: rgba(255, 0, 0, 0.8);
+    background-color: #fff;
+    padding: 2px 6px;
+    font-size: 12px;
+    border: 1px solid rgba(255, 0, 0, 0.5);
+    border-radius: 4px;
+    display: none;
+    z-index: 1000;
+    white-space: nowrap;
+}
