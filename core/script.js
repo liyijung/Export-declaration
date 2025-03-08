@@ -3499,37 +3499,37 @@ function calculateAmounts() {
 
     // 定義關鍵字分類及對應的提示訊息
     const keywordMessages = {
-        quantityCheck: ["PCE", "PCS"], // 檢查數量單位
-        statisticsCheck: ["樣品", "SAMPLE"], // 檢查統計方式
         additionalCosts: ["COST", "FEE", "CHARGE", "FREIGHT", "INSURANCE", "DISCOUNT", "SHIPPING", "POSTAGE"], // 其他費用
+    };
+
+    // 事先轉換關鍵字為正則表達式，確保大寫比對，並且使用 `\b` 限制完整單詞
+    const keywordRegex = {};
+    Object.keys(keywordMessages).forEach(category => {
+        keywordRegex[category] = new RegExp(`\\b(${keywordMessages[category].join('|')})\\b`, 'gi');
+    });
+
+    // 定義提示訊息對應表
+    const categoryMessages = {
+        additionalCosts: "請確認是否為其他費用。",
     };
 
     // 檢查項次內的描述欄位是否包含指定的關鍵字
     let keywordAlerts = [];
     items.forEach((row, index) => {
-        const description = row.querySelector('.DESCRIPTION').value.toUpperCase(); // 將描述轉為大寫
+        const description = row.querySelector('.DESCRIPTION').value; // 保持原始大小寫
+        let matchedKeywords = [];
 
         Object.keys(keywordMessages).forEach(category => {
-            keywordMessages[category].forEach(keyword => {
-                if (description.includes(keyword)) {
-                    let message = "";
-                    switch (category) {
-                        case "quantityCheck":
-                            message = "請確認數量單位是否合理。";
-                            break;
-                        case "statisticsCheck":
-                            message = "請檢查統計方式是否正確。";
-                            break;
-                        case "additionalCosts":
-                            message = "請確認是否為其他費用。";
-                            break;
-                    }
-                    keywordAlerts.push(`➤ No. ${index + 1} 內含關鍵字 "${keyword}"，${message}`);
-                }
-            });
+            const matches = description.match(keywordRegex[category]); // 找出所有匹配的關鍵字
+            if (matches) {
+                matchedKeywords.push(...matches);
+                keywordAlerts.push(`➤ No. ${index + 1} 內含關鍵字 "${matches.join(', ')}"，${categoryMessages[category]}`);
+            }
         });
 
-        calculateAmountsForRow(row, decimalPlaces);
+        if (matchedKeywords.length === 0) {
+            calculateAmountsForRow(row, decimalPlaces);
+        }
     });
 
     // 合併顯示計算結果提示與關鍵字提示
