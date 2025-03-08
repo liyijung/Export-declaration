@@ -3422,7 +3422,7 @@ function calculateAmounts() {
         // 判斷 DOC_TOT_P 是否不足台幣 1 元
         if (exchangeRate > 0 && totalPrice.lessThan(exchangeThreshold) && itemNumber !== '*') {
             totalPriceField.style.backgroundColor = '#ffeb3b';
-            lowTotalPriceAlerts.push(`\n➤ No. ${index + 1} 項次金額 ${totalPrice.toFixed(decimalPlaces)} 不足台幣 1 元，請確認。`);
+            lowTotalPriceAlerts.push(`➤ No. ${index + 1} 項次金額 ${totalPrice.toFixed(decimalPlaces)} 不足台幣 1 元，請確認。`);
         } else {
             totalPriceField.style.backgroundColor = ''; // 清除背景色
         }
@@ -3489,12 +3489,12 @@ function calculateAmounts() {
     let calculationAlerts = "";
     if (calculatedTotalAmount.toFixed(2) === totalDocumentAmount.toFixed(2)) {
         if (termsSales === 'EXW' && !isEXWValid) {
-            calculationAlerts = `【${termsSales} 計算公式：${explanation}】\n系統計算的總金額為：${currency} ${calculatedTotalAmount.toFixed(decimalPlaces)}\n----------------------------------------------------\n報單表頭的總金額為：${currency} ${totalDocumentAmount.toFixed(decimalPlaces)}\n【錯誤！運費、保險費或應減費用不應有值，應加費用需有值】\n各項次金額的加總為：${currency} ${totalItemsAmount.toFixed(decimalPlaces)}`;
+            calculationAlerts = `【${termsSales} 計算公式：${explanation}】\n系統計算的總金額為：${currency} ${calculatedTotalAmount.toFixed(decimalPlaces)}\n----------------------------------------------------\n報單表頭的總金額為：${currency} ${totalDocumentAmount.toFixed(decimalPlaces)}\n【錯誤！運費、保險費或應減費用不應有值，應加費用需有值】\n各項次金額的加總為：${currency} ${totalItemsAmount.toFixed(decimalPlaces)}\n`;
         } else {
-            calculationAlerts = `【${termsSales} 計算公式：${explanation}】\n系統計算的總金額為：${currency} ${calculatedTotalAmount.toFixed(decimalPlaces)}\n----------------------------------------------------\n報單表頭的總金額為：${currency} ${totalDocumentAmount.toFixed(decimalPlaces)}【正確】\n各項次金額的加總為：${currency} ${totalItemsAmount.toFixed(decimalPlaces)}`;
+            calculationAlerts = `【${termsSales} 計算公式：${explanation}】\n系統計算的總金額為：${currency} ${calculatedTotalAmount.toFixed(decimalPlaces)}\n----------------------------------------------------\n報單表頭的總金額為：${currency} ${totalDocumentAmount.toFixed(decimalPlaces)}【正確】\n各項次金額的加總為：${currency} ${totalItemsAmount.toFixed(decimalPlaces)}\n`;
         }
     } else {
-        calculationAlerts = `【${termsSales} 計算公式：${explanation}】\n系統計算的總金額為：${currency} ${calculatedTotalAmount.toFixed(decimalPlaces)}\n----------------------------------------------------\n報單表頭的總金額為：${currency} ${totalDocumentAmount.toFixed(decimalPlaces)}【錯誤！】\n各項次金額的加總為：${currency} ${totalItemsAmount.toFixed(decimalPlaces)}`;
+        calculationAlerts = `【${termsSales} 計算公式：${explanation}】\n系統計算的總金額為：${currency} ${calculatedTotalAmount.toFixed(decimalPlaces)}\n----------------------------------------------------\n報單表頭的總金額為：${currency} ${totalDocumentAmount.toFixed(decimalPlaces)}【錯誤！】\n各項次金額的加總為：${currency} ${totalItemsAmount.toFixed(decimalPlaces)}\n`;
     }
 
     // 定義關鍵字分類及對應的提示訊息
@@ -3524,7 +3524,7 @@ function calculateAmounts() {
                             message = "請確認是否為其他費用。";
                             break;
                     }
-                    keywordAlerts.push(`\n➤ No. ${index + 1} 內含關鍵字 "${keyword}"，${message}`);
+                    keywordAlerts.push(`➤ No. ${index + 1} 內含關鍵字 "${keyword}"，${message}`);
                 }
             });
         });
