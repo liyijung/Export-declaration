@@ -3485,12 +3485,8 @@ function calculateAmounts() {
             return;
     }
 
-    // 檢查 DESCRIPTION 欄位是否包含指定的關鍵字
-    const keywords = ["COST", "FEE", "CHARGE", "FREIGHT", "INSURANCE", "DISCOUNT", "SHIPPING", "POSTAGE"];
-    let keywordAlerts = [];
-    let calculationAlerts = "";
-
     // 檢查計算結果是否與表頭金額相同
+    let calculationAlerts = "";
     if (calculatedTotalAmount.toFixed(2) === totalDocumentAmount.toFixed(2)) {
         if (termsSales === 'EXW' && !isEXWValid) {
             calculationAlerts = `【${termsSales} 計算公式：${explanation}】\n系統計算的總金額為：${currency} ${calculatedTotalAmount.toFixed(decimalPlaces)}\n----------------------------------------------------\n報單表頭的總金額為：${currency} ${totalDocumentAmount.toFixed(decimalPlaces)}\n【錯誤！運費、保險費或應減費用不應有值，應加費用需有值】\n各項次金額的加總為：${currency} ${totalItemsAmount.toFixed(decimalPlaces)}`;
@@ -3501,14 +3497,38 @@ function calculateAmounts() {
         calculationAlerts = `【${termsSales} 計算公式：${explanation}】\n系統計算的總金額為：${currency} ${calculatedTotalAmount.toFixed(decimalPlaces)}\n----------------------------------------------------\n報單表頭的總金額為：${currency} ${totalDocumentAmount.toFixed(decimalPlaces)}【錯誤！】\n各項次金額的加總為：${currency} ${totalItemsAmount.toFixed(decimalPlaces)}`;
     }
 
+    // 定義關鍵字分類及對應的提示訊息
+    const keywordMessages = {
+        quantityCheck: ["PCE", "PCS"], // 檢查數量單位
+        statisticsCheck: ["樣品", "SAMPLE"], // 檢查統計方式
+        additionalCosts: ["COST", "FEE", "CHARGE", "FREIGHT", "INSURANCE", "DISCOUNT", "SHIPPING", "POSTAGE"], // 其他費用
+    };
+
     // 檢查項次內的描述欄位是否包含指定的關鍵字
+    let keywordAlerts = [];
     items.forEach((row, index) => {
         const description = row.querySelector('.DESCRIPTION').value.toUpperCase(); // 將描述轉為大寫
-        keywords.forEach(keyword => {
-            if (description.includes(keyword)) {
-                keywordAlerts.push(`\n➤ No. ${index + 1} 內含關鍵字 "${keyword}"，請確認是否為其他費用。`);
-            }
+
+        Object.keys(keywordMessages).forEach(category => {
+            keywordMessages[category].forEach(keyword => {
+                if (description.includes(keyword)) {
+                    let message = "";
+                    switch (category) {
+                        case "quantityCheck":
+                            message = "請確認數量單位是否合理。";
+                            break;
+                        case "statisticsCheck":
+                            message = "請檢查統計方式是否正確。";
+                            break;
+                        case "additionalCosts":
+                            message = "請確認是否為其他費用。";
+                            break;
+                    }
+                    keywordAlerts.push(`\n➤ No. ${index + 1} 內含關鍵字 "${keyword}"，${message}`);
+                }
+            });
         });
+
         calculateAmountsForRow(row, decimalPlaces);
     });
 
