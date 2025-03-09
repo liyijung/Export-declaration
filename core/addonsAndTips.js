@@ -278,15 +278,23 @@ function validateDclDocType() {
     const dclDocType = document.getElementById('DCL_DOC_TYPE').value.trim().toUpperCase();
     const stMtdCondition1 = ["02", "04", "06", "2L", "2R", "7M", "1A", "94", "95"];
     const stMtdCondition2 = ["81", "82", "8B", "8C", "9N", "8A", "8D", "92", "99", "9M"];
-    let validationErrors = new Set(); // 使用 Set 儲存錯誤訊息，避免重複
-    let validationWarnings = new Set(); // 額外提示用
+    let validationErrors = new Set(); // 錯誤訊息，使用 Set 儲存錯誤訊息，避免重複
+    let validationWarnings = new Set(); // 提示訊息（不影響匯出）
 
-    const stMtdGroups = {}; // 用來分組
+    const stMtdGroups = {}; // 統計方式連號分組
+    let hasSampleKeyword = false; // 樣品關鍵字是否出現
+    let hasQuantityKeyword = false; // 數量關鍵字是否出現
+
+    const sampleRegex = /\b(SAMPLE|F\.?O\.?C\.?|FREE\s+OF\s+CHARGE)\b/i;
+    const quantityRegex = /\b(PCE|PCS)\b/i;
 
     const rows = document.querySelectorAll("#item-container .item-row");
     rows.forEach(item => {
+        const description = item.querySelector(".DESCRIPTION")?.value.trim().toUpperCase();
         const stMtdValue = item.querySelector(".ST_MTD")?.value.trim().toUpperCase();
         const isItemChecked = item.querySelector(".ITEM_NO")?.checked;
+
+        // 統計方式連號檢查
         if (stMtdValue && !isItemChecked) {
             const match = stMtdValue.match(/^(\d+)([A-Z]?)$/);
             if (match) {
@@ -298,9 +306,29 @@ function validateDclDocType() {
                 stMtdGroups[letterPart].push(numPart);
             }
         }
+
+        // 檢查 `DESCRIPTION` 是否包含樣品相關關鍵字
+        if (description && sampleRegex.test(description)) {
+            hasSampleKeyword = true;
+        }
+
+        // 檢查 `DESCRIPTION` 是否包含 PCE、PCS
+        if (description && quantityRegex.test(description)) {
+            hasQuantityKeyword = true;
+        }
     });
 
-    // 檢查每個字母分組是否連號
+    // 提示樣品相關
+    if (hasSampleKeyword) {
+        validationWarnings.add("※ 品名中包含樣品 (SAMPLE / FOC / FREE OF CHARGE)，請確認統計方式是否正確");
+    }
+
+    // 提示數量單位相關
+    if (hasQuantityKeyword) {
+        validationWarnings.add("※ 品名中包含 PCE 或 PCS，請確認『數量單位』或『統計數量單位』是否合理");
+    }
+
+    // 檢查統計方式連號
     Object.entries(stMtdGroups).forEach(([letter, numbers]) => {
         if (numbers.length > 1) {
             let tempSequence = [numbers[0]];
@@ -546,20 +574,20 @@ function validateDclDocType() {
         }
     }
 
-    // 若有任何錯誤，集中提示
+    // 提示與警告
     if (validationErrors.size > 0 || validationWarnings.size > 0) {
         const messages = [];
         if (validationErrors.size > 0) {
             messages.push("❌ 錯誤：\n" + Array.from(validationErrors).join("\n"));
         }
         if (validationWarnings.size > 0) {
-            messages.push("⚠️ 提示：\n" + Array.from(validationWarnings).join("\n"));
+            messages.push("⚠️ 提示（不中止匯出）：\n" + Array.from(validationWarnings).join("\n"));
         }
         alert(messages.join("\n\n"));
         return validationErrors.size === 0;
     }
 
-    return true; // 返回 true，表示檢查通過
+    return true; // 無錯誤，允許繼續處理
 }
 
 // 長期委任字號：
