@@ -646,8 +646,17 @@ document.addEventListener('DOMContentLoaded', function () {
             let docMarksDesc = document.getElementById('DOC_MARKS_DESC')?.value.trim().toUpperCase() || '';
             let docOtrDesc = document.getElementById('DOC_OTR_DESC')?.value.trim().toUpperCase() || '';
         
-            if (!docMarksDesc.includes('MADE IN') && !docOtrDesc.includes('MADE IN')) {
-                alert("⚠️ 提示：\n『標記及貨櫃號碼』 或 『其它申報事項』 未註明產地\n（不中止匯出）");
+            // 檢查所有項次的 DESCRIPTION 是否包含 "MADE IN"（但忽略 ITEM_NO 為 "*" 的項次）
+            let hasMadeInInDescription = Array.from(document.querySelectorAll("#item-container .item-row"))
+                .some(item => {
+                    const itemNo = item.querySelector(".item-number label")?.textContent.trim(); // 取得 ITEM_NO
+                    const description = item.querySelector(".DESCRIPTION")?.value.trim().toUpperCase();
+                    return itemNo !== "*" && description.includes("MADE IN");
+                });
+        
+            // 只有當 DOC_MARKS_DESC、DOC_OTR_DESC 和符合條件的 DESCRIPTION 欄位都沒有 "MADE IN" 時，才顯示提醒
+            if (!docMarksDesc.includes('MADE IN') && !docOtrDesc.includes('MADE IN') && !hasMadeInInDescription) {
+                alert("⚠️ 提示（不中止匯出）：\n『標記及貨櫃號碼』或『其它申報事項』未註明產地，請確認是否應補充");
             }
         }
         
