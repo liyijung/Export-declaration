@@ -227,6 +227,19 @@ function restrictAltKeyCombos(event) {
 // 監聽鍵盤按下事件
 document.addEventListener('keydown', restrictAltKeyCombos);
 
+document.addEventListener("scroll", function () {
+    let scrollLeft = window.scrollX || document.documentElement.scrollLeft;
+    let maxScroll = document.documentElement.scrollWidth - window.innerWidth; // 最大可滾動範圍
+    let viewportWidth = window.innerWidth; // 可視範圍寬度
+    let buttonWidth = document.querySelector(".add-buttons").offsetWidth; // 取得按鍵區塊寬度
+    let maxLeft = viewportWidth - buttonWidth; // 按鍵最大可移動範圍
+
+    let moveRatio = scrollLeft / maxScroll; // 計算滾動比例
+    let newLeft = moveRatio * maxLeft; // **按比例計算 `left` 值**
+
+    document.querySelector(".add-buttons").style.left = `${newLeft}px`;
+});
+
 // 獲取文字區塊與彈跳框元素
 const shortcutHelpBlock = document.getElementById('shortcut-help-block');
 const shortcutHelpModal = document.getElementById('shortcut-help-modal');
