@@ -856,6 +856,9 @@ document.addEventListener('DOMContentLoaded', function () {
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+
+        // 成功匯出 XML 後，清空 calculation-status
+        document.getElementById('calculation-status').value = "";
     }
 
     // 為輸出XML按鈕添加事件監聽器
