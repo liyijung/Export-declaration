@@ -989,7 +989,8 @@ document.addEventListener('DOMContentLoaded', () => {
             input.id === 'Maker') {
             return;
         }
-        
+
+        input.dataset.prevValue = ""; // 初始化記錄原始值
         input.style.position = 'relative';
         input.parentNode.style.position = 'relative';
 
@@ -1041,6 +1042,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // 事件處理：點擊清除按鈕
         clearBtn.addEventListener('click', (event) => {
             event.preventDefault();  // 阻止預設表單提交行為
+            input.dataset.prevValue = input.value; // **記錄清除前的值**
             input.value = '';
             input.focus();
             clearBtn.style.display = 'none';
@@ -1085,6 +1087,26 @@ document.addEventListener('DOMContentLoaded', () => {
                         currencyError.style.display = "none";
                     }
                     break;
+            }
+        });
+
+        // 監聽 `Alt + Backspace`，復原內容並手動觸發 `oninput` 和 `onblur`
+        input.addEventListener('keydown', (event) => {
+            if (event.altKey && event.key === 'Backspace') {
+                event.preventDefault();
+                if (input.dataset.prevValue !== "") {
+                    input.value = input.dataset.prevValue;
+                    input.dataset.prevValue = ""; // **清除記錄，避免多次撤銷**
+                    
+                    // **手動觸發 `input` 和 `blur` 事件**
+                    input.dispatchEvent(new Event('input', { bubbles: true }));
+                    input.dispatchEvent(new Event('change', { bubbles: true }));
+                    input.dispatchEvent(new Event('blur', { bubbles: true }));
+
+                    // **顯示清除按鈕**
+                    clearBtn.style.display = 'block';
+                    positionButton(); // 確保按鈕位置正確
+                }
             }
         });
 
