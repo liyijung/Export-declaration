@@ -90,7 +90,7 @@ body {
 }
 
 .add-buttons {
-    position: sticky; /* 保持在滾動過程中固定 */
+    position: sticky !important; /* 保持在滾動過程中固定 */
     left: 0;
     margin-right: 30px;
 }
