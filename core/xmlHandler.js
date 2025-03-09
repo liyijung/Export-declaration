@@ -659,7 +659,10 @@ document.addEventListener('DOMContentLoaded', function () {
         
             // 只有當 DOC_MARKS_DESC、DOC_OTR_DESC 和符合條件的 DESCRIPTION 欄位都沒有 "MADE IN" 時，才顯示提醒
             if (!docMarksDesc.includes('MADE IN') && !docOtrDesc.includes('MADE IN') && !hasMadeInInDescription) {
-                alert("⚠️ 提示（不中止匯出）：\n『標記及貨櫃號碼』或『其它申報事項』未註明產地，請確認是否應補充");
+                const shprBanIdElement = document.getElementById('SHPR_BAN_ID');
+                if (shprBanIdElement && shprBanIdElement.value !== '23570158') {
+                    alert("⚠️ 提示（不中止匯出）：\n『標記及貨櫃號碼』或『其它申報事項』未註明產地，請確認是否應補充");
+                }
             }
         }
         
