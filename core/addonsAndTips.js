@@ -282,6 +282,7 @@ function validateDclDocType() {
     let validationWarnings = new Set(); // 提示訊息（不影響匯出）
 
     const sampleRegex = /(?:\b|\d+PCE|\d+PCS)(SAMPLE|F\.?O\.?C\.?|FREE\s+OF\s+CHARGE|樣品|样品)/i;
+    let sampleMatches = new Set(); // 用來存儲實際匹配到的樣品關鍵字
     let hasSampleKeyword = false; // 樣品提醒標記
     const stMtdGroups = {}; // 用來儲存統計方式的連號分組
 
@@ -297,6 +298,10 @@ function validateDclDocType() {
         if (description && sampleRegex.test(description)) {
             if (stMtdValue !== "04" && stMtdValue !== "82") {
                 hasSampleKeyword = true; // 只有 ST_MTD 不是 04 或 82 才提醒
+                const match = description.match(sampleRegex);
+                if (match) {
+                    sampleMatches.add(match[1]); // 只加入匹配到的關鍵字
+                }
             }
         }
 
@@ -316,7 +321,7 @@ function validateDclDocType() {
 
     // 先執行樣品
     if (hasSampleKeyword) {
-        validationWarnings.add("※ 品名中包含樣品 (SAMPLE / FOC / FREE OF CHARGE / 樣品 / 样品)，請確認統計方式是否正確");
+        validationWarnings.add(`※ 品名中包含 "${Array.from(sampleMatches).join(", ")}"，請確認統計方式是否正確`);
     }
 
     // 最後執行統計方式連號檢查
