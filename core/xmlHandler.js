@@ -642,6 +642,15 @@ document.addEventListener('DOMContentLoaded', function () {
             return; // 中止匯出過程
         }
 
+        if (['G5', 'G3'].includes(dclDocType)) {
+            let docMarksDesc = document.getElementById('DOC_MARKS_DESC')?.value.trim().toUpperCase() || '';
+            let docOtrDesc = document.getElementById('DOC_OTR_DESC')?.value.trim().toUpperCase() || '';
+        
+            if (!docMarksDesc.includes('MADE IN') && !docOtrDesc.includes('MADE IN')) {
+                alert("⚠️ 提示：\n『標記及貨櫃號碼』 或 『其它申報事項』 未註明產地\n（不中止匯出）");
+            }
+        }
+        
         // 取得核算狀態
         if (document.getElementById('calculation-status')?.value.trim() !== "已執行") {
             alert("請先執行核算後再匯出 XML！");
