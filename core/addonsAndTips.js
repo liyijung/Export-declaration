@@ -285,7 +285,7 @@ function validateDclDocType() {
     let hasSampleKeyword = false; // 樣品關鍵字是否出現
     let hasQuantityKeyword = false; // 數量關鍵字是否出現
 
-    const sampleRegex = /\b(SAMPLE|F\.?O\.?C\.?|FREE\s+OF\s+CHARGE)\b/i;
+    const sampleRegex = /\b(樣品|样品|SAMPLE|F\.?O\.?C\.?|FREE\s+OF\s+CHARGE)\b/i;
     const quantityRegex = /\b(PCE|PCS)\b/i;
 
     const rows = document.querySelectorAll("#item-container .item-row");
