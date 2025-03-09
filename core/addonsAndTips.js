@@ -282,10 +282,7 @@ function validateDclDocType() {
     let validationWarnings = new Set(); // 提示訊息（不影響匯出）
 
     const sampleRegex = /(?:\b|\d+PCE|\d+PCS)(SAMPLE|F\.?O\.?C\.?|FREE\s+OF\s+CHARGE|樣品|样品)/i;
-    const quantityRegex = /\b(\d+)\s*(PCE|PCS)\b/i;
-
     let hasSampleKeyword = false; // 樣品提醒標記
-    let hasQuantityIssue = false; // 數量單位提醒標記
     const stMtdGroups = {}; // 用來儲存統計方式的連號分組
 
     const rows = document.querySelectorAll("#item-container .item-row");
@@ -295,31 +292,15 @@ function validateDclDocType() {
 
         const description = item.querySelector(".DESCRIPTION")?.value.trim().toUpperCase();
         const stMtdValue = item.querySelector(".ST_MTD")?.value.trim().toUpperCase();
-        const docUmValue = item.querySelector(".DOC_UM")?.value.trim().toUpperCase();
-        const stUmValue = item.querySelector(".ST_UM")?.value.trim().toUpperCase();
-        const qtyValue = parseFloat(item.querySelector(".QTY")?.value.trim() || "0");
-        const stQtyValue = parseFloat(item.querySelector(".ST_QTY")?.value.trim() || "0");
 
-        // **檢查 `DESCRIPTION` 是否包含樣品關鍵字**
+        // 檢查 `DESCRIPTION` 是否包含樣品關鍵字
         if (description && sampleRegex.test(description)) {
             if (stMtdValue !== "04" && stMtdValue !== "82") {
                 hasSampleKeyword = true; // 只有 ST_MTD 不是 04 或 82 才提醒
             }
         }
 
-        // **檢查 `DESCRIPTION` 是否包含 PCE、PCS（允許數字開頭）**
-        const quantityMatch = description?.match(quantityRegex);
-        if (quantityMatch) {
-            const matchedQty = parseFloat(quantityMatch[1]); // 解析出數量
-            const matchedUnit = quantityMatch[2].toUpperCase(); // PCE or PCS
-
-            // 只要 QTY 或 ST_QTY 其中一個符合條件，就不提醒
-            if (!((docUmValue === "PCE" && qtyValue === matchedQty) || (stUmValue === "PCE" && stQtyValue === matchedQty))) {
-                hasQuantityIssue = true; // 只要有一個項次數量不符，就觸發提醒
-            }
-        }
-
-        // **統計方式連號檢查（最後才處理）**
+        // 統計方式連號檢查（最後才處理）
         if (stMtdValue) {
             const match = stMtdValue.match(/^(\d+)([A-Z]?)$/);
             if (match) {
@@ -333,15 +314,12 @@ function validateDclDocType() {
         }
     });
 
-    // **先執行樣品 & 數量單位提醒**
+    // 先執行樣品
     if (hasSampleKeyword) {
         validationWarnings.add("※ 品名中包含樣品 (SAMPLE / FOC / FREE OF CHARGE / 樣品 / 样品)，請確認統計方式是否正確");
     }
-    if (hasQuantityIssue) {
-        validationWarnings.add("※ 品名中包含 PCE 或 PCS，請確認『數量單位』或『統計數量單位』是否合理");
-    }
 
-    // **最後執行統計方式連號檢查**
+    // 最後執行統計方式連號檢查
     Object.entries(stMtdGroups).forEach(([letter, numbers]) => {
         if (numbers.length > 1) {
             let tempSequence = [numbers[0]];
@@ -373,7 +351,7 @@ function validateDclDocType() {
                 const combinedValues = seq
                     .map(n => (letter === "" ? n.toString().padStart(2, '0') : n.toString()) + letter)
                     .join(", ");
-                validationWarnings.add(`※ 統計方式連號段落：${combinedValues}`);
+                validationWarnings.add(`※ 統計方式連號：${combinedValues}`);
             });
         }
     });
