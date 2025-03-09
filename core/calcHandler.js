@@ -10,11 +10,30 @@ function calculateQuantities() {
 
     let unitQuantities = {};
     let stUnitQuantities = {};
+    let quantityAlerts = new Set();
+    const quantityRegex = /\b(\d+)\s*(PCE|PCS)\b/i;
 
     items.forEach(row => {
-        // 計算 DOC_UM 和 QTY
+        const itemNo = row.querySelector(".item-number label")?.textContent.trim();
+        if (itemNo === "*") return; // 忽略 ITEM_NO 為 "*" 的項次
+
+        const description = row.querySelector(".DESCRIPTION")?.value.trim().toUpperCase();
         const unit = row.querySelector('.DOC_UM').value;
         const quantityElement = row.querySelector('.QTY');
+        const stUnit = row.querySelector('.ST_UM').value;
+        const stQuantityElement = row.querySelector('.ST_QTY');
+
+        // **檢查品名是否含有 PCE 或 PCS 且需符合條件才提示**
+        const quantityMatch = description.match(quantityRegex);
+        if (quantityMatch) {
+            const matchedQty = parseFloat(quantityMatch[1]);
+            if (!((unit === "PCE" && parseFloat(quantityElement.value) === matchedQty) || 
+                  (stUnit === "PCE" && parseFloat(stQuantityElement.value) === matchedQty))) {
+                quantityAlerts.add("➤ 品名內含 PCE 或 PCS，請確認『數量單位』或『統計數量單位』是否合理");
+            }
+        }
+
+        // 計算 DOC_UM 和 QTY
         if (quantityElement && quantityElement.value.trim() !== '') {
             const quantity = parseFloat(quantityElement.value);
             if (!isNaN(quantity)) {
@@ -26,8 +45,6 @@ function calculateQuantities() {
         }
 
         // 計算 ST_UM 和 ST_QTY
-        const stUnit = row.querySelector('.ST_UM').value;
-        const stQuantityElement = row.querySelector('.ST_QTY');
         if (stQuantityElement && stQuantityElement.value.trim() !== '') {
             const stQuantity = parseFloat(stQuantityElement.value);
             if (!isNaN(stQuantity)) {
@@ -45,21 +62,23 @@ function calculateQuantities() {
         unitQuantitiesString += `\n${parseFloat(totalQuantity.toFixed(6))} ${unit}`;
     }
 
-    let stUnitQuantitiesString = '統計用數量單位加總為：';
-    let hasStUnitQuantities = false;
-    for (const [unit, stTotalQuantity] of Object.entries(stUnitQuantities)) {
-        if (stTotalQuantity > 0) {
-            hasStUnitQuantities = true;
+    let message = unitQuantitiesString;
+
+    // 若統計用數量單位有數據，則加入顯示
+    if (Object.keys(stUnitQuantities).length > 0) {
+        let stUnitQuantitiesString = '統計用數量單位加總為：';
+        for (const [unit, stTotalQuantity] of Object.entries(stUnitQuantities)) {
+            stUnitQuantitiesString += `\n(${parseFloat(stTotalQuantity.toFixed(6))} ${unit})`;
         }
-        stUnitQuantitiesString += `\n(${parseFloat(stTotalQuantity.toFixed(6))} ${unit})`;
+        message += `\n\n${stUnitQuantitiesString}`;
     }
 
-    // 顯示數量總計
-    if (hasStUnitQuantities) {
-        alert(`${unitQuantitiesString}\n\n${stUnitQuantitiesString}`);
-    } else {
-        alert(unitQuantitiesString);
+    // 顯示品名內含 PCE 或 PCS 的提醒
+    if (quantityAlerts.size > 0) {
+        message += `\n\n${Array.from(quantityAlerts).join('\n')}`;
     }
+
+    alert(message);
 }
 
 // 金額核算
