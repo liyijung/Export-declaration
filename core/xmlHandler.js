@@ -1,6 +1,9 @@
 // 匯入XML的功能
 function importXML(event) {
     clearField(); // 清空輸入框內容
+
+    // 清空 calculation-status
+    document.getElementById('calculation-status').value = "";
     
     const file = event.target.files[0];
     if (file) {
@@ -856,9 +859,6 @@ document.addEventListener('DOMContentLoaded', function () {
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
-
-        // 成功匯出 XML 後，清空 calculation-status
-        document.getElementById('calculation-status').value = "";
     }
 
     // 為輸出XML按鈕添加事件監聽器
