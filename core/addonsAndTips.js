@@ -290,6 +290,9 @@ function validateDclDocType() {
 
     const rows = document.querySelectorAll("#item-container .item-row");
     rows.forEach(item => {
+        const itemNo = item.querySelector(".item-number label")?.textContent.trim(); // 取得 ITEM_NO
+        if (itemNo === "*") return; // 忽略 ITEM_NO 為 "*" 的項次
+        
         const description = item.querySelector(".DESCRIPTION")?.value.trim().toUpperCase();
         const stMtdValue = item.querySelector(".ST_MTD")?.value.trim().toUpperCase();
         const isItemChecked = item.querySelector(".ITEM_NO")?.checked;
