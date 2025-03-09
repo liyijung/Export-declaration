@@ -2,6 +2,9 @@
 function importToExcel(event) {
     clearField(); // 清空輸入框內容
     
+    // 清空 calculation-status
+    document.getElementById('calculation-status').value = "";
+    
     const file = event.target.files[0];
     
     // 提取檔名中【】內的文字
