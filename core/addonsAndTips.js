@@ -756,6 +756,9 @@ function thingsToNote() {
             // 顯示彈跳框
             closeExistingPopup();
             showPopup(finalContent);
+        } else {
+            // 如果沒有符合條件的備註，則關閉彈跳框
+            closeExistingPopup();
         }
     });
 };
