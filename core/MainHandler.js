@@ -380,12 +380,7 @@ function searchData(showErrorMessage = false) {
 
     // 如果輸入不滿 8 碼，清空資料並隱藏錯誤訊息，不進行匹配操作
     if (searchCode.length < 8) {
-        document.getElementById('DCL_DOC_EXAM').value = '';
-        document.getElementById('SHPR_C_NAME').value = '';
-        document.getElementById('SHPR_E_NAME').value = '';
-        document.getElementById('SHPR_C_ADDR').value = '';
-        document.getElementById('SHPR_E_ADDR').value = '';
-        document.getElementById('SHPR_TEL').value = '';
+        clearSHPRFields();
         noDataMessage.style.display = 'none'; // 隱藏錯誤訊息
         return;
     }
@@ -432,19 +427,64 @@ function searchData(showErrorMessage = false) {
                     }
                 } else {
                     hasNoData = true; // 查無資料
-
-                    // 清空欄位
-                    document.getElementById('SHPR_C_NAME').value = '';
-                    document.getElementById('SHPR_E_NAME').value = '';
-                    document.getElementById('SHPR_C_ADDR').value = '';
-                    document.getElementById('SHPR_E_ADDR').value = '';
-                    document.getElementById('SHPR_TEL').value = '';
+                    clearSHPRFields(); // 清空欄位
                     noDataMessage.style.display = 'inline'; // 顯示"查無資料"訊息
+                    
+                    // 查找出口備註是否有 "未向國際貿易署登記出進口廠商資料者"
+                    checkUnregisteredCompany(searchCode);
                 }
             }
         });
     }
     thingsToNote(); // 出口備註
+}
+
+// **清空 SHPR 欄位**
+function clearSHPRFields() {
+    document.getElementById('SHPR_C_NAME').value = '';
+    document.getElementById('SHPR_E_NAME').value = '';
+    document.getElementById('SHPR_C_ADDR').value = '';
+    document.getElementById('SHPR_E_ADDR').value = '';
+    document.getElementById('SHPR_TEL').value = '';
+}
+
+// **查找未登記公司**
+function checkUnregisteredCompany(SHPR_BAN_ID) {
+    fetch('./thingsToNote.xlsx')
+        .then(response => {
+            if (!response.ok) throw new Error('無法讀取出口備註');
+            return response.arrayBuffer();
+        })
+        .then(data => {
+            const workbook = XLSX.read(data, { type: 'array' });
+            const sheet = workbook.Sheets[workbook.SheetNames[0]];
+            const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+
+            let matchedData = null;
+
+            // 遍歷 rows，查找 SHPR_BAN_ID
+            rows.forEach(row => {
+                if (row[1] && row[1].toString().trim() === SHPR_BAN_ID) {
+                    matchedData = row[2]; // 找到與 SHPR_BAN_ID 匹配的 row[2] 資料
+                }
+            });
+
+            // **若有找到 `SHPR_BAN_ID`，進一步檢查 row[2] 是否包含 "未向國際貿易署登記出進口廠商資料者"**
+            if (matchedData && matchedData.includes('未向國際貿易署登記出進口廠商資料者')) {
+                const extractedData = matchedData.split('\n').map(line => line.trim()).filter(line => line.length > 0);
+
+                if (extractedData.length >= 2) {
+                    document.getElementById('SHPR_C_NAME').value = extractedData[0].split(' ')[1] || '';
+                    document.getElementById('SHPR_E_NAME').value = extractedData[0].split(' ')[1] || '';
+                    document.getElementById('SHPR_C_ADDR').value = extractedData[1] || '';
+                    document.getElementById('SHPR_E_ADDR').value = extractedData[1] || '';
+                }
+            }
+        })
+        .catch(error => {
+            console.error('讀取出口備註時發生錯誤:', error);
+            alert('讀取出口備註失敗');
+        });
 }
 
 // 出口人統一編號搜尋
