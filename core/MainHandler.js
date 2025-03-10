@@ -240,7 +240,7 @@ document.addEventListener("scroll", function () {
         // 如果按鍵區塊超出可視範圍，按比例移動
         let maxLeft = viewportWidth - buttonWidth; // 最大可移動範圍
         let moveRatio = scrollLeft / maxScroll; // 計算滾動比例
-        let newLeft = moveRatio * maxLeft; // **按比例計算 `left` 值**
+        let newLeft = moveRatio * maxLeft; // 按比例計算 `left` 值
 
         document.querySelector(".add-buttons").style.left = `${newLeft}px`;
     }
@@ -439,7 +439,7 @@ function searchData(showErrorMessage = false) {
     thingsToNote(); // 出口備註
 }
 
-// **清空 SHPR 欄位**
+// 清空 SHPR 欄位
 function clearSHPRFields() {
     document.getElementById('SHPR_C_NAME').value = '';
     document.getElementById('SHPR_E_NAME').value = '';
@@ -448,7 +448,7 @@ function clearSHPRFields() {
     document.getElementById('SHPR_TEL').value = '';
 }
 
-// **查找未登記公司**
+// 查找未登記公司
 function checkUnregisteredCompany(SHPR_BAN_ID) {
     fetch('./thingsToNote.xlsx')
         .then(response => {
@@ -462,22 +462,34 @@ function checkUnregisteredCompany(SHPR_BAN_ID) {
 
             let matchedData = null;
 
-            // 遍歷 rows，查找 SHPR_BAN_ID
+            // 遍歷 rows，查找 `SHPR_BAN_ID`
             rows.forEach(row => {
                 if (row[1] && row[1].toString().trim() === SHPR_BAN_ID) {
-                    matchedData = row[2]; // 找到與 SHPR_BAN_ID 匹配的 row[2] 資料
+                    matchedData = row[2]; // 找到與 SHPR_BAN_ID 匹配的 `row[2]`
                 }
             });
 
-            // **若有找到 `SHPR_BAN_ID`，進一步檢查 row[2] 是否包含 "未向國際貿易署登記出進口廠商資料者"**
+            // 若有找到 `SHPR_BAN_ID`，進一步檢查 `row[2]` 是否包含 "未向國際貿易署登記出進口廠商資料者"
             if (matchedData && matchedData.includes('未向國際貿易署登記出進口廠商資料者')) {
                 const extractedData = matchedData.split('\n').map(line => line.trim()).filter(line => line.length > 0);
 
-                if (extractedData.length >= 2) {
-                    document.getElementById('SHPR_C_NAME').value = extractedData[0].split(' ')[1] || '';
-                    document.getElementById('SHPR_E_NAME').value = extractedData[0].split(' ')[1] || '';
-                    document.getElementById('SHPR_C_ADDR').value = extractedData[1] || '';
-                    document.getElementById('SHPR_E_ADDR').value = extractedData[1] || '';
+                // 尋找包含 `SHPR_BAN_ID` 的行
+                const companyLine = extractedData.find(line => line.includes(SHPR_BAN_ID));
+
+                if (companyLine) {
+                    // 確保 `companyLine` 可以分割
+                    let companyInfo = companyLine.split(SHPR_BAN_ID);
+                    let companyName = companyInfo.length > 1 ? companyInfo[1].trim() : '';
+
+                    if (companyName) {
+                        document.getElementById('SHPR_C_NAME').value = companyName;
+                        document.getElementById('SHPR_E_NAME').value = companyName;
+                    }
+
+                    if (extractedData.length >= 2) {
+                        document.getElementById('SHPR_C_ADDR').value = extractedData[1] || '';
+                        document.getElementById('SHPR_E_ADDR').value = extractedData[1] || '';
+                    }
                 }
             }
         })
