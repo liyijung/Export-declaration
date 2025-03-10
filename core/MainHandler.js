@@ -490,6 +490,12 @@ function checkUnregisteredCompany(SHPR_BAN_ID) {
                         document.getElementById('SHPR_C_ADDR').value = extractedData[1] || '';
                         document.getElementById('SHPR_E_ADDR').value = extractedData[1] || '';
                     }
+
+                    // 隱藏 "查無資料" 訊息
+                    const noDataMessage = document.getElementById('noDataMessage');
+                    if (noDataMessage) {
+                        noDataMessage.style.display = 'none';
+                    }
                 }
             }
         })
