@@ -1087,13 +1087,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         currencyError.style.display = "none";
                     }
                     break;
-                case 'DCL_DOC_TYPE':
-                    // 當清除 `DCL_DOC_TYPE` 時，取消勾選 `general-warehouse`
-                    const generalWarehouseCheckbox = document.getElementById('general-warehouse');
-                    if (generalWarehouseCheckbox) {
-                        generalWarehouseCheckbox.checked = false;
-                    }
-                    break;
             }
         });
 
