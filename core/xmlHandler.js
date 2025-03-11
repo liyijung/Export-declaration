@@ -714,6 +714,16 @@ document.addEventListener('DOMContentLoaded', function () {
         // 添加 PROC_NO 欄位
         xmlContent += `  <fields>\n    <field_name>PROC_NO</field_name>\n    <field_value>${maker}</field_value>\n  </fields>\n`;
 
+        // 取得 FILE_NO 對應的報關日期資訊
+        var { Fymd, yearPart, CustomsDeclarationDate } = getCustomsDeclarationDate();
+
+        // 檢查「一般倉」是否被勾選，若勾選則加入對應的 XML 欄位
+        if (document.getElementById("general-warehouse").checked) {
+            xmlContent += `  <fields>\n    <field_name>DCL_DOC_NO</field_name>\n    <field_value>CW/  /${yearPart}/696/</field_value>\n  </fields>\n`;
+            xmlContent += `  <fields>\n    <field_name>TRANS_VIA</field_name>\n    <field_value>41</field_value>\n  </fields>\n`;
+            xmlContent += `  <fields>\n    <field_name>WAREHOUSE</field_name>\n    <field_value>C2036</field_value>\n  </fields>\n`;
+        }
+
         // 取得 SHPR_BAN_ID 欄位的值
         const shprBanIdElement = document.getElementById('SHPR_BAN_ID');
         const shprBanId = shprBanIdElement ? shprBanIdElement.value.trim() : '';
@@ -721,16 +731,6 @@ document.addEventListener('DOMContentLoaded', function () {
         // 添加 SHPR_AEO 欄位
         const shprAeo = await getAeoNumber(shprBanId);  // 呼叫共用函數
         xmlContent += `  <fields>\n    <field_name>SHPR_AEO</field_name>\n    <field_value>${shprAeo}</field_value>\n  </fields>\n`;
-
-        // 取得 FILE_NO 對應的報關日期資訊
-        var { Fymd, yearPart, CustomsDeclarationDate } = getCustomsDeclarationDate();
-        
-        // 檢查「一般倉」是否被勾選，若勾選則加入對應的 XML 欄位
-        if (document.getElementById("general-warehouse").checked) {
-            xmlContent += `  <fields>\n    <field_name>DCL_DOC_NO</field_name>\n    <field_value>CW/  /${yearPart}/696/</field_value>\n  </fields>\n`;
-            xmlContent += `  <fields>\n    <field_name>TRANS_VIA</field_name>\n    <field_value>41</field_value>\n  </fields>\n`;
-            xmlContent += `  <fields>\n    <field_name>WAREHOUSE</field_name>\n    <field_value>C2036</field_value>\n  </fields>\n`;
-        }
 
         headerFields.forEach(id => {
             let element = document.getElementById(id);
