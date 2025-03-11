@@ -98,9 +98,12 @@ async function exportToPDF() {
         var OrderNumber = generalWarehouseChecked ? `CW/  /${yearPart}/696/` : `CX/  /${yearPart}/696/`;
         doc.text(OrderNumber, 75, 18.5)
         
+        // 生成對應的條碼數據
+        const barcodeText = generalWarehouseChecked ? `CW ${yearPart} 696` : `CX ${yearPart} 696`;
+
         // 添加二維條碼
         const barcodeCanvas = document.createElement('canvas');
-        JsBarcode(barcodeCanvas, 'CX ' + yearPart + '696', {
+        JsBarcode(barcodeCanvas, barcodeText, {
             format: 'CODE128',
             width: 3,           // 調整寬度，讓條碼變長（默認為 2）
             height: 40,         // 可以適當調低高度來強調長度
