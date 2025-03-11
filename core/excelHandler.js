@@ -98,6 +98,14 @@ function importToExcel(event) {
                     }
 
                     element.value = value;
+
+                    // 當 DCL_DOC_TYPE 為 'F5' 時，自動勾選一般倉
+                    if (id === 'DCL_DOC_TYPE' && value === 'F5') {
+                        const generalWarehouseCheckbox = document.getElementById('general-warehouse');
+                        if (generalWarehouseCheckbox) {
+                            generalWarehouseCheckbox.checked = true;
+                        }
+                    }
                 }
             }
         });
