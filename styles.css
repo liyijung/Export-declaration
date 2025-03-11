@@ -957,3 +957,7 @@ button {
     z-index: 1000;
     white-space: nowrap;
 }
+
+#general-warehouse:checked + span {
+    color: red;
+}
