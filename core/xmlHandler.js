@@ -25,6 +25,7 @@ function importXML(event) {
 
             // 解析表頭資料
             const headerFields = xmlDoc.getElementsByTagName("head")[0].getElementsByTagName("fields");
+            let warehouseChecked = false; // 預設不勾選「一般倉」
             Array.from(headerFields).forEach(field => {
                 const fieldName = field.getElementsByTagName("field_name")[0].textContent;
                 const fieldValue = unescapeXml(field.getElementsByTagName("field_value")[0].textContent);
@@ -32,7 +33,15 @@ function importXML(event) {
                 if (element) {
                     element.value = fieldValue;
                 }
+
+                // 若 WAREHOUSE 欄位為 C2036，則勾選「一般倉」
+                if (fieldName === "WAREHOUSE" && fieldValue === "C2036") {
+                    warehouseChecked = true;
+                }
             });
+
+            // 更新「一般倉」勾選框的狀態
+            document.getElementById("general-warehouse").checked = warehouseChecked;
 
             searchData(false); // 出口人統一編號搜尋
             lookupExchangeRate(); // 當旬匯率
@@ -696,6 +705,7 @@ document.addEventListener('DOMContentLoaded', function () {
             'ORG_DCL_NO', 'ORG_DCL_NO_ITEM', 'EXP_NO', 'EXP_SEQ_NO', 
             'WIDE', 'WIDE_UM', 'LENGT_', 'LENGTH_UM', 'ST_QTY' ,'ST_UM',
         ];
+        
         let xmlContent = '<?xml version="1.0" encoding="UTF-8"?>\n<Root>\n  <sys_code>GICCDS</sys_code>\n<head>\n  <head_table_name>DOC_HEAD</head_table_name>\n';
 
         // 取得製單人員輸入值，若為空則預設為 ''
@@ -711,6 +721,15 @@ document.addEventListener('DOMContentLoaded', function () {
         // 添加 SHPR_AEO 欄位
         const shprAeo = await getAeoNumber(shprBanId);  // 呼叫共用函數
         xmlContent += `  <fields>\n    <field_name>SHPR_AEO</field_name>\n    <field_value>${shprAeo}</field_value>\n  </fields>\n`;
+
+        // 取得 FILE_NO 對應的報關日期資訊
+        var { Fymd, yearPart, CustomsDeclarationDate } = getCustomsDeclarationDate();
+        
+        // 檢查「一般倉」是否被勾選，若勾選則加入對應的 XML 欄位
+        if (document.getElementById("general-warehouse").checked) {
+            xmlContent += `  <fields>\n    <field_name>DCL_DOC_NO</field_name>\n    <field_value>CW/  /${yearPart}/696/</field_value>\n  </fields>\n`;
+            xmlContent += `  <fields>\n    <field_name>WAREHOUSE</field_name>\n    <field_value>C2036</field_value>\n  </fields>\n`;
+        }
 
         headerFields.forEach(id => {
             let element = document.getElementById(id);
