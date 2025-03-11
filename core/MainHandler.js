@@ -1800,8 +1800,6 @@ document.addEventListener("DOMContentLoaded", function () {
         dclDocTypeElement.addEventListener("input", function () {
             if (dclDocTypeElement.value.trim().toUpperCase() === "F5") {
                 generalWarehouseCheckbox.checked = true;
-            } else {
-                generalWarehouseCheckbox.checked = false;
             }
         });
 
