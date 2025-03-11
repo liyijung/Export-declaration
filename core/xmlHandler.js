@@ -719,8 +719,8 @@ document.addEventListener('DOMContentLoaded', function () {
         // 取得 FILE_NO 對應的報關日期資訊
         var { Fymd, yearPart, CustomsDeclarationDate } = getCustomsDeclarationDate();
 
-        // 檢查「一般倉」是否被勾選，若勾選則加入對應的 XML 欄位
-        if (document.getElementById("general-warehouse").checked) {
+        // 檢查「一般倉」是否被勾選，若勾選 或 報單類別為 F5 則加入對應的 XML 欄位
+        if (document.getElementById("general-warehouse").checked || dclDocType === 'F5') {
             xmlContent += `  <fields>\n    <field_name>DCL_DOC_NO</field_name>\n    <field_value>CW/  /${yearPart}/696/</field_value>\n  </fields>\n`;
             xmlContent += `  <fields>\n    <field_name>TRANS_VIA</field_name>\n    <field_value>41</field_value>\n  </fields>\n`;
             if (dclDocType === 'F5') {
