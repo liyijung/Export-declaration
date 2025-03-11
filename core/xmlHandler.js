@@ -728,6 +728,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // 檢查「一般倉」是否被勾選，若勾選則加入對應的 XML 欄位
         if (document.getElementById("general-warehouse").checked) {
             xmlContent += `  <fields>\n    <field_name>DCL_DOC_NO</field_name>\n    <field_value>CW/  /${yearPart}/696/</field_value>\n  </fields>\n`;
+            xmlContent += `  <fields>\n    <field_name>TRANS_VIA</field_name>\n    <field_value>41</field_value>\n  </fields>\n`;
             xmlContent += `  <fields>\n    <field_name>WAREHOUSE</field_name>\n    <field_value>C2036</field_value>\n  </fields>\n`;
         }
 
