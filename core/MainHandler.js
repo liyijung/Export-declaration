@@ -1796,11 +1796,19 @@ document.addEventListener("DOMContentLoaded", function () {
     const generalWarehouseCheckbox = document.getElementById("general-warehouse");
 
     if (dclDocTypeElement && generalWarehouseCheckbox) {
+        // 監聽 DCL_DOC_TYPE 變更，當為 F5 時自動勾選一般倉
         dclDocTypeElement.addEventListener("input", function () {
             if (dclDocTypeElement.value.trim().toUpperCase() === "F5") {
                 generalWarehouseCheckbox.checked = true;
             } else {
                 generalWarehouseCheckbox.checked = false;
+            }
+        });
+
+        // 監聽一般倉勾選框變更，若取消勾選且 DCL_DOC_TYPE 為 F5，則清空 DCL_DOC_TYPE
+        generalWarehouseCheckbox.addEventListener("change", function () {
+            if (!generalWarehouseCheckbox.checked && dclDocTypeElement.value.trim().toUpperCase() === "F5") {
+                dclDocTypeElement.value = "";
             }
         });
     }
