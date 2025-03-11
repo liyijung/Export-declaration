@@ -1790,3 +1790,18 @@ document.getElementById('copy_3').addEventListener('change', function () {
         document.getElementById('copy_3_e').checked = false; // 取消 copy_3_e 的勾選
     }
 });
+
+document.addEventListener("DOMContentLoaded", function () {
+    const dclDocTypeElement = document.getElementById("DCL_DOC_TYPE");
+    const generalWarehouseCheckbox = document.getElementById("general-warehouse");
+
+    if (dclDocTypeElement && generalWarehouseCheckbox) {
+        dclDocTypeElement.addEventListener("input", function () {
+            if (dclDocTypeElement.value.trim().toUpperCase() === "F5") {
+                generalWarehouseCheckbox.checked = true;
+            } else {
+                generalWarehouseCheckbox.checked = false;
+            }
+        });
+    }
+});
