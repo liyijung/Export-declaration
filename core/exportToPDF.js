@@ -90,10 +90,12 @@ async function exportToPDF() {
         const dclDocTypeText = optionElement ? optionElement.text : '';
         doc.text(`${dclDocTypeValue}${dclDocTypeText}`, 103, 10)
 
+        const generalWarehouseChecked = document.getElementById('general-warehouse').checked;
+
         var { Fymd, yearPart, CustomsDeclarationDate } = getCustomsDeclarationDate();
 
         // 報單號碼
-        var OrderNumber = 'CX/  /' + yearPart + '/696/';
+        var OrderNumber = generalWarehouseChecked ? `CW/  /${yearPart}/696/` : `CX/  /${yearPart}/696/`;
         doc.text(OrderNumber, 75, 18.5)
         
         // 添加二維條碼
@@ -126,8 +128,13 @@ async function exportToPDF() {
             doc.text('N', 106, 44);
         }
 
-        doc.text(`42`, 136, 44) // 運輸方式
-        doc.text(`C2051 遠雄第四快遞貨棧`, 30, 53.5)
+        if (generalWarehouseChecked) {
+            doc.text(`41`, 136, 44) // 運輸方式(一般倉)
+            doc.text(`C2036 遠雄出口貨棧`, 30, 53.5)
+        } else {
+            doc.text(`42`, 136, 44) // 運輸方式(快遞倉)
+            doc.text(`C2051 遠雄第四快遞貨棧`, 30, 53.5)
+        }
 
         // 獲取並格式化數字值
         const calIpTotItemAmt = formatNumberValue('CAL_IP_TOT_ITEM_AMT');
