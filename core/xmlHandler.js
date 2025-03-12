@@ -739,7 +739,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // 檢查「一般倉」是否被勾選 或 報單類別為 F5，則加入對應的 XML 欄位        
         if (document.getElementById("general-warehouse").checked || dclDocType === 'F5') {
-            let dclDocNo = `CW/  /${yearPart}/696/`; // 預設報單號碼
+            let dclDocNo = `CW/  /${yearPart}/696 /`; // 預設報單號碼
 
             // 如果「報單號碼後5碼」有值，則追加
             if (dclDocNoLast5) {
