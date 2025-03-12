@@ -90,16 +90,25 @@ async function exportToPDF() {
         const dclDocTypeText = optionElement ? optionElement.text : '';
         doc.text(`${dclDocTypeValue}${dclDocTypeText}`, 103, 10)
 
+        // 檢查是否勾選一般倉
         const generalWarehouseChecked = document.getElementById('general-warehouse').checked;
 
         var { Fymd, yearPart, CustomsDeclarationDate } = getCustomsDeclarationDate();
 
-        // 報單號碼
-        var OrderNumber = generalWarehouseChecked ? `CW/  /${yearPart}/696/` : `CX/  /${yearPart}/696/`;
+        // 取得報單後5碼
+        const docNoLast5 = document.getElementById("DOC_DOC_NO_Last5").value.trim().toUpperCase();
+        
+        // 設定 OrderNumber
+        var OrderNumber = generalWarehouseChecked 
+            ? `CW/  /${yearPart}/696/` + (docNoLast5 ? docNoLast5 : '') // 若有5碼則加上
+            : `CX/  /${yearPart}/696/`;
+        
         doc.text(OrderNumber, 75, 18.5)
         
         // 生成對應的條碼數據
-        const barcodeText = generalWarehouseChecked ? `CW ${yearPart} 696` : `CX ${yearPart} 696`;
+        const barcodeText = generalWarehouseChecked 
+            ? `CW ${yearPart} 696` + (docNoLast5 ? ` ${docNoLast5}` : '') // 若有5碼則加上
+            : `CX ${yearPart} 696`;
 
         // 添加二維條碼
         const barcodeCanvas = document.createElement('canvas');
