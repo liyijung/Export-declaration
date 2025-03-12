@@ -117,6 +117,8 @@ async function exportToPDF() {
             width: 3,           // 調整寬度，讓條碼變長（默認為 2）
             height: 40,         // 可以適當調低高度來強調長度
             displayValue: true  // 數字顯示
+            fontSize: 18,       // 放大條碼數字
+            fontOptions: "bold", // 加粗條碼數字
         });
         const barcodeImgData = barcodeCanvas.toDataURL('image/jpeg');
         doc.addImage(barcodeImgData, 'JPEG', 118, 12, 40, 10); // 調整圖像的顯示寬度
