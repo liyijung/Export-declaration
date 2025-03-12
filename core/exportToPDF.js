@@ -100,15 +100,15 @@ async function exportToPDF() {
         
         // 設定 OrderNumber
         var OrderNumber = generalWarehouseChecked 
-            ? `CW/　/${yearPart}/696/` + (docNoLast5 ? docNoLast5 : '') // 若有5碼則加上
-            : `CX/　/${yearPart}/696/`;
+            ? `CW/  /${yearPart}/696/` + (docNoLast5 ? docNoLast5 : '') // 若有5碼則加上
+            : `CX/  /${yearPart}/696/`;
         
         doc.text(OrderNumber, 75, 18.5)
         
         // 生成對應的條碼數據
         const barcodeText = generalWarehouseChecked 
-            ? `CW　${yearPart}696` + (docNoLast5 ? `${docNoLast5}` : '') // 若有5碼則加上
-            : `CX　${yearPart}696`;
+            ? `CW  ${yearPart}696` + (docNoLast5 ? `${docNoLast5}` : '') // 若有5碼則加上
+            : `CX  ${yearPart}696`;
 
         // 添加二維條碼
         const barcodeCanvas = document.createElement('canvas');
