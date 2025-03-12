@@ -38,9 +38,9 @@ function importXML(event) {
                     element.value = fieldValue;
                 }
 
-                // 若 WAREHOUSE 欄位為 C2036 或 C2038，則勾選「一般倉」
+                // 若 WAREHOUSE 欄位為 C2036 或 C2040，則勾選「一般倉」
                 if (fieldName === "WAREHOUSE") {
-                    if (fieldValue === "C2036" || fieldValue === "C2038") {
+                    if (fieldValue === "C2036" || fieldValue === "C2040") {
                         warehouseChecked = true;
                     }
                 }
@@ -728,7 +728,7 @@ document.addEventListener('DOMContentLoaded', function () {
             xmlContent += `  <fields>\n    <field_name>DCL_DOC_NO</field_name>\n    <field_value>CW/  /${yearPart}/696/</field_value>\n  </fields>\n`;
             xmlContent += `  <fields>\n    <field_name>TRANS_VIA</field_name>\n    <field_value>41</field_value>\n  </fields>\n`;
             if (dclDocType === 'F5') {
-                xmlContent += `  <fields>\n    <field_name>WAREHOUSE</field_name>\n    <field_value>C2038</field_value>\n  </fields>\n`;
+                xmlContent += `  <fields>\n    <field_name>WAREHOUSE</field_name>\n    <field_value>C2040</field_value>\n  </fields>\n`;
             } else {
                 xmlContent += `  <fields>\n    <field_name>WAREHOUSE</field_name>\n    <field_value>C2036</field_value>\n  </fields>\n`;
             }
