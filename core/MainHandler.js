@@ -356,17 +356,15 @@ let csvFiles = [
     { range: ['9'], file: 'companyData9.csv' },
 ];
 
+const GITHUB_RAW_URL = "https://raw.githubusercontent.com/liyijung/Trade-Data-Repository/main/companyData/";
+
 // 根據統一編號匹配應該加載的CSV檔案
 function getMatchingFile(searchCode) {
     const prefix1 = searchCode.substring(0, 1); // 取統一編號的第 1 碼
-
-    let matchingFile = csvFiles.find(item => {
-        // 使用前 1 碼進行匹配
-        return prefix1 === item.range[0];
-    });
+    let matchingFile = csvFiles.find(item => prefix1 === item.range[0]);
 
     // 檢查是否找到相應檔案，並回傳包含路徑的檔名
-    return matchingFile ? `companyData/${matchingFile.file}` : null;
+    return matchingFile ? `${GITHUB_RAW_URL}${matchingFile.file}` : null;
 }
 
 const noDataMessage = document.getElementById('noDataMessage'); // 錯誤訊息元素
