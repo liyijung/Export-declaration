@@ -723,9 +723,19 @@ document.addEventListener('DOMContentLoaded', function () {
         // 取得 FILE_NO 對應的報關日期資訊
         var { Fymd, yearPart, CustomsDeclarationDate } = getCustomsDeclarationDate();
 
-        // 檢查「一般倉」是否被勾選，若勾選 或 報單類別為 F5 則加入對應的 XML 欄位
+        // 取得「報單號碼後5碼」的值
+        const dclDocNoLast5 = document.getElementById("DOC_DOC_NO_Last5").value.trim();
+
+        // 檢查「一般倉」是否被勾選 或 報單類別為 F5，則加入對應的 XML 欄位        
         if (document.getElementById("general-warehouse").checked || dclDocType === 'F5') {
-            xmlContent += `  <fields>\n    <field_name>DCL_DOC_NO</field_name>\n    <field_value>CW/  /${yearPart}/696/</field_value>\n  </fields>\n`;
+            let dclDocNo = `CW/  /${yearPart}/696/`; // 預設報單號碼
+
+            // 如果「報單號碼後5碼」有值，則追加
+            if (dclDocNoLast5) {
+                dclDocNo += dclDocNoLast5;
+            }
+
+            xmlContent += `  <fields>\n    <field_name>DCL_DOC_NO</field_name>\n    <field_value>${dclDocNo}</field_value>\n  </fields>\n`;
             xmlContent += `  <fields>\n    <field_name>TRANS_VIA</field_name>\n    <field_value>41</field_value>\n  </fields>\n`;
             if (dclDocType === 'F5') {
                 xmlContent += `  <fields>\n    <field_name>WAREHOUSE</field_name>\n    <field_value>C2040</field_value>\n  </fields>\n`;
