@@ -17,6 +17,9 @@ function importToExcel(event) {
     if (fileRemark.includes("一般倉，")) {
         fileRemark = fileRemark.replace("一般倉，", "").trim(); // 移除 "一般倉，"
         generalWarehouseCheckbox.checked = true; // 勾選一般倉
+    } else if (fileRemark.includes("一般倉")) {
+        fileRemark = fileRemark.replace("一般倉", "").trim(); // 移除 "一般倉"
+        generalWarehouseCheckbox.checked = true;
     } else {
         generalWarehouseCheckbox.checked = false; // 取消勾選
     }
