@@ -136,7 +136,7 @@ async function exportToPDF() {
             if (dclDocTypeValue === 'F5') {
                 doc.text(`C2040 遠雄自由貿易港區`, 30, 53.5)
             } else {
-                doc.text(`C2036 遠雄航空出口一般倉`, 30, 53.5)
+                doc.text(`C2036 遠雄航空出口一般倉貨棧`, 30, 53.5)
             }
         } else {
             doc.text(`42`, 136, 44) // 運輸方式(快遞倉)
