@@ -872,14 +872,25 @@ document.addEventListener('DOMContentLoaded', function () {
         const fileName = document.getElementById('FILE_NO').value.trim();
         const exporterName = document.getElementById('SHPR_C_NAME').value.trim();
         const remarkElement = document.getElementById('REMARK').value.trim() || '';
+        const generalWarehouseChecked = document.getElementById('general-warehouse').checked;
 
-        let fullFileName = '';
-
-        if (remarkElement) {
-            fullFileName = `${fileName}-${exporterName}【${remarkElement}】.xml`;
-        } else {
-            fullFileName = `${fileName}-${exporterName}.xml`;
+        // 組合備註內容，"一般倉" 放最前面
+        let remarks = [];
+        if (generalWarehouseChecked) {
+            remarks.push("一般倉");
         }
+        if (remarkElement) {
+            remarks.push(remarkElement);
+        }
+
+        // 組合檔名
+        let fullFileName = `${fileName}-${exporterName}`;
+        if (remarks.length > 0) {
+            fullFileName += `【${remarks.join('，')}】`; // 以 "，" 分隔多個備註
+        }
+
+        // 加上副檔名
+        fullFileName += ".xml";
 
         const blob = new Blob([xmlContent], { type: 'application/xml' });
         const link = document.createElement('a');
