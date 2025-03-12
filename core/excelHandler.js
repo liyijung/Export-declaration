@@ -9,7 +9,19 @@ function importToExcel(event) {
     
     // 提取檔名中【】內的文字
     const matchRemark = file.name.match(/【(.*?)】/);
-    const fileRemark = matchRemark ? matchRemark[1] : ''; // 若無則回傳空字串
+    let fileRemark = matchRemark ? matchRemark[1] : ''; // 若無則回傳空字串
+    
+    const generalWarehouseCheckbox = document.getElementById('general-warehouse');
+    
+    // 如果含 "一般倉，" 則去除，並勾選一般倉
+    if (fileRemark.includes("一般倉，")) {
+        fileRemark = fileRemark.replace("一般倉，", "").trim(); // 移除 "一般倉，"
+        generalWarehouseCheckbox.checked = true; // 勾選一般倉
+    } else {
+        generalWarehouseCheckbox.checked = false; // 取消勾選
+    }
+    
+    // 設定到 REMARK 欄位
     document.getElementById('REMARK').value = fileRemark;
 
     // 讀取 Excel 檔案
