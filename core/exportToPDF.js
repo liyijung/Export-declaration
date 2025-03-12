@@ -100,15 +100,15 @@ async function exportToPDF() {
         
         // 設定 OrderNumber
         var OrderNumber = generalWarehouseChecked 
-            ? `CW/  /${yearPart}/696/` + (docNoLast5 ? docNoLast5 : '') // 若有5碼則加上
-            : `CX/  /${yearPart}/696/`;
+            ? `CW/　/${yearPart}/696/` + (docNoLast5 ? docNoLast5 : '') // 若有5碼則加上
+            : `CX/　/${yearPart}/696/`;
         
         doc.text(OrderNumber, 75, 18.5)
         
         // 生成對應的條碼數據
         const barcodeText = generalWarehouseChecked 
-            ? `CW ${yearPart} 696` + (docNoLast5 ? ` ${docNoLast5}` : '') // 若有5碼則加上
-            : `CX ${yearPart} 696`;
+            ? `CW　${yearPart}696` + (docNoLast5 ? `${docNoLast5}` : '') // 若有5碼則加上
+            : `CX　${yearPart}696`;
 
         // 添加二維條碼
         const barcodeCanvas = document.createElement('canvas');
@@ -117,6 +117,8 @@ async function exportToPDF() {
             width: 3,           // 調整寬度，讓條碼變長（默認為 2）
             height: 40,         // 可以適當調低高度來強調長度
             displayValue: true  // 數字顯示
+            fontSize: 18,       // 放大字體
+            fontOptions: "bold" // 加粗字體
         });
         const barcodeImgData = barcodeCanvas.toDataURL('image/jpeg');
         doc.addImage(barcodeImgData, 'JPEG', 118, 12, 40, 10); // 調整圖像的顯示寬度
