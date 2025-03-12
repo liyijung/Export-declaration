@@ -520,27 +520,35 @@ function exportToExcel() {
     const fileName = document.getElementById('FILE_NO').value.trim() || '';
     const exporterName = document.getElementById('SHPR_C_NAME').value.trim() || '';
     const remarkElement = document.getElementById('REMARK').value.trim() || '';
+    const generalWarehouseChecked = document.getElementById('general-warehouse').checked;
 
-    // 下載 Excel 文件
+    // 處理 remarkElement，若勾選一般倉，則加在前面
+    let remarkText = remarkElement;
+    if (generalWarehouseChecked) {
+        remarkText = remarkText ? `一般倉，${remarkText}` : '一般倉';
+    }
+    
+    // 根據不同情境組合檔名
     let exportFileName = '';
-
-    if (fileName && exporterName && remarkElement) {
-        exportFileName = `${fileName}-${exporterName}【${remarkElement}】.xlsx`;
+    
+    if (fileName && exporterName && remarkText) {
+        exportFileName = `${fileName}-${exporterName}【${remarkText}】.xlsx`;
     } else if (fileName && exporterName) {
         exportFileName = `${fileName}-${exporterName}.xlsx`;
-    } else if (fileName && remarkElement) {
-        exportFileName = `${fileName}【${remarkElement}】.xlsx`;
-    } else if (exporterName && remarkElement) {
-        exportFileName = `${exporterName}【${remarkElement}】.xlsx`;
+    } else if (fileName && remarkText) {
+        exportFileName = `${fileName}【${remarkText}】.xlsx`;
+    } else if (exporterName && remarkText) {
+        exportFileName = `${exporterName}【${remarkText}】.xlsx`;
     } else if (fileName) {
         exportFileName = `${fileName}.xlsx`;
     } else if (exporterName) {
         exportFileName = `${exporterName}.xlsx`;
-    } else if (remarkElement) {
-        exportFileName = `【${remarkElement}】.xlsx`;
+    } else if (remarkText) {
+        exportFileName = `【${remarkText}】.xlsx`;
     } else {
         exportFileName = 'export.xlsx';
     }
 
+    // 下載 Excel 文件
     XLSX.writeFile(workbook, exportFileName);
 }
