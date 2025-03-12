@@ -505,19 +505,11 @@ document.addEventListener('DOMContentLoaded', function () {
             { id: 'TERMS_SALES', name: '貿易條件', validLengths: [3] },
             { id: 'CURRENCY', name: '幣別', validLengths: [3] },
         ];
-
-        // 取得 "一般倉" 勾選狀態
-        const generalWarehouseChecked = document.getElementById('general-warehouse').checked;
         
         // 執行碼數檢查
         let invalidLengthFields = [];
 
         fieldLengthChecks.forEach(field => {
-            // 如果勾選 "一般倉"，則跳過 "文件編號" (FILE_NO) 的檢查
-            if (generalWarehouseChecked && field.id === 'FILE_NO') {
-                return;
-            }
-
             let element = document.getElementById(field.id);
             if (element && element.value.trim()) { // 如果欄位有值則進行檢查
                 let length = element.value.trim().length;
