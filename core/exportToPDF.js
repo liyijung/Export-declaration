@@ -134,9 +134,9 @@ async function exportToPDF() {
         if (generalWarehouseChecked) {
             doc.text(`41`, 136, 44) // 運輸方式(一般倉)
             if (dclDocTypeValue === 'F5') {
-                doc.text(`C2038 遠雄自貿港`, 30, 53.5)
+                doc.text(`C2040 遠雄自由貿易港區`, 30, 53.5)
             } else {
-                doc.text(`C2036 遠雄出口貨棧`, 30, 53.5)
+                doc.text(`C2036 遠雄航空出口一般倉`, 30, 53.5)
             }
         } else {
             doc.text(`42`, 136, 44) // 運輸方式(快遞倉)
