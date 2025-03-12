@@ -45,14 +45,15 @@ function importXML(event) {
                     }
                 }
 
-                // 解析報單號碼 (DCL_DOC_NO) 後 5 碼並填入 DOC_DOC_NO_Last5
+                // 解析 DCL_DOC_NO 取 **第 5 個字段**
                 if (fieldName === "DCL_DOC_NO") {
-                    const match = fieldValue.match(/\/(\d{5})\/$/); // 找到報單號碼的最後 5 碼
-                    if (match) {
-                        document.getElementById("DOC_DOC_NO_Last5").value = match[1];
-                    } else {
-                        document.getElementById("DOC_DOC_NO_Last5").value = ""; // 若無匹配則清空
-                    }
+                    const cleanValue = fieldValue.trim(); // 移除前後空格
+                    const parts = cleanValue.split('/'); // 依照 `/` 切割
+        
+                    // 確保有 **至少 5 個字段**，否則 `DOC_DOC_NO_Last5` 保持空白
+                    const last5Chars = parts.length >= 5 ? parts[4] : "";
+        
+                    document.getElementById("DOC_DOC_NO_Last5").value = last5Chars;
                 }
             });
 
