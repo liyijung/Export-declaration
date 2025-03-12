@@ -44,6 +44,16 @@ function importXML(event) {
                         warehouseChecked = true;
                     }
                 }
+
+                // 解析報單號碼 (DCL_DOC_NO) 後 5 碼並填入 DOC_DOC_NO_Last5
+                if (fieldName === "DCL_DOC_NO") {
+                    const match = fieldValue.match(/\/(\d{5})\/$/); // 找到報單號碼的最後 5 碼
+                    if (match) {
+                        document.getElementById("DOC_DOC_NO_Last5").value = match[1];
+                    } else {
+                        document.getElementById("DOC_DOC_NO_Last5").value = ""; // 若無匹配則清空
+                    }
+                }
             });
 
             // 更新「一般倉」勾選框的狀態
