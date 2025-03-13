@@ -28,10 +28,6 @@
     
     <!--出口報單表頭-->    
     <div id="header" class="tab active">
-        <label>
-            <input type="checkbox" id="general-warehouse">
-            <span>一般倉</span>
-        </label>        
         <div class="header-section">
             <div class="header-group" style="margin-top: 0px; margin-bottom: 0px;">
                 <label for="REMARK" style="background: #ffffff00;">【檔名加註】</label>
@@ -1028,6 +1024,10 @@ Alt + 2 指定項次">攤重</button>
             3. 報單類別為 F5 自由港區貨物出口
         </div>
         <div style="margin-top: 15px;">
+            <label style="padding-right: 20px;">
+                <input type="checkbox" id="general-warehouse">
+                <span>一般倉</span>
+            </label>
             <label for="DOC_DOC_NO_Last5">報單號碼(後5碼)</label>
             <input type="text" id="DOC_DOC_NO_Last5" name="DOC_DOC_NO_Last5" maxlength="5"
             oninput="filterAlphanumeric(this)" style="height: 30px;"
