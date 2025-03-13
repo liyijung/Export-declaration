@@ -343,26 +343,30 @@ function showHint(input, message) {
 }
 
 // 依據統一編號的不同範圍對應相應的CSV檔案
-const csvFilesMap = {
-    '0': 'companyData0.csv',
-    '1': 'companyData1.csv',
-    '2': 'companyData2.csv',
-    '3': 'companyData3.csv',
-    '4': 'companyData4.csv',
-    '5': 'companyData5.csv',
-    '6': 'companyData6.csv',
-    '7': 'companyData7.csv',
-    '8': 'companyData8.csv',
-    '9': 'companyData9.csv'
-};
+let csvFiles = [
+    { range: ['0'], file: 'companyData0.csv' },
+    { range: ['1'], file: 'companyData1.csv' },
+    { range: ['2'], file: 'companyData2.csv' },
+    { range: ['3'], file: 'companyData3.csv' },
+    { range: ['4'], file: 'companyData4.csv' },
+    { range: ['5'], file: 'companyData5.csv' },
+    { range: ['6'], file: 'companyData6.csv' },
+    { range: ['7'], file: 'companyData7.csv' },
+    { range: ['8'], file: 'companyData8.csv' },
+    { range: ['9'], file: 'companyData9.csv' },
+];
 
-const GITHUB_RAW_URL = "https://raw.githubusercontent.com/liyijung/Trade-Data-Repository/main/companyData/";
-
-// 根據統一編號匹配應該加載的 CSV 檔案
+// 根據統一編號匹配應該加載的CSV檔案
 function getMatchingFile(searchCode) {
-    if (!searchCode || searchCode.length === 0) return null; // 防止空值錯誤
-    const prefix = searchCode[0]; // 直接取第一個字元
-    return csvFilesMap[prefix] ? `${GITHUB_RAW_URL}${csvFilesMap[prefix]}` : null;
+    const prefix1 = searchCode.substring(0, 1); // 取統一編號的第 1 碼
+
+    let matchingFile = csvFiles.find(item => {
+        // 使用前 1 碼進行匹配
+        return prefix1 === item.range[0];
+    });
+
+    // 檢查是否找到相應檔案，並回傳包含路徑的檔名
+    return matchingFile ? `companyData/${matchingFile.file}` : null;
 }
 
 const noDataMessage = document.getElementById('noDataMessage'); // 錯誤訊息元素
