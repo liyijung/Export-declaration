@@ -173,7 +173,12 @@ document.addEventListener('DOMContentLoaded', function () {
         console.log("EXAM_TYPE: " + examType.value);
         console.log("COPY_QTY: " + copyQty.value);
     }
-
+    
+    // 添加事件監聽器到所有checkbox以更新相關變量
+    document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+        checkbox.addEventListener('change', updateVariables);
+    });
+    
     async function exportToXML() {
         updateVariables(); // 在匯出XML之前更新變數
 
