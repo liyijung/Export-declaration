@@ -697,11 +697,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
         checkbox.addEventListener('change', updateDocOtrDesc);
     });
 
-    // 添加事件監聽器到報單副本選項
-    document.querySelectorAll('input[type="checkbox"][name="copy_option"]').forEach(checkbox => {
-        checkbox.addEventListener('change', updateRemark1);
-    });
-
     // 添加鍵盤事件監聽器
     document.addEventListener('keydown', handleKeyNavigation);
     
@@ -1623,6 +1618,11 @@ function updateDocOtrDesc() {
     // 更新文本框的值，將現有描述和新的描述結合
     docOtrDescElement.value = currentDesc + copyDesc;
 }
+
+// 添加事件監聽器到報單副本選項
+document.querySelectorAll('input[type="checkbox"][name="copy_option"]').forEach(checkbox => {
+    checkbox.addEventListener('change', updateRemark1);
+});
 
 // 更新REMARK1的值
 function updateRemark1() {
