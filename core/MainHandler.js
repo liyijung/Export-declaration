@@ -1208,7 +1208,17 @@ function navigateTextarea(currentTextarea, direction) {
 // 添加文本域的示例函數
 function addTextarea() {
     const container = document.getElementById('textarea-container');
+    if (!container) {
+        console.error("找不到 #textarea-container，請檢查 HTML");
+        return;
+    }
+
     const textareaHTML = createTextareaField('example-textarea', '這是初始值');
+    if (!textareaHTML) {
+        console.error("createTextareaField 回傳空值，請檢查函式");
+        return;
+    }
+
     container.innerHTML += textareaHTML;
 }
 
