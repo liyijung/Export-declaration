@@ -702,11 +702,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
         checkbox.addEventListener('change', updateRemark1);
     });
 
-    // 添加事件監聽器到所有checkbox以更新相關變量
-    document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
-        checkbox.addEventListener('change', updateVariables);
-    });
-
     // 添加鍵盤事件監聽器
     document.addEventListener('keydown', handleKeyNavigation);
     
