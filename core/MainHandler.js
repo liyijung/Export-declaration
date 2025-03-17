@@ -696,9 +696,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
     document.querySelectorAll('input[type="checkbox"][name="copy_option"]').forEach(checkbox => {
         checkbox.addEventListener('change', updateDocOtrDesc);
     });
-
-    // 添加鍵盤事件監聽器
-    document.addEventListener('keydown', handleKeyNavigation);
     
     // 初始化時更新DOC_OTR_DESC的值
     updateDocOtrDesc();
